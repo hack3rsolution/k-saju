@@ -15,18 +15,19 @@
     "@k-saju/ui": "workspace:*",
     "next": "^14.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^4.1.7"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.0",
-    "@types/node": "^24.3.1",
+    "@types/node": "^20.11.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^14.2.32",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.1.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"

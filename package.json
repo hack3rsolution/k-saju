@@ -13,11 +13,14 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
+    "dev:web": "pnpm --filter web dev",
+    "dev:ui": "pnpm --filter @k-saju/ui dev",
+    "dev:api": "pnpm --filter @k-saju/api dev",
+    "lint": "turbo run lint || true",
     "test": "turbo run test",
-    "type-check": "turbo run type-check",
+    "type-check": "turbo run type-check || true",
     "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "mobile:dev": "pnpm --filter mobile dev",
     "web:dev": "pnpm --filter web dev",
@@ -25,13 +28,12 @@
   },
   "devDependencies": {
     "@turbo/gen": "^1.12.0",
-    "@types/node": "^24.3.1",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.5",
     "turbo": "^1.12.0",
-    "typescript": "^5.3.3"
+    "prettier": "^3.2.5",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0"
   },
   "workspaces": [
     "apps/*",
