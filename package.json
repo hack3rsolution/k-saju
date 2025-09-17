@@ -27,16 +27,22 @@
     "api:dev": "pnpm --filter api dev"
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.4.3",
     "@turbo/gen": "^1.12.0",
-    "turbo": "^1.12.0",
-    "prettier": "^3.2.5",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0"
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.12.0",
+    "typescript": "^5.3.3"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3"
+  }
 }
