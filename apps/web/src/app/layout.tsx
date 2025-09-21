@@ -21,11 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/about" className="hover:underline">About</a>
               <a href="/pricing" className="hover:underline">Pricing</a>
               <a href="/ui-kit" className="hover:underline">UI Kit</a>
+              <a href="/account" className="hover:underline">Account</a>
             </nav>
             <AuthStatus />
           </div>
         </header>
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

@@ -1,55 +1,41 @@
 'use client';
-
-import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-export const dynamic = 'force-dynamic';
-
-function CallbackInner() {
-  const searchParams = useSearchParams();
+export default function AuthCallback() {
   const router = useRouter();
-  const [err, setErr] = useState<string | null>(null);
+  const sp = useSearchParams();
+  const [msg, setMsg] = useState('Completing sign-in…');
 
   useEffect(() => {
-    const code = searchParams.get('code');
+    const code = sp.get('code');
     if (!code) {
-      setErr('Missing auth code in URL');
+      setMsg('Missing auth code in URL.');
       return;
     }
-    const run = async () => {
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) {
-        setErr(error.message);
-        return;
+
+    (async () => {
+      try {
+        // Supabase JS v2: exchangeCodeForSession({ authCode })
+        const { error } = await (supabase.auth as any).exchangeCodeForSession({
+          authCode: code,
+        });
+        if (error) {
+          setMsg(`Sign-in failed: ${error.message}`);
+          return;
+        }
+        setMsg('Signed in! Redirecting…');
+        router.replace('/account'); // 또는 '/' 로 바꾸셔도 됩니다.
+      } catch (e: any) {
+        setMsg(`Unexpected error: ${e?.message ?? e}`);
       }
-      if (data?.session) router.replace('/');
-    };
-    run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    })();
+  }, [sp, router]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        {!err ? (
-          <p className="text-gray-700">Completing sign-in…</p>
-        ) : (
-          <p className="text-red-600">Auth error: {err}</p>
-        )}
-      </div>
-    </main>
-  );
-}
-
-export default function AuthCallbackPage() {
-  return (
-    <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-700">Preparing…</p>
-      </main>
-    }>
-      <CallbackInner />
-    </Suspense>
+    <div className="min-h-screen grid place-items-center">
+      <p className="text-gray-600">{msg}</p>
+    </div>
   );
 }
