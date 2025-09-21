@@ -1,4 +1,5 @@
-"use client";
+'use client';
+export const dynamic = "force-dynamic";
 import { Button, Card, SectionHeader, Input } from "@k-saju/ui";
 import { useState } from "react";
 

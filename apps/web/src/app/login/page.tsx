@@ -1,8 +1,9 @@
 'use client';
+export const dynamic = "force-dynamic";
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabaseBrowser } from '@/lib/supabase-browser';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export default function LoginPage() {
     try {
       // 브라우저에서 Supabase로 직접 호출 (Codespaces 서버 DNS 이슈 우회)
       const redirectTo = `${window.location.origin}/auth/callback`;
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabaseBrowser().auth.signInWithOtp({
         email,
         options: {
           shouldCreateUser: true,

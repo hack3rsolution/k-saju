@@ -1,3 +1,5 @@
+'use client';
+export const dynamic = "force-dynamic";
 export default function PricingPage() {
   const tiers = [
     { name: "Free", price: "$0", features: ["Basic features", "Community support"] },

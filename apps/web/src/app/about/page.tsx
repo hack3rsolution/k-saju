@@ -1,3 +1,5 @@
+'use client';
+export const dynamic = "force-dynamic";
 export default function AboutPage() {
   return (
     <main className="container mx-auto px-6 py-16">

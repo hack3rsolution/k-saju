@@ -1,7 +1,8 @@
 'use client';
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabaseBrowser } from '@/lib/supabase-browser';
 
 export default function AccountPage() {
   const [profile, setProfile] = useState<any>(null);
@@ -15,14 +16,14 @@ export default function AccountPage() {
       setLoading(true);
 
       // 현재 사용자 확인
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabaseBrowser().auth.getUser();
       if (userError || !user) {
         setLoading(false);
         return;
       }
 
       // 프로필 불러오기
-      const { data, error } = await supabase
+      const { data, error } = await supabaseBrowser()
         .from('profiles')
         .select('*')
         .eq('id', user.id)
@@ -44,7 +45,7 @@ export default function AccountPage() {
   const handleUpdate = async () => {
     setLoading(true);
 
-    const { error } = await supabase.from('profiles').update({
+    const { error } = await supabaseBrowser().from('profiles').update({
       full_name: fullName,
       website,
       phone,
