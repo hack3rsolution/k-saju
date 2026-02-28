@@ -1,4 +1,0 @@
-[
-  { "id": 1, "name": "Alice Kim", "email": "alice@example.com", "phone": "010-0000-0001", "website": "alice.dev", "company": { "name": "K-Saju" } },
-  { "id": 2, "name": "Bob Lee",  "email": "bob@example.com",   "phone": "010-0000-0002", "website": "bob.dev",   "company": { "name": "K-Saju" } }
-]
