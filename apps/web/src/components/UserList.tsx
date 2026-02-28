@@ -25,7 +25,7 @@ export const UserList = () => {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('/api/users');
+        const response = await fetch('/users.json', { cache: 'force-cache' });
         
         if (!response.ok) {
           throw new Error(`Failed to fetch users: ${response.status}`);
