@@ -1,0 +1,9 @@
+Initial release of K-Saju Global.
+
+• Precise Four Pillars calculation with solar term accuracy
+• AI-powered daily, weekly, monthly, and annual fortune readings
+• Six cultural lenses: Korean, Chinese, Japanese, English, Spanish, Vedic Fusion
+• Compatibility, career, destiny cycle, and name analysis add-on reports
+• Magic link, Google, and Apple social sign-in
+• Daily 8:00 AM push notification reminder
+• Available in 10 languages
