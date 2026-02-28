@@ -29,6 +29,8 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "roots": ["<rootDir>/src", "<rootDir>/../../supabase/functions"],
+    "testMatch": ["**/__tests__/**/*.test.ts"],
     "collectCoverageFrom": ["src/**/*.ts", "!src/index.ts"],
     "coverageThreshold": {
       "global": {
