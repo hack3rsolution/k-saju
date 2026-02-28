@@ -1,0 +1,243 @@
+// K-Saju Global — Prisma Schema
+// Database: PostgreSQL (Supabase)
+// Updated: 2026-02-28
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["public", "auth"]
+}
+
+// ─────────────────────────────────────────────
+// Enum definitions
+// ─────────────────────────────────────────────
+
+enum CulturalFrame {
+  kr // 사주팔자 (Korean traditional)
+  cn // BaZi / 四柱推命 (Chinese)
+  jp // 四柱推命 (Japanese)
+  en // Cosmic Blueprint (Western)
+  es // Destino Cósmico (Latin)
+  in // Vedic Fusion (South Asian)
+
+  @@schema("public")
+}
+
+enum Gender {
+  M
+  F
+
+  @@schema("public")
+}
+
+enum SubscriptionPlan {
+  free
+  premium_monthly
+  premium_annual
+
+  @@schema("public")
+}
+
+enum ReadingType {
+  daily
+  weekly
+  monthly
+  annual
+  daewoon
+
+  @@schema("public")
+}
+
+enum AddonType {
+  deep_compatibility
+  career_wealth
+  daewoon_report_pdf
+  name_analysis
+
+  @@schema("public")
+}
+
+enum Platform {
+  ios
+  android
+
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Users
+// ─────────────────────────────────────────────
+
+model User {
+  id             String        @id @default(uuid()) // matches auth.users.id
+  email          String        @unique
+  culturalFrame  CulturalFrame @default(kr)
+  gender         Gender?
+  birthDate      DateTime?     @db.Date
+  birthTime      String?       // "HH:MM" or null when unknown
+  timezone       String        @default("Asia/Seoul")
+  locale         String        @default("ko")
+  onboardingDone Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  chart          SajuChart?
+  readings       Reading[]
+  subscription   Subscription?
+  addonPurchases AddonPurchase[]
+  compatibilityRequests  CompatibilityReport[] @relation("requester")
+  pushTokens     PushToken[]
+
+  @@index([email])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Saju Chart
+// ─────────────────────────────────────────────
+
+model SajuChart {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Four Pillars — stored as JSON for flexibility
+  yearPillar     Json     // { stem: "甲", branch: "子" }
+  monthPillar    Json     // { stem: "丙", branch: "午" }
+  dayPillar      Json     // { stem: "戊", branch: "戌" }
+  hourPillar     Json?    // null when birth time unknown
+
+  // Derived data
+  elementBalance Json     // { Wood: 2, Fire: 3, Earth: 1, Metal: 1, Water: 1 }
+  dayStem        String   // 일간 — the "self" element key
+  daewoonList    Json     // DaewoonPeriod[] — 8 periods
+  shiShinTable   Json?    // 십신 table { stem: ShiShin }[]
+
+  calculatedAt   DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// AI Readings
+// ─────────────────────────────────────────────
+
+model Reading {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type          ReadingType
+  culturalFrame CulturalFrame
+  refDate       DateTime      @db.Date // date this reading is for
+
+  // Content from Claude API
+  summary       String
+  details       Json          // string[]
+  luckyItems    Json?         // { color?, number?, direction?, food? }
+  rawContent    String?       // full Claude response (for debugging)
+
+  createdAt     DateTime      @default(now())
+
+  @@unique([userId, type, refDate, culturalFrame])
+  @@index([userId, type, refDate])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Subscriptions (RevenueCat sync)
+// ─────────────────────────────────────────────
+
+model Subscription {
+  id              String           @id @default(uuid())
+  userId          String           @unique
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan            SubscriptionPlan @default(free)
+  revenuecatId    String?          @unique // RevenueCat customer_id
+  productId       String?          // App Store / Play Store product ID
+  expiresAt       DateTime?
+  autoRenew       Boolean          @default(true)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([revenuecatId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Add-on Purchases (one-time IAP)
+// ─────────────────────────────────────────────
+
+model AddonPurchase {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  addonType       AddonType
+  transactionId   String    @unique // App Store / Play Store transaction
+  productId       String
+  purchasedAt     DateTime  @default(now())
+
+  // Content snapshot at time of purchase
+  reportSnapshot  Json?
+
+  @@index([userId, addonType])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Compatibility Reports
+// ─────────────────────────────────────────────
+
+model CompatibilityReport {
+  id              String        @id @default(uuid())
+  requesterId     String
+  requester       User          @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  // Partner is stored as raw birth data (partner may not be a user)
+  partnerName     String?
+  partnerBirthData Json         // BirthData { year, month, day, hour?, gender }
+  partnerChart    Json          // FourPillars snapshot
+
+  culturalFrame   CulturalFrame
+  compatibilityScore Int        // 0–100
+  summary         String
+  details         Json          // string[]
+  harmonyElements Json?         // element interaction analysis
+
+  createdAt       DateTime      @default(now())
+
+  @@index([requesterId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Push Tokens (Expo Notifications)
+// ─────────────────────────────────────────────
+
+model PushToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token     String   @unique // Expo push token
+  platform  Platform
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@schema("public")
+}
