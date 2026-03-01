@@ -65,6 +65,7 @@ export interface LuckyItems {
 export interface SajuReadingResponse {
   ok: true;
   cached: boolean;
+  readingId: string | null;
   reading: {
     summary: string;
     details: string[];

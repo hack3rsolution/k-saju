@@ -66,8 +66,42 @@ const READING_TYPE_LABELS: Record<ReadingType, string> = {
 
 // ── User Prompt Builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return `${SYSTEM_PROMPTS[frame]}
+export interface FeedbackContext {
+  rating: number;
+  feedbackType: string | null;
+}
+
+function buildFeedbackNote(feedbacks: FeedbackContext[]): string {
+  if (!feedbacks.length) return '';
+
+  const counts: Record<string, number> = {};
+  let positives = 0;
+  let negatives = 0;
+
+  for (const fb of feedbacks) {
+    if (fb.rating === 1) positives++;
+    else negatives++;
+    if (fb.feedbackType) counts[fb.feedbackType] = (counts[fb.feedbackType] ?? 0) + 1;
+  }
+
+  const parts: string[] = [];
+  if (positives > 0) parts.push(`${positives} positive`);
+  if (negatives > 0) parts.push(`${negatives} negative`);
+
+  const typeNotes: string[] = [];
+  if (counts['too_vague']) typeNotes.push('readings were too vague — please be more specific and concrete');
+  if (counts['not_me']) typeNotes.push("readings didn't resonate — try a more personalized, chart-specific interpretation");
+  if (counts['accurate']) typeNotes.push('the user appreciated accuracy — maintain this level of detail');
+
+  let note = `\nUSER FEEDBACK HISTORY (last ${feedbacks.length} readings): ${parts.join(', ')} ratings.`;
+  if (typeNotes.length) note += ` Notes: ${typeNotes.join('; ')}.`;
+  return note;
+}
+
+export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = []): string {
+  const feedbackNote = buildFeedbackNote(feedbacks);
+
+  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {

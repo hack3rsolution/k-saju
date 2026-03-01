@@ -67,6 +67,8 @@ function todayGanji() {
 export interface FortuneState {
   loading: boolean;
   reading: ReadingData | null;
+  /** Supabase Reading row ID — used for feedback association */
+  readingId: string | null;
   error: string | null;
   /** Today's 간지 (연월일) display string */
   ganji: string;
@@ -82,6 +84,7 @@ export interface FortuneState {
 export function useFortune(): FortuneState {
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<ReadingData | null>(null);
+  const [readingId, setReadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [weeklyLimitReached, setWeeklyLimitReached] = useState(false);
   const [tick, setTick] = useState(0);
@@ -186,8 +189,11 @@ export function useFortune(): FortuneState {
           throw new Error(body.message ?? `HTTP ${resp.status}`);
         }
 
-        const data = await resp.json() as { ok: boolean; reading: ReadingData };
-        if (!cancelled) setReading(data.reading);
+        const data = await resp.json() as { ok: boolean; readingId?: string | null; reading: ReadingData };
+        if (!cancelled) {
+          setReading(data.reading);
+          setReadingId(data.readingId ?? null);
+        }
 
         // ── 4. Mark weekly usage for free tier ────────────────────────────
         if (!isPremium) {
@@ -212,6 +218,7 @@ export function useFortune(): FortuneState {
   return {
     loading,
     reading,
+    readingId,
     error,
     ganji: ganji.full,
     todayDay: ganji.dayStr,
