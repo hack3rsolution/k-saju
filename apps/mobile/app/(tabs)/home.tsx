@@ -18,6 +18,10 @@ import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune } from '../../src/hooks/useFortune';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { ShareCard } from '../../src/components/ShareCard';
+import { TimingCategorySheet } from '../../src/components/TimingCategorySheet';
+import { TimingResultSheet } from '../../src/components/TimingResultSheet';
+import { useTimingAdvisor } from '../../src/hooks/useTimingAdvisor';
+import type { TimingCategory } from '../../src/types/timing';
 
 // ── Element palette ───────────────────────────────────────────────────────────
 
@@ -127,6 +131,22 @@ export default function HomeScreen() {
   } = useFortune();
 
   const { chart, frame } = useSajuStore();
+
+  // ── Timing Advisor state ───────────────────────────────────────────────────
+  const { loading: timingLoading, advice, limitReached, error: timingError, analyze, reset: resetTiming } = useTimingAdvisor();
+  const [categorySheetVisible, setCategorySheetVisible] = useState(false);
+  const [resultSheetVisible, setResultSheetVisible] = useState(false);
+
+  function handleTimingPress() {
+    resetTiming();
+    setCategorySheetVisible(true);
+  }
+
+  async function handleCategorySelect(category: TimingCategory) {
+    setCategorySheetVisible(false);
+    setResultSheetVisible(true);
+    await analyze(category);
+  }
 
   // ── Share card state ──────────────────────────────────────────────────────
   const [shareVisible, setShareVisible] = useState(false);
@@ -355,6 +375,33 @@ export default function HomeScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* ── Timing Advisor FAB ───────────────────────────────────────────────── */}
+      <TouchableOpacity
+        style={fabStyles.fab}
+        onPress={handleTimingPress}
+        activeOpacity={0.85}
+      >
+        <Text style={fabStyles.fabIcon}>⏰</Text>
+        <Text style={fabStyles.fabLabel}>지금 결정 분석</Text>
+      </TouchableOpacity>
+
+      {/* ── Timing Category Sheet ────────────────────────────────────────────── */}
+      <TimingCategorySheet
+        visible={categorySheetVisible}
+        onSelect={handleCategorySelect}
+        onClose={() => setCategorySheetVisible(false)}
+      />
+
+      {/* ── Timing Result Sheet ──────────────────────────────────────────────── */}
+      <TimingResultSheet
+        visible={resultSheetVisible}
+        loading={timingLoading}
+        advice={advice}
+        limitReached={limitReached}
+        error={timingError}
+        onClose={() => { setResultSheetVisible(false); resetTiming(); }}
+      />
     </>
   );
 }
@@ -417,6 +464,30 @@ const styles = StyleSheet.create({
   gridItem: { backgroundColor: '#2d1854', borderRadius: 16, padding: 20, width: '47%', alignItems: 'center' },
   gridIcon: { fontSize: 28, marginBottom: 8 },
   gridLabel: { color: '#d8b4fe', fontWeight: '600', fontSize: 14 },
+});
+
+// ── FAB styles ────────────────────────────────────────────────────────────────
+
+const fabStyles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    bottom: 32,
+    right: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#7c3aed',
+    borderRadius: 28,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    shadowColor: '#7c3aed',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.45,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  fabIcon: { fontSize: 18 },
+  fabLabel: { color: '#fff', fontWeight: '700', fontSize: 14 },
 });
 
 // ── Modal styles ──────────────────────────────────────────────────────────────

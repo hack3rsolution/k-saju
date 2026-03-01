@@ -46,6 +46,7 @@ function parseCustomerInfo(info: CustomerInfo): {
       careerWealth: 'career_wealth' in active,
       daewoonPdf: 'daewoon_pdf' in active,
       nameAnalysis: 'name_analysis' in active,
+      timingAdvisor: 'timing_advisor' in active,
     },
   };
 }

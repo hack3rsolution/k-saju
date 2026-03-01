@@ -200,3 +200,91 @@ describe('request validation', () => {
     expect(VALID_TYPES.has('yearly')).toBe(false);
   });
 });
+
+// ── Timing Advisor tests ──────────────────────────────────────────────────────
+
+type TimingCategory = 'business' | 'investment' | 'romance' | 'relocation';
+
+const TIMING_CATEGORIES: TimingCategory[] = ['business', 'investment', 'romance', 'relocation'];
+const TIMING_FRAMES = ['kr', 'cn', 'jp', 'en', 'es', 'in'] as const;
+
+function parseTimingOutput(raw: string): { score: number; headline: string; reasons: string[]; cautions: string[] } | null {
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) return null;
+  try {
+    const p = JSON.parse(jsonMatch[0]);
+    return {
+      score:    Math.max(1, Math.min(10, Number(p.score ?? 5))),
+      headline: String(p.headline ?? '').slice(0, 120),
+      reasons:  Array.isArray(p.reasons)  ? p.reasons.slice(0, 3).map(String)  : [],
+      cautions: Array.isArray(p.cautions) ? p.cautions.slice(0, 2).map(String) : [],
+    };
+  } catch { return null; }
+}
+
+describe('timing-advisor prompts', () => {
+  test('all 4 categories are valid', () => {
+    const valid = new Set(['business', 'investment', 'romance', 'relocation']);
+    TIMING_CATEGORIES.forEach((c) => expect(valid.has(c)).toBe(true));
+  });
+
+  test('all 6 frames are valid for timing', () => {
+    expect(TIMING_FRAMES).toHaveLength(6);
+  });
+
+  test('parseTimingOutput parses well-formed JSON', () => {
+    const raw = JSON.stringify({
+      score: 8,
+      headline: '사업 시작에 매우 유리한 시기입니다.',
+      reasons: ['일간 木기운 강함', '세운과 생합', '월운 吉'],
+      cautions: ['자금 관리 주의', '계약서 검토 필요'],
+    });
+    const result = parseTimingOutput(raw);
+    expect(result).not.toBeNull();
+    expect(result!.score).toBe(8);
+    expect(result!.reasons).toHaveLength(3);
+    expect(result!.cautions).toHaveLength(2);
+  });
+
+  test('parseTimingOutput clamps score to 1-10', () => {
+    const raw = JSON.stringify({ score: 15, headline: 'x', reasons: [], cautions: [] });
+    const result = parseTimingOutput(raw);
+    expect(result!.score).toBeLessThanOrEqual(10);
+  });
+
+  test('parseTimingOutput clamps score minimum to 1', () => {
+    const raw = JSON.stringify({ score: -3, headline: 'x', reasons: [], cautions: [] });
+    const result = parseTimingOutput(raw);
+    expect(result!.score).toBeGreaterThanOrEqual(1);
+  });
+
+  test('parseTimingOutput caps reasons at 3', () => {
+    const raw = JSON.stringify({
+      score: 5, headline: 'x',
+      reasons: ['a', 'b', 'c', 'd', 'e'],
+      cautions: ['f', 'g'],
+    });
+    const result = parseTimingOutput(raw);
+    expect(result!.reasons.length).toBeLessThanOrEqual(3);
+  });
+
+  test('parseTimingOutput caps cautions at 2', () => {
+    const raw = JSON.stringify({
+      score: 5, headline: 'x',
+      reasons: ['a'],
+      cautions: ['a', 'b', 'c'],
+    });
+    const result = parseTimingOutput(raw);
+    expect(result!.cautions.length).toBeLessThanOrEqual(2);
+  });
+
+  test('parseTimingOutput returns null for non-JSON', () => {
+    expect(parseTimingOutput('no json here')).toBeNull();
+  });
+
+  test('currentMonth helper extracts YYYY-MM', () => {
+    function currentMonth(date: string) { return date.slice(0, 7); }
+    expect(currentMonth('2026-03-15')).toBe('2026-03');
+    expect(currentMonth('2026-12-01')).toBe('2026-12');
+  });
+});
