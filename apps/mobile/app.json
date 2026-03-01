@@ -2,7 +2,7 @@
   "expo": {
     "name": "K-Saju",
     "slug": "k-saju",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ksaju.global",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -28,7 +28,7 @@
         "backgroundColor": "#1a0a2e"
       },
       "package": "com.ksaju.global",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [
         "NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED",
