@@ -63,6 +63,24 @@ enum AddonType {
   @@schema("public")
 }
 
+enum RelationshipType {
+  romantic
+  friend
+  family
+  colleague
+  other
+
+  @@schema("public")
+}
+
+enum CompatibilityStatus {
+  good
+  neutral
+  caution
+
+  @@schema("public")
+}
+
 enum Platform {
   ios
   android
@@ -95,6 +113,7 @@ model User {
   compatibilityRequests  CompatibilityReport[] @relation("requester")
   pushTokens     PushToken[]
   fortuneChats   FortuneChatHistory[]
+  relationships  Relationship[]
 
   @@index([email])
   @@schema("public")
@@ -240,6 +259,38 @@ model PushToken {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Fortune Chat History (v1.2.0)
+// ─────────────────────────────────────────────
+
+// ─────────────────────────────────────────────
+// Relationships (v1.2.1)
+// ─────────────────────────────────────────────
+
+model Relationship {
+  id                   String              @id @default(uuid())
+  ownerId              String
+  owner                User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  name                 String
+  birthYear            Int
+  birthMonth           Int
+  birthDay             Int
+  birthHour            Int?
+  gender               Gender
+  relationshipType     RelationshipType
+
+  compatibilityScore   Int?                // 0–100
+  compatibilityStatus  CompatibilityStatus?
+  compatibilityCachedAt DateTime?
+
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  @@index([ownerId, createdAt(sort: Desc)])
   @@schema("public")
 }
 
