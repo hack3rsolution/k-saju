@@ -95,6 +95,7 @@ model User {
   compatibilityRequests  CompatibilityReport[] @relation("requester")
   pushTokens     PushToken[]
   fortuneFeedbacks FortuneFeedback[]
+  fortuneChats   FortuneChatHistory[]
 
   @@index([email])
   @@schema("public")
@@ -264,5 +265,24 @@ model FortuneFeedback {
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([fortuneId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Fortune Chat History (v1.2.0)
+// ─────────────────────────────────────────────
+
+model FortuneChatHistory {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fortuneCacheId String?  // YYYY-MM-DD date string linking to Reading cache
+  role           String   // 'user' | 'assistant'
+  content        String
+
+  createdAt      DateTime @default(now())
+
+  @@index([userId, fortuneCacheId, createdAt])
   @@schema("public")
 }
