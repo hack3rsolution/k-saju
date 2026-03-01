@@ -1,19 +1,13 @@
 -- K-Saju Global — Fortune Feedback
 -- Issue #16: AI Feedback Loop
 -- Run after: 001_rls_policies.sql
+-- Note: FortuneFeedback table is created by Prisma (prisma db push).
+--       This file adds RLS policies and extra indexes only.
 
 -- ─────────────────────────────────────────────
--- FortuneFeedback table
+-- FortuneFeedback table (Prisma-managed, camelCase columns)
+-- Columns: id, userId, fortuneId, rating, feedbackType, createdAt
 -- ─────────────────────────────────────────────
-
-CREATE TABLE IF NOT EXISTS public."FortuneFeedback" (
-  id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId"        TEXT        NOT NULL REFERENCES public."User"(id) ON DELETE CASCADE,
-  "fortuneId"     UUID        REFERENCES public."Reading"(id) ON DELETE SET NULL,
-  rating          SMALLINT    NOT NULL CHECK (rating IN (1, -1)),
-  feedback_type   TEXT        CHECK (feedback_type IN ('accurate', 'too_vague', 'not_me')),
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
 
 ALTER TABLE public."FortuneFeedback" ENABLE ROW LEVEL SECURITY;
 
@@ -28,12 +22,13 @@ CREATE POLICY "feedback_insert_own"
   WITH CHECK (auth.uid()::text = "userId");
 
 -- ─────────────────────────────────────────────
--- Indexes
+-- Indexes (supplement Prisma-generated ones)
 -- ─────────────────────────────────────────────
 
--- Fetch recent feedback per user (for Claude prompt injection)
+-- Fetch recent feedback per user for Claude prompt injection
+-- "createdAt" = Prisma camelCase convention
 CREATE INDEX IF NOT EXISTS idx_fortune_feedback_user_date
-  ON public."FortuneFeedback" ("userId", created_at DESC);
+  ON public."FortuneFeedback" ("userId", "createdAt" DESC);
 
 -- Look up feedback by reading
 CREATE INDEX IF NOT EXISTS idx_fortune_feedback_fortune

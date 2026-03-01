@@ -254,7 +254,7 @@ model FortuneFeedback {
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  fortuneId    String?  @db.Uuid          // links to Reading.id (nullable if reading expires)
+  fortuneId    String?                    // links to Reading.id (nullable if reading expires)
   fortune      Reading? @relation(fields: [fortuneId], references: [id], onDelete: SetNull)
 
   rating       Int      // 1 = 👍, -1 = 👎
