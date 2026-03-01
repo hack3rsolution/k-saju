@@ -1,4 +1,7 @@
 import type { CulturalFrame, ReadingType, SajuReadingRequest } from './types.ts';
+import { buildKCultureLayer, containsRealPersonName } from './kculture.ts';
+
+export { containsRealPersonName };
 
 // ── Cultural Frame System Prompts ─────────────────────────────────────────────
 
@@ -101,7 +104,18 @@ function buildFeedbackNote(feedbacks: FeedbackContext[]): string {
 export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = []): string {
   const feedbackNote = buildFeedbackNote(feedbacks);
 
-  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}
+  // ── K-Culture layer (feedback-adjusted density) ───────────────────────────
+  let positives = 0;
+  let negatives = 0;
+  for (const fb of feedbacks) {
+    if (fb.rating === 1) positives++;
+    else negatives++;
+  }
+  const kCultureLayer = buildKCultureLayer(frame, 'overall', positives, negatives);
+
+  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}${kCultureLayer}
+
+IMPORTANT: Do NOT mention any real celebrities, specific living people, or brand names in the reading.
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {
