@@ -1,0 +1,24 @@
+{
+  "title": "운세",
+  "subtitle": "운세 · 流年 · Luck Cycles",
+  "types": {
+    "daily": "오늘의 운세",
+    "weekly": "이번 주 운세",
+    "monthly": "이번 달 운세",
+    "annual": "올해 운세",
+    "daewoon": "대운 분석"
+  },
+  "freeLimit": "이번 주 무료 열람 {{remaining}}회 남음",
+  "freeLimitExhausted": "이번 주 무료 열람을 모두 사용했습니다",
+  "luckyItems": {
+    "title": "오늘의 길조",
+    "color": "행운의 색",
+    "number": "행운의 숫자",
+    "direction": "행운의 방향",
+    "food": "추천 음식"
+  },
+  "refresh": "새로고침",
+  "share": "공유하기",
+  "premiumRequired": "프리미엄 전용",
+  "unlockReading": "전체 운세 열람"
+}

@@ -3,10 +3,35 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import '../src/i18n';
+import { useAuthGuard } from '../src/hooks/useAuthGuard';
+import { useNotifications } from '../src/hooks/useNotifications';
+import { useAuthStore } from '../src/store/authStore';
+import { initializePurchases, syncEntitlements } from '../src/lib/purchases';
+import { useEntitlementStore } from '../src/store/entitlementStore';
+import { configureNotifications } from '../src/lib/notifications';
+
+// Configure notification handler at module load (before any render)
+configureNotifications();
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useAuthGuard();
+  useNotifications();
+
+  const session = useAuthStore((s) => s.session);
+
+  // Initialise RevenueCat and sync entitlements whenever the user session changes
+  useEffect(() => {
+    if (session?.user?.id) {
+      initializePurchases(session.user.id);
+      syncEntitlements().catch(() => {});
+    } else {
+      useEntitlementStore.getState().reset();
+    }
+  }, [session?.user?.id]);
+
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);

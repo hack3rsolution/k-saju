@@ -1,0 +1,37 @@
+{
+  "title": "解锁您的完整命运",
+  "subtitle": "高级版让您无限访问所有运势、报告和宇宙洞察。",
+  "plans": {
+    "monthly": {
+      "name": "高级月订阅",
+      "price": "$8.99",
+      "period": "/月",
+      "cta": "订阅月度方案"
+    },
+    "annual": {
+      "name": "高级年订阅",
+      "price": "$59.99",
+      "period": "/年",
+      "badge": "最超值 · 节省44%",
+      "cta": "订阅年度方案"
+    }
+  },
+  "addons": {
+    "title": "加购项目（一次性）",
+    "deep_compatibility": "深度合婚报告",
+    "career_wealth": "事业财运报告",
+    "daewoon_report_pdf": "完整大运报告（PDF）",
+    "name_analysis": "命名分析"
+  },
+  "legal": "费用通过App Store/Google Play账户扣除。随时可取消。价格因地区而异。",
+  "restore": "恢复购买",
+  "features": {
+    "unlimited_daily": "无限日运/周运",
+    "monthly_annual": "月运·年运",
+    "daewoon": "大运（十年）分析",
+    "compatibility": "合婚报告",
+    "all_frames": "6种文化视角",
+    "priority_ai": "优先AI解读",
+    "early_access": "新功能抢先体验"
+  }
+}

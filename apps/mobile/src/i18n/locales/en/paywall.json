@@ -1,0 +1,37 @@
+{
+  "title": "Unlock Your Full Destiny",
+  "subtitle": "Premium gives you unlimited access to every reading, report, and cosmic insight.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Monthly",
+      "price": "$8.99",
+      "period": "/month",
+      "cta": "Get Monthly"
+    },
+    "annual": {
+      "name": "Premium Annual",
+      "price": "$59.99",
+      "period": "/year",
+      "badge": "Best Value · Save 44%",
+      "cta": "Get Annual"
+    }
+  },
+  "addons": {
+    "title": "Add-ons (one-time)",
+    "deep_compatibility": "Deep Compatibility Report",
+    "career_wealth": "Career & Wealth Report",
+    "daewoon_report_pdf": "Full Luck Cycle Report (PDF)",
+    "name_analysis": "Name Analysis"
+  },
+  "legal": "Payment charged to your App Store/Google Play account. Cancel anytime. Prices may vary by region.",
+  "restore": "Restore Purchases",
+  "features": {
+    "unlimited_daily": "Unlimited daily & weekly readings",
+    "monthly_annual": "Monthly & annual fortune",
+    "daewoon": "Major Luck Cycle (10-year) analysis",
+    "compatibility": "Compatibility reports",
+    "all_frames": "All 6 cultural frame styles",
+    "priority_ai": "Priority AI readings",
+    "early_access": "Early access to new features"
+  }
+}

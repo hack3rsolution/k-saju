@@ -1,0 +1,35 @@
+{
+  "step": "Langkah {{current}} dari {{total}}",
+  "birthInput": {
+    "title": "Informasi Kelahiran Anda",
+    "subtitle": "Kami menggunakan tanggal dan waktu lahir Anda untuk menghitung Empat Pilar (Saju).",
+    "birthDate": "Tanggal Lahir",
+    "birthTime": "Waktu Lahir",
+    "birthTimeUnknown": "Saya tidak tahu waktu lahir saya",
+    "gender": "Jenis Kelamin",
+    "male": "Laki-laki",
+    "female": "Perempuan",
+    "continue": "Lanjutkan"
+  },
+  "culturalFrame": {
+    "title": "Pilih Perspektif Anda",
+    "subtitle": "Data kosmik yang sama — disesuaikan dengan konteks budaya Anda.",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 Korea", "desc": "Pembacaan Empat Pilar tradisional" },
+      "cn": { "label": "BaZi", "region": "🇨🇳 Tiongkok", "desc": "Sistem BaZi klasik" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 Jepang", "desc": "Pembacaan takdir Jepang" },
+      "en": { "label": "Cosmic Blueprint", "region": "🌏 Barat", "desc": "Fokus pada kepribadian & jalur hidup" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 Latin", "desc": "Gaya horoskop" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Asia Selatan", "desc": "Perspektif terinspirasi Jyotish" }
+    },
+    "continue": "Lanjutkan"
+  },
+  "resultPreview": {
+    "title": "Pratinjau Peta Anda",
+    "subtitle": "Sekilas pandang cetak biru kosmik Anda.",
+    "unlockTitle": "Buka Takdir Penuh Anda",
+    "unlockDesc": "Keberuntungan harian, kecocokan, siklus keberuntungan tahunan, dan lainnya dengan Premium.",
+    "exploreFree": "Jelajahi fitur gratis",
+    "viewPremium": "Lihat paket Premium"
+  }
+}

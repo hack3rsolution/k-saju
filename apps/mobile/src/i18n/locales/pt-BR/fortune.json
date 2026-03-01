@@ -1,0 +1,24 @@
+{
+  "title": "Fortuna",
+  "subtitle": "Leituras · Ciclos de Sorte · Tempo Cósmico",
+  "types": {
+    "daily": "Fortuna Diária",
+    "weekly": "Fortuna Semanal",
+    "monthly": "Fortuna Mensal",
+    "annual": "Fortuna Anual",
+    "daewoon": "Ciclo de Sorte Maior"
+  },
+  "freeLimit": "{{remaining}} leitura(s) gratuita(s) restante(s) esta semana",
+  "freeLimitExhausted": "Sem leituras gratuitas restantes esta semana",
+  "luckyItems": {
+    "title": "Itens de Sorte",
+    "color": "Cor da Sorte",
+    "number": "Número da Sorte",
+    "direction": "Direção da Sorte",
+    "food": "Alimento Recomendado"
+  },
+  "refresh": "Atualizar",
+  "share": "Compartilhar",
+  "premiumRequired": "Somente Premium",
+  "unlockReading": "Desbloquear Todas as Leituras"
+}

@@ -13,8 +13,8 @@
     }
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsup src/index.ts --format cjs,esm --dts --tsconfig tsconfig.build.json",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --tsconfig tsconfig.build.json --watch",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "type-check": "tsc --noEmit"

@@ -1,0 +1,30 @@
+{
+  "title": "My Four Pillars",
+  "subtitle": "Cosmic Blueprint · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Year\nPillar",
+    "month": "Month\nPillar",
+    "day": "Day\nPillar",
+    "hour": "Hour\nPillar",
+    "hourUnknown": "Hour\nUnknown"
+  },
+  "stem": "Heavenly Stem",
+  "branch": "Earthly Branch",
+  "dayStem": "Day Stem (Self)",
+  "elementBalance": "Five Elements Balance",
+  "daewoon": "Major Luck Cycle",
+  "daewoonPeriod": "Age {{age}}+",
+  "shishin": {
+    "title": "Ten Gods",
+    "비견": "Companion",
+    "겁재": "Rob Wealth",
+    "식신": "Eating God",
+    "상관": "Hurting Officer",
+    "편재": "Indirect Wealth",
+    "정재": "Direct Wealth",
+    "편관": "Seven Killings",
+    "정관": "Direct Officer",
+    "편인": "Indirect Resource",
+    "정인": "Direct Resource"
+  }
+}

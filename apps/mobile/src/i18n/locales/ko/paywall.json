@@ -1,0 +1,37 @@
+{
+  "title": "나의 운명을 완전히 열어보세요",
+  "subtitle": "프리미엄으로 모든 운세, 리포트, 우주적 인사이트에 무제한 접근하세요.",
+  "plans": {
+    "monthly": {
+      "name": "프리미엄 월간",
+      "price": "$8.99",
+      "period": "/월",
+      "cta": "월간 구독 시작"
+    },
+    "annual": {
+      "name": "프리미엄 연간",
+      "price": "$59.99",
+      "period": "/년",
+      "badge": "최고 혜택 · 44% 절약",
+      "cta": "연간 구독 시작"
+    }
+  },
+  "addons": {
+    "title": "애드온 (일회성)",
+    "deep_compatibility": "심층 궁합 리포트",
+    "career_wealth": "직업 · 재물 리포트",
+    "daewoon_report_pdf": "대운 전체 리포트 (PDF)",
+    "name_analysis": "작명 분석"
+  },
+  "legal": "결제는 App Store/Google Play 계정으로 청구됩니다. 언제든지 취소 가능. 가격은 지역마다 다를 수 있습니다.",
+  "restore": "구매 복원",
+  "features": {
+    "unlimited_daily": "무제한 일간/주간 운세",
+    "monthly_annual": "월간 · 연간 운세",
+    "daewoon": "대운 (10년 운세) 분석",
+    "compatibility": "궁합 리포트",
+    "all_frames": "6개 문화권 해석",
+    "priority_ai": "우선 AI 열람",
+    "early_access": "신기능 조기 접근"
+  }
+}

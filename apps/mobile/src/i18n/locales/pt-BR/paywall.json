@@ -1,0 +1,37 @@
+{
+  "title": "Desbloqueie Seu Destino Completo",
+  "subtitle": "O Premium oferece acesso ilimitado a todas as leituras, relatórios e insights cósmicos.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Mensal",
+      "price": "$8.99",
+      "period": "/mês",
+      "cta": "Assinar Mensal"
+    },
+    "annual": {
+      "name": "Premium Anual",
+      "price": "$59.99",
+      "period": "/ano",
+      "badge": "Melhor Valor · Economize 44%",
+      "cta": "Assinar Anual"
+    }
+  },
+  "addons": {
+    "title": "Complementos (pagamento único)",
+    "deep_compatibility": "Relatório de Compatibilidade Profunda",
+    "career_wealth": "Relatório de Carreira e Riqueza",
+    "daewoon_report_pdf": "Relatório Completo do Ciclo de Sorte (PDF)",
+    "name_analysis": "Análise de Nome"
+  },
+  "legal": "O pagamento é cobrado na sua conta da App Store/Google Play. Cancele a qualquer momento. Os preços podem variar por região.",
+  "restore": "Restaurar Compras",
+  "features": {
+    "unlimited_daily": "Leituras diárias e semanais ilimitadas",
+    "monthly_annual": "Fortuna mensal e anual",
+    "daewoon": "Análise do Ciclo de Sorte Maior (10 anos)",
+    "compatibility": "Relatórios de compatibilidade",
+    "all_frames": "Todos os 6 estilos de moldura cultural",
+    "priority_ai": "Leituras de IA prioritárias",
+    "early_access": "Acesso antecipado a novos recursos"
+  }
+}

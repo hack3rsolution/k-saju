@@ -1,0 +1,32 @@
+{
+  "appName": "K-Saju",
+  "loading": "Memuat…",
+  "error": "Terjadi kesalahan",
+  "retry": "Coba Lagi",
+  "cancel": "Batal",
+  "confirm": "Konfirmasi",
+  "save": "Simpan",
+  "back": "Kembali",
+  "next": "Berikutnya",
+  "close": "Tutup",
+  "signIn": "Masuk",
+  "signOut": "Keluar",
+  "upgrade": "Tingkatkan",
+  "free": "Gratis",
+  "premium": "Premium",
+  "locked": "Terkunci",
+  "today": "Hari Ini",
+  "week": "Minggu Ini",
+  "month": "Bulan Ini",
+  "year": "Tahun Ini",
+  "elements": {
+    "Wood": "Kayu",
+    "Fire": "Api",
+    "Earth": "Tanah",
+    "Metal": "Logam",
+    "Water": "Air"
+  },
+  "fiveElements": "Lima Elemen",
+  "yin": "Yin",
+  "yang": "Yang"
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Empat Pilar Saya",
+  "subtitle": "Cetak Biru Kosmik · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Pilar\nTahun",
+    "month": "Pilar\nBulan",
+    "day": "Pilar\nHari",
+    "hour": "Pilar\nJam",
+    "hourUnknown": "Jam\nTidak Diketahui"
+  },
+  "stem": "Batang Surgawi",
+  "branch": "Cabang Bumi",
+  "dayStem": "Batang Hari (Diri Sendiri)",
+  "elementBalance": "Keseimbangan Lima Elemen",
+  "daewoon": "Siklus Keberuntungan Utama",
+  "daewoonPeriod": "Usia {{age}}+",
+  "shishin": {
+    "title": "Sepuluh Dewa",
+    "비견": "Pendamping",
+    "겁재": "Kekayaan Dirampas",
+    "식신": "Dewa Makan",
+    "상관": "Pejabat Peluka",
+    "편재": "Kekayaan Tidak Langsung",
+    "정재": "Kekayaan Langsung",
+    "편관": "Tujuh Pembunuhan",
+    "정관": "Pejabat Langsung",
+    "편인": "Sumber Daya Tidak Langsung",
+    "정인": "Sumber Daya Langsung"
+  }
+}

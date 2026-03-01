@@ -1,0 +1,35 @@
+{
+  "step": "ステップ {{current}} / {{total}}",
+  "birthInput": {
+    "title": "生年月日を入力",
+    "subtitle": "四柱推命を計算するために生年月日と生まれた時間が必要です。",
+    "birthDate": "生年月日",
+    "birthTime": "生まれた時間",
+    "birthTimeUnknown": "生まれた時間がわかりません",
+    "gender": "性別",
+    "male": "男性",
+    "female": "女性",
+    "continue": "次へ"
+  },
+  "culturalFrame": {
+    "title": "視点を選んでください",
+    "subtitle": "同じ命式データを文化的コンテキストに合わせて解釈します。",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 韓国", "desc": "韓国伝統の四柱推命" },
+      "cn": { "label": "四柱推命", "region": "🇨🇳 中国", "desc": "BaZiクラシックシステム" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 日本", "desc": "日本の宿命解読" },
+      "en": { "label": "Cosmic Blueprint", "region": "🌏 西洋", "desc": "性格・人生経路重視" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 ラテン", "desc": "星座スタイル解釈" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 南アジア", "desc": "ジョーティシュ視点" }
+    },
+    "continue": "選択完了"
+  },
+  "resultPreview": {
+    "title": "命式プレビュー",
+    "subtitle": "あなたの宇宙の設計図を垣間見てみましょう。",
+    "unlockTitle": "完全な鑑定を解放する",
+    "unlockDesc": "日運・相性・年運・大運分析をプレミアムでご覧ください。",
+    "exploreFree": "無料機能を探索する",
+    "viewPremium": "プレミアムプランを見る"
+  }
+}
