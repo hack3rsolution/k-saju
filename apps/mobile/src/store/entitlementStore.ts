@@ -11,6 +11,7 @@ export interface EntitlementAddons {
   careerWealth: boolean;
   daewoonPdf: boolean;
   nameAnalysis: boolean;
+  timingAdvisor: boolean;
 }
 
 const DEFAULT_ADDONS: EntitlementAddons = {
@@ -18,6 +19,7 @@ const DEFAULT_ADDONS: EntitlementAddons = {
   careerWealth: false,
   daewoonPdf: false,
   nameAnalysis: false,
+  timingAdvisor: false,
 };
 
 interface EntitlementState {

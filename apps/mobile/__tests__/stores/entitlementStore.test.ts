@@ -8,6 +8,7 @@ const DEFAULT_ADDONS = {
   careerWealth:      false,
   daewoonPdf:        false,
   nameAnalysis:      false,
+  timingAdvisor:     false,
 };
 
 function resetStore() {
@@ -46,6 +47,7 @@ describe('entitlementStore', () => {
       careerWealth:      true,
       daewoonPdf:        false,
       nameAnalysis:      false,
+      timingAdvisor:     false,
     };
     useEntitlementStore.getState().setEntitlements(false, addons);
 
@@ -54,6 +56,12 @@ describe('entitlementStore', () => {
     expect(state.addons.careerWealth).toBe(true);
     expect(state.addons.daewoonPdf).toBe(false);
     expect(state.addons.nameAnalysis).toBe(false);
+  });
+
+  it('setEntitlements unlocks timingAdvisor', () => {
+    const addons = { ...DEFAULT_ADDONS, timingAdvisor: true };
+    useEntitlementStore.getState().setEntitlements(false, addons);
+    expect(useEntitlementStore.getState().addons.timingAdvisor).toBe(true);
   });
 
   it('setEntitlements clears isLoading', () => {
@@ -77,7 +85,7 @@ describe('entitlementStore', () => {
   it('reset clears premium and all addons', () => {
     useEntitlementStore.setState({
       isPremium: true,
-      addons: { deepCompatibility: true, careerWealth: true, daewoonPdf: true, nameAnalysis: true },
+      addons: { deepCompatibility: true, careerWealth: true, daewoonPdf: true, nameAnalysis: true, timingAdvisor: true },
       isLoading: true,
     });
 

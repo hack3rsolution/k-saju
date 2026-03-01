@@ -56,10 +56,11 @@ const PLAN_META = {
 };
 
 const ADDON_META: { key: string; name: string; fallbackPrice: string }[] = [
-  { key: 'k_saju_compatibility', name: 'Deep Compatibility Report', fallbackPrice: '$4.99' },
-  { key: 'k_saju_career',        name: 'Career & Wealth Report',    fallbackPrice: '$4.99' },
-  { key: 'k_saju_daewoon_pdf',   name: 'Full 대운 Report (PDF)',    fallbackPrice: '$6.99' },
-  { key: 'k_saju_name_analysis', name: 'Name Analysis (작명)',      fallbackPrice: '$9.99' },
+  { key: 'k_saju_timing',        name: 'Timing Advisor (타이밍 어드바이저)', fallbackPrice: '$2.99' },
+  { key: 'k_saju_compatibility', name: 'Deep Compatibility Report',          fallbackPrice: '$4.99' },
+  { key: 'k_saju_career',        name: 'Career & Wealth Report',             fallbackPrice: '$4.99' },
+  { key: 'k_saju_daewoon_pdf',   name: 'Full 대운 Report (PDF)',             fallbackPrice: '$6.99' },
+  { key: 'k_saju_name_analysis', name: 'Name Analysis (작명)',               fallbackPrice: '$9.99' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
