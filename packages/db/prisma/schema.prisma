@@ -94,6 +94,7 @@ model User {
   addonPurchases AddonPurchase[]
   compatibilityRequests  CompatibilityReport[] @relation("requester")
   pushTokens     PushToken[]
+  fortuneChats   FortuneChatHistory[]
 
   @@index([email])
   @@schema("public")
@@ -239,5 +240,24 @@ model PushToken {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Fortune Chat History (v1.2.0)
+// ─────────────────────────────────────────────
+
+model FortuneChatHistory {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fortuneCacheId String?  // YYYY-MM-DD date string linking to Reading cache
+  role           String   // 'user' | 'assistant'
+  content        String
+
+  createdAt      DateTime @default(now())
+
+  @@index([userId, fortuneCacheId, createdAt])
   @@schema("public")
 }

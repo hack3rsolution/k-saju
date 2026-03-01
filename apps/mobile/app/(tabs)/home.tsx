@@ -17,6 +17,7 @@ import { captureRef } from 'react-native-view-shot';
 import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune } from '../../src/hooks/useFortune';
 import { useSajuStore } from '../../src/store/sajuStore';
+import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { ShareCard } from '../../src/components/ShareCard';
 
 // ── Element palette ───────────────────────────────────────────────────────────
@@ -127,6 +128,7 @@ export default function HomeScreen() {
   } = useFortune();
 
   const { chart, frame } = useSajuStore();
+  const { isPremium } = useEntitlementStore();
 
   // ── Share card state ──────────────────────────────────────────────────────
   const [shareVisible, setShareVisible] = useState(false);
@@ -241,6 +243,29 @@ export default function HomeScreen() {
                   <Text style={styles.detailText}>{d}</Text>
                 </View>
               ))}
+              {/* ── "더 물어보기" button ──────────────────────────────────── */}
+              <TouchableOpacity
+                style={[styles.chatBtn, !isPremium && styles.chatBtnLocked]}
+                onPress={() => {
+                  const today = new Date().toISOString().split('T')[0];
+                  router.push({
+                    pathname: '/fortune-chat/[fortuneId]',
+                    params: {
+                      fortuneId: today,
+                      summary: reading.summary,
+                      details: JSON.stringify(reading.details),
+                    },
+                  } as never);
+                }}
+              >
+                <Text style={styles.chatBtnIcon}>💬</Text>
+                <Text style={styles.chatBtnText}>더 물어보기</Text>
+                {!isPremium && (
+                  <View style={styles.chatBtnBadge}>
+                    <Text style={styles.chatBtnBadgeText}>Premium</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
             </>
           ) : null}
         </View>
@@ -388,6 +413,20 @@ const styles = StyleSheet.create({
   detailRow: { flexDirection: 'row', gap: 8, marginBottom: 6 },
   detailBullet: { fontSize: 18, lineHeight: 22, fontWeight: '700' },
   detailText: { flex: 1, fontSize: 14, color: '#b8a9d9', lineHeight: 22 },
+  chatBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    marginTop: 16, backgroundColor: '#3b1f6e', borderRadius: 12,
+    paddingVertical: 10, paddingHorizontal: 14, alignSelf: 'flex-start',
+    borderWidth: 1, borderColor: '#7c3aed44',
+  },
+  chatBtnLocked: { opacity: 0.8 },
+  chatBtnIcon: { fontSize: 16 },
+  chatBtnText: { color: '#d8b4fe', fontWeight: '600', fontSize: 14 },
+  chatBtnBadge: {
+    backgroundColor: '#7c3aed', borderRadius: 6,
+    paddingHorizontal: 6, paddingVertical: 2, marginLeft: 4,
+  },
+  chatBtnBadgeText: { color: '#fff', fontSize: 10, fontWeight: '700' },
   errorBox: { alignItems: 'center', paddingVertical: 8 },
   errorText: { color: '#f87171', fontSize: 14, marginBottom: 12, textAlign: 'center' },
   retryBtn: { backgroundColor: '#7c3aed33', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 },
