@@ -180,6 +180,86 @@ describe('parseClaudeOutput', () => {
   });
 });
 
+// ── Feedback context injection tests ─────────────────────────────────────────
+
+interface FeedbackEntry { rating: number; feedbackType: string | null; }
+
+function buildFeedbackNoteTest(feedbacks: FeedbackEntry[]): string {
+  if (!feedbacks.length) return '';
+  const counts: Record<string, number> = {};
+  let positives = 0; let negatives = 0;
+  for (const fb of feedbacks) {
+    if (fb.rating === 1) positives++; else negatives++;
+    if (fb.feedbackType) counts[fb.feedbackType] = (counts[fb.feedbackType] ?? 0) + 1;
+  }
+  const parts: string[] = [];
+  if (positives > 0) parts.push(`${positives} positive`);
+  if (negatives > 0) parts.push(`${negatives} negative`);
+  const typeNotes: string[] = [];
+  if (counts['too_vague']) typeNotes.push('readings were too vague — please be more specific and concrete');
+  if (counts['not_me']) typeNotes.push("readings didn't resonate — try a more personalized, chart-specific interpretation");
+  if (counts['accurate']) typeNotes.push('the user appreciated accuracy — maintain this level of detail');
+  let note = `\nUSER FEEDBACK HISTORY (last ${feedbacks.length} readings): ${parts.join(', ')} ratings.`;
+  if (typeNotes.length) note += ` Notes: ${typeNotes.join('; ')}.`;
+  return note;
+}
+
+describe('feedback context injection', () => {
+  test('returns empty string when no feedback', () => {
+    expect(buildFeedbackNoteTest([])).toBe('');
+  });
+
+  test('counts positive and negative ratings', () => {
+    const note = buildFeedbackNoteTest([
+      { rating: 1, feedbackType: 'accurate' },
+      { rating: -1, feedbackType: 'too_vague' },
+      { rating: 1, feedbackType: null },
+    ]);
+    expect(note).toContain('2 positive');
+    expect(note).toContain('1 negative');
+  });
+
+  test('includes too_vague guidance', () => {
+    const note = buildFeedbackNoteTest([{ rating: -1, feedbackType: 'too_vague' }]);
+    expect(note).toContain('too vague');
+    expect(note).toContain('specific');
+  });
+
+  test('includes not_me guidance', () => {
+    const note = buildFeedbackNoteTest([{ rating: -1, feedbackType: 'not_me' }]);
+    expect(note).toContain('personalized');
+  });
+
+  test('includes accurate guidance', () => {
+    const note = buildFeedbackNoteTest([{ rating: 1, feedbackType: 'accurate' }]);
+    expect(note).toContain('maintain this level');
+  });
+
+  test('includes feedback count in header', () => {
+    const feedbacks = Array.from({ length: 5 }, (_, i) => ({
+      rating: i % 2 === 0 ? 1 : -1,
+      feedbackType: null,
+    }));
+    const note = buildFeedbackNoteTest(feedbacks);
+    expect(note).toContain('last 5 readings');
+  });
+
+  test('handles all-positive feedback', () => {
+    const note = buildFeedbackNoteTest([
+      { rating: 1, feedbackType: 'accurate' },
+      { rating: 1, feedbackType: 'accurate' },
+    ]);
+    expect(note).toContain('2 positive');
+    expect(note).not.toContain('negative');
+  });
+
+  test('handles null feedbackType gracefully', () => {
+    const note = buildFeedbackNoteTest([{ rating: 1, feedbackType: null }]);
+    expect(note).toContain('1 positive');
+    expect(note).not.toContain('Notes:');
+  });
+});
+
 describe('request validation', () => {
   const VALID_FRAMES = new Set(['kr', 'cn', 'jp', 'en', 'es', 'in']);
   const VALID_TYPES  = new Set(['daily', 'weekly', 'monthly', 'annual', 'daewoon']);

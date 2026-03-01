@@ -13,7 +13,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.ts';
 import { callClaude } from './claude.ts';
-import { getCachedReading, storeReading } from './cache.ts';
+import { getCachedReading, storeReading, getRecentFeedback } from './cache.ts';
 import type { SajuReadingRequest, SajuReadingResponse } from './types.ts';
 
 // ── Rate limit state (in-memory, per instance) ────────────────────────────────
@@ -96,6 +96,7 @@ Deno.serve(async (req: Request) => {
     const response: SajuReadingResponse = {
       ok: true,
       cached: true,
+      readingId: cached.id,
       reading: {
         summary: cached.summary,
         details: cached.details,
@@ -105,8 +106,11 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(response);
   }
 
+  // ── Fetch recent user feedback for prompt personalization ─────────────────
+  const recentFeedback = await getRecentFeedback(supabase, user.id, 5).catch(() => []);
+
   // ── Build prompts ─────────────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame);
+  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback);
   const userPrompt   = buildUserPrompt(request);
 
   // ── Claude API call ───────────────────────────────────────────────────────
@@ -118,21 +122,27 @@ Deno.serve(async (req: Request) => {
     return errorResponse('AI reading failed. Please try again.', 502);
   }
 
-  // ── Persist to DB (fire-and-forget, non-blocking) ─────────────────────────
-  storeReading(
-    supabase,
-    user.id,
-    request.type,
-    request.refDate,
-    request.frame,
-    output,
-    output.rawContent,
-  ).catch((e) => console.error('[saju-reading] store error:', e));
+  // ── Persist to DB ─────────────────────────────────────────────────────────
+  let readingId: string | null = null;
+  try {
+    readingId = await storeReading(
+      supabase,
+      user.id,
+      request.type,
+      request.refDate,
+      request.frame,
+      output,
+      output.rawContent,
+    );
+  } catch (e) {
+    console.error('[saju-reading] store error:', e);
+  }
 
   // ── Return response ───────────────────────────────────────────────────────
   const response: SajuReadingResponse = {
     ok: true,
     cached: false,
+    readingId,
     reading: {
       summary: output.summary,
       details: output.details,

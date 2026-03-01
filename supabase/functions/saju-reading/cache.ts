@@ -5,16 +5,28 @@ interface SupabaseClient {
 }
 
 interface SupabaseQueryBuilder {
-  select: (cols: string) => SupabaseQueryBuilder;
+  select: (cols?: string) => SupabaseQueryBuilder;
   insert: (data: unknown) => SupabaseQueryBuilder;
   eq: (col: string, val: string) => SupabaseQueryBuilder;
+  order: (col: string, opts?: { ascending?: boolean }) => SupabaseQueryBuilder;
+  limit: (n: number) => SupabaseQueryBuilder;
   single: () => Promise<{ data: unknown; error: unknown }>;
+  // PromiseLike — awaiting the builder directly returns { data, error }
+  then: <T>(
+    onfulfilled: (value: { data: unknown; error: unknown }) => T,
+  ) => Promise<T>;
 }
 
 interface CachedReading {
+  id: string;
   summary: string;
   details: string[];          // stored as JSON in DB
   luckyItems: Record<string, unknown> | null;
+}
+
+export interface FeedbackSummary {
+  rating: number;
+  feedbackType: string | null;
 }
 
 const CACHE_TTL_HOURS = 24;
@@ -32,7 +44,7 @@ export async function getCachedReading(
 ): Promise<CachedReading | null> {
   const { data, error } = await supabase
     .from('Reading')
-    .select('summary, details, luckyItems, createdAt')
+    .select('id, summary, details, luckyItems, createdAt')
     .eq('userId', userId)
     .eq('type', type)
     .eq('refDate', refDate)
@@ -47,6 +59,7 @@ export async function getCachedReading(
   if (ageHours > CACHE_TTL_HOURS) return null;
 
   return {
+    id: row.id,
     summary: row.summary,
     details: row.details,
     luckyItems: row.luckyItems,
@@ -65,8 +78,8 @@ export async function storeReading(
   frame: CulturalFrame,
   output: ClaudeReadingOutput,
   rawContent: string,
-): Promise<void> {
-  await supabase
+): Promise<string | null> {
+  const { data, error } = await supabase
     .from('Reading')
     .insert({
       userId,
@@ -77,5 +90,30 @@ export async function storeReading(
       details: output.details,
       luckyItems: output.luckyItems,
       rawContent,
-    });
+    })
+    .select('id')
+    .single();
+
+  if (error || !data) return null;
+  return (data as { id: string }).id;
+}
+
+/**
+ * Fetches the user's last N feedback records for prompt personalization.
+ */
+export async function getRecentFeedback(
+  supabase: SupabaseClient,
+  userId: string,
+  limit = 5,
+): Promise<FeedbackSummary[]> {
+  const { data, error } = await supabase
+    .from('FortuneFeedback')
+    .select('rating, feedbackType')
+    .eq('userId', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+    .then((r: { data: unknown; error: unknown }) => r);
+
+  if (error || !data) return [];
+  return (data as FeedbackSummary[]);
 }

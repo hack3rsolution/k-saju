@@ -94,6 +94,7 @@ model User {
   addonPurchases AddonPurchase[]
   compatibilityRequests  CompatibilityReport[] @relation("requester")
   pushTokens     PushToken[]
+  fortuneFeedbacks FortuneFeedback[]
 
   @@index([email])
   @@schema("public")
@@ -147,6 +148,8 @@ model Reading {
   rawContent    String?       // full Claude response (for debugging)
 
   createdAt     DateTime      @default(now())
+
+  feedbacks     FortuneFeedback[]
 
   @@unique([userId, type, refDate, culturalFrame])
   @@index([userId, type, refDate])
@@ -239,5 +242,27 @@ model PushToken {
   updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@schema("public")
+}
+
+// ─────────────────────────────────────────────
+// Fortune Feedback (AI Feedback Loop — issue #16)
+// ─────────────────────────────────────────────
+
+model FortuneFeedback {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fortuneId    String?                    // links to Reading.id (nullable if reading expires)
+  fortune      Reading? @relation(fields: [fortuneId], references: [id], onDelete: SetNull)
+
+  rating       Int      // 1 = 👍, -1 = 👎
+  feedbackType String?  // 'accurate' | 'too_vague' | 'not_me'
+
+  createdAt    DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([fortuneId])
   @@schema("public")
 }

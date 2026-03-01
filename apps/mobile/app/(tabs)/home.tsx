@@ -18,6 +18,8 @@ import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune } from '../../src/hooks/useFortune';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { ShareCard } from '../../src/components/ShareCard';
+import { FeedbackSheet } from '../../src/components/FeedbackSheet';
+import { useFeedback, type FeedbackRating, type FeedbackType } from '../../src/hooks/useFeedback';
 
 // ── Element palette ───────────────────────────────────────────────────────────
 
@@ -118,6 +120,7 @@ export default function HomeScreen() {
   const {
     loading,
     reading,
+    readingId,
     error,
     ganji,
     todayDay,
@@ -127,6 +130,22 @@ export default function HomeScreen() {
   } = useFortune();
 
   const { chart, frame } = useSajuStore();
+
+  // ── Feedback state ────────────────────────────────────────────────────────
+  const { submitting: feedbackSubmitting, submitted: feedbackSubmitted, submitFeedback, reset: resetFeedback } = useFeedback();
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const [selectedRating, setSelectedRating] = useState<FeedbackRating | null>(null);
+
+  function handleFeedbackPress(rating: FeedbackRating) {
+    setSelectedRating(rating);
+    setSheetVisible(true);
+  }
+
+  async function handleFeedbackSubmit(feedbackType: FeedbackType) {
+    if (!selectedRating) return;
+    await submitFeedback(readingId, selectedRating, feedbackType);
+    setSheetVisible(false);
+  }
 
   // ── Share card state ──────────────────────────────────────────────────────
   const [shareVisible, setShareVisible] = useState(false);
@@ -241,6 +260,30 @@ export default function HomeScreen() {
                   <Text style={styles.detailText}>{d}</Text>
                 </View>
               ))}
+              {/* Feedback row */}
+              {feedbackSubmitted ? (
+                <View style={styles.feedbackThanks}>
+                  <Text style={styles.feedbackThanksText}>✨ 감사합니다! 피드백이 반영됩니다.</Text>
+                </View>
+              ) : (
+                <View style={styles.feedbackRow}>
+                  <Text style={styles.feedbackLabel}>도움이 됐나요?</Text>
+                  <View style={styles.feedbackBtns}>
+                    <TouchableOpacity
+                      style={[styles.feedbackBtn, selectedRating === 1 && styles.feedbackBtnActive]}
+                      onPress={() => handleFeedbackPress(1)}
+                    >
+                      <Text style={styles.feedbackBtnText}>👍</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.feedbackBtn, selectedRating === -1 && styles.feedbackBtnActive]}
+                      onPress={() => handleFeedbackPress(-1)}
+                    >
+                      <Text style={styles.feedbackBtnText}>👎</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
             </>
           ) : null}
         </View>
@@ -301,6 +344,15 @@ export default function HomeScreen() {
           ))}
         </View>
       </ScrollView>
+
+      {/* ── Feedback Sheet ───────────────────────────────────────────────────── */}
+      <FeedbackSheet
+        visible={sheetVisible}
+        initialRating={selectedRating}
+        submitting={feedbackSubmitting}
+        onSelect={handleFeedbackSubmit}
+        onClose={() => setSheetVisible(false)}
+      />
 
       {/* ── Share Card Modal ─────────────────────────────────────────────────── */}
       <Modal
@@ -412,6 +464,15 @@ const styles = StyleSheet.create({
   limitUsedText: { color: '#d8b4fe', fontSize: 13 },
   limitFreeText: { color: '#d8b4fe', fontSize: 13 },
   upgradeLink: { color: '#a78bfa', fontWeight: '700', fontSize: 13 },
+  // Feedback
+  feedbackRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18, paddingTop: 14, borderTopWidth: 1, borderTopColor: '#3d2471' },
+  feedbackLabel: { color: '#9d8fbe', fontSize: 13, fontWeight: '600' },
+  feedbackBtns: { flexDirection: 'row', gap: 8 },
+  feedbackBtn: { width: 40, height: 40, borderRadius: 10, backgroundColor: '#1a0a2e', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#3d2471' },
+  feedbackBtnActive: { borderColor: '#a78bfa', backgroundColor: '#3d2471' },
+  feedbackBtnText: { fontSize: 18 },
+  feedbackThanks: { marginTop: 18, paddingTop: 14, borderTopWidth: 1, borderTopColor: '#3d2471', alignItems: 'center' },
+  feedbackThanksText: { color: '#a78bfa', fontSize: 13, fontWeight: '600' },
   sectionTitle: { fontSize: 18, fontWeight: '700', color: '#fff', marginBottom: 14 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   gridItem: { backgroundColor: '#2d1854', borderRadius: 16, padding: 20, width: '47%', alignItems: 'center' },
