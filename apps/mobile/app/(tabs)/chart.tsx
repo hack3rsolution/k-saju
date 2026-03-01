@@ -12,6 +12,7 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
+import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
 import type {
   CulturalFrame,
   FiveElement,
@@ -409,6 +410,9 @@ export default function ChartScreen() {
           </ScrollView>
         </>
       )}
+
+      {/* ── Content Recommendation ── */}
+      <ContentRecommendationSection frame={frame ?? 'en'} />
 
       <View style={{ height: 48 }} />
     </ScrollView>
