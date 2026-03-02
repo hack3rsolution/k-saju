@@ -17,7 +17,6 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ksaju.global",
-      "buildNumber": "3",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
