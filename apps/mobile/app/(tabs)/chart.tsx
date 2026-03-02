@@ -1,18 +1,17 @@
 /**
- * My Saju Chart Screen — issue #9
+ * My Saju Chart Screen — issue #9 / design-system #31
  *
  * Displays the full 사주팔자 analysis:
  *  - 8-character (4-pillar) grid with element colours & 십신 badges
- *  - 오행 balance bar chart
+ *  - 오행 balance bar chart (graduated)
  *  - 십신 (Ten Gods) table
  *  - 대운 (Major Luck Cycle) horizontal timeline — current period highlighted
- *
- * All labels are localised per the user's cultural frame (6 variants).
  */
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
 import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
+import { T } from '../../src/theme/tokens';
 import type {
   CulturalFrame,
   FiveElement,
@@ -23,13 +22,7 @@ import type {
 
 // ── Element colours & labels ───────────────────────────────────────────────────
 
-const ELEM_COLOR: Record<FiveElement, string> = {
-  木: '#22c55e',
-  火: '#ef4444',
-  土: '#eab308',
-  金: '#94a3b8',
-  水: '#3b82f6',
-};
+const ELEM_COLOR: Record<FiveElement, string> = T.element;
 
 const ELEM_EN: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
@@ -160,7 +153,7 @@ interface PillarInfo {
   label: string;
   stem: Stem;
   branch: Branch;
-  shiShin: ShiShin | null; // null = day pillar (self)
+  shiShin: ShiShin | null;
   isDay: boolean;
 }
 
@@ -181,6 +174,7 @@ export default function ChartScreen() {
 
   const { pillars, elements, dayStem } = chart;
   const dayStemEl = STEM_ELEMENT[dayStem];
+  const dayStemColor = ELEM_COLOR[dayStemEl];
 
   // ── Current 대운 index ────────────────────────────────────────────────────
   const currentAge = birthData ? new Date().getFullYear() - birthData.year : -1;
@@ -237,6 +231,7 @@ export default function ChartScreen() {
     { key: '水', score: elements.Water },
   ];
   const totalScore = elementRows.reduce((s, r) => s + r.score, 0) || 1;
+  const maxScore = Math.max(...elementRows.map((r) => r.score), 1);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -250,85 +245,112 @@ export default function ChartScreen() {
         <Text style={styles.dayMasterLabel}>{labels.dayMaster}</Text>
         <View style={[
           styles.dayMasterPill,
-          { backgroundColor: ELEM_COLOR[dayStemEl] + '22', borderColor: ELEM_COLOR[dayStemEl] },
+          { backgroundColor: dayStemColor + '22', borderColor: dayStemColor },
         ]}>
-          <Text style={[styles.dayMasterChar, { color: ELEM_COLOR[dayStemEl] }]}>{dayStem}</Text>
-          <Text style={[styles.dayMasterElem, { color: ELEM_COLOR[dayStemEl] }]}>
+          <Text style={[styles.dayMasterChar, { color: dayStemColor }]}>{dayStem}</Text>
+          <Text style={[styles.dayMasterElem, { color: dayStemColor }]}>
             {' '}{ELEM_EN[dayStemEl]}
           </Text>
         </View>
       </View>
 
       {/* ── 8-Character Pillar Grid ── */}
-      <View style={styles.pillarsRow}>
-        {pillarList.map((p) => {
-          const stemEl = STEM_ELEMENT[p.stem];
-          const branchEl = BRANCH_ELEMENT[p.branch];
-          const sc = ELEM_COLOR[stemEl];
-          const bc = ELEM_COLOR[branchEl];
+      <View style={styles.pillarsCard}>
+        {/* Decorative background glyph */}
+        <Text style={styles.pillarsCardDeco}>八</Text>
+
+        {/* Column connector line */}
+        <View style={styles.connectorLine} />
+
+        <View style={styles.pillarsRow}>
+          {pillarList.map((p) => {
+            const stemEl = STEM_ELEMENT[p.stem];
+            const branchEl = BRANCH_ELEMENT[p.branch];
+            const sc = ELEM_COLOR[stemEl];
+            const bc = ELEM_COLOR[branchEl];
+            return (
+              <View key={p.key} style={styles.pillar}>
+                <Text style={styles.pillarLabel}>{p.label}</Text>
+
+                {/* 십신 badge */}
+                <View style={[
+                  styles.shiShinBadge,
+                  p.isDay
+                    ? { backgroundColor: T.semantic.gold + '22', borderColor: T.semantic.gold }
+                    : { backgroundColor: T.bg.base, borderColor: T.border.default },
+                ]}>
+                  <Text style={[styles.shiShinText, p.isDay && { color: T.semantic.gold }]}>
+                    {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
+                  </Text>
+                </View>
+
+                {/* Heavenly Stem */}
+                <View style={[
+                  styles.stemBox,
+                  { backgroundColor: sc + '22', borderColor: sc },
+                  p.isDay && { borderWidth: 2.5, borderColor: T.semantic.gold, backgroundColor: T.semantic.gold + '15' },
+                ]}>
+                  <Text style={[styles.stemChar, { color: p.isDay ? T.semantic.gold : sc }]}>
+                    {p.stem}
+                  </Text>
+                </View>
+
+                {/* Vertical connector dot */}
+                <View style={[styles.connectorDot, { backgroundColor: sc + '44' }]} />
+
+                {/* Earthly Branch */}
+                <View style={[
+                  styles.branchBox,
+                  { backgroundColor: bc + '15', borderColor: bc + '66' },
+                ]}>
+                  <Text style={[styles.branchChar, { color: bc }]}>{p.branch}</Text>
+                </View>
+
+                <Text style={[styles.branchElem, { color: bc + 'aa' }]}>{branchEl}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+
+      {/* ── Element Balance ── */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{labels.elementBalance}</Text>
+        <Text style={styles.sectionDeco}>오행</Text>
+      </View>
+      <View style={styles.elementSection}>
+        {elementRows.map((r) => {
+          const pct = r.score / maxScore;
           return (
-            <View key={p.key} style={styles.pillar}>
-              <Text style={styles.pillarLabel}>{p.label}</Text>
-
-              {/* 십신 badge */}
-              <View style={[
-                styles.shiShinBadge,
-                p.isDay
-                  ? { backgroundColor: '#ffd70022', borderColor: '#ffd700' }
-                  : { backgroundColor: '#ffffff0a', borderColor: '#ffffff22' },
-              ]}>
-                <Text style={[styles.shiShinText, p.isDay && { color: '#ffd700' }]}>
-                  {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
-                </Text>
+            <View key={r.key} style={styles.elementRow}>
+              <View style={styles.elementLabelCol}>
+                <Text style={[styles.elementKanji, { color: ELEM_COLOR[r.key] }]}>{r.key}</Text>
+                <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>{ELEM_EN[r.key]}</Text>
               </View>
-
-              {/* Heavenly Stem */}
-              <View style={[
-                styles.stemBox,
-                { backgroundColor: sc + '22', borderColor: sc },
-                p.isDay && { borderWidth: 2.5, borderColor: '#ffd700' },
-              ]}>
-                <Text style={[styles.stemChar, { color: p.isDay ? '#ffd700' : sc }]}>
-                  {p.stem}
-                </Text>
+              <View style={styles.barBg}>
+                {/* Segmented bar */}
+                <View style={[
+                  styles.barFill,
+                  {
+                    flex: Math.max(r.score, 0),
+                    backgroundColor: ELEM_COLOR[r.key],
+                    opacity: 0.85 + pct * 0.15,
+                  },
+                ]} />
+                <View style={{ flex: Math.max(totalScore - r.score, 0) }} />
               </View>
-
-              {/* Earthly Branch */}
-              <View style={[
-                styles.branchBox,
-                { backgroundColor: bc + '15', borderColor: bc + '66' },
-              ]}>
-                <Text style={[styles.branchChar, { color: bc }]}>{p.branch}</Text>
-              </View>
-
-              <Text style={[styles.branchElem, { color: bc + 'aa' }]}>{branchEl}</Text>
+              <Text style={[styles.elementScore, { color: ELEM_COLOR[r.key] }]}>{r.score}</Text>
             </View>
           );
         })}
       </View>
 
-      {/* ── Element Balance ── */}
-      <Text style={styles.sectionTitle}>{labels.elementBalance}</Text>
-      <View style={styles.elementSection}>
-        {elementRows.map((r) => (
-          <View key={r.key} style={styles.elementRow}>
-            <Text style={[styles.elementLabel, { color: ELEM_COLOR[r.key] }]}>
-              {ELEM_EN[r.key]} · {r.key}
-            </Text>
-            {/* Flex-ratio bar — avoids percentage string type issues */}
-            <View style={styles.barBg}>
-              <View style={[styles.barFill, { flex: Math.max(r.score, 0), backgroundColor: ELEM_COLOR[r.key] }]} />
-              <View style={{ flex: Math.max(totalScore - r.score, 0) }} />
-            </View>
-            <Text style={styles.elementScore}>{r.score}</Text>
-          </View>
-        ))}
-      </View>
-
       {/* ── 십신 Table ── */}
-      <Text style={styles.sectionTitle}>{labels.tenGods}</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{labels.tenGods}</Text>
+        <Text style={styles.sectionDeco}>十神</Text>
+      </View>
       <View style={styles.table}>
-        {/* Header row */}
         <View style={[styles.tableRow, styles.tableHeader]}>
           <Text style={[styles.cell, styles.cellHeader]}>柱</Text>
           <Text style={[styles.cell, styles.cellHeader]}>{labels.stemLabel}</Text>
@@ -338,25 +360,24 @@ export default function ChartScreen() {
           <Text style={[styles.cell, styles.cellHeader]}>{labels.branchLabel}</Text>
           <Text style={[styles.cell, styles.cellHeader]}>오행</Text>
         </View>
-
         {pillarList.map((p) => {
           const stemEl = STEM_ELEMENT[p.stem];
           const branchEl = BRANCH_ELEMENT[p.branch];
           return (
             <View key={p.key} style={[styles.tableRow, p.isDay && styles.tableRowDay]}>
-              <Text style={[styles.cell, styles.cellText, p.isDay && { color: '#ffd700' }]}>
+              <Text style={[styles.cell, styles.cellText, p.isDay && { color: T.semantic.gold }]}>
                 {p.label}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[stemEl], fontSize: 20, fontWeight: '700', textAlign: 'center' }]}>
                 {p.stem}
               </Text>
-              <Text style={[styles.cell, styles.cellWide, styles.cellText, p.isDay && { color: '#ffd700', fontWeight: '700' }]}>
+              <Text style={[styles.cell, styles.cellWide, styles.cellText, p.isDay && { color: T.semantic.gold, fontWeight: '700' }]}>
                 {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: 20, fontWeight: '700', textAlign: 'center' }]}>
                 {p.branch}
               </Text>
-              <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: 11, textAlign: 'center' }]}>
+              <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: T.fontSize.xs, textAlign: 'center' }]}>
                 {ELEM_EN[branchEl]}
               </Text>
             </View>
@@ -367,7 +388,10 @@ export default function ChartScreen() {
       {/* ── 대운 Timeline ── */}
       {daewoon.length > 0 && (
         <>
-          <Text style={styles.sectionTitle}>{labels.luckCycle}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{labels.luckCycle}</Text>
+            <Text style={styles.sectionDeco}>大運</Text>
+          </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -377,24 +401,28 @@ export default function ChartScreen() {
               const isCurrent = i === currentDwIdx;
               const dwStemEl = STEM_ELEMENT[dw.pillar.stem];
               const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
+              const dwColor = ELEM_COLOR[dw.element];
               return (
                 <View
                   key={i}
                   style={[
                     styles.daewoonCard,
-                    { borderColor: isCurrent ? '#ffd700' : '#2d1854' },
-                    isCurrent && { backgroundColor: '#1e1040' },
+                    { borderColor: isCurrent ? T.semantic.gold : T.border.default },
+                    isCurrent && { backgroundColor: T.semantic.gold + '0d' },
                   ]}
                 >
+                  {/* Element accent top bar */}
+                  <View style={[styles.dwAccentBar, { backgroundColor: dwColor }]} />
+
                   {isCurrent && (
                     <View style={styles.nowBadge}>
                       <Text style={styles.nowBadgeText}>NOW</Text>
                     </View>
                   )}
-                  <Text style={[styles.dwAge, isCurrent && { color: '#ffd700' }]}>
+                  <Text style={[styles.dwAge, isCurrent && { color: T.semantic.gold }]}>
                     {dw.startAge}–{dw.startAge + 9}
                   </Text>
-                  <Text style={[styles.dwAgeSuffix, isCurrent && { color: '#ffd70088' }]}>
+                  <Text style={[styles.dwAgeSuffix, isCurrent && { color: T.semantic.gold + '88' }]}>
                     {labels.ageSuffix}
                   </Text>
                   <Text style={[styles.dwStem, { color: ELEM_COLOR[dwStemEl] }]}>
@@ -403,7 +431,7 @@ export default function ChartScreen() {
                   <Text style={[styles.dwBranch, { color: ELEM_COLOR[dwBranchEl] }]}>
                     {dw.pillar.branch}
                   </Text>
-                  <View style={[styles.dwDot, { backgroundColor: ELEM_COLOR[dw.element] }]} />
+                  <View style={[styles.dwDot, { backgroundColor: dwColor }]} />
                 </View>
               );
             })}
@@ -422,168 +450,173 @@ export default function ChartScreen() {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  // ── Container
-  container: { flex: 1, backgroundColor: '#0d0016' },
-  content: { padding: 20, paddingTop: 60 },
+  container: { flex: 1, backgroundColor: T.bg.base },
+  content: { padding: T.spacing[5], paddingTop: 60 },
 
-  // ── Empty state
+  // Empty state
   emptyContainer: {
     flex: 1,
-    backgroundColor: '#0d0016',
+    backgroundColor: T.bg.base,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: T.spacing[8],
   },
-  emptyIcon: { fontSize: 80, opacity: 0.15, marginBottom: 16 },
-  emptyText: { color: '#9d8fbe', fontSize: 15, textAlign: 'center', lineHeight: 24 },
+  emptyIcon: { fontSize: 80, opacity: 0.15, marginBottom: T.spacing[4] },
+  emptyText: { color: T.text.faint, fontSize: T.fontSize.md, textAlign: 'center', lineHeight: 24 },
 
-  // ── Header
-  title: { fontSize: 26, fontWeight: '800', color: '#fff', marginBottom: 2 },
-  subtitle: { fontSize: 13, color: '#9d8fbe', marginBottom: 16 },
+  // Header
+  title: { fontSize: T.fontSize['4xl'], fontWeight: '800', color: T.text.primary, marginBottom: 2, letterSpacing: -0.5 },
+  subtitle: { fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[4] },
 
-  // ── Day Master pill
-  dayMasterRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  dayMasterLabel: { color: '#9d8fbe', fontSize: 13, marginRight: 12, fontWeight: '600' },
+  // Day Master pill
+  dayMasterRow: { flexDirection: 'row', alignItems: 'center', marginBottom: T.spacing[6] },
+  dayMasterLabel: { color: T.text.faint, fontSize: T.fontSize.sm, marginRight: T.spacing[3], fontWeight: '600' },
   dayMasterPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1.5,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    flexDirection: 'row', alignItems: 'center',
+    borderRadius: T.radius.md, borderWidth: 1.5,
+    paddingHorizontal: T.spacing[4], paddingVertical: T.spacing[2],
   },
   dayMasterChar: { fontSize: 22, fontWeight: '800' },
-  dayMasterElem: { fontSize: 14, fontWeight: '600' },
+  dayMasterElem: { fontSize: T.fontSize.base, fontWeight: '600' },
 
-  // ── Pillar grid
-  pillarsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 32 },
+  // Pillar grid card
+  pillarsCard: {
+    backgroundColor: T.bg.card,
+    borderRadius: T.radius.xl,
+    padding: T.spacing[5],
+    marginBottom: T.spacing[8],
+    borderWidth: 1,
+    borderColor: T.border.default,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  pillarsCardDeco: {
+    position: 'absolute',
+    fontSize: 120,
+    fontWeight: '900',
+    color: T.primary.DEFAULT,
+    opacity: 0.05,
+    right: -10,
+    top: -10,
+  },
+  connectorLine: {
+    position: 'absolute',
+    top: '52%',
+    left: T.spacing[5],
+    right: T.spacing[5],
+    height: 1,
+    backgroundColor: T.border.subtle,
+  },
+  pillarsRow: { flexDirection: 'row', justifyContent: 'space-between' },
   pillar: { alignItems: 'center', flex: 1 },
   pillarLabel: {
-    fontSize: 10,
-    color: '#9d8fbe',
+    fontSize: T.fontSize.xs,
+    color: T.text.faint,
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: T.spacing[2],
     fontWeight: '600',
     letterSpacing: 0.3,
   },
 
   // 십신 badge
   shiShinBadge: {
-    borderRadius: 6,
-    borderWidth: 1,
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    marginBottom: 6,
-    minWidth: 44,
-    alignItems: 'center',
+    borderRadius: T.radius.sm, borderWidth: 1,
+    paddingHorizontal: 4, paddingVertical: 2,
+    marginBottom: T.spacing[2], minWidth: 44, alignItems: 'center',
   },
   shiShinText: {
-    fontSize: 9,
-    color: '#c4b5fd',
-    fontWeight: '700',
-    textAlign: 'center',
+    fontSize: 9, color: T.primary.lighter, fontWeight: '700', textAlign: 'center',
   },
 
   // Stem & Branch boxes
   stemBox: {
-    width: 54,
-    height: 54,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 6,
+    width: 54, height: 54,
+    borderRadius: T.radius.md, borderWidth: 1.5,
+    justifyContent: 'center', alignItems: 'center',
+    marginBottom: 2,
   },
   stemChar: { fontSize: 28, fontWeight: '800' },
-
+  connectorDot: { width: 5, height: 5, borderRadius: 3, marginVertical: 2 },
   branchBox: {
-    width: 54,
-    height: 54,
-    borderRadius: 12,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: 54, height: 54,
+    borderRadius: T.radius.md, borderWidth: 1,
+    justifyContent: 'center', alignItems: 'center',
     marginBottom: 4,
   },
   branchChar: { fontSize: 26, fontWeight: '700' },
   branchElem: { fontSize: 9, fontWeight: '600' },
 
-  // ── Section title
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-    marginBottom: 14,
-  },
+  // Section header
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: T.spacing[4] },
+  sectionTitle: { fontSize: T.fontSize.md, fontWeight: '700', color: T.text.primary },
+  sectionDeco: { color: T.primary.DEFAULT, fontSize: T.fontSize.base, fontWeight: '800', opacity: 0.5 },
 
-  // ── Element balance
-  elementSection: { marginBottom: 32 },
-  elementRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  elementLabel: { width: 82, fontSize: 12, fontWeight: '700' },
+  // Element balance
+  elementSection: { marginBottom: T.spacing[8] },
+  elementRow: { flexDirection: 'row', alignItems: 'center', marginBottom: T.spacing[3] },
+  elementLabelCol: { width: 52, alignItems: 'flex-start' },
+  elementKanji: { fontSize: T.fontSize.md, fontWeight: '800', lineHeight: 20 },
+  elementName: { fontSize: 9, fontWeight: '600', letterSpacing: 0.3 },
   barBg: {
     flex: 1,
-    height: 8,
-    backgroundColor: '#1e0a38',
-    borderRadius: 4,
-    marginHorizontal: 10,
+    height: 10,
+    backgroundColor: T.bg.input,
+    borderRadius: T.radius.sm,
+    marginHorizontal: T.spacing[3],
     flexDirection: 'row',
     overflow: 'hidden',
   },
-  barFill: { height: 8 },
+  barFill: { height: 10, borderRadius: T.radius.sm },
   elementScore: {
-    color: '#9d8fbe',
-    fontSize: 13,
-    fontWeight: '600',
-    width: 20,
-    textAlign: 'right',
+    fontSize: T.fontSize.sm, fontWeight: '700',
+    width: 20, textAlign: 'right',
   },
 
-  // ── 십신 table
+  // 십신 table
   table: {
-    marginBottom: 32,
-    borderRadius: 12,
+    marginBottom: T.spacing[8],
+    borderRadius: T.radius.md,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#2d1854',
+    borderColor: T.border.default,
   },
-  tableHeader: { backgroundColor: '#1a0a38' },
+  tableHeader: { backgroundColor: T.bg.input },
   tableRow: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e0a38',
-    paddingVertical: 10,
-    paddingHorizontal: 6,
+    borderBottomWidth: 1, borderBottomColor: T.bg.input,
+    paddingVertical: T.spacing[3], paddingHorizontal: 6,
     alignItems: 'center',
   },
-  tableRowDay: { backgroundColor: '#ffd70008' },
+  tableRowDay: { backgroundColor: T.semantic.gold + '08' },
   cell: { flex: 1, textAlign: 'center' },
   cellWide: { flex: 1.4 },
-  cellHeader: { fontSize: 10, fontWeight: '700', color: '#6b5b8f' },
-  cellText: { fontSize: 12, color: '#c4b5fd', textAlign: 'center' },
+  cellHeader: { fontSize: T.fontSize.xs, fontWeight: '700', color: T.text.disabled },
+  cellText: { fontSize: T.fontSize.sm, color: T.primary.lighter, textAlign: 'center' },
 
-  // ── 대운 timeline
-  daewoonScroll: { paddingBottom: 8, paddingRight: 20 },
+  // 대운 timeline
+  daewoonScroll: { paddingBottom: T.spacing[2], paddingRight: T.spacing[5], marginBottom: T.spacing[8] },
   daewoonCard: {
     width: 80,
-    minHeight: 130,
-    borderRadius: 14,
+    minHeight: 136,
+    borderRadius: T.radius.lg,
     borderWidth: 1.5,
-    padding: 10,
-    marginRight: 10,
+    paddingBottom: T.spacing[3],
+    marginRight: T.spacing[3],
     alignItems: 'center',
-    backgroundColor: '#130820',
+    backgroundColor: T.bg.card,
+    overflow: 'hidden',
   },
+  dwAccentBar: { width: '100%', height: 3, marginBottom: T.spacing[2] },
   nowBadge: {
-    backgroundColor: '#ffd700',
-    borderRadius: 4,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    backgroundColor: T.semantic.gold,
+    borderRadius: T.radius.sm,
+    paddingHorizontal: 5, paddingVertical: 2,
     marginBottom: 4,
   },
   nowBadgeText: { fontSize: 8, fontWeight: '900', color: '#000', letterSpacing: 0.5 },
-  dwAge: { fontSize: 12, fontWeight: '700', color: '#9d8fbe', textAlign: 'center' },
-  dwAgeSuffix: { fontSize: 9, color: '#6b5b8f', marginBottom: 6, textAlign: 'center' },
+  dwAge: { fontSize: T.fontSize.sm, fontWeight: '700', color: T.text.faint, textAlign: 'center' },
+  dwAgeSuffix: { fontSize: 9, color: T.text.disabled, marginBottom: T.spacing[2], textAlign: 'center' },
   dwStem: { fontSize: 28, fontWeight: '800', lineHeight: 34 },
   dwBranch: { fontSize: 22, fontWeight: '700', lineHeight: 28 },
-  dwDot: { width: 7, height: 7, borderRadius: 4, marginTop: 8 },
+  dwDot: { width: 7, height: 7, borderRadius: 4, marginTop: T.spacing[2] },
 });
