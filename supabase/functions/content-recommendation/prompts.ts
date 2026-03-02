@@ -28,7 +28,7 @@ export const FALLBACK: Record<FiveElement, ClaudeRecommendationOutput> = {
     books: [
       { title: 'The Hidden Life of Trees', description: 'Peter Wohlleben reveals how forests communicate — pure Wood-element wisdom.', tag: '🌲 Nature' },
       { title: 'Atomic Habits', description: 'Like a sapling, your Wood energy thrives on patient, consistent growth strategies.', tag: '📈 Growth' },
-      { title: 'Siddhartha', description: 'Herman Hesse's journey of seeking — resonates with Wood's endless drive for expansion.', tag: '🧘 Spiritual' },
+      { title: 'Siddhartha', description: 'Herman Hesse\'s journey of seeking — resonates with Wood\'s endless drive for expansion.', tag: '🧘 Spiritual' },
     ],
     travel: [
       { title: 'Arashiyama Bamboo Grove, Japan', description: 'Walking through towering bamboo channels pure Wood chi and spring energy.', tag: '🇯🇵 Asia' },
@@ -40,11 +40,11 @@ export const FALLBACK: Record<FiveElement, ClaudeRecommendationOutput> = {
     element: 'Fire',
     music: [
       { title: 'Afrobeat & Highlife Anthems', description: 'Rhythmic fire of West African beats matching your vibrant Fire day-master energy.', tag: '🔥 Afrobeat' },
-      { title: 'Flamenco Passion', description: 'Intense Spanish guitar and footwork channeling Fire's passion and expressiveness.', tag: '💃 Flamenco' },
-      { title: 'Epic Film Scores', description: 'Hans Zimmer's dramatic orchestration mirrors Fire's grand, sweeping ambition.', tag: '🎬 Cinematic' },
+      { title: 'Flamenco Passion', description: 'Intense Spanish guitar and footwork channeling Fire\'s passion and expressiveness.', tag: '💃 Flamenco' },
+      { title: 'Epic Film Scores', description: 'Hans Zimmer\'s dramatic orchestration mirrors Fire\'s grand, sweeping ambition.', tag: '🎬 Cinematic' },
     ],
     books: [
-      { title: 'The Alchemist', description: 'Paulo Coelho's luminous journey — Fire energy pursuing its Personal Legend with full heart.', tag: '✨ Journey' },
+      { title: 'The Alchemist', description: 'Paulo Coelho\'s luminous journey — Fire energy pursuing its Personal Legend with full heart.', tag: '✨ Journey' },
       { title: 'Steve Jobs', description: 'Walter Isaacson on creative fire — how passion transforms vision into revolution.', tag: '💡 Biography' },
       { title: 'Meditations by Marcus Aurelius', description: 'Fire tempered by wisdom — channel your intensity with Stoic clarity.', tag: '🏛️ Philosophy' },
     ],
@@ -57,14 +57,14 @@ export const FALLBACK: Record<FiveElement, ClaudeRecommendationOutput> = {
   Earth: {
     element: 'Earth',
     music: [
-      { title: 'Classical Piano Études', description: 'Structured, grounded compositions that resonate with Earth's stability and reliability.', tag: '🎹 Classical' },
+      { title: 'Classical Piano Études', description: 'Structured, grounded compositions that resonate with Earth\'s stability and reliability.', tag: '🎹 Classical' },
       { title: 'Bluegrass & Americana', description: 'Rooted in community and tradition — Earth energy in musical form.', tag: '🪕 Folk' },
-      { title: 'Gregorian & Tibetan Chants', description: 'Deep, centring vibrations that anchor Earth's nurturing, meditative nature.', tag: '🕊️ Sacred' },
+      { title: 'Gregorian & Tibetan Chants', description: 'Deep, centring vibrations that anchor Earth\'s nurturing, meditative nature.', tag: '🕊️ Sacred' },
     ],
     books: [
       { title: 'Braiding Sweetgrass', description: 'Robin Wall Kimmerer weaves Indigenous wisdom with botany — Earth nourishing all life.', tag: '🌾 Nature' },
       { title: 'The Art of Happiness', description: 'Dalai Lama on cultivating inner stability — Earth energy as a foundation for joy.', tag: '☮️ Wellbeing' },
-      { title: 'Sapiens', description: 'Yuval Harari grounds humanity's story in the Earth of shared history and culture.', tag: '🏛️ History' },
+      { title: 'Sapiens', description: 'Yuval Harari grounds humanity\'s story in the Earth of shared history and culture.', tag: '🏛️ History' },
     ],
     travel: [
       { title: 'Tuscany, Italy', description: 'Rolling golden hills, vineyards, and farm-to-table culture — Earth at its finest.', tag: '🇮🇹 Europe' },
@@ -75,32 +75,32 @@ export const FALLBACK: Record<FiveElement, ClaudeRecommendationOutput> = {
   Metal: {
     element: 'Metal',
     music: [
-      { title: 'Baroque Orchestral Works', description: 'Bach and Vivaldi's precise structures mirror Metal's love of clarity and perfection.', tag: '🎻 Baroque' },
-      { title: 'Post-Rock Instrumentals', description: 'Godspeed You! Black Emperor and Sigur Rós — Metal's sharp beauty made sonic.', tag: '🎸 Post-Rock' },
-      { title: 'Traditional Koto & Guqin', description: 'East Asian string instruments channeling Metal's cool, precise resonance.', tag: '🪗 Classical' },
+      { title: 'Baroque Orchestral Works', description: 'Bach and Vivaldi\'s precise structures mirror Metal\'s love of clarity and perfection.', tag: '🎻 Baroque' },
+      { title: 'Post-Rock Instrumentals', description: 'Godspeed You! Black Emperor and Sigur Rós — Metal\'s sharp beauty made sonic.', tag: '🎸 Post-Rock' },
+      { title: 'Traditional Koto & Guqin', description: 'East Asian string instruments channeling Metal\'s cool, precise resonance.', tag: '🪗 Classical' },
     ],
     books: [
-      { title: 'Thinking, Fast and Slow', description: 'Kahneman's precise analysis of the mind — Metal clarity applied to decision-making.', tag: '🧠 Psychology' },
-      { title: 'The Art of War', description: 'Sun Tzu's razor-sharp strategic thinking — the original Metal manual.', tag: '⚔️ Strategy' },
+      { title: 'Thinking, Fast and Slow', description: 'Kahneman\'s precise analysis of the mind — Metal clarity applied to decision-making.', tag: '🧠 Psychology' },
+      { title: 'The Art of War', description: 'Sun Tzu\'s razor-sharp strategic thinking — the original Metal manual.', tag: '⚔️ Strategy' },
       { title: 'Sapiens: A Graphic History', description: 'Crisp visual storytelling for Metal thinkers who value elegant, concise ideas.', tag: '📖 Graphic' },
     ],
     travel: [
       { title: 'Kyoto Zen Temples, Japan', description: 'Raked gravel gardens and precise stone placement — Metal aesthetics perfected.', tag: '⛩️ Japan' },
       { title: 'Swiss Alps, Switzerland', description: 'Crystalline air, precision engineering, and pristine peaks — pure Metal energy.', tag: '🏔️ Europe' },
-      { title: 'Patagonia, Argentina', description: 'Stark, majestic glaciers and sharp peaks — Metal's raw, unsentimental beauty.', tag: '🧊 Americas' },
+      { title: 'Patagonia, Argentina', description: 'Stark, majestic glaciers and sharp peaks — Metal\'s raw, unsentimental beauty.', tag: '🧊 Americas' },
     ],
   },
   Water: {
     element: 'Water',
     music: [
-      { title: 'Brian Eno Ambient Series', description: 'Flowing, immersive soundscapes that match Water's depth and adaptability.', tag: '🌊 Ambient' },
+      { title: 'Brian Eno Ambient Series', description: 'Flowing, immersive soundscapes that match Water\'s depth and adaptability.', tag: '🌊 Ambient' },
       { title: 'Blues & Soul Classics', description: 'Deep emotional currents — Water flowing through the wellspring of human feeling.', tag: '🎵 Blues' },
-      { title: 'Bossa Nova & Jazz Fusion', description: 'Fluid, improvisational music mirroring Water's effortless movement and intuition.', tag: '🌙 Bossa Nova' },
+      { title: 'Bossa Nova & Jazz Fusion', description: 'Fluid, improvisational music mirroring Water\'s effortless movement and intuition.', tag: '🌙 Bossa Nova' },
     ],
     books: [
-      { title: 'Tao Te Ching', description: 'Laozi's philosophy of wu-wei (effortless action) — pure Water wisdom from the source.', tag: '☯️ Taoist' },
-      { title: 'Moby Dick', description: 'Melville's oceanic epic — Water energy in its most vast and mysterious form.', tag: '🐋 Classic' },
-      { title: 'Man's Search for Meaning', description: 'Frankl's deep dive into the subconscious well — Water finding light in darkness.', tag: '🕯️ Philosophy' },
+      { title: 'Tao Te Ching', description: 'Laozi\'s philosophy of wu-wei (effortless action) — pure Water wisdom from the source.', tag: '☯️ Taoist' },
+      { title: 'Moby Dick', description: 'Melville\'s oceanic epic — Water energy in its most vast and mysterious form.', tag: '🐋 Classic' },
+      { title: 'Man\'s Search for Meaning', description: 'Frankl\'s deep dive into the subconscious well — Water finding light in darkness.', tag: '🕯️ Philosophy' },
     ],
     travel: [
       { title: 'Norwegian Fjords', description: 'Glacial water cutting through ancient mountains — the purest Water landscape on Earth.', tag: '🇳🇴 Europe' },
@@ -129,7 +129,7 @@ const SYSTEM_PROMPTS: Record<CulturalFrame, string> = {
 JSON形式のみで返答し、説明文は日本語で記述してください。`,
 
   en: `You are a Cosmic Blueprint life curator blending Eastern metaphysics with modern wellness.
-Analyze the user's Day Master element and Five Element balance to recommend music, books, and travel.
+Analyze the user\'s Day Master element and Five Element balance to recommend music, books, and travel.
 Use a personality-first, psychologically grounded approach (similar to MBTI but deeper).
 Return JSON only. Descriptions in English, warm and engaging tone.`,
 
@@ -139,7 +139,7 @@ Usa un tono apasionado y relatable, enfocado en relaciones, amor y experiencias 
 Responde solo en JSON. Las descripciones en español.`,
 
   in: `You are a Vedic Fusion life guide blending Jyotish wisdom with Ba Zi metaphysics.
-Analyze the user's Day Master element and Panchabhoota (Five Element) balance to recommend music, books, and travel.
+Analyze the user\'s Day Master element and Panchabhoota (Five Element) balance to recommend music, books, and travel.
 Use karma, dharma, and spiritual growth as lenses. References to Indian classical arts and sacred sites are welcome.
 Return JSON only. Descriptions in English with Sanskrit/Hindi terms where natural.`,
 };
