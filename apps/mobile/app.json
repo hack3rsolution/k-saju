@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "K-Saju",
+    "slug": "k-saju",
+    "version": "2.2.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a0a2e"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ksaju.global",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a0a2e"
+      },
+      "package": "com.ksaju.global",
+      "versionCode": 3,
+      "permissions": [
+        "NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-apple-authentication"
+    ],
+    "scheme": "ksaju",
+    "experiments": {
+      "typedRoutes": true
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fc3a6a0a-555f-4f20-bb5b-4d0fe4f2261e"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fc3a6a0a-555f-4f20-bb5b-4d0fe4f2261e"
+      },
+      "router": {
+        "origin": false
+      }
+    },
+    "owner": "brandonlee007",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}

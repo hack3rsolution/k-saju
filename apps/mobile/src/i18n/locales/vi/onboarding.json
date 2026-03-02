@@ -1,0 +1,35 @@
+{
+  "step": "Bước {{current}} / {{total}}",
+  "birthInput": {
+    "title": "Thông Tin Ngày Sinh",
+    "subtitle": "Chúng tôi dùng ngày và giờ sinh của bạn để tính Tứ Trụ (Saju).",
+    "birthDate": "Ngày Sinh",
+    "birthTime": "Giờ Sinh",
+    "birthTimeUnknown": "Tôi không biết giờ sinh của mình",
+    "gender": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "continue": "Tiếp tục"
+  },
+  "culturalFrame": {
+    "title": "Chọn Góc Nhìn Của Bạn",
+    "subtitle": "Cùng dữ liệu vũ trụ — cá nhân hóa theo văn hóa của bạn.",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 Hàn Quốc", "desc": "Luận giải Tứ Trụ truyền thống" },
+      "cn": { "label": "BaZi", "region": "🇨🇳 Trung Quốc", "desc": "Hệ thống BaZi cổ điển" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 Nhật Bản", "desc": "Luận giải số mệnh Nhật Bản" },
+      "en": { "label": "Cosmic Blueprint", "region": "🌏 Phương Tây", "desc": "Tập trung vào tính cách và con đường sống" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 Latinh", "desc": "Phong cách tử vi" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Nam Á", "desc": "Góc nhìn lấy cảm hứng từ Jyotish" }
+    },
+    "continue": "Tiếp tục"
+  },
+  "resultPreview": {
+    "title": "Xem Trước Lá Số Của Bạn",
+    "subtitle": "Đây là cái nhìn đầu tiên về bản đồ vũ trụ của bạn.",
+    "unlockTitle": "Mở Khóa Toàn Bộ Số Mệnh",
+    "unlockDesc": "Vận hàng ngày, hợp duyên, đại vận hàng năm và hơn thế nữa với Premium.",
+    "exploreFree": "Khám phá tính năng miễn phí",
+    "viewPremium": "Xem gói Premium"
+  }
+}

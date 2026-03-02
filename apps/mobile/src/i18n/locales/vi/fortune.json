@@ -1,0 +1,24 @@
+{
+  "title": "Vận Số",
+  "subtitle": "Luận Giải · Đại Vận · Thời Điểm Vũ Trụ",
+  "types": {
+    "daily": "Vận Hàng Ngày",
+    "weekly": "Vận Hàng Tuần",
+    "monthly": "Vận Hàng Tháng",
+    "annual": "Vận Hàng Năm",
+    "daewoon": "Đại Vận"
+  },
+  "freeLimit": "Còn {{remaining}} lần xem miễn phí trong tuần này",
+  "freeLimitExhausted": "Hết lượt xem miễn phí trong tuần này",
+  "luckyItems": {
+    "title": "Vật Phẩm May Mắn",
+    "color": "Màu May Mắn",
+    "number": "Số May Mắn",
+    "direction": "Hướng May Mắn",
+    "food": "Thực Phẩm Gợi Ý"
+  },
+  "refresh": "Làm Mới",
+  "share": "Chia Sẻ",
+  "premiumRequired": "Chỉ Dành Cho Premium",
+  "unlockReading": "Mở Khóa Tất Cả Luận Giải"
+}

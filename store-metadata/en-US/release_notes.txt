@@ -1,0 +1,10 @@
+Initial release of K-Saju Global.
+
+• Full Four Pillars (사주팔자) chart calculation
+• Daily, weekly, monthly, and annual fortune readings powered by AI
+• Six cultural lenses: Korean, Chinese, Japanese, English, Spanish, South Asian
+• Ten-year luck cycle (대운) analysis
+• Compatibility and add-on reports
+• Supabase-powered magic link + social sign-in
+• Daily push notification reminders
+• Available in 10 languages

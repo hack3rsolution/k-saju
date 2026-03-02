@@ -1,0 +1,30 @@
+{
+  "title": "Tứ Trụ Của Tôi",
+  "subtitle": "Bản Đồ Vũ Trụ · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Trụ\nNăm",
+    "month": "Trụ\nTháng",
+    "day": "Trụ\nNgày",
+    "hour": "Trụ\nGiờ",
+    "hourUnknown": "Giờ\nKhông Rõ"
+  },
+  "stem": "Thiên Can",
+  "branch": "Địa Chi",
+  "dayStem": "Nhật Can (Bản Thân)",
+  "elementBalance": "Cân Bằng Ngũ Hành",
+  "daewoon": "Đại Vận",
+  "daewoonPeriod": "Tuổi {{age}}+",
+  "shishin": {
+    "title": "Thập Thần",
+    "비견": "Tỷ Kiên",
+    "겁재": "Kiếp Tài",
+    "식신": "Thực Thần",
+    "상관": "Thương Quan",
+    "편재": "Thiên Tài",
+    "정재": "Chính Tài",
+    "편관": "Thiên Quan",
+    "정관": "Chính Quan",
+    "편인": "Thiên Ấn",
+    "정인": "Chính Ấn"
+  }
+}

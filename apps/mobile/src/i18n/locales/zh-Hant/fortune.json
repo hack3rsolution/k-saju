@@ -1,0 +1,24 @@
+{
+  "title": "運勢",
+  "subtitle": "流年 · 大運 · 命運週期",
+  "types": {
+    "daily": "今日運勢",
+    "weekly": "本週運勢",
+    "monthly": "本月運勢",
+    "annual": "流年運勢",
+    "daewoon": "大運分析"
+  },
+  "freeLimit": "本週剩餘免費次數：{{remaining}}",
+  "freeLimitExhausted": "本週免費次數已用完",
+  "luckyItems": {
+    "title": "今日吉祥物",
+    "color": "幸運顏色",
+    "number": "幸運數字",
+    "direction": "吉利方位",
+    "food": "推薦食物"
+  },
+  "refresh": "重新整理",
+  "share": "分享",
+  "premiumRequired": "高級版專屬",
+  "unlockReading": "解鎖全部運勢"
+}

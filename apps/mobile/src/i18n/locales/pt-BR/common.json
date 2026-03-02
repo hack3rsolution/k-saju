@@ -1,0 +1,32 @@
+{
+  "appName": "K-Saju",
+  "loading": "Carregando…",
+  "error": "Algo deu errado",
+  "retry": "Tentar Novamente",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "save": "Salvar",
+  "back": "Voltar",
+  "next": "Próximo",
+  "close": "Fechar",
+  "signIn": "Entrar",
+  "signOut": "Sair",
+  "upgrade": "Melhorar",
+  "free": "Grátis",
+  "premium": "Premium",
+  "locked": "Bloqueado",
+  "today": "Hoje",
+  "week": "Esta Semana",
+  "month": "Este Mês",
+  "year": "Este Ano",
+  "elements": {
+    "Wood": "Madeira",
+    "Fire": "Fogo",
+    "Earth": "Terra",
+    "Metal": "Metal",
+    "Water": "Água"
+  },
+  "fiveElements": "Cinco Elementos",
+  "yin": "Yin",
+  "yang": "Yang"
+}

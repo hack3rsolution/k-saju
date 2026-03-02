@@ -1,0 +1,24 @@
+{
+  "title": "Keberuntungan",
+  "subtitle": "Pembacaan · Siklus Keberuntungan · Waktu Kosmik",
+  "types": {
+    "daily": "Keberuntungan Harian",
+    "weekly": "Keberuntungan Mingguan",
+    "monthly": "Keberuntungan Bulanan",
+    "annual": "Keberuntungan Tahunan",
+    "daewoon": "Siklus Keberuntungan Utama"
+  },
+  "freeLimit": "{{remaining}} pembacaan gratis tersisa minggu ini",
+  "freeLimitExhausted": "Tidak ada pembacaan gratis tersisa minggu ini",
+  "luckyItems": {
+    "title": "Item Keberuntungan",
+    "color": "Warna Keberuntungan",
+    "number": "Angka Keberuntungan",
+    "direction": "Arah Keberuntungan",
+    "food": "Makanan yang Disarankan"
+  },
+  "refresh": "Segarkan",
+  "share": "Bagikan",
+  "premiumRequired": "Khusus Premium",
+  "unlockReading": "Buka Semua Pembacaan"
+}

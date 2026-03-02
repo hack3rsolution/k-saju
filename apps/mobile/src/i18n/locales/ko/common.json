@@ -1,0 +1,32 @@
+{
+  "appName": "K-Saju",
+  "loading": "로딩 중…",
+  "error": "오류가 발생했습니다",
+  "retry": "다시 시도",
+  "cancel": "취소",
+  "confirm": "확인",
+  "save": "저장",
+  "back": "뒤로",
+  "next": "다음",
+  "close": "닫기",
+  "signIn": "로그인",
+  "signOut": "로그아웃",
+  "upgrade": "업그레이드",
+  "free": "무료",
+  "premium": "프리미엄",
+  "locked": "잠김",
+  "today": "오늘",
+  "week": "이번 주",
+  "month": "이번 달",
+  "year": "올해",
+  "elements": {
+    "Wood": "木 목",
+    "Fire": "火 화",
+    "Earth": "土 토",
+    "Metal": "金 금",
+    "Water": "水 수"
+  },
+  "fiveElements": "오행",
+  "yin": "음",
+  "yang": "양"
+}

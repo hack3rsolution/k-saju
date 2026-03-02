@@ -1,0 +1,35 @@
+{
+  "step": "第 {{current}} / {{total}} 步",
+  "birthInput": {
+    "title": "輸入出生資訊",
+    "subtitle": "我們需要您的出生日期和時間來計算四柱八字。",
+    "birthDate": "出生日期",
+    "birthTime": "出生時間",
+    "birthTimeUnknown": "不知道出生時間",
+    "gender": "性別",
+    "male": "男",
+    "female": "女",
+    "continue": "繼續"
+  },
+  "culturalFrame": {
+    "title": "選擇您的視角",
+    "subtitle": "相同的命理數據，不同的文化詮釋。",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 韓國", "desc": "韓國傳統四柱命理" },
+      "cn": { "label": "四柱推命", "region": "🇨🇳 中國", "desc": "BaZi 經典體系" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 日本", "desc": "日本命運解讀" },
+      "en": { "label": "Cosmic Blueprint", "region": "🌏 西方", "desc": "性格與人生道路" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 拉丁", "desc": "星座風格解讀" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 南亞", "desc": "吠陀啟發視角" }
+    },
+    "continue": "選擇完成"
+  },
+  "resultPreview": {
+    "title": "命盤預覽",
+    "subtitle": "您的宇宙命運藍圖一瞥。",
+    "unlockTitle": "解鎖完整分析",
+    "unlockDesc": "透過高級版查看日運、合婚、年運和大運分析。",
+    "exploreFree": "探索免費功能",
+    "viewPremium": "查看高級方案"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Buka Takdir Penuh Anda",
+  "subtitle": "Premium memberi Anda akses tak terbatas ke setiap pembacaan, laporan, dan wawasan kosmik.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Bulanan",
+      "price": "$8.99",
+      "period": "/bulan",
+      "cta": "Dapatkan Bulanan"
+    },
+    "annual": {
+      "name": "Premium Tahunan",
+      "price": "$59.99",
+      "period": "/tahun",
+      "badge": "Nilai Terbaik · Hemat 44%",
+      "cta": "Dapatkan Tahunan"
+    }
+  },
+  "addons": {
+    "title": "Tambahan (sekali bayar)",
+    "deep_compatibility": "Laporan Kecocokan Mendalam",
+    "career_wealth": "Laporan Karier & Kekayaan",
+    "daewoon_report_pdf": "Laporan Siklus Keberuntungan Penuh (PDF)",
+    "name_analysis": "Analisis Nama"
+  },
+  "legal": "Pembayaran ditagihkan ke akun App Store/Google Play Anda. Batalkan kapan saja. Harga dapat berbeda per wilayah.",
+  "restore": "Pulihkan Pembelian",
+  "features": {
+    "unlimited_daily": "Pembacaan harian & mingguan tak terbatas",
+    "monthly_annual": "Keberuntungan bulanan & tahunan",
+    "daewoon": "Analisis Siklus Keberuntungan Utama (10 tahun)",
+    "compatibility": "Laporan kecocokan",
+    "all_frames": "Semua 6 gaya bingkai budaya",
+    "priority_ai": "Pembacaan AI prioritas",
+    "early_access": "Akses awal ke fitur baru"
+  }
+}

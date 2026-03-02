@@ -1,0 +1,12 @@
+{
+  "title": "運勢",
+  "subtitle": "流年 · 大運 · 運命サイクル",
+  "types": { "daily": "今日の運勢", "weekly": "今週の運勢", "monthly": "今月の運勢", "annual": "今年の運勢", "daewoon": "大運分析" },
+  "freeLimit": "今週の無料残り回数：{{remaining}}",
+  "freeLimitExhausted": "今週の無料回数を使い切りました",
+  "luckyItems": { "title": "本日の開運アイテム", "color": "ラッキーカラー", "number": "ラッキーナンバー", "direction": "吉方位", "food": "おすすめ食材" },
+  "refresh": "更新",
+  "share": "シェア",
+  "premiumRequired": "プレミアム限定",
+  "unlockReading": "全運勢を解放"
+}

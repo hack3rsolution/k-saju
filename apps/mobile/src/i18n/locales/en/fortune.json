@@ -1,0 +1,24 @@
+{
+  "title": "Fortune",
+  "subtitle": "Readings · Luck Cycles · Cosmic Timing",
+  "types": {
+    "daily": "Daily Fortune",
+    "weekly": "Weekly Fortune",
+    "monthly": "Monthly Fortune",
+    "annual": "Annual Fortune",
+    "daewoon": "Major Luck Cycle"
+  },
+  "freeLimit": "{{remaining}} free reading(s) left this week",
+  "freeLimitExhausted": "No free readings left this week",
+  "luckyItems": {
+    "title": "Lucky Items",
+    "color": "Lucky Color",
+    "number": "Lucky Number",
+    "direction": "Lucky Direction",
+    "food": "Recommended Food"
+  },
+  "refresh": "Refresh",
+  "share": "Share",
+  "premiumRequired": "Premium Only",
+  "unlockReading": "Unlock All Readings"
+}

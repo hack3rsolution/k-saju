@@ -1,0 +1,30 @@
+{
+  "title": "Mis Cuatro Pilares",
+  "subtitle": "Plano Cósmico · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Pilar\nAño",
+    "month": "Pilar\nMes",
+    "day": "Pilar\nDía",
+    "hour": "Pilar\nHora",
+    "hourUnknown": "Hora\nDesconocida"
+  },
+  "stem": "Tallo Celestial",
+  "branch": "Rama Terrestre",
+  "dayStem": "Tallo del Día (Yo)",
+  "elementBalance": "Equilibrio de los Cinco Elementos",
+  "daewoon": "Ciclo de Suerte Mayor",
+  "daewoonPeriod": "Edad {{age}}+",
+  "shishin": {
+    "title": "Diez Dioses",
+    "비견": "Compañero",
+    "겁재": "Riqueza Robada",
+    "식신": "Dios Comedor",
+    "상관": "Oficial Heridor",
+    "편재": "Riqueza Indirecta",
+    "정재": "Riqueza Directa",
+    "편관": "Siete Muertes",
+    "정관": "Oficial Directo",
+    "편인": "Recurso Indirecto",
+    "정인": "Recurso Directo"
+  }
+}

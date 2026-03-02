@@ -1,0 +1,32 @@
+{
+  "appName": "K-Saju",
+  "loading": "載入中…",
+  "error": "發生錯誤",
+  "retry": "重試",
+  "cancel": "取消",
+  "confirm": "確認",
+  "save": "儲存",
+  "back": "返回",
+  "next": "下一步",
+  "close": "關閉",
+  "signIn": "登入",
+  "signOut": "登出",
+  "upgrade": "升級",
+  "free": "免費",
+  "premium": "高級版",
+  "locked": "已鎖定",
+  "today": "今天",
+  "week": "本週",
+  "month": "本月",
+  "year": "今年",
+  "elements": {
+    "Wood": "木",
+    "Fire": "火",
+    "Earth": "土",
+    "Metal": "金",
+    "Water": "水"
+  },
+  "fiveElements": "五行",
+  "yin": "陰",
+  "yang": "陽"
+}

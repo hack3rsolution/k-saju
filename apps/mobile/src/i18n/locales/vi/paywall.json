@@ -1,0 +1,37 @@
+{
+  "title": "Mở Khóa Toàn Bộ Số Mệnh",
+  "subtitle": "Premium cho bạn truy cập không giới hạn mọi luận giải, báo cáo và thông tin vũ trụ.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Hàng Tháng",
+      "price": "$8.99",
+      "period": "/tháng",
+      "cta": "Đăng Ký Tháng"
+    },
+    "annual": {
+      "name": "Premium Hàng Năm",
+      "price": "$59.99",
+      "period": "/năm",
+      "badge": "Giá Trị Nhất · Tiết Kiệm 44%",
+      "cta": "Đăng Ký Năm"
+    }
+  },
+  "addons": {
+    "title": "Tiện Ích Bổ Sung (một lần)",
+    "deep_compatibility": "Báo Cáo Hợp Duyên Chuyên Sâu",
+    "career_wealth": "Báo Cáo Sự Nghiệp & Tài Lộc",
+    "daewoon_report_pdf": "Báo Cáo Đại Vận Đầy Đủ (PDF)",
+    "name_analysis": "Phân Tích Tên"
+  },
+  "legal": "Thanh toán được tính vào tài khoản App Store/Google Play của bạn. Hủy bất cứ lúc nào. Giá có thể thay đổi theo khu vực.",
+  "restore": "Khôi Phục Giao Dịch",
+  "features": {
+    "unlimited_daily": "Luận giải ngày & tuần không giới hạn",
+    "monthly_annual": "Vận tháng & năm",
+    "daewoon": "Phân tích Đại Vận (10 năm)",
+    "compatibility": "Báo cáo hợp duyên",
+    "all_frames": "Tất cả 6 phong cách văn hóa",
+    "priority_ai": "Luận giải AI ưu tiên",
+    "early_access": "Truy cập sớm tính năng mới"
+  }
+}

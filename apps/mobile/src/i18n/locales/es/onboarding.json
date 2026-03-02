@@ -1,0 +1,35 @@
+{
+  "step": "Paso {{current}} de {{total}}",
+  "birthInput": {
+    "title": "Tu Fecha de Nacimiento",
+    "subtitle": "Usamos tu fecha y hora de nacimiento para calcular tus Cuatro Pilares (Saju).",
+    "birthDate": "Fecha de Nacimiento",
+    "birthTime": "Hora de Nacimiento",
+    "birthTimeUnknown": "No sé mi hora de nacimiento",
+    "gender": "Género",
+    "male": "Masculino",
+    "female": "Femenino",
+    "continue": "Continuar"
+  },
+  "culturalFrame": {
+    "title": "Elige Tu Perspectiva",
+    "subtitle": "Los mismos datos cósmicos — personalizados a tu contexto cultural.",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 Coreano", "desc": "Lectura tradicional de los Cuatro Pilares" },
+      "cn": { "label": "BaZi", "region": "🇨🇳 Chino", "desc": "Sistema clásico BaZi" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 Japonés", "desc": "Lectura del destino japonesa" },
+      "en": { "label": "Cosmic Blueprint", "region": "🌏 Occidental", "desc": "Enfoque en personalidad y camino de vida" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 Latino", "desc": "Estilo de horóscopo" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Sur de Asia", "desc": "Perspectiva inspirada en Jyotish" }
+    },
+    "continue": "Continuar"
+  },
+  "resultPreview": {
+    "title": "Vista Previa de Tu Carta",
+    "subtitle": "Aquí tienes un vistazo de tu plano cósmico.",
+    "unlockTitle": "Desbloquea Tu Destino Completo",
+    "unlockDesc": "Fortuna diaria, compatibilidad, ciclo de suerte anual y más con Premium.",
+    "exploreFree": "Explorar funciones gratuitas",
+    "viewPremium": "Ver planes Premium"
+  }
+}
