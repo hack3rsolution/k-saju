@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Alice Kim",
+    "company": "K-Saju",
+    "email": "alice@example.com",
+    "phone": "010-0000-0001",
+    "website": "alice.dev"
+  },
+  {
+    "id": "2",
+    "name": "Bob Lee",
+    "company": "K-Saju",
+    "email": "bob@example.com",
+    "phone": "010-0000-0002",
+    "website": "bob.dev"
+  }
+]

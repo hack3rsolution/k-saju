@@ -103,3 +103,4 @@ Thumbs.db
 # Expo
 .expo/
 dist/
+.vercel
