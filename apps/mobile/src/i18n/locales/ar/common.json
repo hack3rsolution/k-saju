@@ -28,5 +28,14 @@
   },
   "fiveElements": "العناصر الخمسة",
   "yin": "يين",
-  "yang": "يانغ"
+  "yang": "يانغ",
+  "greeting": { "morning": "صباح الخير", "afternoon": "مساء الخير", "evening": "مساء الخير", "night": "تصبح على خير" },
+  "explore": "استكشاف",
+  "compatibility": "التوافق",
+  "analyzeNow": "تحليل الآن",
+  "restorePurchases": "استعادة المشتريات",
+  "rerunOnboarding": "إعادة التأهيل",
+  "dailyNotification": "الإشعار اليومي",
+  "comingSoon": "قريباً",
+  "serviceError": "حدثت مشكلة مؤقتة. يرجى المحاولة مرة أخرى قريباً."
 }

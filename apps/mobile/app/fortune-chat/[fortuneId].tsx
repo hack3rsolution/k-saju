@@ -187,7 +187,7 @@ export default function FortuneChatScreen() {
     })(),
   };
 
-  const { isPremium } = useEntitlementStore();
+  useEntitlementStore();
   const { messages, streaming, error, rateLimited, premiumRequired, sendMessage } =
     useFortunChat(fortuneId, todayReading);
 

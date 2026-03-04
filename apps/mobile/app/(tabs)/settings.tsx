@@ -241,7 +241,7 @@ export default function SettingsScreen() {
           <Text style={styles.sectionLabel}>About</Text>
           <View style={styles.row}>
             <Text style={styles.rowText}>Version</Text>
-            <Text style={styles.rowValue}>{Constants.expoConfig?.version ?? '2.2.0'}</Text>
+            <Text style={styles.rowValue}>{Constants.expoConfig?.version ?? '2.3.0'}</Text>
           </View>
         </View>
 

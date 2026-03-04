@@ -16,7 +16,6 @@ export function useAuthGuard() {
       setSession(s);
     });
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Redirect based on auth + onboarding state

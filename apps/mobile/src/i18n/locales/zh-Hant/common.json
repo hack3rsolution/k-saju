@@ -28,5 +28,14 @@
   },
   "fiveElements": "五行",
   "yin": "陰",
-  "yang": "陽"
+  "yang": "陽",
+  "greeting": { "morning": "早上好", "afternoon": "下午好", "evening": "晚上好", "night": "晚安" },
+  "explore": "探索",
+  "compatibility": "合婚",
+  "analyzeNow": "立即分析",
+  "restorePurchases": "恢復購買",
+  "rerunOnboarding": "重新引導",
+  "dailyNotification": "每日通知",
+  "comingSoon": "即將推出",
+  "serviceError": "服務暫時出現問題，請稍後再試。"
 }

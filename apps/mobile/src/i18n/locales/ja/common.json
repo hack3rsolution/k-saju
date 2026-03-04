@@ -22,5 +22,14 @@
   "elements": { "Wood": "木", "Fire": "火", "Earth": "土", "Metal": "金", "Water": "水" },
   "fiveElements": "五行",
   "yin": "陰",
-  "yang": "陽"
+  "yang": "陽",
+  "greeting": { "morning": "おはようございます", "afternoon": "こんにちは", "evening": "こんばんは", "night": "おやすみなさい" },
+  "explore": "探索",
+  "compatibility": "相性",
+  "analyzeNow": "今すぐ分析",
+  "restorePurchases": "購入を復元",
+  "rerunOnboarding": "オンボーディングをやり直す",
+  "dailyNotification": "毎日の通知",
+  "comingSoon": "近日公開",
+  "serviceError": "一時的な問題が発生しました。しばらくしてからもう一度お試しください。"
 }

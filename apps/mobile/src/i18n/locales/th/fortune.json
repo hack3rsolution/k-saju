@@ -20,5 +20,28 @@
   "refresh": "รีเฟรช",
   "share": "แชร์",
   "premiumRequired": "เฉพาะ Premium",
-  "unlockReading": "ปลดล็อกการอ่านทั้งหมด"
+  "unlockReading": "ปลดล็อกการอ่านทั้งหมด",
+  "todaysFortune": "ดวงวันนี้ · 日運",
+  "annualReport": "รายงานประจำปี",
+  "myChart": "ดวงชะตาของฉัน",
+  "wasHelpful": "มีประโยชน์ไหม?",
+  "feedbackThanks": "✨ ขอบคุณ! ความคิดเห็นของคุณช่วยให้เราพัฒนา",
+  "askMore": "ถามเพิ่มเติม",
+  "freeChatBadge": "แชทฟรีวันนี้ {{count}} ครั้ง",
+  "chatLimitTitle": "ใช้แชทฟรีหมดแล้ววันนี้",
+  "chatLimitSub": "ปลดล็อคแบบไม่จำกัด — ฿349/เดือน",
+  "weeklyReadingUsed": "ใช้การทำนายรายสัปดาห์แล้ว",
+  "weeklyReadingUsedDesc": "คุณใช้การทำนายฟรีประจำสัปดาห์แล้ว อัพเกรดเป็น Premium เพื่อการทำนายรายวันไม่จำกัด",
+  "weeklyFreeAvailable": "🎁 มีการทำนายฟรี 1 ครั้งสัปดาห์นี้",
+  "upgradeToPremium": "อัพเกรดเป็น Premium →",
+  "shareCard": "แชร์การ์ดของคุณ",
+  "shareCardSubtitle": "จับภาพและแชร์ชะตากรรมแห่งจักรวาล",
+  "shareAsImage": "แชร์เป็นรูปภาพ",
+  "elementDay": {
+    "木": "วันไม้",
+    "火": "วันไฟ",
+    "土": "วันดิน",
+    "金": "วันโลหะ",
+    "水": "วันน้ำ"
+  }
 }

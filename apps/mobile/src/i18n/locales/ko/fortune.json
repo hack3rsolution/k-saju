@@ -20,5 +20,48 @@
   "refresh": "새로고침",
   "share": "공유하기",
   "premiumRequired": "프리미엄 전용",
-  "unlockReading": "전체 운세 열람"
+  "unlockReading": "전체 운세 열람",
+  "todaysFortune": "오늘의 운세 · 日運",
+  "annualReport": "연간 리포트",
+  "journal": {
+    "title": "인생 일지",
+    "subtitle": "인생 이벤트 · 命運流",
+    "addEvent": "인생 이벤트 추가",
+    "recordPlaceholder": "인생의 주요 순간을 기록하세요",
+    "noEvents": "아직 기록된 이벤트가 없습니다",
+    "saveEvent": "저장",
+    "savedToast": "이벤트가 저장되었습니다",
+    "aiAnalysis": "AI 패턴 분석",
+    "aiAnalysisDesc": "사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요"
+  },
+  "compatibility": {
+    "title": "궁합",
+    "subtitle": "궁합 · 合婚 · 관계 조화",
+    "partnerBirthDate": "파트너 생년월일",
+    "checkBtn": "궁합 확인하기",
+    "generateReport": "전체 리포트 생성",
+    "analyzeAnother": "다른 사람 분석하기",
+    "fullReport": "Full AI 리포트"
+  },
+  "myChart": "내 사주",
+  "wasHelpful": "도움이 됐나요?",
+  "feedbackThanks": "✨ 감사합니다! 더 나은 서비스를 위해 노력할게요.",
+  "askMore": "더 물어보기",
+  "freeChatBadge": "오늘 무료 채팅 {{count}}회",
+  "chatLimitTitle": "오늘 무료 채팅을 모두 사용했어요",
+  "chatLimitSub": "무제한 이용 — ₩12,900/월",
+  "weeklyReadingUsed": "이번 주 무료 열람 사용",
+  "weeklyReadingUsedDesc": "이번 주 무료 운세를 모두 사용했습니다. 프리미엄으로 업그레이드하면 매일 무제한 열람이 가능합니다.",
+  "weeklyFreeAvailable": "🎁 이번 주 무료 열람 1회 남음",
+  "upgradeToPremium": "프리미엄 업그레이드 →",
+  "shareCard": "카드 공유하기",
+  "shareCardSubtitle": "나의 사주 운명을 공유해보세요",
+  "shareAsImage": "이미지로 공유",
+  "elementDay": {
+    "木": "목(木)일",
+    "火": "화(火)일",
+    "土": "토(土)일",
+    "金": "금(金)일",
+    "水": "수(水)일"
+  }
 }

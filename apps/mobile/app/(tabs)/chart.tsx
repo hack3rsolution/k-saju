@@ -8,12 +8,12 @@
  *  - 대운 (Major Luck Cycle) horizontal timeline — current period highlighted
  */
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
 import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
 import { T } from '../../src/theme/tokens';
 import type {
-  CulturalFrame,
   FiveElement,
   Stem,
   Branch,
@@ -24,126 +24,9 @@ import type {
 
 const ELEM_COLOR: Record<FiveElement, string> = T.element;
 
-const ELEM_EN: Record<FiveElement, string> = {
+// Maps FiveElement kanji → common:elements key
+const ELEM_KEY: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
-};
-
-// ── Cultural frame label sets ─────────────────────────────────────────────────
-
-interface FrameLabels {
-  title: string;
-  subtitle: string;
-  yearPillar: string;
-  monthPillar: string;
-  dayPillar: string;
-  hourPillar: string;
-  dayMaster: string;
-  tenGods: string;
-  luckCycle: string;
-  elementBalance: string;
-  ageSuffix: string;
-  stemLabel: string;
-  branchLabel: string;
-  noChart: string;
-}
-
-const FRAME_LABELS: Record<CulturalFrame, FrameLabels> = {
-  kr: {
-    title: '사주팔자',
-    subtitle: '나의 운명의 지도',
-    yearPillar: '연주',
-    monthPillar: '월주',
-    dayPillar: '일주',
-    hourPillar: '시주',
-    dayMaster: '일간',
-    tenGods: '십신 (十神)',
-    luckCycle: '대운 (大運)',
-    elementBalance: '오행 균형',
-    ageSuffix: '세',
-    stemLabel: '천간',
-    branchLabel: '지지',
-    noChart: '온보딩을 완료하면 사주팔자를 볼 수 있습니다.',
-  },
-  cn: {
-    title: '四柱八字 · BaZi',
-    subtitle: '命運地圖',
-    yearPillar: '年柱',
-    monthPillar: '月柱',
-    dayPillar: '日柱',
-    hourPillar: '時柱',
-    dayMaster: '日主',
-    tenGods: '十神',
-    luckCycle: '大運',
-    elementBalance: '五行平衡',
-    ageSuffix: '歲',
-    stemLabel: '天干',
-    branchLabel: '地支',
-    noChart: 'Complete onboarding to view your BaZi chart.',
-  },
-  jp: {
-    title: '四柱推命',
-    subtitle: '命の地図',
-    yearPillar: '年柱',
-    monthPillar: '月柱',
-    dayPillar: '日柱',
-    hourPillar: '時柱',
-    dayMaster: '日干',
-    tenGods: '十神',
-    luckCycle: '大運',
-    elementBalance: '五行バランス',
-    ageSuffix: '歳',
-    stemLabel: '天干',
-    branchLabel: '地支',
-    noChart: 'オンボーディングを完了してチャートを表示してください。',
-  },
-  en: {
-    title: 'Cosmic Blueprint',
-    subtitle: 'Your Destiny Map',
-    yearPillar: 'Year',
-    monthPillar: 'Month',
-    dayPillar: 'Day',
-    hourPillar: 'Hour',
-    dayMaster: 'Day Master',
-    tenGods: 'Ten Gods',
-    luckCycle: 'Major Luck Cycle',
-    elementBalance: 'Element Balance',
-    ageSuffix: 'yrs',
-    stemLabel: 'Stem',
-    branchLabel: 'Branch',
-    noChart: 'Complete onboarding to view your Cosmic Blueprint.',
-  },
-  es: {
-    title: 'Destino Cósmico',
-    subtitle: 'Tu Mapa del Destino',
-    yearPillar: 'Año',
-    monthPillar: 'Mes',
-    dayPillar: 'Día',
-    hourPillar: 'Hora',
-    dayMaster: 'Maestro del Día',
-    tenGods: 'Diez Dioses',
-    luckCycle: 'Ciclo de Suerte Mayor',
-    elementBalance: 'Balance Elemental',
-    ageSuffix: 'años',
-    stemLabel: 'Tallo',
-    branchLabel: 'Rama',
-    noChart: 'Completa el onboarding para ver tu carta.',
-  },
-  in: {
-    title: 'Vedic Fusion',
-    subtitle: 'Your Cosmic Map',
-    yearPillar: 'Year',
-    monthPillar: 'Month',
-    dayPillar: 'Day',
-    hourPillar: 'Hour',
-    dayMaster: 'Day Master',
-    tenGods: 'Ten Deities',
-    luckCycle: 'Mahadasha Cycle',
-    elementBalance: 'Panchabhoota Balance',
-    ageSuffix: 'yrs',
-    stemLabel: 'Stem',
-    branchLabel: 'Branch',
-    noChart: 'Complete onboarding to view your Vedic chart.',
-  },
 };
 
 // ── Pillar row data ───────────────────────────────────────────────────────────
@@ -160,14 +43,14 @@ interface PillarInfo {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ChartScreen() {
+  const { t } = useTranslation(['chart', 'common']);
   const { chart, daewoon, frame, birthData } = useSajuStore();
-  const labels = FRAME_LABELS[frame ?? 'en'];
 
   if (!chart) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyIcon}>命</Text>
-        <Text style={styles.emptyText}>{labels.noChart}</Text>
+        <Text style={styles.emptyText}>{t('chart:noChart')}</Text>
       </View>
     );
   }
@@ -187,7 +70,7 @@ export default function ChartScreen() {
   const pillarList: PillarInfo[] = [
     {
       key: 'year',
-      label: labels.yearPillar,
+      label: t('chart:pillars.year'),
       stem: pillars.year.stem,
       branch: pillars.year.branch,
       shiShin: getShiShin(dayStem, pillars.year.stem),
@@ -195,7 +78,7 @@ export default function ChartScreen() {
     },
     {
       key: 'month',
-      label: labels.monthPillar,
+      label: t('chart:pillars.month'),
       stem: pillars.month.stem,
       branch: pillars.month.branch,
       shiShin: getShiShin(dayStem, pillars.month.stem),
@@ -203,7 +86,7 @@ export default function ChartScreen() {
     },
     {
       key: 'day',
-      label: labels.dayPillar,
+      label: t('chart:pillars.day'),
       stem: pillars.day.stem,
       branch: pillars.day.branch,
       shiShin: null,
@@ -214,7 +97,7 @@ export default function ChartScreen() {
   if (pillars.hour) {
     pillarList.push({
       key: 'hour',
-      label: labels.hourPillar,
+      label: t('chart:pillars.hour'),
       stem: pillars.hour.stem,
       branch: pillars.hour.branch,
       shiShin: getShiShin(dayStem, pillars.hour.stem),
@@ -237,19 +120,19 @@ export default function ChartScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
       {/* ── Header ── */}
-      <Text style={styles.title}>{labels.title}</Text>
-      <Text style={styles.subtitle}>{labels.subtitle}</Text>
+      <Text style={styles.title}>{t('chart:cosmicBlueprint')}</Text>
+      <Text style={styles.subtitle}>{t('chart:destinyMap')}</Text>
 
       {/* ── Day Master pill ── */}
       <View style={styles.dayMasterRow}>
-        <Text style={styles.dayMasterLabel}>{labels.dayMaster}</Text>
+        <Text style={styles.dayMasterLabel}>{t('chart:dayMaster')}</Text>
         <View style={[
           styles.dayMasterPill,
           { backgroundColor: dayStemColor + '22', borderColor: dayStemColor },
         ]}>
           <Text style={[styles.dayMasterChar, { color: dayStemColor }]}>{dayStem}</Text>
           <Text style={[styles.dayMasterElem, { color: dayStemColor }]}>
-            {' '}{ELEM_EN[dayStemEl]}
+            {' '}{t(`common:elements.${ELEM_KEY[dayStemEl]}`)}
           </Text>
         </View>
       </View>
@@ -280,7 +163,7 @@ export default function ChartScreen() {
                     : { backgroundColor: T.bg.base, borderColor: T.border.default },
                 ]}>
                   <Text style={[styles.shiShinText, p.isDay && { color: T.semantic.gold }]}>
-                    {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
+                    {p.isDay ? t('chart:dayMaster') : (p.shiShin ?? '')}
                   </Text>
                 </View>
 
@@ -306,7 +189,9 @@ export default function ChartScreen() {
                   <Text style={[styles.branchChar, { color: bc }]}>{p.branch}</Text>
                 </View>
 
-                <Text style={[styles.branchElem, { color: bc + 'aa' }]}>{branchEl}</Text>
+                <Text style={[styles.branchElem, { color: bc + 'aa' }]}>
+                  {t(`common:elements.${ELEM_KEY[branchEl]}`)}
+                </Text>
               </View>
             );
           })}
@@ -315,7 +200,7 @@ export default function ChartScreen() {
 
       {/* ── Element Balance ── */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{labels.elementBalance}</Text>
+        <Text style={styles.sectionTitle}>{t('chart:elementBalance')}</Text>
         <Text style={styles.sectionDeco}>五行</Text>
       </View>
       <View style={styles.elementSection}>
@@ -325,7 +210,9 @@ export default function ChartScreen() {
             <View key={r.key} style={styles.elementRow}>
               <View style={styles.elementLabelCol}>
                 <Text style={[styles.elementKanji, { color: ELEM_COLOR[r.key] }]}>{r.key}</Text>
-                <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>{ELEM_EN[r.key]}</Text>
+                <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>
+                  {t(`common:elements.${ELEM_KEY[r.key]}`)}
+                </Text>
               </View>
               <View style={styles.barBg}>
                 {/* Segmented bar */}
@@ -347,17 +234,17 @@ export default function ChartScreen() {
 
       {/* ── 십신 Table ── */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{labels.tenGods}</Text>
+        <Text style={styles.sectionTitle}>{t('chart:shishin.title')}</Text>
         <Text style={styles.sectionDeco}>十神</Text>
       </View>
       <View style={styles.table}>
         <View style={[styles.tableRow, styles.tableHeader]}>
           <Text style={[styles.cell, styles.cellHeader]}>柱</Text>
-          <Text style={[styles.cell, styles.cellHeader]}>{labels.stemLabel}</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>{t('chart:stem')}</Text>
           <Text style={[styles.cell, styles.cellHeader, styles.cellWide]}>
-            {labels.tenGods.split(' ')[0]}
+            {t('chart:shishin.title')}
           </Text>
-          <Text style={[styles.cell, styles.cellHeader]}>{labels.branchLabel}</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>{t('chart:branch')}</Text>
           <Text style={[styles.cell, styles.cellHeader]}>五行</Text>
         </View>
         {pillarList.map((p) => {
@@ -372,13 +259,13 @@ export default function ChartScreen() {
                 {p.stem}
               </Text>
               <Text style={[styles.cell, styles.cellWide, styles.cellText, p.isDay && { color: T.semantic.gold, fontWeight: '700' }]}>
-                {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
+                {p.isDay ? t('chart:dayMaster') : (p.shiShin ?? '')}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: 20, fontWeight: '700', textAlign: 'center' }]}>
                 {p.branch}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: T.fontSize.xs, textAlign: 'center' }]}>
-                {ELEM_EN[branchEl]}
+                {t(`common:elements.${ELEM_KEY[branchEl]}`)}
               </Text>
             </View>
           );
@@ -389,7 +276,7 @@ export default function ChartScreen() {
       {daewoon.length > 0 && (
         <>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{labels.luckCycle}</Text>
+            <Text style={styles.sectionTitle}>{t('chart:daewoon')}</Text>
             <Text style={styles.sectionDeco}>大運</Text>
           </View>
           <ScrollView
@@ -416,14 +303,14 @@ export default function ChartScreen() {
 
                   {isCurrent && (
                     <View style={styles.nowBadge}>
-                      <Text style={styles.nowBadgeText}>NOW</Text>
+                      <Text style={styles.nowBadgeText}>{t('chart:now')}</Text>
                     </View>
                   )}
                   <Text style={[styles.dwAge, isCurrent && { color: T.semantic.gold }]}>
                     {dw.startAge}–{dw.startAge + 9}
                   </Text>
                   <Text style={[styles.dwAgeSuffix, isCurrent && { color: T.semantic.gold + '88' }]}>
-                    {labels.ageSuffix}
+                    {t('chart:ageSuffix')}
                   </Text>
                   <Text style={[styles.dwStem, { color: ELEM_COLOR[dwStemEl] }]}>
                     {dw.pillar.stem}

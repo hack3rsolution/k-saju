@@ -28,5 +28,14 @@
   },
   "fiveElements": "Fünf Elemente",
   "yin": "Yin",
-  "yang": "Yang"
+  "yang": "Yang",
+  "greeting": { "morning": "Guten Morgen", "afternoon": "Guten Nachmittag", "evening": "Guten Abend", "night": "Gute Nacht" },
+  "explore": "Erkunden",
+  "compatibility": "Kompatibilität",
+  "analyzeNow": "Jetzt analysieren",
+  "restorePurchases": "Käufe wiederherstellen",
+  "rerunOnboarding": "Einführung wiederholen",
+  "dailyNotification": "Tägliche Benachrichtigung",
+  "comingSoon": "Demnächst verfügbar",
+  "serviceError": "Ein temporäres Problem ist aufgetreten. Bitte versuchen Sie es in Kürze erneut."
 }

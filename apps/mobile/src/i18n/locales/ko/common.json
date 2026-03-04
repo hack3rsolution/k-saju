@@ -26,7 +26,21 @@
     "Metal": "金 금",
     "Water": "水 수"
   },
-  "fiveElements": "오행",
-  "yin": "음",
-  "yang": "양"
+  "fiveElements": "오행(五行)",
+  "yin": "음(陰)",
+  "yang": "양(陽)",
+  "greeting": {
+    "morning": "좋은 아침이에요",
+    "afternoon": "안녕하세요",
+    "evening": "좋은 저녁이에요",
+    "night": "좋은 밤이에요"
+  },
+  "explore": "탐색",
+  "compatibility": "궁합",
+  "analyzeNow": "지금 분석하기",
+  "restorePurchases": "구매 복원",
+  "rerunOnboarding": "온보딩 다시 실행",
+  "dailyNotification": "매일 알림",
+  "comingSoon": "준비 중",
+  "serviceError": "서비스에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요."
 }

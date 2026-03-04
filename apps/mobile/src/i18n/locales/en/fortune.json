@@ -20,5 +20,28 @@
   "refresh": "Refresh",
   "share": "Share",
   "premiumRequired": "Premium Only",
-  "unlockReading": "Unlock All Readings"
+  "unlockReading": "Unlock All Readings",
+  "todaysFortune": "TODAY'S FORTUNE · 日運",
+  "annualReport": "Annual Report",
+  "myChart": "My Chart",
+  "wasHelpful": "Was this helpful?",
+  "feedbackThanks": "✨ Thanks! Your feedback helps us improve.",
+  "askMore": "Ask More",
+  "freeChatBadge": "{{count}} free chat today",
+  "chatLimitTitle": "Free chat used for today",
+  "chatLimitSub": "Unlock unlimited — $9.99/month",
+  "weeklyReadingUsed": "Weekly reading used",
+  "weeklyReadingUsedDesc": "Your free reading for this week has been used. Upgrade to Premium for unlimited daily readings.",
+  "weeklyFreeAvailable": "🎁 1 free reading available this week",
+  "upgradeToPremium": "Upgrade to Premium →",
+  "shareCard": "Share Your Card",
+  "shareCardSubtitle": "Capture & share your cosmic destiny",
+  "shareAsImage": "Share as Image",
+  "elementDay": {
+    "木": "Wood Day",
+    "火": "Fire Day",
+    "土": "Earth Day",
+    "金": "Metal Day",
+    "水": "Water Day"
+  }
 }

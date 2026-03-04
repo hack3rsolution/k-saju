@@ -11,15 +11,11 @@ import {
   calculateElementBalance,
   calculateDaewoon,
   dayPillar,
-  monthPillar,
-  yearPillar,
   STEM_ELEMENT,
   type BirthData,
 } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
-import { useEntitlementStore } from '../store/entitlementStore';
 import { useLanguageStore } from '../store/languageStore';
 import type { TimingCategory } from '../types/timing';
 
@@ -48,10 +44,8 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
-  const { isPremium, addons } = useEntitlementStore();
   const { language } = useLanguageStore();
 
-  const hasEntitlement = isPremium || addons.timingAdvisor;
 
   async function analyze(category: TimingCategory) {
     if (!session || loading) return;

@@ -121,8 +121,11 @@ function PeriodCard({ period, unlocked }: { period: Period; unlocked: boolean })
       router.push('/paywall');
       return;
     }
-    // Navigate to reading (Daily → home, others TBD)
-    if (period.type === 'daily') router.push('/(tabs)/home');
+    if (period.type === 'daily') {
+      router.push('/(tabs)/home');
+    } else {
+      router.push(`/fortune/${period.type}` as never);
+    }
   }
 
   return (

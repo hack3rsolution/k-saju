@@ -34,6 +34,7 @@ export default function RelationshipsScreen() {
     loading,
     fortuneLoading,
     error,
+    fortuneError,
     list,
     add,
     remove,
@@ -45,7 +46,6 @@ export default function RelationshipsScreen() {
   const [detailVisible, setDetailVisible] = useState(false);
   const [selected,      setSelected]      = useState<Relationship | null>(null);
   const [fortune,       setFortune]       = useState<RelationshipFortuneData | null>(null);
-  const [fortuneError,  setFortuneError]  = useState<string | null>(null);
 
   // ── Load on mount ────────────────────────────────────────────────────────────
   useEffect(() => { list(); }, [list]);
@@ -63,20 +63,14 @@ export default function RelationshipsScreen() {
   const handleCardPress = useCallback((rel: Relationship) => {
     setSelected(rel);
     setFortune(null);
-    setFortuneError(null);
     setDetailVisible(true);
   }, []);
 
   const handleLoadFortune = useCallback(async () => {
     if (!selected) return;
-    setFortuneError(null);
     const data = await getFortune(selected);
-    if (!data) {
-      setFortuneError(error ?? 'Failed to load');
-    } else {
-      setFortune(data);
-    }
-  }, [selected, getFortune, error]);
+    if (data) setFortune(data);
+  }, [selected, getFortune]);
 
   const handleDelete = useCallback(async (id: string) => {
     await remove(id);

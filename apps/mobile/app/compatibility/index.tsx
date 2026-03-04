@@ -22,13 +22,11 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import {
   calculateFourPillars,
   calculateElementBalance,
-  calculateDaewoon,
   STEM_ELEMENT,
   type BirthData,
   type SajuChart,
@@ -38,32 +36,11 @@ import { useAddonReport } from '../../src/hooks/useAddonReport';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { useSajuStore } from '../../src/store/sajuStore';
 import type { ReportSection } from '../../src/hooks/useAddonReport';
+import { lunarToSolar } from '../../src/lib/lunar';
 
 const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 
-/** Lunar → Solar conversion using lunar-javascript */
-function lunarToSolar(
-  year: number,
-  month: number,
-  day: number,
-): { year: number; month: number; day: number } | null {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Lunar } = require('lunar-javascript');
-    const solar = Lunar.fromYmd(year, month, day).getSolar();
-    return { year: solar.getYear(), month: solar.getMonth(), day: solar.getDay() };
-  } catch {
-    return null;
-  }
-}
-
 const LUNAR_FRAMES = new Set(['kr', 'cn', 'jp']);
-
-// ── Element palette ───────────────────────────────────────────────────────────
-
-const ELEM_COLOR: Record<string, string> = {
-  木: '#22c55e', 火: '#ef4444', 土: '#eab308', 金: '#94a3b8', 水: '#3b82f6',
-};
 
 // ── Local element harmony score ───────────────────────────────────────────────
 
@@ -294,15 +271,15 @@ export default function CompatibilityScreen() {
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Compatibility</Text>
-      <Text style={styles.subtitle}>궁합 · 合婚 · Relationship Harmony</Text>
+      <Text style={styles.title}>궁합</Text>
+      <Text style={styles.subtitle}>궁합 · 合婚 · 관계 조화</Text>
 
       {/* Input form — shown when no result yet */}
       {!localCompat && !report && (
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>Partner's Birth Date</Text>
+          <Text style={styles.formTitle}>파트너 생년월일</Text>
           <Text style={styles.formHint}>
-            Enter your partner's birth info to see your elemental compatibility score.
+            파트너의 생년월일을 입력하면 오행 궁합 점수를 확인할 수 있습니다.
           </Text>
 
           {/* Lunar / Solar toggle */}
@@ -327,9 +304,9 @@ export default function CompatibilityScreen() {
 
           <View style={styles.inputRow}>
             {[
-              { label: 'Year', value: pYear, onChange: setPYear, maxLength: 4, placeholder: '1990' },
-              { label: 'Month', value: pMonth, onChange: setPMonth, maxLength: 2, placeholder: '06' },
-              { label: 'Day', value: pDay, onChange: setPDay, maxLength: 2, placeholder: '15' },
+              { label: '년도', value: pYear, onChange: setPYear, maxLength: 4, placeholder: '1990' },
+              { label: '월', value: pMonth, onChange: setPMonth, maxLength: 2, placeholder: '06' },
+              { label: '일', value: pDay, onChange: setPDay, maxLength: 2, placeholder: '15' },
             ].map((f) => (
               <View key={f.label} style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>{f.label}</Text>
@@ -346,7 +323,7 @@ export default function CompatibilityScreen() {
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>Partner Gender</Text>
+          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>파트너 성별</Text>
           <View style={styles.genderRow}>
             {(['M', 'F'] as const).map((g) => (
               <TouchableOpacity
@@ -355,7 +332,7 @@ export default function CompatibilityScreen() {
                 onPress={() => setPGender(g)}
               >
                 <Text style={[styles.genderText, pGender === g && styles.genderTextActive]}>
-                  {g === 'M' ? '♂ Male' : '♀ Female'}
+                  {g === 'M' ? '♂ 남성' : '♀ 여성'}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -364,7 +341,7 @@ export default function CompatibilityScreen() {
           {inputError && <Text style={styles.errorText}>{inputError}</Text>}
 
           <TouchableOpacity style={styles.analyzeBtn} onPress={handleAnalyze}>
-            <Text style={styles.analyzeBtnText}>Check Compatibility</Text>
+            <Text style={styles.analyzeBtnText}>궁합 확인하기</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -381,10 +358,9 @@ export default function CompatibilityScreen() {
           {/* Full report — addon users only */}
           {hasFullAccess && (
             <View style={styles.fullReportCard}>
-              <Text style={styles.fullReportTitle}>Full AI Report</Text>
+              <Text style={styles.fullReportTitle}>Full AI 리포트</Text>
               <Text style={styles.fullReportDesc}>
-                Get a detailed 5-section analysis of elemental harmony, strengths,
-                tensions, and a relationship forecast.
+                오행 조화, 강점, 긴장 관계, 관계 예측 등 5개 섹션으로 구성된 심층 분석 리포트입니다.
               </Text>
               <TouchableOpacity
                 style={[styles.analyzeBtn, loading && styles.analyzeBtnDisabled]}
@@ -394,7 +370,7 @@ export default function CompatibilityScreen() {
                 {loading ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={styles.analyzeBtnText}>Generate Full Report</Text>
+                  <Text style={styles.analyzeBtnText}>전체 리포트 생성</Text>
                 )}
               </TouchableOpacity>
             </View>
@@ -407,7 +383,7 @@ export default function CompatibilityScreen() {
           )}
 
           <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-            <Text style={styles.resetBtnText}>← Analyze another person</Text>
+            <Text style={styles.resetBtnText}>← 다른 사람 분석하기</Text>
           </TouchableOpacity>
         </>
       )}
@@ -423,7 +399,7 @@ export default function CompatibilityScreen() {
             <SectionCard key={i} section={s} index={i} />
           ))}
           <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-            <Text style={styles.resetBtnText}>Analyze Another Person →</Text>
+            <Text style={styles.resetBtnText}>다른 사람 분석하기 →</Text>
           </TouchableOpacity>
         </>
       )}

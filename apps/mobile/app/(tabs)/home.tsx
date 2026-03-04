@@ -14,11 +14,13 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
+import { useTranslation } from 'react-i18next';
 import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune } from '../../src/hooks/useFortune';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { useFreemiumLimits } from '../../src/hooks/useFreemiumLimits';
+import i18n from '../../src/i18n';
 
 const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 import { ShareCard } from '../../src/components/ShareCard';
@@ -42,7 +44,8 @@ const ELEMENT_EMOJI: Record<FiveElement, string> = {
   水: '🌊',
 };
 
-const ELEMENT_LABEL: Record<FiveElement, string> = {
+// Maps FiveElement kanji → common:elements key (English)
+const ELEMENT_KEY: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
 };
 
@@ -102,35 +105,22 @@ const lStyles = StyleSheet.create({
   value: { color: T.text.primary, fontSize: T.fontSize.sm, fontWeight: '700' },
 });
 
-// ── Greeting helpers ──────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
-}
-
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-function formatDate() {
+function getFormattedDate(): string {
   const d = new Date();
-  return `${WEEKDAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  try {
+    return d.toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' });
+  } catch {
+    return d.toLocaleDateString('en', { weekday: 'long', month: 'short', day: 'numeric' });
+  }
 }
-
-// ── Quick-action grid items ───────────────────────────────────────────────────
-
-const GRID_ITEMS = [
-  { label: 'Compatibility', icon: '💞', route: '/compatibility', deco: '合' },
-  { label: 'Annual Report', icon: '📅', route: '/reports', deco: '年' },
-  { label: 'My Chart', icon: '☯️', route: '/(tabs)/chart', deco: '命' },
-  { label: 'Fortune', icon: '⭐', route: '/(tabs)/fortune', deco: '運' },
-] as const;
 
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function HomeScreen() {
+  const { t } = useTranslation(['common', 'fortune']);
+
   const {
     loading,
     reading,
@@ -148,8 +138,23 @@ export default function HomeScreen() {
   const { chatRemaining, canChat, consumeChat } = useFreemiumLimits();
   const effectivePremium = DEV_BYPASS || isPremium;
 
+  // ── Greeting ──────────────────────────────────────────────────────────────
+  const h = new Date().getHours();
+  const greetingText =
+    h < 12 ? t('common:greeting.morning') :
+    h < 18 ? t('common:greeting.afternoon') :
+    t('common:greeting.evening');
+
+  // ── Quick action grid items ───────────────────────────────────────────────
+  const gridItems = [
+    { key: 'compatibility', label: t('common:compatibility'), icon: '💞', route: '/compatibility', deco: '合' },
+    { key: 'annualReport',  label: t('fortune:annualReport'), icon: '📅', route: '/reports',         deco: '年' },
+    { key: 'myChart',       label: t('fortune:myChart'),      icon: '☯️', route: '/(tabs)/chart',    deco: '命' },
+    { key: 'fortune',       label: t('fortune:title'),        icon: '⭐', route: '/(tabs)/fortune',  deco: '運' },
+  ];
+
   // ── Feedback state ────────────────────────────────────────────────────────
-  const { submitting: feedbackSubmitting, submitted: feedbackSubmitted, submitFeedback, reset: resetFeedback } = useFeedback();
+  const { submitting: feedbackSubmitting, submitted: feedbackSubmitted, submitFeedback } = useFeedback();
   const [sheetVisible, setSheetVisible] = useState(false);
   const [selectedRating, setSelectedRating] = useState<FeedbackRating | null>(null);
 
@@ -194,7 +199,7 @@ export default function HomeScreen() {
       if (available) {
         await Sharing.shareAsync(uri, {
           mimeType: 'image/png',
-          dialogTitle: 'Share your K-Saju card',
+          dialogTitle: t('fortune:shareCard'),
         });
       }
     } catch (e) {
@@ -222,8 +227,8 @@ export default function HomeScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>{greeting()}</Text>
-            <Text style={styles.dateText}>{formatDate()}</Text>
+            <Text style={styles.greeting}>{greetingText}</Text>
+            <Text style={styles.dateText}>{getFormattedDate()}</Text>
           </View>
           <View style={styles.headerActions}>
             <TouchableOpacity style={styles.iconBtn} onPress={refresh} disabled={loading}>
@@ -251,7 +256,7 @@ export default function HomeScreen() {
           <Text style={styles.ganjiText}>{ganji}</Text>
           <View style={[styles.elementBadge, { backgroundColor: elementColor + '22', borderColor: elementColor + '44' }]}>
             <Text style={[styles.elementBadgeText, { color: elementColor }]}>
-              {ELEMENT_LABEL[todayElement]} Day
+              {t(`fortune:elementDay.${todayElement}`, { defaultValue: `${ELEMENT_KEY[todayElement]} Day` })}
             </Text>
           </View>
         </View>
@@ -264,7 +269,7 @@ export default function HomeScreen() {
           <View style={styles.fortuneCardInner}>
             <View style={styles.fortuneHeader}>
               <View>
-                <Text style={styles.fortuneLabel}>TODAY'S FORTUNE · 日運</Text>
+                <Text style={styles.fortuneLabel}>{t('fortune:todaysFortune')}</Text>
                 <View style={[styles.dayBadge, { backgroundColor: elementColor + '22', borderColor: elementColor + '44' }]}>
                   <Text style={[styles.dayBadgeText, { color: elementColor }]}>{todayDay}</Text>
                 </View>
@@ -284,16 +289,14 @@ export default function HomeScreen() {
               <View style={styles.errorBox}>
                 <Text style={styles.errorText}>{error}</Text>
                 <TouchableOpacity style={styles.retryBtn} onPress={refresh}>
-                  <Text style={styles.retryText}>Try again</Text>
+                  <Text style={styles.retryText}>{t('common:retry')}</Text>
                 </TouchableOpacity>
               </View>
             ) : weeklyLimitReached && !reading ? (
               <View style={styles.lockedBox}>
                 <Text style={styles.lockedIcon}>🔒</Text>
-                <Text style={styles.lockedTitle}>Weekly reading used</Text>
-                <Text style={styles.lockedDesc}>
-                  Your free reading for this week has been used. Upgrade to Premium for unlimited daily readings.
-                </Text>
+                <Text style={styles.lockedTitle}>{t('fortune:weeklyReadingUsed')}</Text>
+                <Text style={styles.lockedDesc}>{t('fortune:weeklyReadingUsedDesc')}</Text>
               </View>
             ) : reading ? (
               <>
@@ -313,11 +316,11 @@ export default function HomeScreen() {
                 {/* Feedback row */}
                 {feedbackSubmitted ? (
                   <View style={styles.feedbackThanks}>
-                    <Text style={styles.feedbackThanksText}>✨ Thanks! Your feedback helps us improve.</Text>
+                    <Text style={styles.feedbackThanksText}>{t('fortune:feedbackThanks')}</Text>
                   </View>
                 ) : (
                   <View style={styles.feedbackRow}>
-                    <Text style={styles.feedbackLabel}>Was this helpful?</Text>
+                    <Text style={styles.feedbackLabel}>{t('fortune:wasHelpful')}</Text>
                     <View style={styles.feedbackBtns}>
                       <TouchableOpacity
                         style={[styles.feedbackBtn, selectedRating === 1 && styles.feedbackBtnActive]}
@@ -353,11 +356,11 @@ export default function HomeScreen() {
                     }}
                   >
                     <Text style={styles.chatBtnIcon}>💬</Text>
-                    <Text style={styles.chatBtnText}>Ask More</Text>
+                    <Text style={styles.chatBtnText}>{t('fortune:askMore')}</Text>
                     {!effectivePremium && (
                       <View style={styles.chatBtnFreeBadge}>
                         <Text style={styles.chatBtnFreeBadgeText}>
-                          {chatRemaining} free chat today
+                          {t('fortune:freeChatBadge', { count: chatRemaining })}
                         </Text>
                       </View>
                     )}
@@ -370,8 +373,8 @@ export default function HomeScreen() {
                   >
                     <Text style={styles.chatLimitIcon}>💬</Text>
                     <View style={{ flex: 1 }}>
-                      <Text style={styles.chatLimitTitle}>Free chat used for today</Text>
-                      <Text style={styles.chatLimitSub}>Unlock unlimited — $9.99/month</Text>
+                      <Text style={styles.chatLimitTitle}>{t('fortune:chatLimitTitle')}</Text>
+                      <Text style={styles.chatLimitSub}>{t('fortune:chatLimitSub')}</Text>
                     </View>
                     <Text style={styles.chatLimitArrow}>→</Text>
                   </TouchableOpacity>
@@ -385,21 +388,21 @@ export default function HomeScreen() {
         {reading?.luckyItems && (
           <View style={styles.luckyCard}>
             <View style={styles.luckyHeader}>
-              <Text style={styles.luckyTitle}>LUCKY TODAY</Text>
+              <Text style={styles.luckyTitle}>{t('fortune:luckyItems.title')}</Text>
               <Text style={styles.luckyGlyph}>吉</Text>
             </View>
             <View style={styles.luckyGrid}>
               {reading.luckyItems.color && (
-                <LuckyPill icon="🎨" label="Color" value={reading.luckyItems.color} />
+                <LuckyPill icon="🎨" label={t('fortune:luckyItems.color')} value={reading.luckyItems.color} />
               )}
               {reading.luckyItems.number != null && (
-                <LuckyPill icon="🔢" label="Number" value={reading.luckyItems.number} />
+                <LuckyPill icon="🔢" label={t('fortune:luckyItems.number')} value={reading.luckyItems.number} />
               )}
               {reading.luckyItems.direction && (
-                <LuckyPill icon="🧭" label="Direction" value={reading.luckyItems.direction} />
+                <LuckyPill icon="🧭" label={t('fortune:luckyItems.direction')} value={reading.luckyItems.direction} />
               )}
               {reading.luckyItems.food && (
-                <LuckyPill icon="🍽️" label="Food" value={reading.luckyItems.food} />
+                <LuckyPill icon="🍽️" label={t('fortune:luckyItems.food')} value={reading.luckyItems.food} />
               )}
             </View>
           </View>
@@ -408,24 +411,24 @@ export default function HomeScreen() {
         {/* ── Free limit banner (hidden for premium) ── */}
         {!effectivePremium && (weeklyLimitReached ? (
           <TouchableOpacity style={styles.limitBannerUsed} onPress={() => router.push('/paywall')}>
-            <Text style={styles.limitUsedText}>Weekly free reading used · </Text>
-            <Text style={styles.upgradeLink}>Upgrade to Premium →</Text>
+            <Text style={styles.limitUsedText}>{t('fortune:weeklyReadingUsed')} · </Text>
+            <Text style={styles.upgradeLink}>{t('fortune:upgradeToPremium')}</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.limitBannerFree}>
-            <Text style={styles.limitFreeText}>🎁 1 free reading available this week</Text>
+            <Text style={styles.limitFreeText}>{t('fortune:weeklyFreeAvailable')}</Text>
             <TouchableOpacity onPress={() => router.push('/paywall')}>
-              <Text style={styles.upgradeLink}>Upgrade →</Text>
+              <Text style={styles.upgradeLink}>{t('common:upgrade')} →</Text>
             </TouchableOpacity>
           </View>
         ))}
 
         {/* ── Quick actions grid ── */}
-        <Text style={styles.sectionTitle}>Explore</Text>
+        <Text style={styles.sectionTitle}>{t('common:explore')}</Text>
         <View style={styles.grid}>
-          {GRID_ITEMS.map((item) => (
+          {gridItems.map((item) => (
             <TouchableOpacity
-              key={item.label}
+              key={item.key}
               style={styles.gridItem}
               onPress={() => router.push(item.route as never)}
               activeOpacity={0.75}
@@ -458,8 +461,8 @@ export default function HomeScreen() {
         <View style={mStyles.overlay}>
           <View style={mStyles.sheet}>
             <View style={mStyles.handle} />
-            <Text style={mStyles.title}>Share Your Card</Text>
-            <Text style={mStyles.subtitle}>Capture & share your cosmic destiny</Text>
+            <Text style={mStyles.title}>{t('fortune:shareCard')}</Text>
+            <Text style={mStyles.subtitle}>{t('fortune:shareCardSubtitle')}</Text>
             <View style={mStyles.cardContainer}>
               <ShareCard
                 ref={cardRef}
@@ -481,12 +484,12 @@ export default function HomeScreen() {
               ) : (
                 <>
                   <Ionicons name="image-outline" size={18} color="#fff" />
-                  <Text style={mStyles.primaryBtnText}>Share as Image</Text>
+                  <Text style={mStyles.primaryBtnText}>{t('fortune:shareAsImage')}</Text>
                 </>
               )}
             </TouchableOpacity>
             <TouchableOpacity style={mStyles.closeBtn} onPress={() => setShareVisible(false)}>
-              <Text style={mStyles.closeBtnText}>Close</Text>
+              <Text style={mStyles.closeBtnText}>{t('common:close')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -499,7 +502,7 @@ export default function HomeScreen() {
         activeOpacity={0.85}
       >
         <Text style={fabStyles.fabIcon}>⏰</Text>
-        <Text style={fabStyles.fabLabel}>Analyze Now</Text>
+        <Text style={fabStyles.fabLabel}>{t('common:analyzeNow')}</Text>
       </TouchableOpacity>
 
       <TimingCategorySheet

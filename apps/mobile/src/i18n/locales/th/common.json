@@ -28,5 +28,14 @@
   },
   "fiveElements": "ธาตุทั้งห้า",
   "yin": "หยิน",
-  "yang": "หยาง"
+  "yang": "หยาง",
+  "greeting": { "morning": "สวัสดีตอนเช้า", "afternoon": "สวัสดีตอนบ่าย", "evening": "สวัสดีตอนเย็น", "night": "ราตรีสวัสดิ์" },
+  "explore": "สำรวจ",
+  "compatibility": "ความเข้ากัน",
+  "analyzeNow": "วิเคราะห์ตอนนี้",
+  "restorePurchases": "กู้คืนการซื้อ",
+  "rerunOnboarding": "ทำขั้นตอนเริ่มต้นใหม่",
+  "dailyNotification": "การแจ้งเตือนประจำวัน",
+  "comingSoon": "เร็วๆ นี้",
+  "serviceError": "เกิดปัญหาชั่วคราว กรุณาลองอีกครั้งในอีกสักครู่"
 }

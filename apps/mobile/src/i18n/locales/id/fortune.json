@@ -20,5 +20,28 @@
   "refresh": "Segarkan",
   "share": "Bagikan",
   "premiumRequired": "Khusus Premium",
-  "unlockReading": "Buka Semua Pembacaan"
+  "unlockReading": "Buka Semua Pembacaan",
+  "todaysFortune": "KEBERUNTUNGAN HARI INI · 日運",
+  "annualReport": "Laporan Tahunan",
+  "myChart": "Peta Takdirku",
+  "wasHelpful": "Apakah ini membantu?",
+  "feedbackThanks": "✨ Terima kasih! Masukan Anda membantu kami berkembang.",
+  "askMore": "Tanya lebih",
+  "freeChatBadge": "{{count}} chat gratis hari ini",
+  "chatLimitTitle": "Chat gratis hari ini sudah habis",
+  "chatLimitSub": "Buka unlimited — $9.99/bulan",
+  "weeklyReadingUsed": "Bacaan mingguan telah digunakan",
+  "weeklyReadingUsedDesc": "Bacaan gratis Anda minggu ini telah digunakan. Upgrade ke Premium untuk bacaan harian tak terbatas.",
+  "weeklyFreeAvailable": "🎁 1 bacaan gratis tersedia minggu ini",
+  "upgradeToPremium": "Upgrade ke Premium →",
+  "shareCard": "Bagikan Kartu Anda",
+  "shareCardSubtitle": "Tangkap & bagikan takdir kosmik Anda",
+  "shareAsImage": "Bagikan sebagai gambar",
+  "elementDay": {
+    "木": "Hari Kayu",
+    "火": "Hari Api",
+    "土": "Hari Tanah",
+    "金": "Hari Logam",
+    "水": "Hari Air"
+  }
 }

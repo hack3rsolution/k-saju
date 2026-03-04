@@ -28,5 +28,14 @@
   },
   "fiveElements": "Five Elements",
   "yin": "Yin",
-  "yang": "Yang"
+  "yang": "Yang",
+  "greeting": { "morning": "Good morning", "afternoon": "Good afternoon", "evening": "Good evening", "night": "Good night" },
+  "explore": "Explore",
+  "compatibility": "Compatibility",
+  "analyzeNow": "Analyze Now",
+  "restorePurchases": "Restore Purchases",
+  "rerunOnboarding": "Redo Onboarding",
+  "dailyNotification": "Daily Notification",
+  "comingSoon": "Coming Soon",
+  "serviceError": "A temporary issue occurred. Please try again shortly."
 }

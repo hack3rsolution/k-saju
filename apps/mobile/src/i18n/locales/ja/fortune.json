@@ -8,5 +8,28 @@
   "refresh": "更新",
   "share": "シェア",
   "premiumRequired": "プレミアム限定",
-  "unlockReading": "全運勢を解放"
+  "unlockReading": "全運勢を解放",
+  "todaysFortune": "本日の運勢 · 日運",
+  "annualReport": "年間レポート",
+  "myChart": "私の命式",
+  "wasHelpful": "参考になりましたか？",
+  "feedbackThanks": "✨ ありがとうございます！フィードバックをいただきました。",
+  "askMore": "もっと聞く",
+  "freeChatBadge": "今日の無料チャット{{count}}回",
+  "chatLimitTitle": "本日の無料チャットを使い切りました",
+  "chatLimitSub": "無制限プラン — ¥1,500/月",
+  "weeklyReadingUsed": "今週の無料占いを使いました",
+  "weeklyReadingUsedDesc": "今週の無料占いを使い切りました。プレミアムにアップグレードで毎日無制限。",
+  "weeklyFreeAvailable": "🎁 今週の無料占いが1回あります",
+  "upgradeToPremium": "プレミアムへアップグレード →",
+  "shareCard": "カードをシェア",
+  "shareCardSubtitle": "あなたの宿命をシェアしよう",
+  "shareAsImage": "画像としてシェア",
+  "elementDay": {
+    "木": "木の日",
+    "火": "火の日",
+    "土": "土の日",
+    "金": "金の日",
+    "水": "水の日"
+  }
 }

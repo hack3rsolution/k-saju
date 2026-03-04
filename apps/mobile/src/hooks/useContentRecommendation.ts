@@ -5,9 +5,9 @@
  * dominant 오행 (Five Element) and Day Master (일간).
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -82,7 +82,7 @@ export function useContentRecommendation(): ContentRecommendationState {
         travel:  json.travel,
       });
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Recommendation failed');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }

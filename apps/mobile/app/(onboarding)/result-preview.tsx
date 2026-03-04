@@ -157,7 +157,6 @@ export default function ResultPreviewScreen() {
   // Save once on mount
   useEffect(() => {
     saveToSupabase();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function saveToSupabase() {

@@ -20,5 +20,28 @@
   "refresh": "रिफ्रेश",
   "share": "साझा करें",
   "premiumRequired": "केवल प्रीमियम",
-  "unlockReading": "सभी रीडिंग अनलॉक करें"
+  "unlockReading": "सभी रीडिंग अनलॉक करें",
+  "todaysFortune": "आज का भाग्य · 日運",
+  "annualReport": "वार्षिक रिपोर्ट",
+  "myChart": "मेरी कुंडली",
+  "wasHelpful": "क्या यह उपयोगी था?",
+  "feedbackThanks": "✨ धन्यवाद! आपकी प्रतिक्रिया हमें बेहतर बनाने में मदद करती है।",
+  "askMore": "और पूछें",
+  "freeChatBadge": "आज {{count}} मुफ्त चैट",
+  "chatLimitTitle": "आज का मुफ्त चैट उपयोग हो गया",
+  "chatLimitSub": "असीमित अनलॉक करें — ₹799/माह",
+  "weeklyReadingUsed": "साप्ताहिक पाठन उपयोग हुआ",
+  "weeklyReadingUsedDesc": "इस सप्ताह का आपका मुफ्त पाठन उपयोग हो गया। असीमित दैनिक पाठन के लिए Premium में अपग्रेड करें।",
+  "weeklyFreeAvailable": "🎁 इस सप्ताह 1 मुफ्त पाठन उपलब्ध",
+  "upgradeToPremium": "Premium में अपग्रेड करें →",
+  "shareCard": "अपना कार्ड शेयर करें",
+  "shareCardSubtitle": "अपनी ब्रह्मांडीय नियति को कैद करें और शेयर करें",
+  "shareAsImage": "छवि के रूप में शेयर करें",
+  "elementDay": {
+    "木": "काष्ठ दिन",
+    "火": "अग्नि दिन",
+    "土": "पृथ्वी दिन",
+    "金": "धातु दिन",
+    "水": "जल दिन"
+  }
 }

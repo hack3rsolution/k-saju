@@ -20,5 +20,28 @@
   "refresh": "重新整理",
   "share": "分享",
   "premiumRequired": "高級版專屬",
-  "unlockReading": "解鎖全部運勢"
+  "unlockReading": "解鎖全部運勢",
+  "todaysFortune": "今日運勢 · 日運",
+  "annualReport": "年度報告",
+  "myChart": "我的命盤",
+  "wasHelpful": "這有幫助嗎？",
+  "feedbackThanks": "✨ 謝謝！您的回饋幫助我們改進。",
+  "askMore": "繼續提問",
+  "freeChatBadge": "今日{{count}}次免費諮詢",
+  "chatLimitTitle": "今日免費諮詢已用完",
+  "chatLimitSub": "無限暢用 — NT$299/月",
+  "weeklyReadingUsed": "本週免費占卜已用完",
+  "weeklyReadingUsedDesc": "本週免費占卜次數已用完。升級為高級版，每天無限次占卜。",
+  "weeklyFreeAvailable": "🎁 本週還有1次免費占卜",
+  "upgradeToPremium": "升級高級版 →",
+  "shareCard": "分享命盤",
+  "shareCardSubtitle": "分享你的命運藍圖",
+  "shareAsImage": "分享為圖片",
+  "elementDay": {
+    "木": "木日",
+    "火": "火日",
+    "土": "土日",
+    "金": "金日",
+    "水": "水日"
+  }
 }

@@ -35,7 +35,6 @@ export function WheelPicker({ data, selectedIndex, onIndexChange, width = 80 }: 
       ref.current?.scrollToOffset({ offset: selectedIndex * ITEM_H, animated: false });
     }, 150);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onMomentumScrollEnd = useCallback(

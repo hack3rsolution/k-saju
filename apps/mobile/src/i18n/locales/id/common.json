@@ -28,5 +28,14 @@
   },
   "fiveElements": "Lima Elemen",
   "yin": "Yin",
-  "yang": "Yang"
+  "yang": "Yang",
+  "greeting": { "morning": "Selamat pagi", "afternoon": "Selamat siang", "evening": "Selamat malam", "night": "Selamat malam" },
+  "explore": "Jelajahi",
+  "compatibility": "Kecocokan",
+  "analyzeNow": "Analisis sekarang",
+  "restorePurchases": "Pulihkan pembelian",
+  "rerunOnboarding": "Ulangi pengenalan",
+  "dailyNotification": "Notifikasi harian",
+  "comingSoon": "Segera hadir",
+  "serviceError": "Terjadi masalah sementara. Silakan coba lagi sebentar."
 }

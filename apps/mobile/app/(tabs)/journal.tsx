@@ -6,7 +6,7 @@
  *  - FAB to add an event
  *  - AI analysis banner when events >= 5
  */
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Animated,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -62,6 +63,17 @@ export default function JournalScreen() {
   const [analysis,        setAnalysis]        = useState<JournalAnalysisData | null>(null);
   const [analysisError,   setAnalysisError]   = useState<string | null>(null);
 
+  // ── Save toast ────────────────────────────────────────────────────────────
+  const toastOpacity = useRef(new Animated.Value(0)).current;
+
+  const showSavedToast = useCallback(() => {
+    Animated.sequence([
+      Animated.timing(toastOpacity, { toValue: 1, duration: 200, useNativeDriver: true }),
+      Animated.delay(2000),
+      Animated.timing(toastOpacity, { toValue: 0, duration: 300, useNativeDriver: true }),
+    ]).start();
+  }, [toastOpacity]);
+
   // ── Load on mount ────────────────────────────────────────────────────────────
   useEffect(() => { list(); }, [list]);
 
@@ -72,11 +84,13 @@ export default function JournalScreen() {
       const ok = await add(input);
       if (ok) {
         setAddVisible(false);
-        // Invalidate analysis cache on new event
         setAnalysis(null);
+        showSavedToast();
+        // Refresh list to confirm DB write (UUID fix means this now succeeds)
+        list();
       }
     },
-    [add],
+    [add, showSavedToast, list],
   );
 
   const handleDelete = useCallback(
@@ -114,8 +128,8 @@ export default function JournalScreen() {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
         {/* Header */}
-        <Text style={styles.title}>Life Journal</Text>
-        <Text style={styles.subtitle}>Life Events · 命運流</Text>
+        <Text style={styles.title}>인생 일지</Text>
+        <Text style={styles.subtitle}>인생 이벤트 · 命運流</Text>
 
         {/* 대운/세운 overlay banner */}
         <View style={styles.cycleBanner}>
@@ -146,9 +160,9 @@ export default function JournalScreen() {
           >
             <Text style={styles.analysisBannerIcon}>🔮</Text>
             <View style={styles.analysisBannerText}>
-              <Text style={styles.analysisBannerTitle}>AI Pattern Analysis</Text>
+              <Text style={styles.analysisBannerTitle}>AI 패턴 분석</Text>
               <Text style={styles.analysisBannerDesc}>
-                See how your saju cycles shaped your life events
+                사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요
               </Text>
             </View>
             {effectivePremium ? (
@@ -181,9 +195,9 @@ export default function JournalScreen() {
         {!loading && events.length === 0 && (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyIcon}>📖</Text>
-            <Text style={styles.emptyTitle}>No events yet</Text>
+            <Text style={styles.emptyTitle}>아직 기록된 이벤트가 없습니다</Text>
             <Text style={styles.emptyDesc}>
-              Record your major life events — career shifts, relationships, health milestones — and let AI find the saju patterns behind them.
+              커리어 변화, 인간관계, 건강 등 인생의 주요 순간을 기록하고 사주 패턴과의 연결을 찾아보세요.
             </Text>
           </View>
         )}
@@ -192,7 +206,7 @@ export default function JournalScreen() {
         {loading && events.length === 0 && (
           <View style={styles.loadingBox}>
             <ActivityIndicator color="#a78bfa" size="large" />
-            <Text style={styles.loadingText}>Loading journal…</Text>
+            <Text style={styles.loadingText}>인생 일지 로딩 중…</Text>
           </View>
         )}
 
@@ -237,6 +251,11 @@ export default function JournalScreen() {
         onClose={() => setAnalysisVisible(false)}
         onLoad={handleLoadAnalysis}
       />
+
+      {/* Save success toast */}
+      <Animated.View style={[styles.toast, { opacity: toastOpacity }]} pointerEvents="none">
+        <Text style={styles.toastText}>✅ 이벤트가 저장되었습니다</Text>
+      </Animated.View>
     </View>
   );
 }
@@ -306,4 +325,12 @@ const styles = StyleSheet.create({
     shadowColor: '#7c3aed', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5, shadowRadius: 12, elevation: 8,
   },
+  toast: {
+    position: 'absolute', bottom: 100, alignSelf: 'center',
+    backgroundColor: '#22c55e', borderRadius: 24,
+    paddingHorizontal: 20, paddingVertical: 10,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3, shadowRadius: 6, elevation: 6,
+  },
+  toastText: { color: '#fff', fontWeight: '700', fontSize: 14 },
 });

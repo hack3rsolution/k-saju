@@ -14,10 +14,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
@@ -130,7 +128,7 @@ export function ContentRecommendationSection({ frame }: Props) {
   const { loading, data, error, fetch } = useContentRecommendation();
 
   // Auto-fetch on mount
-  useEffect(() => { fetch(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetch(); }, []);
 
   const elemColor = data ? (ELEM_COLOR[data.element] ?? '#a78bfa') : '#a78bfa';
 

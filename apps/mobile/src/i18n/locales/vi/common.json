@@ -28,5 +28,14 @@
   },
   "fiveElements": "Ngũ Hành",
   "yin": "Âm",
-  "yang": "Dương"
+  "yang": "Dương",
+  "greeting": { "morning": "Chào buổi sáng", "afternoon": "Chào buổi chiều", "evening": "Chào buổi tối", "night": "Chúc ngủ ngon" },
+  "explore": "Khám phá",
+  "compatibility": "Tương hợp",
+  "analyzeNow": "Phân tích ngay",
+  "restorePurchases": "Khôi phục mua hàng",
+  "rerunOnboarding": "Làm lại hướng dẫn",
+  "dailyNotification": "Thông báo hàng ngày",
+  "comingSoon": "Sắp ra mắt",
+  "serviceError": "Đã xảy ra sự cố tạm thời. Vui lòng thử lại sau."
 }

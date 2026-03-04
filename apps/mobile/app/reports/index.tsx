@@ -21,7 +21,7 @@ import * as Sharing from 'expo-sharing';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { useAddonReport } from '../../src/hooks/useAddonReport';
 import { useSajuStore } from '../../src/store/sajuStore';
-import type { AddonReportType, AddonReport, ReportSection } from '../../src/hooks/useAddonReport';
+import type { AddonReport, ReportSection } from '../../src/hooks/useAddonReport';
 
 // ── Section card ──────────────────────────────────────────────────────────────
 

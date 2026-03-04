@@ -20,5 +20,28 @@
   "refresh": "Aktualisieren",
   "share": "Teilen",
   "premiumRequired": "Nur Premium",
-  "unlockReading": "Alle Lesungen freischalten"
+  "unlockReading": "Alle Lesungen freischalten",
+  "todaysFortune": "HEUTIGES GLÜCK · 日運",
+  "annualReport": "Jahresbericht",
+  "myChart": "Mein Horoskop",
+  "wasHelpful": "War das hilfreich?",
+  "feedbackThanks": "✨ Danke! Ihr Feedback hilft uns, uns zu verbessern.",
+  "askMore": "Mehr fragen",
+  "freeChatBadge": "{{count}} gratis Chat heute",
+  "chatLimitTitle": "Gratis-Chat heute aufgebraucht",
+  "chatLimitSub": "Unbegrenzt freischalten — 9,99 €/Monat",
+  "weeklyReadingUsed": "Wöchentliche Lesung verwendet",
+  "weeklyReadingUsedDesc": "Ihre kostenlose Lesung für diese Woche wurde verwendet. Upgrade auf Premium für unbegrenzte tägliche Lesungen.",
+  "weeklyFreeAvailable": "🎁 1 kostenlose Lesung diese Woche verfügbar",
+  "upgradeToPremium": "Auf Premium upgraden →",
+  "shareCard": "Karte teilen",
+  "shareCardSubtitle": "Erfasse & teile dein kosmisches Schicksal",
+  "shareAsImage": "Als Bild teilen",
+  "elementDay": {
+    "木": "Holz-Tag",
+    "火": "Feuer-Tag",
+    "土": "Erde-Tag",
+    "金": "Metall-Tag",
+    "水": "Wasser-Tag"
+  }
 }

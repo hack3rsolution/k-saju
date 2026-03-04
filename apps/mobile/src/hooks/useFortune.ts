@@ -20,6 +20,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Response types (mirrors supabase/functions/saju-reading/types.ts) ────────
 
@@ -63,6 +64,10 @@ function todayGanji() {
   };
 }
 
+// ── Reading type ──────────────────────────────────────────────────────────────
+
+export type ReadingType = 'daily' | 'weekly' | 'monthly' | 'annual' | 'daewoon';
+
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export interface FortuneState {
@@ -82,7 +87,7 @@ export interface FortuneState {
   refresh: () => void;
 }
 
-export function useFortune(): FortuneState {
+export function useFortune(type: ReadingType = 'daily'): FortuneState {
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<ReadingData | null>(null);
   const [readingId, setReadingId] = useState<string | null>(null);
@@ -141,11 +146,11 @@ export function useFortune(): FortuneState {
           setChart(activeChart, birthData, dw, activeFrame!);
         }
 
-        // ── 2. Check free weekly limit ─────────────────────────────────────
+        // ── 2. Check free weekly limit (daily only) ────────────────────────
         const meta = session!.user.user_metadata;
         const currentWeek = isoWeek(now);
         const isPremium = meta?.is_premium === true;
-        const usedThisWeek = !isPremium && meta?.last_free_reading_week === currentWeek;
+        const usedThisWeek = type === 'daily' && !isPremium && meta?.last_free_reading_week === currentWeek;
 
         if (usedThisWeek) {
           setWeeklyLimitReached(true);
@@ -159,6 +164,7 @@ export function useFortune(): FortuneState {
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
         const refDate = now.toISOString().split('T')[0];
         const { dayStr: todayDay } = ganjiRef.current;
+        const yp = yearPillar(now.getFullYear());
 
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/saju-reading`,
@@ -179,9 +185,10 @@ export function useFortune(): FortuneState {
                 daewoonList: activeDaewoon,
               },
               frame: activeFrame ?? 'en',
-              type: 'daily',
+              type,
               refDate,
               todaySexagenary: todayDay,
+              currentYearPillar: yp,
               userLanguage: language,
             }),
           },
@@ -206,7 +213,7 @@ export function useFortune(): FortuneState {
         }
       } catch (e: unknown) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : 'Failed to load reading');
+          setError(friendlyApiError(e));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -215,8 +222,7 @@ export function useFortune(): FortuneState {
 
     fetch();
     return () => { cancelled = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, tick, language]);
+  }, [session, tick, language, type]);
 
   return {
     loading,

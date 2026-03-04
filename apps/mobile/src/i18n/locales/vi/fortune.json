@@ -20,5 +20,28 @@
   "refresh": "Làm Mới",
   "share": "Chia Sẻ",
   "premiumRequired": "Chỉ Dành Cho Premium",
-  "unlockReading": "Mở Khóa Tất Cả Luận Giải"
+  "unlockReading": "Mở Khóa Tất Cả Luận Giải",
+  "todaysFortune": "VẬN HÔM NAY · 日運",
+  "annualReport": "Báo cáo Năm",
+  "myChart": "Tử vi của tôi",
+  "wasHelpful": "Điều này có hữu ích không?",
+  "feedbackThanks": "✨ Cảm ơn! Phản hồi của bạn giúp chúng tôi cải thiện.",
+  "askMore": "Hỏi thêm",
+  "freeChatBadge": "{{count}} chat miễn phí hôm nay",
+  "chatLimitTitle": "Đã dùng hết chat miễn phí hôm nay",
+  "chatLimitSub": "Mở khóa không giới hạn — $9.99/tháng",
+  "weeklyReadingUsed": "Đã dùng hết đọc vận tuần này",
+  "weeklyReadingUsedDesc": "Lượt đọc vận miễn phí tuần này đã dùng hết. Nâng cấp Premium để đọc vận mỗi ngày.",
+  "weeklyFreeAvailable": "🎁 Còn 1 lượt đọc vận miễn phí tuần này",
+  "upgradeToPremium": "Nâng cấp Premium →",
+  "shareCard": "Chia sẻ thẻ của bạn",
+  "shareCardSubtitle": "Chụp và chia sẻ vận mệnh vũ trụ",
+  "shareAsImage": "Chia sẻ dạng ảnh",
+  "elementDay": {
+    "木": "Ngày Mộc",
+    "火": "Ngày Hỏa",
+    "土": "Ngày Thổ",
+    "金": "Ngày Kim",
+    "水": "Ngày Thủy"
+  }
 }

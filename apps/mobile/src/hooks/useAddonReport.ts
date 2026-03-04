@@ -5,12 +5,11 @@
  * The caller is responsible for entitlement checking before calling generate().
  */
 import { useState } from 'react';
-import type { SajuChart, BirthData, DaewoonPeriod } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
+import type { SajuChart, DaewoonPeriod } from '@k-saju/saju-engine';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
-import type { CulturalFrame } from '@k-saju/saju-engine';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Types (mirrors Edge Function types) ──────────────────────────────────────
 
@@ -121,7 +120,7 @@ export function useAddonReport(): AddonReportState {
       const data = await resp.json() as { ok: boolean; report: AddonReport };
       setReport(data.report);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Report generation failed');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }

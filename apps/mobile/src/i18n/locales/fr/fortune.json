@@ -12,7 +12,7 @@
   "freeLimitExhausted": "Aucune lecture gratuite restante cette semaine",
   "luckyItems": {
     "title": "Porte-Bonheur",
-    "color": "Couleur Chancheuse",
+    "color": "Couleur Chanceuse",
     "number": "Numéro Chanceux",
     "direction": "Direction Chanceuse",
     "food": "Aliment Recommandé"
@@ -20,5 +20,28 @@
   "refresh": "Actualiser",
   "share": "Partager",
   "premiumRequired": "Premium Uniquement",
-  "unlockReading": "Débloquer Toutes les Lectures"
+  "unlockReading": "Débloquer Toutes les Lectures",
+  "todaysFortune": "FORTUNE DU JOUR · 日運",
+  "annualReport": "Rapport Annuel",
+  "myChart": "Mon Thème",
+  "wasHelpful": "Était-ce utile ?",
+  "feedbackThanks": "✨ Merci ! Vos retours nous aident à nous améliorer.",
+  "askMore": "En savoir plus",
+  "freeChatBadge": "{{count}} chat gratuit aujourd'hui",
+  "chatLimitTitle": "Chat gratuit utilisé aujourd'hui",
+  "chatLimitSub": "Débloquez illimité — 9,99 €/mois",
+  "weeklyReadingUsed": "Lecture hebdomadaire utilisée",
+  "weeklyReadingUsedDesc": "Votre lecture gratuite de cette semaine a été utilisée. Passez Premium pour des lectures quotidiennes illimitées.",
+  "weeklyFreeAvailable": "🎁 1 lecture gratuite disponible cette semaine",
+  "upgradeToPremium": "Passer Premium →",
+  "shareCard": "Partager votre carte",
+  "shareCardSubtitle": "Capturez & partagez votre destin cosmique",
+  "shareAsImage": "Partager en image",
+  "elementDay": {
+    "木": "Jour Bois",
+    "火": "Jour Feu",
+    "土": "Jour Terre",
+    "金": "Jour Métal",
+    "水": "Jour Eau"
+  }
 }

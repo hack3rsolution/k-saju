@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signInWithApple: async () => {
     if (Platform.OS !== 'ios') throw new Error('Apple Sign-In is iOS only');
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const AppleAuth = require('expo-apple-authentication');
     const credential = await AppleAuth.signInAsync({
       requestedScopes: [
@@ -99,7 +99,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setDevSession: () => {
     if (!__DEV__) return;
     const mockUser = {
-      id: 'dev-user-00000000-0000-0000-0000-000000000000',
+      id: '00000000-0000-4000-8000-000000000000',
       aud: 'authenticated',
       role: 'authenticated',
       email: 'dev@k-saju.local',

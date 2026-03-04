@@ -20,5 +20,28 @@
   "refresh": "Actualizar",
   "share": "Compartir",
   "premiumRequired": "Solo Premium",
-  "unlockReading": "Desbloquear Todas las Lecturas"
+  "unlockReading": "Desbloquear Todas las Lecturas",
+  "todaysFortune": "FORTUNA DE HOY · 日運",
+  "annualReport": "Informe Anual",
+  "myChart": "Mi Carta",
+  "wasHelpful": "¿Fue útil?",
+  "feedbackThanks": "✨ ¡Gracias! Tu comentario nos ayuda a mejorar.",
+  "askMore": "Preguntar más",
+  "freeChatBadge": "{{count}} chat gratis hoy",
+  "chatLimitTitle": "Chat gratuito usado hoy",
+  "chatLimitSub": "Desbloquea ilimitado — $9.99/mes",
+  "weeklyReadingUsed": "Lectura semanal usada",
+  "weeklyReadingUsedDesc": "Tu lectura gratuita de esta semana ya fue utilizada. Actualiza a Premium para lecturas diarias ilimitadas.",
+  "weeklyFreeAvailable": "🎁 1 lectura gratuita disponible esta semana",
+  "upgradeToPremium": "Actualizar a Premium →",
+  "shareCard": "Compartir tu carta",
+  "shareCardSubtitle": "Captura y comparte tu destino cósmico",
+  "shareAsImage": "Compartir como imagen",
+  "elementDay": {
+    "木": "Día Madera",
+    "火": "Día Fuego",
+    "土": "Día Tierra",
+    "金": "Día Metal",
+    "水": "Día Agua"
+  }
 }

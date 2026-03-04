@@ -12,32 +12,14 @@ import { router } from 'expo-router';
 import { WheelPicker } from '../../src/components/WheelPicker';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useLanguageStore } from '../../src/store/languageStore';
+import { lunarToSolar, LUNAR_LANGUAGES } from '../../src/lib/lunar';
 
 const YEARS = Array.from({ length: 81 }, (_, i) => String(1930 + i));
 const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 
-const LUNAR_LANGUAGES = new Set(['ko', 'zh-Hans', 'zh-Hant', 'ja']);
-
 function daysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate();
-}
-
-/** Convert a Korean/Chinese lunar date to the Gregorian (solar) equivalent */
-function lunarToSolar(
-  year: number,
-  month: number,
-  day: number,
-): { year: number; month: number; day: number } | null {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Lunar } = require('lunar-javascript');
-    const lunar = Lunar.fromYmd(year, month, day);
-    const solar = lunar.getSolar();
-    return { year: solar.getYear(), month: solar.getMonth(), day: solar.getDay() };
-  } catch {
-    return null;
-  }
 }
 
 export default function BirthInputScreen() {

@@ -2,7 +2,7 @@
  * useFortunChat — manages the AI follow-up chat session for a given fortune.
  *
  * Streams Claude's response from the fortune-chat Edge Function.
- * Free users receive a 403 → redirect to paywall.
+ * Free users receive a 402 (free_limit_reached) → redirect to paywall.
  * Premium users limited to 20 messages/day (enforced server-side).
  */
 import { useState, useCallback } from 'react';
@@ -87,8 +87,8 @@ export function useFortunChat(
         },
       );
 
-      // Premium gate
-      if (resp.status === 403) {
+      // Premium gate — server returns 402 (free_limit_reached) or 403 (premium_required)
+      if (resp.status === 402 || resp.status === 403) {
         setPremiumRequired(true);
         setMessages(nextMessages); // remove placeholder
         return;
@@ -119,6 +119,7 @@ export function useFortunChat(
       let accumulated = '';
       let lineBuffer = '';
 
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;

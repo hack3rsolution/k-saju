@@ -53,9 +53,10 @@ export function useRelationships() {
     updateRelationship,
   } = useRelationshipStore();
 
-  const [loading, setLoading]         = useState(false);
+  const [loading, setLoading]               = useState(false);
   const [fortuneLoading, setFortuneLoading] = useState(false);
-  const [error, setError]             = useState<string | null>(null);
+  const [error, setError]                   = useState<string | null>(null);
+  const [fortuneError, setFortuneError]     = useState<string | null>(null);
 
   // ── List ────────────────────────────────────────────────────────────────────
 
@@ -136,7 +137,7 @@ export function useRelationships() {
     async (rel: Relationship): Promise<RelationshipFortuneData | null> => {
       if (!session || !chart) return null;
       setFortuneLoading(true);
-      setError(null);
+      setFortuneError(null);
 
       const refMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
@@ -177,7 +178,7 @@ export function useRelationships() {
         );
 
         if (resp.status === 403) {
-          setError('premium_required');
+          setFortuneError('premium_required');
           return null;
         }
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -192,13 +193,13 @@ export function useRelationships() {
 
         return data;
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Failed to load fortune');
+        setFortuneError(e instanceof Error ? e.message : 'Failed to load fortune');
         return null;
       } finally {
         setFortuneLoading(false);
       }
     },
-    [session, chart, frame, updateRelationship],
+    [session, chart, frame, language, updateRelationship],
   );
 
   return {
@@ -206,6 +207,7 @@ export function useRelationships() {
     loading,
     fortuneLoading,
     error,
+    fortuneError,
     list,
     add,
     remove,

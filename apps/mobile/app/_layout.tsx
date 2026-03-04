@@ -55,7 +55,7 @@ export default function RootLayout() {
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="compatibility" />
-        <Stack.Screen name="fortune-chat" />
+        <Stack.Screen name="fortune-chat/[fortuneId]" />
         <Stack.Screen name="reports" />
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
       </Stack>
