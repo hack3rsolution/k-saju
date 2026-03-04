@@ -16,6 +16,7 @@ import {
 import { supabase } from '../../src/lib/supabase';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useSajuStore } from '../../src/store/sajuStore';
+import { useAuthStore } from '../../src/store/authStore';
 import {
   requestNotificationPermission,
   scheduleDailyNotification,
@@ -131,6 +132,7 @@ const eStyles = StyleSheet.create({
 export default function ResultPreviewScreen() {
   const { birthYear, birthMonth, birthDay, birthHour, gender, frame } = useOnboardingStore();
   const { setChart } = useSajuStore();
+  const { setOnboardingCompleted } = useAuthStore();
 
   const [saving, setSaving] = useState(false);
 
@@ -208,6 +210,9 @@ export default function ResultPreviewScreen() {
 
   function handleExplore() {
     setChart(chart, birthData, daywoon, frame ?? 'en');
+    // Update in-memory session so auth guard sees onboarding_completed = true
+    // (critical for DEV mode where Supabase updateUser is a no-op)
+    setOnboardingCompleted(true);
     router.replace('/(tabs)/home');
   }
 

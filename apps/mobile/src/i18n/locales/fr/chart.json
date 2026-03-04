@@ -1,0 +1,30 @@
+{
+  "title": "Mes Quatre Piliers",
+  "subtitle": "Plan Cosmique · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Pilier\nAnnée",
+    "month": "Pilier\nMois",
+    "day": "Pilier\nJour",
+    "hour": "Pilier\nHeure",
+    "hourUnknown": "Heure\nInconnue"
+  },
+  "stem": "Tige Céleste",
+  "branch": "Branche Terrestre",
+  "dayStem": "Tige du Jour (Soi)",
+  "elementBalance": "Équilibre des Cinq Éléments",
+  "daewoon": "Grand Cycle de Chance",
+  "daewoonPeriod": "Âge {{age}}+",
+  "shishin": {
+    "title": "Dix Dieux",
+    "비견": "Compagnon",
+    "겁재": "Vol de Richesse",
+    "식신": "Dieu Nourricier",
+    "상관": "Officier Blessant",
+    "편재": "Richesse Indirecte",
+    "정재": "Richesse Directe",
+    "편관": "Sept Tueurs",
+    "정관": "Officier Direct",
+    "편인": "Ressource Indirecte",
+    "정인": "Ressource Directe"
+  }
+}

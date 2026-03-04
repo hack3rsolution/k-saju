@@ -17,6 +17,10 @@ interface AuthState {
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** DEV only: bypass auth with a mock session */
+  setDevSession: () => void;
+  /** Update onboarding_completed in the in-memory session (works for real & dev sessions) */
+  setOnboardingCompleted: (value: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -81,5 +85,47 @@ export const useAuthStore = create<AuthState>((set) => ({
   signOut: async () => {
     await supabase.auth.signOut();
     set({ user: null, session: null });
+  },
+
+  setOnboardingCompleted: (value) =>
+    set((state) => {
+      if (!state.user || !state.session) return {};
+      const meta = { ...state.user.user_metadata, onboarding_completed: value };
+      const user = { ...state.user, user_metadata: meta };
+      const session = { ...state.session, user };
+      return { user, session };
+    }),
+
+  setDevSession: () => {
+    if (!__DEV__) return;
+    const mockUser = {
+      id: 'dev-user-00000000-0000-0000-0000-000000000000',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'dev@k-saju.local',
+      email_confirmed_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      user_metadata: {
+        onboarding_completed: true,
+        // Default birth data so useFortune can rebuild the chart without DB
+        birth_year: 1990,
+        birth_month: 6,
+        birth_day: 15,
+        birth_hour: 12,
+        gender: 'M',
+        cultural_frame: 'en',
+      },
+      app_metadata: {},
+    } as unknown as User;
+    const mockSession = {
+      access_token: 'dev-access-token',
+      refresh_token: 'dev-refresh-token',
+      token_type: 'bearer',
+      expires_in: 3600,
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      user: mockUser,
+    } as unknown as Session;
+    set({ session: mockSession, user: mockUser, initialized: true });
   },
 }));

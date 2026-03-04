@@ -130,7 +130,7 @@ Deno.serve(async (req: Request) => {
   let claudeResult: { summary: string; patterns: PatternInsight[]; dominantElement: string };
   try {
     claudeResult = await callClaude(
-      buildSystemPrompt(request.frame),
+      buildSystemPrompt(request.frame, (request as { userLanguage?: string }).userLanguage),
       buildUserPrompt(request.events, request.chart),
       ANTHROPIC_API_KEY,
     );

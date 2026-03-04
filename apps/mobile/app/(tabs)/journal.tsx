@@ -16,13 +16,17 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useJournal } from '../../src/hooks/useJournal';
 import { JournalEventCard } from '../../src/components/JournalEventCard';
 import { AddEventModal } from '../../src/components/AddEventModal';
 import { JournalAnalysisSheet } from '../../src/components/JournalAnalysisSheet';
 import { useSajuStore } from '../../src/store/sajuStore';
+import { useEntitlementStore } from '../../src/store/entitlementStore';
 import type { JournalAnalysisData, AddEventInput } from '../../src/types/journal';
+
+const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -40,6 +44,8 @@ function currentYearPillar(): string {
 
 export default function JournalScreen() {
   const { daewoon, birthData } = useSajuStore();
+  const { isPremium } = useEntitlementStore();
+  const effectivePremium = DEV_BYPASS || isPremium;
   const {
     events,
     loading,
@@ -109,17 +115,17 @@ export default function JournalScreen() {
       >
         {/* Header */}
         <Text style={styles.title}>Life Journal</Text>
-        <Text style={styles.subtitle}>인생 이벤트 기록 · 사주 흐름</Text>
+        <Text style={styles.subtitle}>Life Events · 命運流</Text>
 
         {/* 대운/세운 overlay banner */}
         <View style={styles.cycleBanner}>
           <View style={styles.cycleChip}>
-            <Text style={styles.cycleLabel}>세운</Text>
+            <Text style={styles.cycleLabel}>歲運</Text>
             <Text style={styles.cycleValue}>{yearPillar}</Text>
           </View>
           {activeDaewoon && (
             <View style={styles.cycleChip}>
-              <Text style={styles.cycleLabel}>대운</Text>
+              <Text style={styles.cycleLabel}>大運</Text>
               <Text style={styles.cycleValue}>
                 {activeDaewoon.pillar.stem}{activeDaewoon.pillar.branch}
               </Text>
@@ -131,8 +137,11 @@ export default function JournalScreen() {
         {/* AI Analysis banner (unlocked at 5+ events) */}
         {events.length >= MIN_EVENTS_FOR_ANALYSIS && (
           <TouchableOpacity
-            style={styles.analysisBanner}
-            onPress={() => setAnalysisVisible(true)}
+            style={[styles.analysisBanner, !effectivePremium && styles.analysisBannerLocked]}
+            onPress={() => {
+              if (!effectivePremium) { router.push('/paywall'); return; }
+              setAnalysisVisible(true);
+            }}
             activeOpacity={0.85}
           >
             <Text style={styles.analysisBannerIcon}>🔮</Text>
@@ -142,7 +151,13 @@ export default function JournalScreen() {
                 See how your saju cycles shaped your life events
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color="#a78bfa" />
+            {effectivePremium ? (
+              <Ionicons name="chevron-forward" size={18} color="#a78bfa" />
+            ) : (
+              <View style={styles.premiumBadge}>
+                <Text style={styles.premiumBadgeText}>Premium</Text>
+              </View>
+            )}
           </TouchableOpacity>
         )}
 
@@ -253,10 +268,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#2d1854', borderRadius: 14, padding: 14,
     marginBottom: 16, borderWidth: 1, borderColor: '#7c3aed',
   },
+  analysisBannerLocked: { borderColor: '#3d2a6e' },
   analysisBannerIcon:  { fontSize: 28 },
   analysisBannerText:  { flex: 1 },
   analysisBannerTitle: { color: '#fff', fontWeight: '700', fontSize: 15 },
   analysisBannerDesc:  { color: '#9d8fbe', fontSize: 12, marginTop: 2 },
+  premiumBadge: {
+    backgroundColor: '#7c3aed', borderRadius: 8,
+    paddingHorizontal: 8, paddingVertical: 3,
+  },
+  premiumBadgeText: { color: '#fff', fontSize: 11, fontWeight: '700' },
 
   lockedAnalysis: {
     backgroundColor: '#2d1854', borderRadius: 12, padding: 12,

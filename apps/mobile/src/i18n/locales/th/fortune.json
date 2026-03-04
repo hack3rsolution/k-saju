@@ -1,0 +1,24 @@
+{
+  "title": "ดวงชะตา",
+  "subtitle": "การอ่านดวง · รอบโชค · จังหวะจักรวาล",
+  "types": {
+    "daily": "ดวงประจำวัน",
+    "weekly": "ดวงประจำสัปดาห์",
+    "monthly": "ดวงประจำเดือน",
+    "annual": "ดวงประจำปี",
+    "daewoon": "รอบโชคใหญ่"
+  },
+  "freeLimit": "เหลือการอ่านฟรี {{remaining}} ครั้งในสัปดาห์นี้",
+  "freeLimitExhausted": "ไม่มีการอ่านฟรีในสัปดาห์นี้แล้ว",
+  "luckyItems": {
+    "title": "สิ่งมงคล",
+    "color": "สีมงคล",
+    "number": "เลขมงคล",
+    "direction": "ทิศมงคล",
+    "food": "อาหารแนะนำ"
+  },
+  "refresh": "รีเฟรช",
+  "share": "แชร์",
+  "premiumRequired": "เฉพาะ Premium",
+  "unlockReading": "ปลดล็อกการอ่านทั้งหมด"
+}

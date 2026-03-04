@@ -1,0 +1,24 @@
+{
+  "title": "Glücksvorhersage",
+  "subtitle": "Lesungen · Glückszyklen · Kosmisches Timing",
+  "types": {
+    "daily": "Tagesglück",
+    "weekly": "Wochenglück",
+    "monthly": "Monatsglück",
+    "annual": "Jahresglück",
+    "daewoon": "Großer Glückszyklus"
+  },
+  "freeLimit": "{{remaining}} kostenlose Lesung(en) diese Woche übrig",
+  "freeLimitExhausted": "Keine kostenlosen Lesungen mehr diese Woche",
+  "luckyItems": {
+    "title": "Glücksbringer",
+    "color": "Glücksfarbe",
+    "number": "Glückszahl",
+    "direction": "Glücksrichtung",
+    "food": "Empfohlenes Essen"
+  },
+  "refresh": "Aktualisieren",
+  "share": "Teilen",
+  "premiumRequired": "Nur Premium",
+  "unlockReading": "Alle Lesungen freischalten"
+}

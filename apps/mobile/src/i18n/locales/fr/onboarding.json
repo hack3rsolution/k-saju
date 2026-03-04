@@ -1,0 +1,35 @@
+{
+  "step": "Étape {{current}} sur {{total}}",
+  "birthInput": {
+    "title": "Vos informations de naissance",
+    "subtitle": "Nous utilisons votre date et heure de naissance pour calculer vos Quatre Piliers (Saju).",
+    "birthDate": "Date de naissance",
+    "birthTime": "Heure de naissance",
+    "birthTimeUnknown": "Je ne connais pas mon heure de naissance",
+    "gender": "Genre",
+    "male": "Homme",
+    "female": "Femme",
+    "continue": "Continuer"
+  },
+  "culturalFrame": {
+    "title": "Choisissez votre prisme",
+    "subtitle": "Mêmes données cosmiques — personnalisées selon votre contexte culturel.",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 Coréen", "desc": "Lecture traditionnelle des Quatre Piliers" },
+      "cn": { "label": "BaZi", "region": "🇨🇳 Chinois", "desc": "Système BaZi classique" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 Japonais", "desc": "Lecture du destin japonais" },
+      "en": { "label": "Plan Cosmique", "region": "🌏 Occidental", "desc": "Focus personnalité et chemin de vie" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 Latin", "desc": "Style horoscope" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Asie du Sud", "desc": "Perspective inspirée du Jyotish" }
+    },
+    "continue": "Continuer"
+  },
+  "resultPreview": {
+    "title": "Aperçu de votre thème",
+    "subtitle": "Voici un aperçu de votre plan cosmique.",
+    "unlockTitle": "Déverrouillez votre destin complet",
+    "unlockDesc": "Fortune quotidienne, compatibilité, cycle de chance annuel et plus encore avec Premium.",
+    "exploreFree": "Explorer les fonctionnalités gratuites",
+    "viewPremium": "Voir les offres Premium"
+  }
+}

@@ -110,7 +110,7 @@ Deno.serve(async (req: Request) => {
   const recentFeedback = await getRecentFeedback(supabase, user.id, 5).catch(() => []);
 
   // ── Build prompts ─────────────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback);
+  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback, request.userLanguage);
   const userPrompt   = buildUserPrompt(request);
 
   // ── Claude API call ───────────────────────────────────────────────────────

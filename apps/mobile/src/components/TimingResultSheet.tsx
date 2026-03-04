@@ -26,10 +26,10 @@ function scoreColor(score: number): string {
 }
 
 function scoreLabel(score: number): string {
-  if (score >= 8) return '최적';
-  if (score >= 6) return '양호';
-  if (score >= 4) return '보통';
-  return '비추';
+  if (score >= 8) return 'Optimal';
+  if (score >= 6) return 'Good';
+  if (score >= 4) return 'Fair';
+  return 'Caution';
 }
 
 // ── Score gauge ───────────────────────────────────────────────────────────────
@@ -84,9 +84,17 @@ interface Props {
   limitReached: boolean;
   error: string | null;
   onClose: () => void;
+  /** Days until free timing analysis resets. If not provided, computed from end of month. */
+  timingDaysUntilFree?: number;
 }
 
-export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose }: Props) {
+function daysUntilMonthEnd(): number {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
+}
+
+export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose, timingDaysUntilFree }: Props) {
+  const daysLeft = timingDaysUntilFree ?? daysUntilMonthEnd();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -96,20 +104,22 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           {loading ? (
             <View style={styles.centerBox}>
               <ActivityIndicator color="#a78bfa" size="large" />
-              <Text style={styles.loadingText}>사주 분석 중…</Text>
+              <Text style={styles.loadingText}>Analyzing…</Text>
             </View>
           ) : limitReached ? (
             <View style={styles.centerBox}>
               <Text style={styles.limitIcon}>🔒</Text>
-              <Text style={styles.limitTitle}>이번 달 무료 분석 완료</Text>
+              <Text style={styles.limitTitle}>Free Analysis Used</Text>
               <Text style={styles.limitDesc}>
-                Premium으로 업그레이드하면 매일 무제한 타이밍 분석이 가능합니다.
+                {daysLeft > 0
+                  ? `Next free use in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — or upgrade for unlimited timing analysis.`
+                  : 'Your free analysis resets tomorrow — or upgrade for unlimited access.'}
               </Text>
               <TouchableOpacity
                 style={styles.upgradeBtn}
                 onPress={() => { onClose(); router.push('/paywall'); }}
               >
-                <Text style={styles.upgradeBtnText}>Premium 업그레이드 →</Text>
+                <Text style={styles.upgradeBtnText}>Upgrade to Premium →</Text>
               </TouchableOpacity>
             </View>
           ) : error ? (
@@ -118,14 +128,14 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
             </View>
           ) : advice ? (
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-              <Text style={styles.title}>⏰ 타이밍 분석 결과</Text>
+              <Text style={styles.title}>⏰ TIMING ANALYSIS</Text>
 
               <ScoreGauge score={advice.score} />
 
               <Text style={styles.headline}>{advice.headline}</Text>
 
               {/* Reasons */}
-              <Text style={styles.sectionLabel}>✅ 긍정 요인</Text>
+              <Text style={styles.sectionLabel}>✅ POSITIVE FACTORS</Text>
               {advice.reasons.map((r, i) => (
                 <View key={i} style={styles.reasonRow}>
                   <Text style={styles.bullet}>·</Text>
@@ -134,7 +144,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
               ))}
 
               {/* Cautions */}
-              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ 주의 사항</Text>
+              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ CAUTIONS</Text>
               {advice.cautions.map((c, i) => (
                 <View key={i} style={styles.cautionRow}>
                   <Text style={styles.cautionBullet}>·</Text>
@@ -145,7 +155,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           ) : null}
 
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>닫기</Text>
+            <Text style={styles.closeBtnText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>

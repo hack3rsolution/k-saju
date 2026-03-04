@@ -6,21 +6,43 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import { WheelPicker } from '../../src/components/WheelPicker';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
+import { useLanguageStore } from '../../src/store/languageStore';
 
 const YEARS = Array.from({ length: 81 }, (_, i) => String(1930 + i));
 const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 
+const LUNAR_LANGUAGES = new Set(['ko', 'zh-Hans', 'zh-Hant', 'ja']);
+
 function daysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate();
 }
 
+/** Convert a Korean/Chinese lunar date to the Gregorian (solar) equivalent */
+function lunarToSolar(
+  year: number,
+  month: number,
+  day: number,
+): { year: number; month: number; day: number } | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Lunar } = require('lunar-javascript');
+    const lunar = Lunar.fromYmd(year, month, day);
+    const solar = lunar.getSolar();
+    return { year: solar.getYear(), month: solar.getMonth(), day: solar.getDay() };
+  } catch {
+    return null;
+  }
+}
+
 export default function BirthInputScreen() {
   const { setBirthData } = useOnboardingStore();
+  const { language } = useLanguageStore();
 
   const [yearIdx, setYearIdx] = useState(60);   // 1990
   const [monthIdx, setMonthIdx] = useState(0);
@@ -28,6 +50,7 @@ export default function BirthInputScreen() {
   const [hourIdx, setHourIdx] = useState(12);
   const [timeKnown, setTimeKnown] = useState(false);
   const [gender, setGender] = useState<'M' | 'F' | null>(null);
+  const [isLunar, setIsLunar] = useState(LUNAR_LANGUAGES.has(language));
 
   const year = 1930 + yearIdx;
   const month = monthIdx + 1;
@@ -41,10 +64,28 @@ export default function BirthInputScreen() {
   const clampedDayIdx = Math.min(dayIdx, days.length - 1);
 
   function handleContinue() {
+    let solarYear = year;
+    let solarMonth = month;
+    let solarDay = clampedDayIdx + 1;
+
+    if (isLunar) {
+      const converted = lunarToSolar(year, month, clampedDayIdx + 1);
+      if (!converted) {
+        Alert.alert(
+          'Invalid Lunar Date',
+          'The lunar date you entered could not be converted. Please check and try again.',
+        );
+        return;
+      }
+      solarYear = converted.year;
+      solarMonth = converted.month;
+      solarDay = converted.day;
+    }
+
     setBirthData({
-      birthYear: year,
-      birthMonth: month,
-      birthDay: clampedDayIdx + 1,
+      birthYear: solarYear,
+      birthMonth: solarMonth,
+      birthDay: solarDay,
       birthHour: timeKnown ? hourIdx : null,
       gender,
     });
@@ -58,6 +99,31 @@ export default function BirthInputScreen() {
       <Text style={styles.subtitle}>
         We use your birth date and time to calculate your Four Pillars (四柱).
       </Text>
+
+      {/* Lunar / Solar toggle */}
+      <View style={styles.calendarToggle}>
+        <TouchableOpacity
+          style={[styles.calToggleBtn, isLunar && styles.calToggleBtnActive]}
+          onPress={() => setIsLunar(true)}
+        >
+          <Text style={[styles.calToggleText, isLunar && styles.calToggleTextActive]}>
+            🌙 Lunar
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.calToggleBtn, !isLunar && styles.calToggleBtnActive]}
+          onPress={() => setIsLunar(false)}
+        >
+          <Text style={[styles.calToggleText, !isLunar && styles.calToggleTextActive]}>
+            ☀️ Solar
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {isLunar && (
+        <Text style={styles.lunarHint}>
+          Lunar date will be converted to solar for Four Pillars calculation.
+        </Text>
+      )}
 
       {/* Date pickers */}
       <View style={styles.pickerCard}>
@@ -136,7 +202,32 @@ const styles = StyleSheet.create({
   content: { padding: 28, paddingTop: 72, paddingBottom: 40 },
   step: { color: '#7c3aed', fontWeight: '600', marginBottom: 6 },
   title: { fontSize: 28, fontWeight: '700', color: '#fff', marginBottom: 10 },
-  subtitle: { fontSize: 15, color: '#b8a9d9', marginBottom: 28, lineHeight: 22 },
+  subtitle: { fontSize: 15, color: '#b8a9d9', marginBottom: 20, lineHeight: 22 },
+
+  calendarToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#2d1854',
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 8,
+  },
+  calToggleBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 9,
+    alignItems: 'center',
+  },
+  calToggleBtnActive: { backgroundColor: '#7c3aed' },
+  calToggleText: { color: '#9d8fbe', fontWeight: '600', fontSize: 14 },
+  calToggleTextActive: { color: '#fff' },
+  lunarHint: {
+    color: '#9d8fbe',
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+
   pickerCard: {
     backgroundColor: '#2d1854',
     borderRadius: 16,

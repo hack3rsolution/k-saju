@@ -19,6 +19,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 
 // ── Response types (mirrors supabase/functions/saju-reading/types.ts) ────────
 
@@ -91,6 +92,7 @@ export function useFortune(): FortuneState {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const ganji = todayGanji();
   // Stable ref so the effect below doesn't re-fire when ganji object changes identity
@@ -180,6 +182,7 @@ export function useFortune(): FortuneState {
               type: 'daily',
               refDate,
               todaySexagenary: todayDay,
+              userLanguage: language,
             }),
           },
         );
@@ -213,7 +216,7 @@ export function useFortune(): FortuneState {
     fetch();
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, tick]);
+  }, [session, tick, language]);
 
   return {
     loading,

@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useRelationshipStore } from '../store/relationshipStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 import type {
   Relationship,
   AddRelationshipInput,
@@ -43,6 +44,7 @@ function rowToRelationship(row: Record<string, unknown>): Relationship {
 export function useRelationships() {
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
   const {
     relationships,
     setRelationships,
@@ -169,6 +171,7 @@ export function useRelationships() {
               relationshipType: rel.relationshipType,
               frame:            frame ?? 'en',
               refMonth,
+              userLanguage:     language,
             }),
           },
         );

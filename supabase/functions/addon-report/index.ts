@@ -164,7 +164,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // Build prompts & call Claude
-  const systemPrompt = buildSystemPrompt(request.frame);
+  const systemPrompt = buildSystemPrompt(request.frame, (request as { userLanguage?: string }).userLanguage);
   const userPrompt   = buildUserPrompt(request);
 
   let report: ClaudeReportOutput;

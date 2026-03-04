@@ -98,10 +98,25 @@ function buildFeedbackNote(feedbacks: FeedbackContext[]): string {
   return note;
 }
 
-export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = []): string {
-  const feedbackNote = buildFeedbackNote(feedbacks);
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
 
-  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}
+export function buildSystemPrompt(
+  frame: CulturalFrame,
+  feedbacks: FeedbackContext[] = [],
+  userLanguage?: string,
+): string {
+  const feedbackNote = buildFeedbackNote(feedbacks);
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  const langInstruction = langName
+    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All fortune text, analysis, and explanations must be in ${langName}. Do not mix languages.`
+    : '';
+
+  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}${langInstruction}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {

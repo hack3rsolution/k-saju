@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useJournalStore } from '../store/journalStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 import type {
   LifeEvent,
   AddEventInput,
@@ -38,6 +39,7 @@ export function useJournal() {
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
   const { events, setEvents, addEvent, removeEvent } = useJournalStore();
+  const { language } = useLanguageStore();
 
   const [loading, setLoading]               = useState(false);
   const [analysisLoading, setAnalysisLoading] = useState(false);
@@ -145,6 +147,7 @@ export function useJournal() {
               dayStem:        chart.dayStem,
             },
             frame: frame ?? 'en',
+            userLanguage: language,
           }),
         },
       );

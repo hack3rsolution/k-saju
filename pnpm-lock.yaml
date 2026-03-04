@@ -114,6 +114,9 @@ importers:
       i18next:
         specifier: ^25.8.13
         version: 25.8.13(typescript@5.9.2)
+      lunar-javascript:
+        specifier: ^1.7.7
+        version: 1.7.7
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -9382,6 +9385,10 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
     dev: true
+
+  /lunar-javascript@1.7.7:
+    resolution: {integrity: sha512-u/KYiwPIBo/0bT+WWfU7qO1d+aqeB90Tuy4ErXenr2Gam0QcWeezUvtiOIyXR7HbVnW2I1DKfU0NBvzMZhbVQw==}
+    dev: false
 
   /magic-string@0.30.18:
     resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}

@@ -192,8 +192,18 @@ const REPORT_BUILDERS: Record<
   name_analysis: buildNameAnalysisPrompt,
 };
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const base = SYSTEM_PROMPTS[frame];
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  if (!langName) return base;
+  return `${base}\n\nIMPORTANT: All report text (title, overview, sections) must be written entirely in ${langName}. Do not mix languages.`;
 }
 
 export function buildUserPrompt(req: AddonReportRequest): string {

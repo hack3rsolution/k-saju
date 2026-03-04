@@ -139,6 +139,16 @@ Respond ONLY with valid JSON matching this exact schema:
 }`;
 }
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const base = SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  if (!langName) return base;
+  return `${base}\n\nIMPORTANT: Respond ONLY in ${langName}. All text in the JSON must be in ${langName}. Do not mix languages.`;
 }

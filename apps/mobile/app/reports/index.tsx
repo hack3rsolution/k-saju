@@ -267,7 +267,7 @@ export default function ReportsScreen() {
       <ReportCard
         icon="💞"
         title="Deep Compatibility"
-        subtitle="궁합 · 합충형파 분석"
+        subtitle="合婚 · Compatibility Analysis"
         desc="Compare two saju charts for element harmony, clash cycles, and long-term relationship forecast."
         unlockPrice="$4.99"
         isUnlocked={addons.deepCompatibility}
@@ -284,8 +284,8 @@ export default function ReportsScreen() {
       <ReportCard
         icon="💼"
         title="Career & Wealth"
-        subtitle="재물운 · 관운"
-        desc="Analyse 재성/관성 stars, optimal career domains, wealth accumulation patterns, and timing windows."
+        subtitle="財官 · Wealth & Career"
+        desc="Analyse wealth and career stars, optimal career domains, wealth accumulation patterns, and timing windows."
         unlockPrice="$4.99"
         isUnlocked={addons.careerWealth}
       >
@@ -310,7 +310,7 @@ export default function ReportsScreen() {
       {/* ── 3. Full 대운 Report ───────────────────────────────────────────── */}
       <ReportCard
         icon="🌊"
-        title="Full 대운 Report"
+        title="Full 大運 Report"
         subtitle="大運 · 10-Year Luck Cycle PDF"
         desc="Comprehensive analysis of all 8 major luck periods covering your full life arc, with PDF export."
         unlockPrice="$6.99"
@@ -339,7 +339,7 @@ export default function ReportsScreen() {
       <ReportCard
         icon="📝"
         title="Name Analysis"
-        subtitle="작명 · 이름 한자 오행"
+        subtitle="名分析 · Name Element Analysis"
         desc="Analyse your name's hanja strokes and elemental energy against your natal chart. Get rename recommendations."
         unlockPrice="$9.99"
         isUnlocked={addons.nameAnalysis}
@@ -355,7 +355,7 @@ export default function ReportsScreen() {
               style={styles.nameInput}
               value={nameInput}
               onChangeText={setNameInput}
-              placeholder="Enter name (e.g. 김민준 or 金敏俊)"
+              placeholder="Enter name (e.g. Kim Minjun or 金敏俊)"
               placeholderTextColor="#5b4d7e"
             />
             {nameReport.error && (

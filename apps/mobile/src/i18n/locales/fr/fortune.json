@@ -1,0 +1,24 @@
+{
+  "title": "Fortune",
+  "subtitle": "Lectures · Cycles de Chance · Timing Cosmique",
+  "types": {
+    "daily": "Fortune du Jour",
+    "weekly": "Fortune de la Semaine",
+    "monthly": "Fortune du Mois",
+    "annual": "Fortune Annuelle",
+    "daewoon": "Grand Cycle de Chance"
+  },
+  "freeLimit": "{{remaining}} lecture(s) gratuite(s) restante(s) cette semaine",
+  "freeLimitExhausted": "Aucune lecture gratuite restante cette semaine",
+  "luckyItems": {
+    "title": "Porte-Bonheur",
+    "color": "Couleur Chancheuse",
+    "number": "Numéro Chanceux",
+    "direction": "Direction Chanceuse",
+    "food": "Aliment Recommandé"
+  },
+  "refresh": "Actualiser",
+  "share": "Partager",
+  "premiumRequired": "Premium Uniquement",
+  "unlockReading": "Débloquer Toutes les Lectures"
+}

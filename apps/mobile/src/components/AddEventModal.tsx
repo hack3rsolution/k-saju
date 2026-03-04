@@ -87,7 +87,7 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
           <View style={styles.handle} />
 
           <Text style={styles.heading}>Add Life Event</Text>
-          <Text style={styles.subheading}>인생 이벤트 기록</Text>
+          <Text style={styles.subheading}>Record a life event</Text>
 
           <ScrollView showsVerticalScrollIndicator={false}>
             {/* Title */}

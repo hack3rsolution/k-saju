@@ -13,10 +13,10 @@ interface Category {
 }
 
 const CATEGORIES: Category[] = [
-  { key: 'business',   emoji: '🚀', label: '사업 / 창업',   desc: 'Start or expand a business' },
-  { key: 'investment', emoji: '💰', label: '투자 / 재테크', desc: 'Invest money or assets'       },
-  { key: 'romance',    emoji: '💞', label: '연애 / 결혼',   desc: 'Start a relationship or wed' },
-  { key: 'relocation', emoji: '🏠', label: '이사 / 여행',   desc: 'Move home or plan a trip'    },
+  { key: 'business',   emoji: '🚀', label: 'Business / Startup',   desc: 'Start or expand a business' },
+  { key: 'investment', emoji: '💰', label: 'Investment / Finance',  desc: 'Invest money or assets'       },
+  { key: 'romance',    emoji: '💞', label: 'Romance / Marriage',    desc: 'Start a relationship or wed' },
+  { key: 'relocation', emoji: '🏠', label: 'Moving / Travel',       desc: 'Move home or plan a trip'    },
 ];
 
 interface Props {
@@ -32,8 +32,8 @@ export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
-          <Text style={styles.title}>⏰ 타이밍 어드바이저</Text>
-          <Text style={styles.subtitle}>어떤 결정을 분석할까요?</Text>
+          <Text style={styles.title}>⏰ Timing Advisor</Text>
+          <Text style={styles.subtitle}>Which decision should we analyze?</Text>
 
           {CATEGORIES.map((c) => (
             <TouchableOpacity
@@ -50,7 +50,7 @@ export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
           ))}
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>취소</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>

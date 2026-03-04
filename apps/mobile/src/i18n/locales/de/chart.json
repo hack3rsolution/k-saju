@@ -1,0 +1,30 @@
+{
+  "title": "Meine Vier Säulen",
+  "subtitle": "Kosmischer Plan · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Jahres-\nSäule",
+    "month": "Monats-\nSäule",
+    "day": "Tages-\nSäule",
+    "hour": "Stunden-\nSäule",
+    "hourUnknown": "Stunde\nUnbekannt"
+  },
+  "stem": "Himmlischer Stamm",
+  "branch": "Irdischer Ast",
+  "dayStem": "Tagesstamm (Selbst)",
+  "elementBalance": "Gleichgewicht der Fünf Elemente",
+  "daewoon": "Großer Glückszyklus",
+  "daewoonPeriod": "Alter {{age}}+",
+  "shishin": {
+    "title": "Zehn Götter",
+    "비견": "Begleiter",
+    "겁재": "Raubreichtum",
+    "식신": "Essensgott",
+    "상관": "Verletzender Beamter",
+    "편재": "Indirekter Reichtum",
+    "정재": "Direkter Reichtum",
+    "편관": "Sieben Töter",
+    "정관": "Direkter Beamter",
+    "편인": "Indirekte Ressource",
+    "정인": "Direkte Ressource"
+  }
+}

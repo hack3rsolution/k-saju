@@ -12,6 +12,7 @@ interface SajuState {
     daewoon: DaewoonPeriod[],
     frame: CulturalFrame,
   ) => void;
+  updateFrame: (frame: CulturalFrame) => void;
   clear: () => void;
 }
 
@@ -22,5 +23,6 @@ export const useSajuStore = create<SajuState>((set) => ({
   frame: null,
   setChart: (chart, birthData, daewoon, frame) =>
     set({ chart, birthData, daewoon, frame }),
+  updateFrame: (frame) => set({ frame }),
   clear: () => set({ chart: null, daewoon: [], birthData: null, frame: null }),
 }));

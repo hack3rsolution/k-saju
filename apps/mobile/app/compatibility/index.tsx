@@ -1,9 +1,17 @@
 /**
- * Compatibility screen — Deep Compatibility Report (애드온).
+ * Compatibility screen — 궁합 analysis.
  *
- * • Entitlement gate: addon.deepCompatibility (from entitlementStore)
- * • Partner birth date input → calculate partner chart → call addon-report
- * • Shows section-by-section results
+ * Freemium strategy:
+ *   FREE   → local element-harmony score (0-100) + one-line summary
+ *            "See why — Unlock full report $4.99" CTA
+ *   ADDON  → full AI Compatibility Report (deepCompatibility entitlement)
+ *
+ * Local score algorithm (no network required):
+ *   Compares day/month/year element pairs using 오행 상생(+) / 상극(-) rules.
+ *   Day pillar weighted 40%, Month 30%, Year 30%.
+ *   Final score scaled to 0-100.
+ *
+ * DEV_BYPASS: EXPO_PUBLIC_ENABLE_DEV_BYPASS=true skips addon gate in dev.
  */
 import { useState } from 'react';
 import {
@@ -14,6 +22,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -23,25 +32,108 @@ import {
   STEM_ELEMENT,
   type BirthData,
   type SajuChart,
+  type FiveElement,
 } from '@k-saju/saju-engine';
 import { useAddonReport } from '../../src/hooks/useAddonReport';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useSajuStore } from '../../src/store/sajuStore';
 import type { ReportSection } from '../../src/hooks/useAddonReport';
 
-// ── Element color palette ──────────────────────────────────────────────────────
+const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
+
+/** Lunar → Solar conversion using lunar-javascript */
+function lunarToSolar(
+  year: number,
+  month: number,
+  day: number,
+): { year: number; month: number; day: number } | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Lunar } = require('lunar-javascript');
+    const solar = Lunar.fromYmd(year, month, day).getSolar();
+    return { year: solar.getYear(), month: solar.getMonth(), day: solar.getDay() };
+  } catch {
+    return null;
+  }
+}
+
+const LUNAR_FRAMES = new Set(['kr', 'cn', 'jp']);
+
+// ── Element palette ───────────────────────────────────────────────────────────
 
 const ELEM_COLOR: Record<string, string> = {
   木: '#22c55e', 火: '#ef4444', 土: '#eab308', 金: '#94a3b8', 水: '#3b82f6',
 };
 
+// ── Local element harmony score ───────────────────────────────────────────────
+
+/** 오행 상생 (generating) table */
+const GENERATES: Partial<Record<FiveElement, FiveElement>> = {
+  木: '火', 火: '土', 土: '金', 金: '水', 水: '木',
+};
+
+/** 오행 상극 (controlling) table */
+const CONTROLS: Partial<Record<FiveElement, FiveElement>> = {
+  木: '土', 土: '水', 水: '火', 火: '金', 金: '木',
+};
+
+/**
+ * Score a single element pair: 100 = generating (harmony), 70 = same, 50 = neutral, 30 = controlling.
+ */
+function scorePair(a: FiveElement, b: FiveElement): number {
+  if (a === b) return 70;
+  if (GENERATES[a] === b || GENERATES[b] === a) return 100;
+  if (CONTROLS[a] === b || CONTROLS[b] === a) return 30;
+  return 50; // neutral
+}
+
+interface LocalCompatibility {
+  score: number;
+  summary: string;
+  dayRelation: string;
+}
+
+/**
+ * Calculate a 0-100 compatibility score from two saju charts using element harmony rules.
+ * Day pillar 40%, Month 30%, Year 30%.
+ */
+function calculateLocalCompatibility(userChart: SajuChart, partnerChart: SajuChart): LocalCompatibility {
+  const dayScore   = scorePair(STEM_ELEMENT[userChart.pillars.day.stem]!,   STEM_ELEMENT[partnerChart.pillars.day.stem]!);
+  const monthScore = scorePair(STEM_ELEMENT[userChart.pillars.month.stem]!, STEM_ELEMENT[partnerChart.pillars.month.stem]!);
+  const yearScore  = scorePair(STEM_ELEMENT[userChart.pillars.year.stem]!,  STEM_ELEMENT[partnerChart.pillars.year.stem]!);
+
+  const weighted = dayScore * 0.4 + monthScore * 0.3 + yearScore * 0.3;
+  const score = Math.round(weighted);
+
+  let summary: string;
+  let dayRelation: string;
+
+  // Day element relation label
+  const dA = STEM_ELEMENT[userChart.pillars.day.stem]!;
+  const dB = STEM_ELEMENT[partnerChart.pillars.day.stem]!;
+  if (GENERATES[dA] === dB) dayRelation = `Your ${dA} nourishes their ${dB}`;
+  else if (GENERATES[dB] === dA) dayRelation = `Their ${dB} nourishes your ${dA}`;
+  else if (CONTROLS[dA] === dB) dayRelation = `Your ${dA} challenges their ${dB}`;
+  else if (CONTROLS[dB] === dA) dayRelation = `Their ${dB} challenges your ${dA}`;
+  else if (dA === dB) dayRelation = `Both carry ${dA} energy — strong resonance`;
+  else dayRelation = `${dA} and ${dB} flow independently`;
+
+  if (score >= 80) summary = 'Excellent elemental harmony — a naturally complementary pair';
+  else if (score >= 65) summary = 'Strong compatibility with a dynamic, growth-oriented bond';
+  else if (score >= 50) summary = 'Moderate harmony — growth through complementary differences';
+  else if (score >= 35) summary = 'Challenging energies that deepen with understanding';
+  else summary = 'High tension combination — transformation is possible through awareness';
+
+  return { score, summary, dayRelation };
+}
+
 // ── Section card ──────────────────────────────────────────────────────────────
 
 function SectionCard({ section, index }: { section: ReportSection; index: number }) {
-  const colors = ['#7c3aed', '#a855f7', '#9333ea', '#6d28d9', '#8b5cf6', '#7c3aed'];
-  const accentColor = colors[index % colors.length];
+  const colors = ['#7c3aed', '#a855f7', '#9333ea', '#6d28d9', '#8b5cf6'];
   return (
     <View style={sStyles.card}>
-      <View style={[sStyles.accentBar, { backgroundColor: accentColor }]} />
+      <View style={[sStyles.accentBar, { backgroundColor: colors[index % colors.length] }]} />
       <View style={sStyles.body}>
         <Text style={sStyles.heading}>{section.heading}</Text>
         <Text style={sStyles.content}>{section.content}</Text>
@@ -51,17 +143,66 @@ function SectionCard({ section, index }: { section: ReportSection; index: number
 }
 
 const sStyles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    backgroundColor: '#2d1854',
-    borderRadius: 14,
-    marginBottom: 12,
-    overflow: 'hidden',
-  },
+  card: { flexDirection: 'row', backgroundColor: '#2d1854', borderRadius: 14, marginBottom: 12, overflow: 'hidden' },
   accentBar: { width: 4 },
   body: { flex: 1, padding: 16 },
   heading: { fontSize: 14, fontWeight: '700', color: '#d8b4fe', marginBottom: 8 },
   content: { fontSize: 13, color: '#b8a9d9', lineHeight: 21 },
+});
+
+// ── Score card ────────────────────────────────────────────────────────────────
+
+function ScoreCard({
+  compat,
+  hasFullAccess,
+  onUnlock,
+}: {
+  compat: LocalCompatibility;
+  hasFullAccess: boolean;
+  onUnlock: () => void;
+}) {
+  const scoreColor = compat.score >= 70 ? '#22c55e' : compat.score >= 50 ? '#a78bfa' : '#ef4444';
+
+  return (
+    <View style={scoreStyles.card}>
+      {/* Score ring area */}
+      <View style={scoreStyles.scoreRow}>
+        <View style={[scoreStyles.scoreCircle, { borderColor: scoreColor }]}>
+          <Text style={[scoreStyles.scoreNum, { color: scoreColor }]}>{compat.score}</Text>
+          <Text style={scoreStyles.scoreMax}>/100</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={scoreStyles.summary}>{compat.summary}</Text>
+          <Text style={[scoreStyles.dayRelation, { color: scoreColor }]}>{compat.dayRelation}</Text>
+        </View>
+      </View>
+
+      {/* Gate CTA or full-report trigger */}
+      {!hasFullAccess ? (
+        <TouchableOpacity style={scoreStyles.ctaBtn} onPress={onUnlock}>
+          <Text style={scoreStyles.ctaBtnText}>See why — Unlock full report $4.99</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
+  );
+}
+
+const scoreStyles = StyleSheet.create({
+  card: { backgroundColor: '#2d1854', borderRadius: 20, padding: 20, marginBottom: 16 },
+  scoreRow: { flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 16 },
+  scoreCircle: {
+    width: 80, height: 80, borderRadius: 40,
+    borderWidth: 4, alignItems: 'center', justifyContent: 'center',
+  },
+  scoreNum: { fontSize: 28, fontWeight: '800', lineHeight: 32 },
+  scoreMax: { fontSize: 11, color: '#9d8fbe', fontWeight: '600' },
+  summary: { color: '#fff', fontWeight: '700', fontSize: 15, lineHeight: 22, marginBottom: 6 },
+  dayRelation: { fontSize: 12, fontWeight: '600' },
+  ctaBtn: {
+    backgroundColor: '#7c3aed', borderRadius: 12,
+    paddingVertical: 13, alignItems: 'center',
+  },
+  ctaBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 });
 
 // ── Main screen ───────────────────────────────────────────────────────────────
@@ -69,27 +210,43 @@ const sStyles = StyleSheet.create({
 export default function CompatibilityScreen() {
   const { loading, report, error, generate, reset } = useAddonReport();
   const { addons } = useEntitlementStore();
-  const isUnlocked = addons.deepCompatibility;
+  const { chart: userChart, frame } = useSajuStore();
+  const hasFullAccess = DEV_BYPASS || addons.deepCompatibility;
 
-  // Partner birth input state
+  // Partner birth input
   const [pYear,   setPYear]   = useState('');
   const [pMonth,  setPMonth]  = useState('');
   const [pDay,    setPDay]    = useState('');
   const [pGender, setPGender] = useState<'M' | 'F'>('F');
+  const [pIsLunar, setPIsLunar] = useState(LUNAR_FRAMES.has(frame ?? ''));
   const [inputError, setInputError] = useState<string | null>(null);
 
+  // Local compatibility result (free tier)
+  const [localCompat, setLocalCompat] = useState<LocalCompatibility | null>(null);
+  const [partnerChart, setPartnerChart] = useState<{ chart: SajuChart; birthYear: number } | null>(null);
+
   function buildPartnerChart(): { chart: SajuChart; birthYear: number } | null {
-    const year  = parseInt(pYear, 10);
-    const month = parseInt(pMonth, 10);
-    const day   = parseInt(pDay, 10);
+    const yearRaw  = parseInt(pYear, 10);
+    const monthRaw = parseInt(pMonth, 10);
+    const dayRaw   = parseInt(pDay, 10);
 
     if (
-      isNaN(year)  || year  < 1920 || year  > 2020 ||
-      isNaN(month) || month < 1    || month > 12   ||
-      isNaN(day)   || day   < 1    || day   > 31
+      isNaN(yearRaw)  || yearRaw  < 1920 || yearRaw  > 2020 ||
+      isNaN(monthRaw) || monthRaw < 1    || monthRaw > 12   ||
+      isNaN(dayRaw)   || dayRaw   < 1    || dayRaw   > 31
     ) {
       setInputError('Please enter a valid birth date (year 1920–2020).');
       return null;
+    }
+
+    let year = yearRaw, month = monthRaw, day = dayRaw;
+    if (pIsLunar) {
+      const solar = lunarToSolar(yearRaw, monthRaw, dayRaw);
+      if (!solar) {
+        setInputError('Could not convert lunar date. Please check and try again.');
+        return null;
+      }
+      year = solar.year; month = solar.month; day = solar.day;
     }
     setInputError(null);
 
@@ -97,52 +254,39 @@ export default function CompatibilityScreen() {
     const pillars  = calculateFourPillars(birthData);
     const elements = calculateElementBalance(pillars);
     return {
-      chart: {
-        pillars,
-        elements,
-        dayStem: pillars.day.stem,
-        dayElement: STEM_ELEMENT[pillars.day.stem],
-      },
+      chart: { pillars, elements, dayStem: pillars.day.stem, dayElement: STEM_ELEMENT[pillars.day.stem]! },
       birthYear: year,
     };
   }
 
-  async function handleAnalyze() {
+  function handleAnalyze() {
     const result = buildPartnerChart();
     if (!result) return;
+
+    setPartnerChart(result);
+
+    if (userChart) {
+      setLocalCompat(calculateLocalCompatibility(userChart, result.chart));
+    }
+  }
+
+  async function handleFullReport() {
+    if (!partnerChart) return;
     await generate({
       reportType: 'compatibility',
-      partnerChart: result.chart,
-      partnerBirthYear: result.birthYear,
+      partnerChart: partnerChart.chart,
+      partnerBirthYear: partnerChart.birthYear,
     });
   }
 
-  // ── Locked state ─────────────────────────────────────────────────────────
-
-  if (!isUnlocked) {
-    return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-          <Text style={styles.backText}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Compatibility</Text>
-        <Text style={styles.subtitle}>궁합 · 合婚 · Relationship Harmony</Text>
-        <View style={styles.lockCard}>
-          <Text style={styles.lockIcon}>💞</Text>
-          <Text style={styles.lockTitle}>Deep Compatibility Report</Text>
-          <Text style={styles.lockDesc}>
-            Unlock a full 합충형파 analysis of two charts, elemental harmony score,
-            and a 5-year relationship forecast.
-          </Text>
-          <TouchableOpacity style={styles.unlockBtn} onPress={() => router.push('/paywall')}>
-            <Text style={styles.unlockBtnText}>Unlock — $4.99</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    );
+  function handleReset() {
+    setLocalCompat(null);
+    setPartnerChart(null);
+    setInputError(null);
+    setPYear(''); setPMonth(''); setPDay('');
+    setPIsLunar(LUNAR_FRAMES.has(frame ?? ''));
+    reset();
   }
-
-  // ── Unlocked state ────────────────────────────────────────────────────────
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -153,54 +297,55 @@ export default function CompatibilityScreen() {
       <Text style={styles.title}>Compatibility</Text>
       <Text style={styles.subtitle}>궁합 · 合婚 · Relationship Harmony</Text>
 
-      {/* Partner input form */}
-      {!report && (
+      {/* Input form — shown when no result yet */}
+      {!localCompat && !report && (
         <View style={styles.formCard}>
           <Text style={styles.formTitle}>Partner's Birth Date</Text>
           <Text style={styles.formHint}>
-            Enter your partner's birth information to compare charts.
+            Enter your partner's birth info to see your elemental compatibility score.
           </Text>
 
-          <View style={styles.inputRow}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Year</Text>
-              <TextInput
-                style={styles.input}
-                value={pYear}
-                onChangeText={setPYear}
-                keyboardType="number-pad"
-                maxLength={4}
-                placeholder="1990"
-                placeholderTextColor="#5b4d7e"
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Month</Text>
-              <TextInput
-                style={styles.input}
-                value={pMonth}
-                onChangeText={setPMonth}
-                keyboardType="number-pad"
-                maxLength={2}
-                placeholder="06"
-                placeholderTextColor="#5b4d7e"
-              />
-            </View>
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Day</Text>
-              <TextInput
-                style={styles.input}
-                value={pDay}
-                onChangeText={setPDay}
-                keyboardType="number-pad"
-                maxLength={2}
-                placeholder="15"
-                placeholderTextColor="#5b4d7e"
-              />
-            </View>
+          {/* Lunar / Solar toggle */}
+          <View style={styles.calendarToggle}>
+            <TouchableOpacity
+              style={[styles.calToggleBtn, pIsLunar && styles.calToggleBtnActive]}
+              onPress={() => setPIsLunar(true)}
+            >
+              <Text style={[styles.calToggleText, pIsLunar && styles.calToggleTextActive]}>
+                🌙 Lunar
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.calToggleBtn, !pIsLunar && styles.calToggleBtnActive]}
+              onPress={() => setPIsLunar(false)}
+            >
+              <Text style={[styles.calToggleText, !pIsLunar && styles.calToggleTextActive]}>
+                ☀️ Solar
+              </Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Gender toggle */}
+          <View style={styles.inputRow}>
+            {[
+              { label: 'Year', value: pYear, onChange: setPYear, maxLength: 4, placeholder: '1990' },
+              { label: 'Month', value: pMonth, onChange: setPMonth, maxLength: 2, placeholder: '06' },
+              { label: 'Day', value: pDay, onChange: setPDay, maxLength: 2, placeholder: '15' },
+            ].map((f) => (
+              <View key={f.label} style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>{f.label}</Text>
+                <TextInput
+                  style={styles.input}
+                  value={f.value}
+                  onChangeText={f.onChange}
+                  keyboardType="number-pad"
+                  maxLength={f.maxLength}
+                  placeholder={f.placeholder}
+                  placeholderTextColor="#5b4d7e"
+                />
+              </View>
+            ))}
+          </View>
+
           <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>Partner Gender</Text>
           <View style={styles.genderRow}>
             {(['M', 'F'] as const).map((g) => (
@@ -218,43 +363,66 @@ export default function CompatibilityScreen() {
 
           {inputError && <Text style={styles.errorText}>{inputError}</Text>}
 
-          <TouchableOpacity
-            style={[styles.analyzeBtn, loading && styles.analyzeBtnDisabled]}
-            onPress={handleAnalyze}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.analyzeBtnText}>Analyze Compatibility</Text>
-            )}
+          <TouchableOpacity style={styles.analyzeBtn} onPress={handleAnalyze}>
+            <Text style={styles.analyzeBtnText}>Check Compatibility</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Error */}
-      {error && !loading && (
-        <View style={styles.errorCard}>
-          <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => { reset(); }}>
-            <Text style={styles.retryText}>Try Again</Text>
+      {/* Free score result */}
+      {localCompat && !report && (
+        <>
+          <ScoreCard
+            compat={localCompat}
+            hasFullAccess={hasFullAccess}
+            onUnlock={() => router.push('/paywall')}
+          />
+
+          {/* Full report — addon users only */}
+          {hasFullAccess && (
+            <View style={styles.fullReportCard}>
+              <Text style={styles.fullReportTitle}>Full AI Report</Text>
+              <Text style={styles.fullReportDesc}>
+                Get a detailed 5-section analysis of elemental harmony, strengths,
+                tensions, and a relationship forecast.
+              </Text>
+              <TouchableOpacity
+                style={[styles.analyzeBtn, loading && styles.analyzeBtnDisabled]}
+                onPress={handleFullReport}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.analyzeBtnText}>Generate Full Report</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {error && !loading && (
+            <View style={styles.errorCard}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
+
+          <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
+            <Text style={styles.resetBtnText}>← Analyze another person</Text>
           </TouchableOpacity>
-        </View>
+        </>
       )}
 
-      {/* Results */}
+      {/* Full AI report results */}
       {report && (
         <>
           <View style={styles.reportHeader}>
             <Text style={styles.reportTitle}>{report.title}</Text>
             <Text style={styles.reportOverview}>{report.overview}</Text>
           </View>
-
           {report.sections.map((s, i) => (
             <SectionCard key={i} section={s} index={i} />
           ))}
-
-          <TouchableOpacity style={styles.resetBtn} onPress={reset}>
+          <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
             <Text style={styles.resetBtnText}>Analyze Another Person →</Text>
           </TouchableOpacity>
         </>
@@ -273,85 +441,56 @@ const styles = StyleSheet.create({
   title: { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 4 },
   subtitle: { fontSize: 14, color: '#9d8fbe', marginBottom: 28 },
 
-  // Locked
-  lockCard: {
-    backgroundColor: '#2d1854',
-    borderRadius: 20,
-    padding: 32,
-    alignItems: 'center',
-  },
-  lockIcon: { fontSize: 48, marginBottom: 16 },
-  lockTitle: { fontSize: 20, fontWeight: '700', color: '#fff', marginBottom: 12, textAlign: 'center' },
-  lockDesc: { fontSize: 14, color: '#b8a9d9', lineHeight: 22, textAlign: 'center', marginBottom: 24 },
-  unlockBtn: {
-    backgroundColor: '#7c3aed',
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-  },
-  unlockBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-
-  // Form
   formCard: { backgroundColor: '#2d1854', borderRadius: 20, padding: 22, marginBottom: 20 },
   formTitle: { fontSize: 18, fontWeight: '700', color: '#fff', marginBottom: 6 },
-  formHint: { fontSize: 13, color: '#9d8fbe', lineHeight: 20, marginBottom: 20 },
+  formHint: { fontSize: 13, color: '#9d8fbe', lineHeight: 20, marginBottom: 16 },
+  calendarToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#1a0a2e',
+    borderRadius: 10,
+    padding: 3,
+    marginBottom: 16,
+  },
+  calToggleBtn: { flex: 1, paddingVertical: 8, borderRadius: 8, alignItems: 'center' },
+  calToggleBtnActive: { backgroundColor: '#7c3aed' },
+  calToggleText: { color: '#9d8fbe', fontWeight: '600', fontSize: 13 },
+  calToggleTextActive: { color: '#fff' },
   inputRow: { flexDirection: 'row', gap: 12 },
   inputGroup: { flex: 1 },
   inputLabel: { fontSize: 11, fontWeight: '700', color: '#7c3aed', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 },
   input: {
-    backgroundColor: '#1a0a2e',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    borderWidth: 1,
-    borderColor: '#3d2471',
+    backgroundColor: '#1a0a2e', borderRadius: 10,
+    paddingHorizontal: 12, paddingVertical: 12,
+    color: '#fff', fontSize: 16, fontWeight: '700', textAlign: 'center',
+    borderWidth: 1, borderColor: '#3d2471',
   },
   genderRow: { flexDirection: 'row', gap: 12 },
   genderBtn: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#3d2471',
-    alignItems: 'center',
-    backgroundColor: '#1a0a2e',
+    flex: 1, paddingVertical: 12, borderRadius: 10,
+    borderWidth: 1.5, borderColor: '#3d2471',
+    alignItems: 'center', backgroundColor: '#1a0a2e',
   },
   genderBtnActive: { borderColor: '#7c3aed', backgroundColor: '#7c3aed22' },
   genderText: { color: '#9d8fbe', fontWeight: '600', fontSize: 14 },
   genderTextActive: { color: '#d8b4fe' },
   errorText: { color: '#f87171', fontSize: 13, marginTop: 12, textAlign: 'center' },
   analyzeBtn: {
-    backgroundColor: '#7c3aed',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 20,
+    backgroundColor: '#7c3aed', borderRadius: 12,
+    paddingVertical: 14, alignItems: 'center', marginTop: 20,
   },
   analyzeBtnDisabled: { opacity: 0.6 },
   analyzeBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 
-  // Error card
-  errorCard: {
-    backgroundColor: '#2d1854',
-    borderRadius: 14,
-    padding: 20,
-    alignItems: 'center',
-    marginBottom: 16,
+  fullReportCard: {
+    backgroundColor: '#2d1854', borderRadius: 16,
+    padding: 18, marginBottom: 16,
+    borderWidth: 1, borderColor: '#4c1d95',
   },
-  retryBtn: {
-    marginTop: 12,
-    backgroundColor: '#7c3aed33',
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  retryText: { color: '#a78bfa', fontWeight: '600' },
+  fullReportTitle: { color: '#d8b4fe', fontSize: 16, fontWeight: '700', marginBottom: 6 },
+  fullReportDesc: { color: '#9d8fbe', fontSize: 13, lineHeight: 20 },
 
-  // Report
+  errorCard: { backgroundColor: '#2d1854', borderRadius: 14, padding: 20, alignItems: 'center', marginBottom: 16 },
+
   reportHeader: { marginBottom: 20 },
   reportTitle: { fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 10 },
   reportOverview: { fontSize: 15, color: '#b8a9d9', lineHeight: 24 },

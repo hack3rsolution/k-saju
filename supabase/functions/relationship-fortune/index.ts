@@ -208,7 +208,7 @@ Deno.serve(async (req: Request) => {
   // ── Call Claude ────────────────────────────────────────────────────────────
   let claudeResult: { summary: string; monthlyFlow: string; strengths: string[]; cautions: string[] };
   try {
-    const systemPrompt = buildSystemPrompt(request.frame);
+    const systemPrompt = buildSystemPrompt(request.frame, (request as { userLanguage?: string }).userLanguage);
     const userPrompt = buildUserPrompt(
       request.ownerChart,
       request.partnerBirth,

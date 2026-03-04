@@ -13,8 +13,19 @@ const SYSTEM_PROMPTS: Record<CulturalFrame, string> = {
 
 // ── User prompt builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  const langInstruction = langName
+    ? ` IMPORTANT: Respond ONLY in ${langName}. All text in the JSON must be in ${langName}.`
+    : '';
+  return SYSTEM_PROMPTS[frame] + langInstruction;
 }
 
 export function buildUserPrompt(events: LifeEvent[], chart: SajuChart): string {

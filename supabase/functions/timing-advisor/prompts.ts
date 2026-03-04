@@ -50,10 +50,22 @@ Assess the current cosmic cycle for a major life decision using Four Pillars com
 - Include practical Vedic remedies if the timing is challenging`,
 };
 
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
 // ── System prompt builder ─────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return `${BASE_PROMPTS[frame]}
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  const langInstruction = langName
+    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All text, headline, reasons, and cautions must be in ${langName}. Do not mix languages.`
+    : '';
+
+  return `${BASE_PROMPTS[frame]}${langInstruction}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {

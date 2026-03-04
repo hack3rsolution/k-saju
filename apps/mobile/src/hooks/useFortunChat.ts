@@ -9,6 +9,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,7 @@ export function useFortunChat(
 
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const sendMessage = useCallback(async (content: string) => {
     if (!session || !chart || !todayReading || streaming) return;
@@ -80,6 +82,7 @@ export function useFortunChat(
               dayStem:        chart.dayStem,
             },
             todayReading,
+            userLanguage: language,
           }),
         },
       );
@@ -148,7 +151,7 @@ export function useFortunChat(
     } finally {
       setStreaming(false);
     }
-  }, [session, chart, frame, messages, todayReading, fortuneId, streaming]);
+  }, [session, chart, frame, language, messages, todayReading, fortuneId, streaming]);
 
   const reset = useCallback(() => {
     setMessages([]);

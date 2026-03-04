@@ -15,9 +15,9 @@ interface Reason {
 }
 
 const REASONS: Reason[] = [
-  { key: 'accurate',  emoji: '✨', label: '정확해요' },
-  { key: 'too_vague', emoji: '🌫️', label: '너무 모호해요' },
-  { key: 'not_me',    emoji: '🤔', label: '나랑 안 맞아요' },
+  { key: 'accurate',  emoji: '✨', label: 'Accurate' },
+  { key: 'too_vague', emoji: '🌫️', label: 'Too vague' },
+  { key: 'not_me',    emoji: '🤔', label: "Doesn't fit me" },
 ];
 
 interface Props {
@@ -41,9 +41,9 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
           <View style={styles.handle} />
 
           <Text style={styles.title}>
-            {initialRating === 1 ? '👍 도움이 됐군요!' : '👎 아쉬웠군요'}
+            {initialRating === 1 ? '👍 Glad it helped!' : '👎 Sorry about that'}
           </Text>
-          <Text style={styles.subtitle}>이유를 선택해 주세요</Text>
+          <Text style={styles.subtitle}>Choose a reason</Text>
 
           {submitting ? (
             <ActivityIndicator color="#a78bfa" style={styles.spinner} />
@@ -61,7 +61,7 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
           )}
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>취소</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>

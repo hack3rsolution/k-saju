@@ -56,8 +56,9 @@ export function AddRelationshipModal({
     const m = parseInt(month, 10);
     const d = parseInt(day, 10);
 
-    if (!name.trim())               return Alert.alert('Name required');
-    if (!y || y < 1900 || y > 2025) return Alert.alert('Enter a valid birth year (1900–2025)');
+    const maxBirthYear = new Date().getFullYear() - 16;
+    if (!name.trim())                            return Alert.alert('Name required');
+    if (!y || y < 1900 || y > maxBirthYear) return Alert.alert(`Enter a valid birth year (1900–${maxBirthYear})`);
     if (!m || m < 1 || m > 12)      return Alert.alert('Enter a valid birth month (1–12)');
     if (!d || d < 1 || d > 31)      return Alert.alert('Enter a valid birth day (1–31)');
 

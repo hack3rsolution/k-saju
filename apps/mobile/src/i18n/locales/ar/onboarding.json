@@ -1,0 +1,35 @@
+{
+  "step": "الخطوة {{current}} من {{total}}",
+  "birthInput": {
+    "title": "معلومات ميلادك",
+    "subtitle": "نستخدم تاريخ ووقت ميلادك لحساب الأعمدة الأربعة (سaju).",
+    "birthDate": "تاريخ الميلاد",
+    "birthTime": "وقت الميلاد",
+    "birthTimeUnknown": "لا أعرف وقت ميلادي",
+    "gender": "الجنس",
+    "male": "ذكر",
+    "female": "أنثى",
+    "continue": "متابعة"
+  },
+  "culturalFrame": {
+    "title": "اختر منظورك",
+    "subtitle": "نفس البيانات الكونية — مخصصة لسياقك الثقافي.",
+    "frames": {
+      "kr": { "label": "사주팔자", "region": "🇰🇷 كوري", "desc": "قراءة الأعمدة الأربعة التقليدية" },
+      "cn": { "label": "BaZi", "region": "🇨🇳 صيني", "desc": "نظام BaZi الكلاسيكي" },
+      "jp": { "label": "四柱推命", "region": "🇯🇵 ياباني", "desc": "قراءة القدر اليابانية" },
+      "en": { "label": "المخطط الكوني", "region": "🌏 غربي", "desc": "التركيز على الشخصية ومسار الحياة" },
+      "es": { "label": "Destino Cósmico", "region": "🌎 لاتيني", "desc": "أسلوب الأبراج" },
+      "in": { "label": "Vedic Fusion", "region": "🇮🇳 جنوب آسيا", "desc": "منظور مستوحى من Jyotish" }
+    },
+    "continue": "متابعة"
+  },
+  "resultPreview": {
+    "title": "معاينة مخططك",
+    "subtitle": "إليك لمحة عن مخططك الكوني.",
+    "unlockTitle": "افتح قدرك الكامل",
+    "unlockDesc": "الحظ اليومي، والتوافق، ودورة الحظ السنوية، والمزيد مع بريميوم.",
+    "exploreFree": "استكشاف الميزات المجانية",
+    "viewPremium": "عرض خطط بريميوم"
+  }
+}

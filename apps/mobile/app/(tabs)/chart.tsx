@@ -316,7 +316,7 @@ export default function ChartScreen() {
       {/* ── Element Balance ── */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{labels.elementBalance}</Text>
-        <Text style={styles.sectionDeco}>오행</Text>
+        <Text style={styles.sectionDeco}>五行</Text>
       </View>
       <View style={styles.elementSection}>
         {elementRows.map((r) => {
@@ -358,7 +358,7 @@ export default function ChartScreen() {
             {labels.tenGods.split(' ')[0]}
           </Text>
           <Text style={[styles.cell, styles.cellHeader]}>{labels.branchLabel}</Text>
-          <Text style={[styles.cell, styles.cellHeader]}>오행</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>五行</Text>
         </View>
         {pillarList.map((p) => {
           const stemEl = STEM_ELEMENT[p.stem];

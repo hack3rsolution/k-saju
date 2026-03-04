@@ -230,7 +230,9 @@ export default function FortuneChatScreen() {
   }
 
   const showChips = allMessages.length === 0 && !streaming;
-  const showLocked = !isPremium || premiumRequired;
+  // Only lock when the server explicitly rejects access (403 → premiumRequired).
+  // Removing !isPremium allows free users to reach the UI with their 1 daily free chat.
+  const showLocked = premiumRequired;
 
   return (
     <>

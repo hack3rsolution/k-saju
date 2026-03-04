@@ -9,6 +9,7 @@ import type { SajuChart, BirthData, DaewoonPeriod } from '@k-saju/saju-engine';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 
 // ── Types (mirrors Edge Function types) ──────────────────────────────────────
@@ -70,6 +71,7 @@ export function useAddonReport(): AddonReportState {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, birthData } = useSajuStore();
+  const { language } = useLanguageStore();
 
   async function generate(params: GenerateParams) {
     if (!session) { setError('Not signed in'); return; }
@@ -87,6 +89,7 @@ export function useAddonReport(): AddonReportState {
         chart: serializeChart(chart, daewoon),
         frame: frame ?? 'en',
         birthYear: birthData?.year,
+        userLanguage: language,
       };
 
       if (params.partnerChart) {

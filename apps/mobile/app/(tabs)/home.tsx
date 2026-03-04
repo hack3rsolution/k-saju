@@ -18,6 +18,9 @@ import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune } from '../../src/hooks/useFortune';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useFreemiumLimits } from '../../src/hooks/useFreemiumLimits';
+
+const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 import { ShareCard } from '../../src/components/ShareCard';
 import { FeedbackSheet } from '../../src/components/FeedbackSheet';
 import { useFeedback, type FeedbackRating, type FeedbackType } from '../../src/hooks/useFeedback';
@@ -142,6 +145,8 @@ export default function HomeScreen() {
 
   const { chart, frame } = useSajuStore();
   const { isPremium } = useEntitlementStore();
+  const { chatRemaining, canChat, consumeChat } = useFreemiumLimits();
+  const effectivePremium = DEV_BYPASS || isPremium;
 
   // ── Feedback state ────────────────────────────────────────────────────────
   const { submitting: feedbackSubmitting, submitted: feedbackSubmitted, submitFeedback, reset: resetFeedback } = useFeedback();
@@ -308,11 +313,11 @@ export default function HomeScreen() {
                 {/* Feedback row */}
                 {feedbackSubmitted ? (
                   <View style={styles.feedbackThanks}>
-                    <Text style={styles.feedbackThanksText}>✨ 감사합니다! 피드백이 반영됩니다.</Text>
+                    <Text style={styles.feedbackThanksText}>✨ Thanks! Your feedback helps us improve.</Text>
                   </View>
                 ) : (
                   <View style={styles.feedbackRow}>
-                    <Text style={styles.feedbackLabel}>도움이 됐나요?</Text>
+                    <Text style={styles.feedbackLabel}>Was this helpful?</Text>
                     <View style={styles.feedbackBtns}>
                       <TouchableOpacity
                         style={[styles.feedbackBtn, selectedRating === 1 && styles.feedbackBtnActive]}
@@ -330,29 +335,47 @@ export default function HomeScreen() {
                   </View>
                 )}
 
-                {/* "더 물어보기" button */}
-                <TouchableOpacity
-                  style={[styles.chatBtn, !isPremium && styles.chatBtnLocked]}
-                  onPress={() => {
-                    const today = new Date().toISOString().split('T')[0];
-                    router.push({
-                      pathname: '/fortune-chat/[fortuneId]',
-                      params: {
-                        fortuneId: today,
-                        summary: reading.summary,
-                        details: JSON.stringify(reading.details),
-                      },
-                    } as never);
-                  }}
-                >
-                  <Text style={styles.chatBtnIcon}>💬</Text>
-                  <Text style={styles.chatBtnText}>더 물어보기</Text>
-                  {!isPremium && (
-                    <View style={styles.chatBtnBadge}>
-                      <Text style={styles.chatBtnBadgeText}>Premium</Text>
+                {/* "더 물어보기" button — 1 free/day for free users */}
+                {effectivePremium || canChat ? (
+                  <TouchableOpacity
+                    style={[styles.chatBtn, (!effectivePremium && chatRemaining > 0) && styles.chatBtnFree]}
+                    onPress={async () => {
+                      if (!effectivePremium) await consumeChat();
+                      const today = new Date().toISOString().split('T')[0];
+                      router.push({
+                        pathname: '/fortune-chat/[fortuneId]',
+                        params: {
+                          fortuneId: today,
+                          summary: reading.summary,
+                          details: JSON.stringify(reading.details),
+                        },
+                      } as never);
+                    }}
+                  >
+                    <Text style={styles.chatBtnIcon}>💬</Text>
+                    <Text style={styles.chatBtnText}>Ask More</Text>
+                    {!effectivePremium && (
+                      <View style={styles.chatBtnFreeBadge}>
+                        <Text style={styles.chatBtnFreeBadgeText}>
+                          {chatRemaining} free chat today
+                        </Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                ) : (
+                  /* Limit reached — upgrade banner */
+                  <TouchableOpacity
+                    style={styles.chatLimitBanner}
+                    onPress={() => router.push('/paywall')}
+                  >
+                    <Text style={styles.chatLimitIcon}>💬</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.chatLimitTitle}>Free chat used for today</Text>
+                      <Text style={styles.chatLimitSub}>Unlock unlimited — $9.99/month</Text>
                     </View>
-                  )}
-                </TouchableOpacity>
+                    <Text style={styles.chatLimitArrow}>→</Text>
+                  </TouchableOpacity>
+                )}
               </>
             ) : null}
           </View>
@@ -382,8 +405,8 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {/* ── Free limit banner ── */}
-        {weeklyLimitReached ? (
+        {/* ── Free limit banner (hidden for premium) ── */}
+        {!effectivePremium && (weeklyLimitReached ? (
           <TouchableOpacity style={styles.limitBannerUsed} onPress={() => router.push('/paywall')}>
             <Text style={styles.limitUsedText}>Weekly free reading used · </Text>
             <Text style={styles.upgradeLink}>Upgrade to Premium →</Text>
@@ -395,7 +418,7 @@ export default function HomeScreen() {
               <Text style={styles.upgradeLink}>Upgrade →</Text>
             </TouchableOpacity>
           </View>
-        )}
+        ))}
 
         {/* ── Quick actions grid ── */}
         <Text style={styles.sectionTitle}>Explore</Text>
@@ -476,7 +499,7 @@ export default function HomeScreen() {
         activeOpacity={0.85}
       >
         <Text style={fabStyles.fabIcon}>⏰</Text>
-        <Text style={fabStyles.fabLabel}>지금 결정 분석</Text>
+        <Text style={fabStyles.fabLabel}>Analyze Now</Text>
       </TouchableOpacity>
 
       <TimingCategorySheet
@@ -564,13 +587,25 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: T.primary.subtle,
   },
   chatBtnLocked: { opacity: 0.8 },
+  chatBtnFree: { borderColor: T.semantic.gold + '55' },
   chatBtnIcon: { fontSize: 15 },
   chatBtnText: { color: T.primary.lighter, fontWeight: '600', fontSize: T.fontSize.base },
-  chatBtnBadge: {
-    backgroundColor: T.primary.DEFAULT, borderRadius: T.radius.sm,
+  chatBtnFreeBadge: {
+    backgroundColor: T.semantic.gold + '33', borderRadius: T.radius.sm,
     paddingHorizontal: 6, paddingVertical: 2, marginLeft: 4,
+    borderWidth: 1, borderColor: T.semantic.gold + '66',
   },
-  chatBtnBadgeText: { color: '#fff', fontSize: T.fontSize.xs, fontWeight: '700' },
+  chatBtnFreeBadgeText: { color: T.semantic.gold, fontSize: T.fontSize.xs, fontWeight: '700' },
+  chatLimitBanner: {
+    flexDirection: 'row', alignItems: 'center', gap: T.spacing[3],
+    marginTop: T.spacing[4], backgroundColor: T.bg.overlay, borderRadius: T.radius.md,
+    paddingVertical: T.spacing[3], paddingHorizontal: T.spacing[4],
+    borderWidth: 1, borderColor: T.primary.subtle,
+  },
+  chatLimitIcon: { fontSize: 18, opacity: 0.6 },
+  chatLimitTitle: { color: T.text.secondary, fontWeight: '600', fontSize: T.fontSize.sm },
+  chatLimitSub: { color: T.primary.light, fontSize: T.fontSize.xs, marginTop: 2 },
+  chatLimitArrow: { color: T.primary.light, fontSize: 16 },
 
   errorBox: { alignItems: 'center', paddingVertical: T.spacing[2] },
   errorText: { color: T.semantic.error, fontSize: T.fontSize.base, marginBottom: T.spacing[3], textAlign: 'center' },

@@ -16,6 +16,8 @@ configureNotifications();
 
 SplashScreen.preventAutoHideAsync();
 
+const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
+
 export default function RootLayout() {
   useAuthGuard();
   useNotifications();
@@ -24,6 +26,16 @@ export default function RootLayout() {
 
   // Initialise RevenueCat and sync entitlements whenever the user session changes
   useEffect(() => {
+    if (DEV_BYPASS) {
+      useEntitlementStore.getState().setEntitlements(true, {
+        deepCompatibility: true,
+        careerWealth: true,
+        daewoonPdf: true,
+        nameAnalysis: true,
+        timingAdvisor: true,
+      });
+      return;
+    }
     if (session?.user?.id) {
       initializePurchases(session.user.id);
       syncEntitlements().catch(() => {});
@@ -43,6 +55,7 @@ export default function RootLayout() {
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="compatibility" />
+        <Stack.Screen name="fortune-chat" />
         <Stack.Screen name="reports" />
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
       </Stack>

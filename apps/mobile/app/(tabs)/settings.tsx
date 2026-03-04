@@ -1,4 +1,16 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Switch, Modal, FlatList, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Switch,
+  Modal,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import Constants from 'expo-constants';
 import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +18,10 @@ import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../src/i18n';
 import { useLanguageStore } from '../../src/store/languageStore';
 import { useAuthStore } from '../../src/store/authStore';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useSajuStore } from '../../src/store/sajuStore';
 import { restorePurchases } from '../../src/lib/purchases';
+import { supabase } from '../../src/lib/supabase';
+import type { CulturalFrame } from '@k-saju/saju-engine';
 import {
   isDailyNotificationScheduled,
   requestNotificationPermission,
@@ -15,17 +30,38 @@ import {
   setTokensEnabled,
 } from '../../src/lib/notifications';
 
+// ── Cultural frame config ────────────────────────────────────────────────────
+
+const FRAMES: { id: CulturalFrame; label: string; region: string; flag: string }[] = [
+  { id: 'kr', label: '사주팔자',       region: 'Korean',     flag: '🇰🇷' },
+  { id: 'cn', label: 'BaZi / 四柱',   region: 'Chinese',    flag: '🇨🇳' },
+  { id: 'jp', label: '四柱推命',       region: 'Japanese',   flag: '🇯🇵' },
+  { id: 'en', label: 'Cosmic Blueprint', region: 'Western', flag: '🌐' },
+  { id: 'es', label: 'Destino Cósmico', region: 'Latin',    flag: '🌐' },
+  { id: 'in', label: 'Vedic Fusion',  region: 'South Asian', flag: '🇮🇳' },
+];
+
+// ── Component ────────────────────────────────────────────────────────────────
+
 export default function SettingsScreen() {
   const { t } = useTranslation('common');
   const [notifications, setNotifications] = useState(false);
   const [notifLoading, setNotifLoading] = useState(false);
   const [langPickerVisible, setLangPickerVisible] = useState(false);
+  const [framePickerVisible, setFramePickerVisible] = useState(false);
+  const [frameSaving, setFrameSaving] = useState(false);
   const [restoring, setRestoring] = useState(false);
-  const { language, setLanguage } = useLanguageStore();
-  const { user, signOut } = useAuthStore();
-  const { isPremium } = useEntitlementStore();
 
-  // Sync notification toggle with actual scheduled state on mount
+  const { language, setLanguage } = useLanguageStore();
+  const { user, signOut, setOnboardingCompleted } = useAuthStore();
+  const { isPremium } = useEntitlementStore();
+  const { frame, updateFrame, clear: clearSaju } = useSajuStore();
+
+  // Derive current frame: prefer store, then user_metadata
+  const metaFrame = user?.user_metadata?.cultural_frame as CulturalFrame | undefined;
+  const currentFrameId: CulturalFrame = frame ?? metaFrame ?? 'en';
+  const currentFrame = FRAMES.find((f) => f.id === currentFrameId) ?? FRAMES[3];
+
   useEffect(() => {
     isDailyNotificationScheduled().then(setNotifications).catch(() => {});
   }, []);
@@ -79,6 +115,25 @@ export default function SettingsScreen() {
     }
   }
 
+  async function handleSelectFrame(newFrame: CulturalFrame) {
+    setFramePickerVisible(false);
+    if (newFrame === currentFrameId) return;
+
+    setFrameSaving(true);
+    try {
+      // 1) Update in-memory store immediately
+      updateFrame(newFrame);
+      // 2) Persist to Supabase user metadata
+      await supabase.auth.updateUser({ data: { cultural_frame: newFrame } });
+    } catch (e) {
+      Alert.alert('Error', 'Could not save cultural frame. Please try again.');
+      // Revert
+      updateFrame(currentFrameId);
+    } finally {
+      setFrameSaving(false);
+    }
+  }
+
   const currentLang = SUPPORTED_LANGUAGES.find((l) => l.code === language);
 
   function handleSelectLanguage(code: SupportedLanguage) {
@@ -86,10 +141,33 @@ export default function SettingsScreen() {
     setLangPickerVisible(false);
   }
 
+  function handleRerunOnboarding() {
+    Alert.alert(
+      'Re-run Onboarding',
+      'This will reset your saju data and take you back to the onboarding flow.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Re-run',
+          style: 'destructive',
+          onPress: () => {
+            clearSaju();
+            setOnboardingCompleted(false);
+            // Persist reset to Supabase so it survives app restarts
+            supabase.auth.updateUser({
+              data: { onboarding_completed: false },
+            }).catch(console.error);
+            router.replace('/(onboarding)/birth-input');
+          },
+        },
+      ],
+    );
+  }
+
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('back') === 'Back' ? 'Settings' : t('save') === '저장' ? '설정' : 'Settings'}</Text>
+        <Text style={styles.title}>Settings</Text>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Account</Text>
@@ -141,9 +219,15 @@ export default function SettingsScreen() {
               />
             )}
           </View>
-          <TouchableOpacity style={styles.row} onPress={() => router.push('/(onboarding)/cultural-frame')}>
+          <TouchableOpacity style={styles.row} onPress={() => setFramePickerVisible(true)}>
             <Text style={styles.rowText}>Cultural Frame</Text>
-            <Text style={styles.rowValue}>🇰🇷 Korean →</Text>
+            {frameSaving ? (
+              <ActivityIndicator color="#9d8fbe" size="small" />
+            ) : (
+              <Text style={styles.rowValue}>
+                {currentFrame.flag} {currentFrame.region} →
+              </Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.row} onPress={() => setLangPickerVisible(true)}>
             <Text style={styles.rowText}>Language</Text>
@@ -157,15 +241,23 @@ export default function SettingsScreen() {
           <Text style={styles.sectionLabel}>About</Text>
           <View style={styles.row}>
             <Text style={styles.rowText}>Version</Text>
-            <Text style={styles.rowValue}>1.0.0</Text>
+            <Text style={styles.rowValue}>{Constants.expoConfig?.version ?? '2.2.0'}</Text>
           </View>
         </View>
 
         <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
           <Text style={styles.signOutText}>{t('signOut')}</Text>
         </TouchableOpacity>
+
+        {/* DEV-only: Re-run Onboarding */}
+        {__DEV__ && (
+          <TouchableOpacity style={styles.devBtn} onPress={handleRerunOnboarding}>
+            <Text style={styles.devBtnText}>⚡ Re-run Onboarding</Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
 
+      {/* ── Language picker modal ── */}
       <Modal
         visible={langPickerVisible}
         transparent
@@ -192,6 +284,44 @@ export default function SettingsScreen() {
             )}
           />
           <TouchableOpacity style={styles.sheetClose} onPress={() => setLangPickerVisible(false)}>
+            <Text style={styles.sheetCloseText}>{t('cancel')}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* ── Cultural Frame picker modal ── */}
+      <Modal
+        visible={framePickerVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setFramePickerVisible(false)}
+      >
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setFramePickerVisible(false)} />
+        <View style={styles.sheet}>
+          <Text style={styles.sheetTitle}>Cultural Frame</Text>
+          <Text style={styles.sheetSubtitle}>
+            Same saju reading — localized to your cultural context
+          </Text>
+          <FlatList
+            data={FRAMES}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.langRow, item.id === currentFrameId && styles.langRowActive]}
+                onPress={() => handleSelectFrame(item.id)}
+              >
+                <Text style={styles.langFlag}>{item.flag}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.langLabel, item.id === currentFrameId && styles.langLabelActive]}>
+                    {item.label}
+                  </Text>
+                  <Text style={styles.frameRegion}>{item.region}</Text>
+                </View>
+                {item.id === currentFrameId && <Text style={styles.checkmark}>✓</Text>}
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity style={styles.sheetClose} onPress={() => setFramePickerVisible(false)}>
             <Text style={styles.sheetCloseText}>{t('cancel')}</Text>
           </TouchableOpacity>
         </View>
@@ -234,8 +364,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#7c3aed',
+    marginBottom: 16,
   },
   signOutText: { color: '#a78bfa', fontWeight: '600', fontSize: 16 },
+  devBtn: {
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#f59e0b',
+    marginBottom: 40,
+  },
+  devBtnText: { color: '#f59e0b', fontWeight: '600', fontSize: 14 },
   // Modal
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
   sheet: {
@@ -245,9 +385,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 40,
-    maxHeight: '70%',
+    maxHeight: '75%',
   },
-  sheetTitle: { color: '#fff', fontSize: 18, fontWeight: '700', marginBottom: 16, textAlign: 'center' },
+  sheetTitle: { color: '#fff', fontSize: 18, fontWeight: '700', marginBottom: 4, textAlign: 'center' },
+  sheetSubtitle: { color: '#9d8fbe', fontSize: 13, textAlign: 'center', marginBottom: 16 },
   langRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -260,6 +401,7 @@ const styles = StyleSheet.create({
   langFlag: { fontSize: 22, marginRight: 12 },
   langLabel: { flex: 1, color: '#9d8fbe', fontSize: 16 },
   langLabelActive: { color: '#fff', fontWeight: '600' },
+  frameRegion: { color: '#5b4d7e', fontSize: 12, marginTop: 2 },
   checkmark: { color: '#a78bfa', fontSize: 18, fontWeight: '700' },
   sheetClose: {
     marginTop: 12,

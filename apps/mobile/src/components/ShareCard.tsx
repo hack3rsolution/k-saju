@@ -148,7 +148,7 @@ export const ShareCard = forwardRef<View, ShareCardProps>(function ShareCard(
           </View>
 
           <View style={styles.pillarMeta}>
-            <Text style={[styles.pillarMetaLabel, { color: T.text.faint }]}>일주 (Day Pillar)</Text>
+            <Text style={[styles.pillarMetaLabel, { color: T.text.faint }]}>日柱 (Day Pillar)</Text>
             <View style={[styles.elemBadge, { backgroundColor: elemColor + '22', borderColor: elemColor + '55' }]}>
               <Text style={[styles.elemText, { color: elemColor }]}>{ELEMENT_LABEL[dayElement]}</Text>
             </View>

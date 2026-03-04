@@ -39,12 +39,20 @@ export const SUGGESTED_QUESTIONS: Record<CulturalFrame, string[]> = {
   in: ['Is today auspicious for new beginnings?', 'How can I align with my dharma today?', 'What karma should I be mindful of this week?'],
 };
 
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
 // ── System prompt builder ─────────────────────────────────────────────────────
 
 export function buildSystemPrompt(
   frame: CulturalFrame,
   chart: ChartSnapshot,
   reading: TodayReading,
+  userLanguage?: string,
 ): string {
   const el = chart.elementBalance;
   const dominant = Object.entries(el).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'Wood';
@@ -64,6 +72,11 @@ export function buildSystemPrompt(
     `Details: ${reading.details.join(' / ')}`,
   ].join('\n');
 
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  const langInstruction = langName
+    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All text must be in ${langName}. Do not mix languages.`
+    : '';
+
   return `${FRAME_SYSTEM[frame]}
 
 USER'S SAJU CHART:
@@ -73,5 +86,5 @@ TODAY'S FORTUNE CONTEXT:
 ${readingSummary}
 
 Always answer in the context of this specific chart and today's fortune reading.
-Keep responses focused, empathetic, and between 3-5 sentences.`;
+Keep responses focused, empathetic, and between 3-5 sentences.${langInstruction}`;
 }

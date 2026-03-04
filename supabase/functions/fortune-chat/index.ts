@@ -170,14 +170,28 @@ Deno.serve(async (req: Request) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return errorResponse('Unauthorized', 401);
 
-  // ── Premium gate ──────────────────────────────────────────────────────────
+  // ── Freemium / Premium gate ───────────────────────────────────────────────
   const isPremium = user.user_metadata?.is_premium === true;
   if (!isPremium) {
-    return jsonResponse({
-      ok:    false,
-      error: 'premium_required',
-      suggestedQuestions: SUGGESTED_QUESTIONS['en'],
-    }, 403);
+    // Free users: 1 chat per calendar day — verified server-side
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const { count } = await supabaseAdmin
+      .from('fortune_chat_history')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('role', 'user')
+      .gte('created_at', todayStart.toISOString());
+
+    if ((count ?? 0) >= 1) {
+      return jsonResponse({
+        ok:    false,
+        error: 'free_limit_reached',
+        suggestedQuestions: SUGGESTED_QUESTIONS['en'],
+      }, 402);
+    }
   }
 
   // ── Rate limit ────────────────────────────────────────────────────────────
@@ -195,7 +209,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Build Claude messages ─────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame, request.chart, request.todayReading);
+  const systemPrompt = buildSystemPrompt(request.frame, request.chart, request.todayReading, (request as { userLanguage?: string }).userLanguage);
   const claudeMessages = request.messages.map((m) => ({
     role:    m.role,
     content: m.content,

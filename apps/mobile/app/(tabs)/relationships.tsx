@@ -89,7 +89,7 @@ export default function RelationshipsScreen() {
       <View style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>Relationship Map</Text>
-          <Text style={styles.subtitle}>관계 지도 · 人脈運</Text>
+          <Text style={styles.subtitle}>人脈運 · Relationship Map</Text>
           <View style={styles.lockedCard}>
             <Text style={styles.lockedIcon}>💞</Text>
             <Text style={styles.lockedTitle}>Premium Feature</Text>
@@ -116,7 +116,7 @@ export default function RelationshipsScreen() {
       >
         {/* Header */}
         <Text style={styles.title}>Relationship Map</Text>
-        <Text style={styles.subtitle}>관계 지도 · {new Date().toLocaleString('en', { month: 'long', year: 'numeric' })}</Text>
+        <Text style={styles.subtitle}>人脈運 · {new Date().toLocaleString('en', { month: 'long', year: 'numeric' })}</Text>
 
         {/* Error banner */}
         {error && error !== 'premium_required' && (

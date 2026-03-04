@@ -12,6 +12,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../src/store/authStore';
 
+const DEV_BYPASS =
+  __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
+
 type LoadingKey = 'magic' | 'google' | 'apple' | null;
 
 export default function LoginScreen() {
@@ -20,7 +23,8 @@ export default function LoginScreen() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { signInWithMagicLink, signInWithGoogle, signInWithApple } = useAuthStore();
+  const { signInWithMagicLink, signInWithGoogle, signInWithApple, setDevSession } =
+    useAuthStore();
 
   async function withLoading(key: LoadingKey, fn: () => Promise<void>) {
     setLoading(key);
@@ -114,6 +118,15 @@ export default function LoginScreen() {
             )}
 
             {error && <Text style={styles.error}>{error}</Text>}
+
+            {DEV_BYPASS && (
+              <TouchableOpacity
+                style={styles.devButton}
+                onPress={() => setDevSession()}
+              >
+                <Text style={styles.devButtonText}>⚡ Dev Login (Skip)</Text>
+              </TouchableOpacity>
+            )}
           </>
         )}
       </View>
@@ -171,4 +184,13 @@ const styles = StyleSheet.create({
   appleText: { color: '#000', fontWeight: '600', fontSize: 15 },
   error: { color: '#f87171', marginTop: 12, textAlign: 'center' },
   success: { color: '#4ade80', fontSize: 16, textAlign: 'center' },
+  devButton: {
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: '#f59e0b',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  devButtonText: { color: '#f59e0b', fontWeight: '600', fontSize: 14 },
 });
