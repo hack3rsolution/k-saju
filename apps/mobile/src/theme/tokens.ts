@@ -56,21 +56,21 @@ export const elementGlow: Record<FiveElement, string> = {
 // ── 6 Cultural Frame Accent Colors ────────────────────────────────────────────
 
 export const frameAccent: Record<CulturalFrame, string> = {
-  kr: '#c8102e', // 태극 Red — Korean
-  cn: '#e8b800', // Imperial Gold — Chinese (BaZi precision)
-  jp: '#bc002d', // 紅(くれない) Crimson — Japanese
-  en: '#7c3aed', // Cosmic Purple — Western/MBTI
-  es: '#ea580c', // Sunset Orange — LATAM passion
-  in: '#f97316', // Saffron Orange — South Asian karma
+  kr: '#7c3aed', // 자주빛 퍼플 — Korean
+  cn: '#dc2626', // 황금 레드 — Chinese (BaZi precision)
+  jp: '#e11d48', // 단풍 레드 — Japanese
+  en: '#0ea5e9', // 미드나잇 블루 — Western/MBTI
+  es: '#f59e0b', // 선셋 오렌지 — LATAM passion
+  in: '#10b981', // 강가 그린 — South Asian karma
 };
 
 export const frameHighlight: Record<CulturalFrame, string> = {
-  kr: '#ffd700',
-  cn: '#fff9c4',
-  jp: '#e8d5a3',
-  en: '#c4b5fd',
-  es: '#fbbf24',
-  in: '#fcd34d',
+  kr: '#c4b5fd', // light purple — complement to 자주빛
+  cn: '#fca5a5', // light red — complement to 황금 레드
+  jp: '#fda4af', // light rose — complement to 단풍 레드
+  en: '#7dd3fc', // light sky blue — complement to 미드나잇 블루
+  es: '#fcd34d', // light amber — complement to 선셋 오렌지
+  in: '#6ee7b7', // light green — complement to 강가 그린
 };
 
 export const frameDecoChar: Record<CulturalFrame, string> = {

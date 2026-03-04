@@ -51,8 +51,8 @@ const THEMES: Record<CulturalFrame, Theme> = {
     decoSecondary: '命',
   },
   en: {
-    bg: '#0a061e',
-    panel: '#1a1040',
+    bg: '#030d1a',    // deep midnight blue
+    panel: '#071e38', // dark navy panel
     accent: T.frameAccent.en,
     highlight: T.frameHighlight.en,
     label: 'Cosmic Blueprint',
@@ -60,8 +60,8 @@ const THEMES: Record<CulturalFrame, Theme> = {
     decoSecondary: '命',
   },
   es: {
-    bg: '#180800',
-    panel: '#2e1200',
+    bg: '#1a0e00',
+    panel: '#2e1c00',
     accent: T.frameAccent.es,
     highlight: T.frameHighlight.es,
     label: 'Destino Cósmico',
@@ -69,8 +69,8 @@ const THEMES: Record<CulturalFrame, Theme> = {
     decoSecondary: '命',
   },
   in: {
-    bg: '#1a0500',
-    panel: '#2e0e00',
+    bg: '#011a0e',    // deep forest green
+    panel: '#032e18', // dark green panel
     accent: T.frameAccent.in,
     highlight: T.frameHighlight.in,
     label: 'Vedic Fusion',
