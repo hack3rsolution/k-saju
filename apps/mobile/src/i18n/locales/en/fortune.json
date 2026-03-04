@@ -1,6 +1,26 @@
 {
   "title": "Fortune",
   "subtitle": "Readings · Luck Cycles · Cosmic Timing",
+  "readingsTitle": "Fortune Readings",
+  "luckCycles": "流年 · Luck Cycles",
+  "weeklyLabel": "WEEKLY FORTUNE · 週運",
+  "weeklyTeaser": "This week's Wood energy aligns with your day pillar — a significant window opens for...",
+  "unlockWeekly": "✨ Unlock full access — $9.99/month",
+  "unlockAll": "✨ Unlock all fortune readings — $9.99/month",
+  "periodLabel": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "daewoon": "大運 (10yr)"
+  },
+  "periodDesc": {
+    "daily": "Today's luck & energy",
+    "weekly": "This week's full cycle",
+    "monthly": "Monthly luck & career",
+    "annual": "Full year forecast",
+    "daewoon": "10-year destiny cycle"
+  },
   "types": {
     "daily": "Daily Fortune",
     "weekly": "Weekly Fortune",
@@ -43,5 +63,30 @@
     "土": "Earth Day",
     "金": "Metal Day",
     "水": "Water Day"
+  },
+  "timingAdvisor": {
+    "title": "Timing Advisor",
+    "subtitle": "Which decision should we analyze?",
+    "analyzing": "Analyzing…",
+    "categories": {
+      "business": { "label": "Business / Startup", "desc": "Start or expand a business" },
+      "investment": { "label": "Investment / Finance", "desc": "Invest money or assets" },
+      "romance": { "label": "Romance / Marriage", "desc": "Start a relationship or wed" },
+      "relocation": { "label": "Moving / Travel", "desc": "Move home or plan a trip" }
+    },
+    "resultTitle": "TIMING ANALYSIS",
+    "positiveFactors": "POSITIVE FACTORS",
+    "cautions": "CAUTIONS",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Good",
+      "fair": "Fair",
+      "caution": "Caution"
+    },
+    "freeUsed": "Free Analysis Used",
+    "nextFree": "Next free use in {{days}} day(s) — or upgrade for unlimited timing analysis.",
+    "nextFreeToday": "Your free analysis resets tomorrow — or upgrade for unlimited access.",
+    "upgradeCta": "Upgrade to Premium →",
+    "analysisFailed": "AI analysis failed. Please try again."
   }
 }

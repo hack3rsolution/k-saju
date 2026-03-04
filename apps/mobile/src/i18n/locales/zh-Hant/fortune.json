@@ -1,6 +1,26 @@
 {
   "title": "運勢",
   "subtitle": "流年 · 大運 · 命運週期",
+  "readingsTitle": "運勢解讀",
+  "luckCycles": "流年 · 運勢週期",
+  "weeklyLabel": "週運 · 週運",
+  "weeklyTeaser": "本週木運與日柱相合 — 一扇重要的窗口即將開啟...",
+  "unlockWeekly": "✨ 解鎖全部 — $9.99/月",
+  "unlockAll": "✨ 解鎖所有運勢 — $9.99/月",
+  "periodLabel": {
+    "daily": "日運",
+    "weekly": "週運",
+    "monthly": "月運",
+    "annual": "年運",
+    "daewoon": "大運（10年）"
+  },
+  "periodDesc": {
+    "daily": "今日運勢與能量",
+    "weekly": "本週完整運勢",
+    "monthly": "本月運勢與事業",
+    "annual": "全年運勢預測",
+    "daewoon": "十年命運週期"
+  },
   "types": {
     "daily": "今日運勢",
     "weekly": "本週運勢",
@@ -43,5 +63,30 @@
     "土": "土日",
     "金": "金日",
     "水": "水日"
+  },
+  "timingAdvisor": {
+    "title": "時機顧問",
+    "subtitle": "要分析哪個決定？",
+    "analyzing": "分析中…",
+    "categories": {
+      "business": { "label": "事業 / 創業", "desc": "開始或擴展業務" },
+      "investment": { "label": "投資 / 財務", "desc": "投資資產" },
+      "romance": { "label": "戀愛 / 婚姻", "desc": "開始戀愛或結婚" },
+      "relocation": { "label": "搬家 / 旅行", "desc": "搬家或規劃旅行" }
+    },
+    "resultTitle": "時機分析",
+    "positiveFactors": "有利因素",
+    "cautions": "注意事項",
+    "score": {
+      "optimal": "最佳",
+      "good": "良好",
+      "fair": "一般",
+      "caution": "注意"
+    },
+    "freeUsed": "免費分析已使用",
+    "nextFree": "{{days}}天後可免費使用 — 或升級享無限次分析",
+    "nextFreeToday": "明天重置免費分析 — 或升級享無限存取",
+    "upgradeCta": "升級至高級版 →",
+    "analysisFailed": "AI分析失敗，請重試。"
   }
 }

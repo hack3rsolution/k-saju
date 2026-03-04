@@ -4,6 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '../lib/supabase';
+import { useEntitlementStore } from './entitlementStore';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,8 +18,8 @@ interface AuthState {
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
-  /** DEV only: bypass auth with a mock session */
-  setDevSession: () => void;
+  /** DEV only: sign in as dev@k-saju.com (real Supabase session) */
+  setDevSession: () => Promise<void>;
   /** Update onboarding_completed in the in-memory session (works for real & dev sessions) */
   setOnboardingCompleted: (value: boolean) => void;
 }
@@ -96,36 +97,84 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { user, session };
     }),
 
-  setDevSession: () => {
+  setDevSession: async () => {
     if (!__DEV__) return;
-    const mockUser = {
-      id: '00000000-0000-4000-8000-000000000000',
-      aud: 'authenticated',
-      role: 'authenticated',
-      email: 'dev@k-saju.local',
-      email_confirmed_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      user_metadata: {
-        onboarding_completed: true,
-        // Default birth data so useFortune can rebuild the chart without DB
-        birth_year: 1990,
-        birth_month: 6,
-        birth_day: 15,
-        birth_hour: 12,
-        gender: 'M',
-        cultural_frame: 'en',
-      },
-      app_metadata: {},
-    } as unknown as User;
-    const mockSession = {
-      access_token: 'dev-access-token',
-      refresh_token: 'dev-refresh-token',
-      token_type: 'bearer',
-      expires_in: 3600,
-      expires_at: Math.floor(Date.now() / 1000) + 3600,
-      user: mockUser,
-    } as unknown as Session;
-    set({ session: mockSession, user: mockUser, initialized: true });
+    const DEV_EMAIL = 'dev@k-saju.com';
+    const DEV_PASSWORD = 'devpassword123';
+    const DEV_META = {
+      onboarding_completed: true,
+      birth_year: 1990,
+      birth_month: 6,
+      birth_day: 15,
+      birth_hour: 12,
+      gender: 'M',
+      cultural_frame: 'en',
+      is_premium: true,
+      has_timing_advisor: true,
+    };
+
+    // Try sign-in first; if user doesn't exist, sign up then sign in
+    let result = await supabase.auth.signInWithPassword({
+      email: DEV_EMAIL,
+      password: DEV_PASSWORD,
+    });
+
+    if (result.error) {
+      // User may not exist — attempt sign-up (email confirm must be disabled in Supabase)
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: DEV_EMAIL,
+        password: DEV_PASSWORD,
+        options: { data: DEV_META },
+      });
+      if (signUpError) throw signUpError;
+
+      // signUp returns a session immediately only when email confirmation is disabled.
+      // If identities is empty, the user already existed but wasn't confirmed.
+      if (signUpData.session) {
+        // Email confirm disabled → session returned directly
+        set({
+          session: signUpData.session,
+          user: signUpData.session.user ?? null,
+          initialized: true,
+        });
+        return;
+      }
+
+      result = await supabase.auth.signInWithPassword({
+        email: DEV_EMAIL,
+        password: DEV_PASSWORD,
+      });
+    }
+
+    if (result.error) {
+      if (result.error.message?.toLowerCase().includes('email not confirmed')) {
+        console.warn(
+          '[DEV] Supabase "Email not confirmed" 에러 발생.\n' +
+          '→ Supabase Dashboard > Authentication > Providers > Email\n' +
+          '→ "Confirm email" 옵션을 OFF로 설정한 뒤 다시 시도하세요.'
+        );
+      }
+      throw result.error;
+    }
+
+    // Ensure user_metadata has the dev birth data and premium flags
+    if (!result.data.user?.user_metadata?.birth_year || !result.data.user?.user_metadata?.is_premium) {
+      await supabase.auth.updateUser({ data: DEV_META });
+    }
+
+    set({
+      session: result.data.session,
+      user: result.data.session?.user ?? null,
+      initialized: true,
+    });
+
+    // Force all entitlements on for dev session
+    useEntitlementStore.getState().setEntitlements(true, {
+      deepCompatibility: true,
+      careerWealth: true,
+      daewoonPdf: true,
+      nameAnalysis: true,
+      timingAdvisor: true,
+    });
   },
 }));

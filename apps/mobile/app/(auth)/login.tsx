@@ -123,10 +123,15 @@ export default function LoginScreen() {
 
             {DEV_BYPASS && (
               <TouchableOpacity
-                style={styles.devButton}
-                onPress={() => setDevSession()}
+                style={[styles.devButton, !!loading && styles.buttonDisabled]}
+                onPress={() => withLoading('magic', setDevSession)}
+                disabled={!!loading}
               >
-                <Text style={styles.devButtonText}>⚡ Dev Login (Skip)</Text>
+                {loading === 'magic' ? (
+                  <ActivityIndicator color="#f59e0b" />
+                ) : (
+                  <Text style={styles.devButtonText}>⚡ Dev Login (Supabase)</Text>
+                )}
               </TouchableOpacity>
             )}
           </>

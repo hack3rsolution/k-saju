@@ -9,7 +9,17 @@
     "gender": "Geschlecht",
     "male": "Männlich",
     "female": "Weiblich",
-    "continue": "Weiter"
+    "continue": "Weiter",
+    "lunar": "🌙 Mondkalender",
+    "solar": "☀️ Sonnenkalender",
+    "lunarHint": "Das Monddatum wird für die Vier-Säulen-Berechnung in das Solardatum umgewandelt.",
+    "year": "Jahr",
+    "month": "Monat",
+    "day": "Tag",
+    "timeKnown": "Kennen Sie Ihre Geburtszeit?",
+    "hour24": "Stunde (24h)",
+    "lunarErrorTitle": "Ungültiges Monddatum",
+    "lunarErrorMsg": "Das eingegebene Monddatum konnte nicht konvertiert werden. Bitte überprüfen Sie es und versuchen Sie es erneut."
   },
   "culturalFrame": {
     "title": "Wählen Sie Ihre Perspektive",

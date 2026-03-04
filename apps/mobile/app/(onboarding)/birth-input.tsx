@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { WheelPicker } from '../../src/components/WheelPicker';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useLanguageStore } from '../../src/store/languageStore';
@@ -25,6 +26,7 @@ function daysInMonth(year: number, month: number) {
 export default function BirthInputScreen() {
   const { setBirthData } = useOnboardingStore();
   const { language } = useLanguageStore();
+  const { t } = useTranslation('onboarding');
 
   const [yearIdx, setYearIdx] = useState(60);   // 1990
   const [monthIdx, setMonthIdx] = useState(0);
@@ -54,8 +56,8 @@ export default function BirthInputScreen() {
       const converted = lunarToSolar(year, month, clampedDayIdx + 1);
       if (!converted) {
         Alert.alert(
-          'Invalid Lunar Date',
-          'The lunar date you entered could not be converted. Please check and try again.',
+          t('birthInput.lunarErrorTitle', 'Invalid Lunar Date'),
+          t('birthInput.lunarErrorMsg', 'The lunar date you entered could not be converted. Please check and try again.'),
         );
         return;
       }
@@ -76,11 +78,9 @@ export default function BirthInputScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>Step 1 of 3</Text>
-      <Text style={styles.title}>Your Birth Info</Text>
-      <Text style={styles.subtitle}>
-        We use your birth date and time to calculate your Four Pillars (四柱).
-      </Text>
+      <Text style={styles.step}>{t('step', { current: 1, total: 3 })}</Text>
+      <Text style={styles.title}>{t('birthInput.title')}</Text>
+      <Text style={styles.subtitle}>{t('birthInput.subtitle')}</Text>
 
       {/* Lunar / Solar toggle */}
       <View style={styles.calendarToggle}>
@@ -89,7 +89,7 @@ export default function BirthInputScreen() {
           onPress={() => setIsLunar(true)}
         >
           <Text style={[styles.calToggleText, isLunar && styles.calToggleTextActive]}>
-            🌙 Lunar
+            {t('birthInput.lunar')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -97,13 +97,13 @@ export default function BirthInputScreen() {
           onPress={() => setIsLunar(false)}
         >
           <Text style={[styles.calToggleText, !isLunar && styles.calToggleTextActive]}>
-            ☀️ Solar
+            {t('birthInput.solar')}
           </Text>
         </TouchableOpacity>
       </View>
       {isLunar && (
         <Text style={styles.lunarHint}>
-          Lunar date will be converted to solar for Four Pillars calculation.
+          {t('birthInput.lunarHint')}
         </Text>
       )}
 
@@ -111,15 +111,15 @@ export default function BirthInputScreen() {
       <View style={styles.pickerCard}>
         <View style={styles.pickerRow}>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Year</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.year')}</Text>
             <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Month</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.month')}</Text>
             <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Day</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.day')}</Text>
             <WheelPicker
               data={days}
               selectedIndex={clampedDayIdx}
@@ -133,7 +133,7 @@ export default function BirthInputScreen() {
       {/* Time */}
       <View style={styles.card}>
         <View style={styles.switchRow}>
-          <Text style={styles.cardLabel}>Birth time known?</Text>
+          <Text style={styles.cardLabel}>{t('birthInput.timeKnown')}</Text>
           <Switch
             value={timeKnown}
             onValueChange={setTimeKnown}
@@ -143,7 +143,7 @@ export default function BirthInputScreen() {
         </View>
         {timeKnown && (
           <View style={styles.hourPicker}>
-            <Text style={styles.pickerLabel}>Hour (24h)</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.hour24')}</Text>
             <WheelPicker data={HOURS} selectedIndex={hourIdx} onIndexChange={setHourIdx} width={72} />
           </View>
         )}
@@ -151,19 +151,19 @@ export default function BirthInputScreen() {
 
       {/* Gender */}
       <View style={styles.card}>
-        <Text style={styles.cardLabel}>Gender</Text>
+        <Text style={styles.cardLabel}>{t('birthInput.gender')}</Text>
         <View style={styles.genderRow}>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
             onPress={() => setGender('M')}
           >
-            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>Male</Text>
+            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>{t('birthInput.male')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
             onPress={() => setGender('F')}
           >
-            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>Female</Text>
+            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{t('birthInput.female')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -173,7 +173,7 @@ export default function BirthInputScreen() {
         onPress={handleContinue}
         disabled={!gender}
       >
-        <Text style={styles.buttonText}>Continue →</Text>
+        <Text style={styles.buttonText}>{t('birthInput.continue')} →</Text>
       </TouchableOpacity>
     </ScrollView>
   );

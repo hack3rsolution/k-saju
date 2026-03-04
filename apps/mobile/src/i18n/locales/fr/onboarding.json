@@ -9,7 +9,17 @@
     "gender": "Genre",
     "male": "Homme",
     "female": "Femme",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "lunar": "🌙 Lunaire",
+    "solar": "☀️ Solaire",
+    "lunarHint": "La date lunaire sera convertie en solaire pour le calcul des Quatre Piliers.",
+    "year": "Année",
+    "month": "Mois",
+    "day": "Jour",
+    "timeKnown": "Connaissez-vous votre heure de naissance ?",
+    "hour24": "Heure (24h)",
+    "lunarErrorTitle": "Date lunaire invalide",
+    "lunarErrorMsg": "La date lunaire saisie n'a pas pu être convertie. Veuillez vérifier et réessayer."
   },
   "culturalFrame": {
     "title": "Choisissez votre prisme",

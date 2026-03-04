@@ -7,6 +7,7 @@
 import { useState, useCallback } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 import { friendlyApiError } from '../lib/apiError';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -40,6 +41,7 @@ export function useContentRecommendation(): ContentRecommendationState {
 
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const fetch = useCallback(async () => {
     if (!session) { setError('Not signed in'); return; }
@@ -55,6 +57,7 @@ export function useContentRecommendation(): ContentRecommendationState {
         dayStem:        chart.dayStem,
         elementBalance: chart.elements,
         frame:          frame ?? 'en',
+        userLanguage:   language,
       };
 
       const resp = await globalThis.fetch(

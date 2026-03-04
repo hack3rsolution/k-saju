@@ -1,6 +1,26 @@
 {
   "title": "运势",
   "subtitle": "流年 · 大运 · 命运周期",
+  "readingsTitle": "运势解读",
+  "luckCycles": "流年 · 运势周期",
+  "weeklyLabel": "周运 · 週運",
+  "weeklyTeaser": "本周木运与日柱相合 — 一扇重要的窗口即将开启...",
+  "unlockWeekly": "✨ 解锁全部 — $9.99/月",
+  "unlockAll": "✨ 解锁所有运势 — $9.99/月",
+  "periodLabel": {
+    "daily": "日运",
+    "weekly": "周运",
+    "monthly": "月运",
+    "annual": "年运",
+    "daewoon": "大运（10年）"
+  },
+  "periodDesc": {
+    "daily": "今日运势与能量",
+    "weekly": "本周完整运势",
+    "monthly": "本月运势与事业",
+    "annual": "全年运势预测",
+    "daewoon": "十年命运周期"
+  },
   "types": {
     "daily": "今日运势",
     "weekly": "本周运势",
@@ -43,5 +63,30 @@
     "土": "土日",
     "金": "金日",
     "水": "水日"
+  },
+  "timingAdvisor": {
+    "title": "时机顾问",
+    "subtitle": "要分析哪个决定？",
+    "analyzing": "分析中…",
+    "categories": {
+      "business": { "label": "事业 / 创业", "desc": "开始或扩展业务" },
+      "investment": { "label": "投资 / 财务", "desc": "投资资产" },
+      "romance": { "label": "恋爱 / 婚姻", "desc": "开始恋爱或结婚" },
+      "relocation": { "label": "搬家 / 旅行", "desc": "搬家或规划旅行" }
+    },
+    "resultTitle": "时机分析",
+    "positiveFactors": "有利因素",
+    "cautions": "注意事项",
+    "score": {
+      "optimal": "最佳",
+      "good": "良好",
+      "fair": "一般",
+      "caution": "注意"
+    },
+    "freeUsed": "免费分析已使用",
+    "nextFree": "{{days}}天后可免费使用 — 或升级享无限次分析",
+    "nextFreeToday": "明天重置免费分析 — 或升级享无限访问",
+    "upgradeCta": "升级至高级版 →",
+    "analysisFailed": "AI分析失败，请重试。"
   }
 }

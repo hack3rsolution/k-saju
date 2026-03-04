@@ -9,7 +9,17 @@
     "gender": "性別",
     "male": "男",
     "female": "女",
-    "continue": "繼續"
+    "continue": "繼續",
+    "lunar": "🌙 農曆",
+    "solar": "☀️ 陽曆",
+    "lunarHint": "農曆日期將轉換為陽曆以計算四柱。",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "timeKnown": "知道出生時間嗎？",
+    "hour24": "時（24h）",
+    "lunarErrorTitle": "農曆日期無效",
+    "lunarErrorMsg": "您輸入的農曆日期無法轉換。請確認後重試。"
   },
   "culturalFrame": {
     "title": "選擇您的視角",

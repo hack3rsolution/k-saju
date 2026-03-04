@@ -9,7 +9,17 @@
     "gender": "Género",
     "male": "Masculino",
     "female": "Femenino",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "lunar": "🌙 Lunar",
+    "solar": "☀️ Solar",
+    "lunarHint": "La fecha lunar se convertirá al calendario solar para calcular los Cuatro Pilares.",
+    "year": "Año",
+    "month": "Mes",
+    "day": "Día",
+    "timeKnown": "¿Conoces tu hora de nacimiento?",
+    "hour24": "Hora (24h)",
+    "lunarErrorTitle": "Fecha lunar inválida",
+    "lunarErrorMsg": "La fecha lunar ingresada no pudo convertirse. Por favor, verifica e intenta nuevamente."
   },
   "culturalFrame": {
     "title": "Elige Tu Perspectiva",

@@ -1,6 +1,26 @@
 {
   "title": "Fortuna",
   "subtitle": "Lecturas · Ciclos de Suerte · Tiempos Cósmicos",
+  "readingsTitle": "Lecturas de Fortuna",
+  "luckCycles": "流年 · Ciclos de Suerte",
+  "weeklyLabel": "FORTUNA SEMANAL · 週運",
+  "weeklyTeaser": "La energía Madera de esta semana se alinea con tu pilar del día — se abre una ventana especial...",
+  "unlockWeekly": "✨ Desbloquear acceso completo — $9.99/mes",
+  "unlockAll": "✨ Desbloquear todas las lecturas — $9.99/mes",
+  "periodLabel": {
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "daewoon": "大運 (10 años)"
+  },
+  "periodDesc": {
+    "daily": "Suerte y energía de hoy",
+    "weekly": "Ciclo completo de la semana",
+    "monthly": "Suerte mensual y carrera",
+    "annual": "Pronóstico de todo el año",
+    "daewoon": "Ciclo de destino de 10 años"
+  },
   "types": {
     "daily": "Fortuna Diaria",
     "weekly": "Fortuna Semanal",
@@ -43,5 +63,30 @@
     "土": "Día Tierra",
     "金": "Día Metal",
     "水": "Día Agua"
+  },
+  "timingAdvisor": {
+    "title": "Asesor de Timing",
+    "subtitle": "¿Qué decisión analizamos?",
+    "analyzing": "Analizando…",
+    "categories": {
+      "business": { "label": "Negocio / Empresa", "desc": "Iniciar o expandir un negocio" },
+      "investment": { "label": "Inversión / Finanzas", "desc": "Invertir dinero o activos" },
+      "romance": { "label": "Romance / Matrimonio", "desc": "Iniciar una relación o casarse" },
+      "relocation": { "label": "Mudanza / Viaje", "desc": "Mudarse o planear un viaje" }
+    },
+    "resultTitle": "ANÁLISIS DE TIMING",
+    "positiveFactors": "FACTORES POSITIVOS",
+    "cautions": "PRECAUCIONES",
+    "score": {
+      "optimal": "Óptimo",
+      "good": "Bueno",
+      "fair": "Regular",
+      "caution": "Precaución"
+    },
+    "freeUsed": "Análisis gratuito usado",
+    "nextFree": "Próximo uso gratuito en {{days}} día(s) — o mejora para análisis ilimitado.",
+    "nextFreeToday": "Tu análisis gratuito se restablece mañana — o mejora para acceso ilimitado.",
+    "upgradeCta": "Actualizar a Premium →",
+    "analysisFailed": "Análisis de IA fallido. Por favor, inténtalo de nuevo."
   }
 }

@@ -154,10 +154,21 @@ Deno.serve(async (req: Request) => {
     global: { headers: { Authorization: authHeader } },
   });
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return errorResponse('Unauthorized', 401);
+
+  let userId: string;
+  if (authError || !user) {
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    if (token && token === SUPABASE_ANON_KEY) {
+      userId = '00000000-0000-4000-8000-000000000000';
+    } else {
+      return errorResponse('Unauthorized', 401);
+    }
+  } else {
+    userId = user.id;
+  }
 
   // Rate limit
-  if (!checkRateLimit(user.id)) {
+  if (!checkRateLimit(userId)) {
     return errorResponse('Rate limit exceeded. Try again in a minute.', 429);
   }
 
@@ -181,7 +192,8 @@ Deno.serve(async (req: Request) => {
   // Call Claude (fallback to static data on error)
   let result: ClaudeRecommendationOutput;
   try {
-    const systemPrompt = buildSystemPrompt(request.frame);
+    const userLanguage = (request as unknown as Record<string, unknown>).userLanguage as string | undefined;
+    const systemPrompt = buildSystemPrompt(request.frame, userLanguage);
     const userPrompt   = buildUserPrompt(request);
     result = await callClaude(systemPrompt, userPrompt, ANTHROPIC_API_KEY);
   } catch (e) {

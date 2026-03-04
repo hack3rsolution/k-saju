@@ -9,7 +9,17 @@
     "gender": "性别",
     "male": "男",
     "female": "女",
-    "continue": "继续"
+    "continue": "继续",
+    "lunar": "🌙 农历",
+    "solar": "☀️ 阳历",
+    "lunarHint": "农历日期将转换为阳历以计算四柱。",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "timeKnown": "知道出生时间吗？",
+    "hour24": "时（24h）",
+    "lunarErrorTitle": "农历日期无效",
+    "lunarErrorMsg": "您输入的农历日期无法转换。请检查后重试。"
   },
   "culturalFrame": {
     "title": "选择您的视角",

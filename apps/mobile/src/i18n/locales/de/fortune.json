@@ -1,6 +1,26 @@
 {
   "title": "Glücksvorhersage",
   "subtitle": "Lesungen · Glückszyklen · Kosmisches Timing",
+  "readingsTitle": "Glückslesungen",
+  "luckCycles": "流年 · Glückszyklen",
+  "weeklyLabel": "WOCHENGLÜCK · 週運",
+  "weeklyTeaser": "Die Holzenergie dieser Woche harmoniert mit Ihrem Tagespfeiler — ein bedeutendes Fenster öffnet sich...",
+  "unlockWeekly": "✨ Vollzugang freischalten — 9,99 $/Monat",
+  "unlockAll": "✨ Alle Glückslesungen freischalten — 9,99 $/Monat",
+  "periodLabel": {
+    "daily": "Täglich",
+    "weekly": "Wöchentlich",
+    "monthly": "Monatlich",
+    "annual": "Jährlich",
+    "daewoon": "大運 (10 Jahre)"
+  },
+  "periodDesc": {
+    "daily": "Heutiges Glück & Energie",
+    "weekly": "Vollständiger Zyklus dieser Woche",
+    "monthly": "Monatliches Glück & Karriere",
+    "annual": "Prognose für das ganze Jahr",
+    "daewoon": "10-jähriger Schicksalszyklus"
+  },
   "types": {
     "daily": "Tagesglück",
     "weekly": "Wochenglück",
@@ -43,5 +63,30 @@
     "土": "Erde-Tag",
     "金": "Metall-Tag",
     "水": "Wasser-Tag"
+  },
+  "timingAdvisor": {
+    "title": "Timing-Berater",
+    "subtitle": "Welche Entscheidung sollen wir analysieren?",
+    "analyzing": "Analysiere…",
+    "categories": {
+      "business": { "label": "Geschäft / Startup", "desc": "Ein Unternehmen gründen oder erweitern" },
+      "investment": { "label": "Investition / Finanzen", "desc": "Geld oder Vermögen investieren" },
+      "romance": { "label": "Romantik / Hochzeit", "desc": "Eine Beziehung beginnen oder heiraten" },
+      "relocation": { "label": "Umzug / Reise", "desc": "Umziehen oder eine Reise planen" }
+    },
+    "resultTitle": "TIMING-ANALYSE",
+    "positiveFactors": "POSITIVE FAKTOREN",
+    "cautions": "VORSICHT",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Gut",
+      "fair": "Angemessen",
+      "caution": "Vorsicht"
+    },
+    "freeUsed": "Kostenlose Analyse Verwendet",
+    "nextFree": "Nächste kostenlose Nutzung in {{days}} Tag(en) — oder upgraden Sie für unbegrenzte Analysen.",
+    "nextFreeToday": "Ihre kostenlose Analyse wird morgen zurückgesetzt — oder upgraden Sie für unbegrenzten Zugang.",
+    "upgradeCta": "Auf Premium upgraden →",
+    "analysisFailed": "KI-Analyse fehlgeschlagen. Bitte versuchen Sie es erneut."
   }
 }

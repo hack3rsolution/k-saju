@@ -9,7 +9,17 @@
     "gender": "Giới tính",
     "male": "Nam",
     "female": "Nữ",
-    "continue": "Tiếp tục"
+    "continue": "Tiếp tục",
+    "lunar": "🌙 Âm Lịch",
+    "solar": "☀️ Dương Lịch",
+    "lunarHint": "Ngày âm lịch sẽ được chuyển đổi sang dương lịch để tính Tứ Trụ.",
+    "year": "Năm",
+    "month": "Tháng",
+    "day": "Ngày",
+    "timeKnown": "Bạn có biết giờ sinh không?",
+    "hour24": "Giờ (24h)",
+    "lunarErrorTitle": "Ngày âm lịch không hợp lệ",
+    "lunarErrorMsg": "Không thể chuyển đổi ngày âm lịch đã nhập. Vui lòng kiểm tra và thử lại."
   },
   "culturalFrame": {
     "title": "Chọn Góc Nhìn Của Bạn",

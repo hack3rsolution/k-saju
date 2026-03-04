@@ -9,7 +9,17 @@
     "gender": "Gender",
     "male": "Male",
     "female": "Female",
-    "continue": "Continue"
+    "continue": "Continue",
+    "lunar": "🌙 Lunar",
+    "solar": "☀️ Solar",
+    "lunarHint": "Lunar date will be converted to solar for Four Pillars calculation.",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "timeKnown": "Birth time known?",
+    "hour24": "Hour (24h)",
+    "lunarErrorTitle": "Invalid Lunar Date",
+    "lunarErrorMsg": "The lunar date you entered could not be converted. Please check and try again."
   },
   "culturalFrame": {
     "title": "Choose Your Lens",

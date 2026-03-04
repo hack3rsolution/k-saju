@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { TimingAdvice } from '../hooks/useTimingAdvisor';
 
 // ── Score color ───────────────────────────────────────────────────────────────
@@ -25,16 +26,9 @@ function scoreColor(score: number): string {
   return '#ef4444';
 }
 
-function scoreLabel(score: number): string {
-  if (score >= 8) return 'Optimal';
-  if (score >= 6) return 'Good';
-  if (score >= 4) return 'Fair';
-  return 'Caution';
-}
-
 // ── Score gauge ───────────────────────────────────────────────────────────────
 
-function ScoreGauge({ score }: { score: number }) {
+function ScoreGauge({ score, label }: { score: number; label: string }) {
   const color = scoreColor(score);
   return (
     <View style={gaugeStyles.container}>
@@ -45,7 +39,7 @@ function ScoreGauge({ score }: { score: number }) {
         <Text style={[gaugeStyles.score, { color }]}>{score}</Text>
         <Text style={gaugeStyles.outOf}>/10</Text>
         <Text style={[gaugeStyles.badge, { backgroundColor: color + '22', color }]}>
-          {scoreLabel(score)}
+          {label}
         </Text>
       </View>
     </View>
@@ -94,7 +88,16 @@ function daysUntilMonthEnd(): number {
 }
 
 export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose, timingDaysUntilFree }: Props) {
+  const { t } = useTranslation('fortune');
   const daysLeft = timingDaysUntilFree ?? daysUntilMonthEnd();
+
+  function scoreLabel(score: number): string {
+    if (score >= 8) return t('timingAdvisor.score.optimal');
+    if (score >= 6) return t('timingAdvisor.score.good');
+    if (score >= 4) return t('timingAdvisor.score.fair');
+    return t('timingAdvisor.score.caution');
+  }
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -104,38 +107,38 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           {loading ? (
             <View style={styles.centerBox}>
               <ActivityIndicator color="#a78bfa" size="large" />
-              <Text style={styles.loadingText}>Analyzing…</Text>
+              <Text style={styles.loadingText}>{t('timingAdvisor.analyzing')}</Text>
             </View>
           ) : limitReached ? (
             <View style={styles.centerBox}>
               <Text style={styles.limitIcon}>🔒</Text>
-              <Text style={styles.limitTitle}>Free Analysis Used</Text>
+              <Text style={styles.limitTitle}>{t('timingAdvisor.freeUsed')}</Text>
               <Text style={styles.limitDesc}>
                 {daysLeft > 0
-                  ? `Next free use in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — or upgrade for unlimited timing analysis.`
-                  : 'Your free analysis resets tomorrow — or upgrade for unlimited access.'}
+                  ? t('timingAdvisor.nextFree', { days: daysLeft })
+                  : t('timingAdvisor.nextFreeToday')}
               </Text>
               <TouchableOpacity
                 style={styles.upgradeBtn}
                 onPress={() => { onClose(); router.push('/paywall'); }}
               >
-                <Text style={styles.upgradeBtnText}>Upgrade to Premium →</Text>
+                <Text style={styles.upgradeBtnText}>{t('timingAdvisor.upgradeCta')}</Text>
               </TouchableOpacity>
             </View>
           ) : error ? (
             <View style={styles.centerBox}>
-              <Text style={styles.errorText}>{error}</Text>
+              <Text style={styles.errorText}>{t('timingAdvisor.analysisFailed')}</Text>
             </View>
           ) : advice ? (
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-              <Text style={styles.title}>⏰ TIMING ANALYSIS</Text>
+              <Text style={styles.title}>⏰ {t('timingAdvisor.resultTitle')}</Text>
 
-              <ScoreGauge score={advice.score} />
+              <ScoreGauge score={advice.score} label={scoreLabel(advice.score)} />
 
               <Text style={styles.headline}>{advice.headline}</Text>
 
               {/* Reasons */}
-              <Text style={styles.sectionLabel}>✅ POSITIVE FACTORS</Text>
+              <Text style={styles.sectionLabel}>✅ {t('timingAdvisor.positiveFactors')}</Text>
               {advice.reasons.map((r, i) => (
                 <View key={i} style={styles.reasonRow}>
                   <Text style={styles.bullet}>·</Text>
@@ -144,7 +147,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
               ))}
 
               {/* Cautions */}
-              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ CAUTIONS</Text>
+              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ {t('timingAdvisor.cautions')}</Text>
               {advice.cautions.map((c, i) => (
                 <View key={i} style={styles.cautionRow}>
                   <Text style={styles.cautionBullet}>·</Text>
@@ -155,7 +158,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           ) : null}
 
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>Close</Text>
+            <Text style={styles.closeBtnText}>{t('common:close', 'Close')}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1,6 +1,26 @@
 {
   "title": "Keberuntungan",
   "subtitle": "Pembacaan · Siklus Keberuntungan · Waktu Kosmik",
+  "readingsTitle": "Pembacaan Nasib",
+  "luckCycles": "流年 · Siklus Keberuntungan",
+  "weeklyLabel": "NASIB MINGGUAN · 週運",
+  "weeklyTeaser": "Energi Kayu minggu ini selaras dengan pilar hari Anda — sebuah jendela penting terbuka...",
+  "unlockWeekly": "✨ Buka akses penuh — $9.99/bulan",
+  "unlockAll": "✨ Buka semua pembacaan nasib — $9.99/bulan",
+  "periodLabel": {
+    "daily": "Harian",
+    "weekly": "Mingguan",
+    "monthly": "Bulanan",
+    "annual": "Tahunan",
+    "daewoon": "大運 (10 thn)"
+  },
+  "periodDesc": {
+    "daily": "Keberuntungan & energi hari ini",
+    "weekly": "Siklus penuh minggu ini",
+    "monthly": "Keberuntungan bulanan & karir",
+    "annual": "Prakiraan setahun penuh",
+    "daewoon": "Siklus nasib 10 tahun"
+  },
   "types": {
     "daily": "Keberuntungan Harian",
     "weekly": "Keberuntungan Mingguan",
@@ -43,5 +63,30 @@
     "土": "Hari Tanah",
     "金": "Hari Logam",
     "水": "Hari Air"
+  },
+  "timingAdvisor": {
+    "title": "Penasihat Timing",
+    "subtitle": "Keputusan apa yang akan kita analisis?",
+    "analyzing": "Menganalisis…",
+    "categories": {
+      "business": { "label": "Bisnis / Startup", "desc": "Memulai atau mengembangkan bisnis" },
+      "investment": { "label": "Investasi / Keuangan", "desc": "Menginvestasikan uang atau aset" },
+      "romance": { "label": "Romansa / Pernikahan", "desc": "Memulai hubungan atau menikah" },
+      "relocation": { "label": "Pindah / Perjalanan", "desc": "Pindah rumah atau merencanakan perjalanan" }
+    },
+    "resultTitle": "ANALISIS TIMING",
+    "positiveFactors": "FAKTOR POSITIF",
+    "cautions": "PERHATIAN",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Bagus",
+      "fair": "Cukup",
+      "caution": "Perhatian"
+    },
+    "freeUsed": "Analisis Gratis Telah Digunakan",
+    "nextFree": "Penggunaan gratis berikutnya dalam {{days}} hari — atau upgrade untuk analisis tak terbatas.",
+    "nextFreeToday": "Analisis gratis Anda direset besok — atau upgrade untuk akses tak terbatas.",
+    "upgradeCta": "Upgrade ke Premium →",
+    "analysisFailed": "Analisis AI gagal. Silakan coba lagi."
   }
 }

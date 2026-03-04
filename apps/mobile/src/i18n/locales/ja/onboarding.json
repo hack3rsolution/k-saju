@@ -9,7 +9,17 @@
     "gender": "性別",
     "male": "男性",
     "female": "女性",
-    "continue": "次へ"
+    "continue": "次へ",
+    "lunar": "🌙 旧暦",
+    "solar": "☀️ 新暦",
+    "lunarHint": "旧暦は新暦に変換されて四柱推命の計算に使用されます。",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "timeKnown": "生まれた時間がわかりますか？",
+    "hour24": "時（24h）",
+    "lunarErrorTitle": "旧暦の日付が無効です",
+    "lunarErrorMsg": "入力された旧暦の日付を変換できません。確認してからもう一度お試しください。"
   },
   "culturalFrame": {
     "title": "視点を選んでください",

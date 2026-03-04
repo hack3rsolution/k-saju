@@ -9,7 +9,17 @@
     "gender": "성별",
     "male": "남",
     "female": "여",
-    "continue": "다음으로"
+    "continue": "다음으로",
+    "lunar": "🌙 음력",
+    "solar": "☀️ 양력",
+    "lunarHint": "음력은 양력으로 변환되어 사주 계산에 사용됩니다.",
+    "year": "년",
+    "month": "월",
+    "day": "일",
+    "timeKnown": "출생 시간을 아시나요?",
+    "hour24": "시간 (24h)",
+    "lunarErrorTitle": "잘못된 음력 날짜",
+    "lunarErrorMsg": "입력하신 음력 날짜를 변환할 수 없습니다. 확인 후 다시 시도해주세요."
   },
   "culturalFrame": {
     "title": "나에게 맞는 시각 선택",

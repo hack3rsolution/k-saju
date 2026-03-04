@@ -146,8 +146,19 @@ Return JSON only. Descriptions in English with Sanskrit/Hindi terms where natura
 
 // ── User prompt builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+const LANGUAGE_NAMES: Record<string, string> = {
+  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
+  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
+  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
+};
+
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  const langInstruction = langName
+    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All titles and descriptions must be written in ${langName}. Do not mix languages.`
+    : '';
+  return `${SYSTEM_PROMPTS[frame]}${langInstruction}`;
 }
 
 export function buildUserPrompt(req: ContentRecommendationRequest): string {

@@ -1,6 +1,26 @@
 {
   "title": "Fortune",
   "subtitle": "Lectures · Cycles de Chance · Timing Cosmique",
+  "readingsTitle": "Lectures de Fortune",
+  "luckCycles": "流年 · Cycles de Chance",
+  "weeklyLabel": "FORTUNE HEBDOMADAIRE · 週運",
+  "weeklyTeaser": "L'énergie Bois de cette semaine s'aligne avec votre pilier du jour — une fenêtre significative s'ouvre...",
+  "unlockWeekly": "✨ Débloquer l'accès complet — 9,99 $/mois",
+  "unlockAll": "✨ Débloquer toutes les lectures — 9,99 $/mois",
+  "periodLabel": {
+    "daily": "Quotidien",
+    "weekly": "Hebdomadaire",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "daewoon": "大運 (10 ans)"
+  },
+  "periodDesc": {
+    "daily": "Chance et énergie du jour",
+    "weekly": "Cycle complet de la semaine",
+    "monthly": "Chance mensuelle et carrière",
+    "annual": "Prévision pour toute l'année",
+    "daewoon": "Cycle de destin sur 10 ans"
+  },
   "types": {
     "daily": "Fortune du Jour",
     "weekly": "Fortune de la Semaine",
@@ -43,5 +63,30 @@
     "土": "Jour Terre",
     "金": "Jour Métal",
     "水": "Jour Eau"
+  },
+  "timingAdvisor": {
+    "title": "Conseiller Temporel",
+    "subtitle": "Quelle décision analyser ?",
+    "analyzing": "Analyse en cours…",
+    "categories": {
+      "business": { "label": "Affaires / Startup", "desc": "Lancer ou développer une entreprise" },
+      "investment": { "label": "Investissement / Finance", "desc": "Investir de l'argent ou des actifs" },
+      "romance": { "label": "Romance / Mariage", "desc": "Commencer une relation ou se marier" },
+      "relocation": { "label": "Déménagement / Voyage", "desc": "Déménager ou planifier un voyage" }
+    },
+    "resultTitle": "ANALYSE TEMPORELLE",
+    "positiveFactors": "FACTEURS POSITIFS",
+    "cautions": "PRÉCAUTIONS",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Bon",
+      "fair": "Correct",
+      "caution": "Attention"
+    },
+    "freeUsed": "Analyse Gratuite Utilisée",
+    "nextFree": "Prochain usage gratuit dans {{days}} jour(s) — ou passez à Premium.",
+    "nextFreeToday": "Votre analyse gratuite se réinitialise demain — ou passez à l'accès illimité.",
+    "upgradeCta": "Passer à Premium →",
+    "analysisFailed": "L'analyse IA a échoué. Veuillez réessayer."
   }
 }

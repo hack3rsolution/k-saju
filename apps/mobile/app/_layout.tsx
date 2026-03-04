@@ -38,7 +38,18 @@ export default function RootLayout() {
     }
     if (session?.user?.id) {
       initializePurchases(session.user.id);
-      syncEntitlements().catch(() => {});
+      // Skip RevenueCat sync for dev session — entitlements are set in setDevSession()
+      if (__DEV__ && session.user.email === 'dev@k-saju.com') {
+        useEntitlementStore.getState().setEntitlements(true, {
+          deepCompatibility: true,
+          careerWealth: true,
+          daewoonPdf: true,
+          nameAnalysis: true,
+          timingAdvisor: true,
+        });
+      } else {
+        syncEntitlements().catch(() => {});
+      }
     } else {
       useEntitlementStore.getState().reset();
     }

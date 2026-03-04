@@ -1,6 +1,26 @@
 {
   "title": "운세",
   "subtitle": "운세 · 流年 · Luck Cycles",
+  "readingsTitle": "운세 리딩",
+  "luckCycles": "유년(流年) · 운의 흐름",
+  "weeklyLabel": "주간 운세 · 週運",
+  "weeklyTeaser": "이번 주 목(木) 기운이 일주와 맞닿아 — 특별한 흐름이 열립니다...",
+  "unlockWeekly": "✨ 전체 열람 — $9.99/월",
+  "unlockAll": "✨ 전체 운세 열람 — $9.99/월",
+  "periodLabel": {
+    "daily": "일간 운세",
+    "weekly": "주간 운세",
+    "monthly": "월간 운세",
+    "annual": "연간 운세",
+    "daewoon": "대운(大運)"
+  },
+  "periodDesc": {
+    "daily": "오늘의 운과 에너지",
+    "weekly": "이번 주 운세 흐름",
+    "monthly": "이달의 운과 커리어",
+    "annual": "1년 운세 전망",
+    "daewoon": "10년 운명 주기"
+  },
   "types": {
     "daily": "오늘의 운세",
     "weekly": "이번 주 운세",
@@ -63,5 +83,30 @@
     "土": "토(土)일",
     "金": "금(金)일",
     "水": "수(水)일"
+  },
+  "timingAdvisor": {
+    "title": "타이밍 어드바이저",
+    "subtitle": "어떤 결정을 분석할까요?",
+    "analyzing": "분석 중…",
+    "categories": {
+      "business": { "label": "사업 / 창업", "desc": "사업을 시작하거나 확장" },
+      "investment": { "label": "투자 / 금전", "desc": "자산을 투자" },
+      "romance": { "label": "연애 / 결혼", "desc": "연애를 시작하거나 결혼" },
+      "relocation": { "label": "이사 / 여행", "desc": "이사하거나 여행 계획" }
+    },
+    "resultTitle": "타이밍 분석",
+    "positiveFactors": "긍정적 요소",
+    "cautions": "주의사항",
+    "score": {
+      "optimal": "최적",
+      "good": "좋음",
+      "fair": "보통",
+      "caution": "주의"
+    },
+    "freeUsed": "무료 분석 사용",
+    "nextFree": "{{days}}일 후 무료 이용 가능 — 또는 업그레이드하세요",
+    "nextFreeToday": "내일 무료 분석이 리셋됩니다 — 또는 무제한 이용하세요",
+    "upgradeCta": "프리미엄 업그레이드 →",
+    "analysisFailed": "AI 분석에 실패했습니다. 다시 시도해주세요."
   }
 }

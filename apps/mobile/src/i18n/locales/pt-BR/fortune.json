@@ -1,6 +1,26 @@
 {
   "title": "Fortuna",
   "subtitle": "Leituras · Ciclos de Sorte · Tempo Cósmico",
+  "readingsTitle": "Leituras de Fortuna",
+  "luckCycles": "流年 · Ciclos de Sorte",
+  "weeklyLabel": "FORTUNA SEMANAL · 週運",
+  "weeklyTeaser": "A energia Madeira desta semana se alinha com seu pilar do dia — uma janela significativa se abre...",
+  "unlockWeekly": "✨ Desbloquear acesso completo — $9.99/mês",
+  "unlockAll": "✨ Desbloquear todas as leituras — $9.99/mês",
+  "periodLabel": {
+    "daily": "Diário",
+    "weekly": "Semanal",
+    "monthly": "Mensal",
+    "annual": "Anual",
+    "daewoon": "大運 (10 anos)"
+  },
+  "periodDesc": {
+    "daily": "Sorte e energia de hoje",
+    "weekly": "Ciclo completo desta semana",
+    "monthly": "Sorte mensal e carreira",
+    "annual": "Previsão para o ano inteiro",
+    "daewoon": "Ciclo de destino de 10 anos"
+  },
   "types": {
     "daily": "Fortuna Diária",
     "weekly": "Fortuna Semanal",
@@ -43,5 +63,30 @@
     "土": "Dia Terra",
     "金": "Dia Metal",
     "水": "Dia Água"
+  },
+  "timingAdvisor": {
+    "title": "Conselheiro de Timing",
+    "subtitle": "Qual decisão devemos analisar?",
+    "analyzing": "Analisando…",
+    "categories": {
+      "business": { "label": "Negócio / Startup", "desc": "Iniciar ou expandir um negócio" },
+      "investment": { "label": "Investimento / Finanças", "desc": "Investir dinheiro ou ativos" },
+      "romance": { "label": "Romance / Casamento", "desc": "Iniciar um relacionamento ou casar" },
+      "relocation": { "label": "Mudança / Viagem", "desc": "Mudar de casa ou planejar uma viagem" }
+    },
+    "resultTitle": "ANÁLISE DE TIMING",
+    "positiveFactors": "FATORES POSITIVOS",
+    "cautions": "PRECAUÇÕES",
+    "score": {
+      "optimal": "Ótimo",
+      "good": "Bom",
+      "fair": "Regular",
+      "caution": "Cuidado"
+    },
+    "freeUsed": "Análise gratuita usada",
+    "nextFree": "Próximo uso gratuito em {{days}} dia(s) — ou atualize para análises ilimitadas.",
+    "nextFreeToday": "Sua análise gratuita redefine amanhã — ou atualize para acesso ilimitado.",
+    "upgradeCta": "Atualizar para Premium →",
+    "analysisFailed": "Análise de IA falhou. Por favor, tente novamente."
   }
 }
