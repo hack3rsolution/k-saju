@@ -1,0 +1,1 @@
+v2.3.0 — Supporto per 15 lingue, integrazione K-Culture migliorata, schemi della fortuna settimanale e miglioramenti al motore saju.

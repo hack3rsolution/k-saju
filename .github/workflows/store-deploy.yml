@@ -1,0 +1,350 @@
+name: Store Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deploy target'
+        required: true
+        default: 'metadata-only'
+        type: choice
+        options:
+          - metadata-only
+          - build-and-metadata
+          - full-release
+      platform:
+        description: 'Target platform'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - ios
+          - android
+          - both
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/mobile/fastlane/metadata/**'
+
+env:
+  NODE_VERSION: '20'
+  WORKING_DIR: apps/mobile
+
+# ──────────────────────────────────────────────────────────────────────────────
+jobs:
+  # ── 1. VALIDATE ────────────────────────────────────────────────────────────
+  validate:
+    name: Validate Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check character limits & required files
+        working-directory: ${{ env.WORKING_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ERRORS=0
+
+          # App Store Connect locale codes (15 locales)
+          IOS_LOCALES=(
+            "ar-SA" "de-DE" "en-US" "es-ES" "fr-FR"
+            "hi"    "id"    "it"    "ja"    "ko"
+            "pt-BR" "th"    "vi"    "zh-Hans" "zh-Hant"
+          )
+
+          # Google Play locale codes (15 locales)
+          ANDROID_LOCALES=(
+            "ar"    "de-DE" "en-US" "es-ES" "fr-FR"
+            "hi-IN" "id"    "it-IT" "ja-JP" "ko-KR"
+            "pt-BR" "th"    "vi"    "zh-CN" "zh-TW"
+          )
+
+          check_exists() {
+            local f="$1"
+            if [[ ! -f "$f" ]]; then
+              echo "::error::Missing required file: $f"
+              ERRORS=$((ERRORS + 1))
+            fi
+          }
+
+          # Strip trailing newline before counting (avoids off-by-one vs. store limits)
+          check_maxlen() {
+            local f="$1" max="$2" label="$3"
+            [[ ! -f "$f" ]] && return
+            local len
+            len=$(perl -0777 -pe 's/\n+$//' "$f" | wc -m | tr -d ' ')
+            if (( len > max )); then
+              echo "::error file=$f::$label: $len chars (max $max)"
+              ERRORS=$((ERRORS + 1))
+            fi
+          }
+
+          echo "── iOS metadata ───────────────────────────────────────────────"
+          for locale in "${IOS_LOCALES[@]}"; do
+            d="fastlane/metadata/$locale"
+            check_exists "$d/name.txt"
+            check_exists "$d/description.txt"
+            check_exists "$d/release_notes.txt"
+            check_maxlen "$d/name.txt"             30   "[$locale] name"
+            check_maxlen "$d/subtitle.txt"         30   "[$locale] subtitle"
+            check_maxlen "$d/keywords.txt"         100  "[$locale] keywords"
+            check_maxlen "$d/description.txt"      4000 "[$locale] description"
+            check_maxlen "$d/promotional_text.txt" 170  "[$locale] promotional_text"
+            check_maxlen "$d/release_notes.txt"    4000 "[$locale] release_notes"
+          done
+
+          echo "── Android metadata ───────────────────────────────────────────"
+          for locale in "${ANDROID_LOCALES[@]}"; do
+            d="fastlane/metadata/android/$locale"
+            check_exists "$d/title.txt"
+            check_exists "$d/short_description.txt"
+            check_exists "$d/full_description.txt"
+            check_maxlen "$d/title.txt"             30   "[$locale] title"
+            check_maxlen "$d/short_description.txt" 80   "[$locale] short_description"
+            check_maxlen "$d/full_description.txt"  4000 "[$locale] full_description"
+          done
+
+          echo ""
+          if (( ERRORS > 0 )); then
+            echo "❌ Validation failed — $ERRORS error(s) found."
+            exit 1
+          fi
+          echo "✅ All metadata validation passed (iOS × ${#IOS_LOCALES[@]} locales, Android × ${#ANDROID_LOCALES[@]} locales)."
+
+  # ── 2. COMPUTE MATRIX ──────────────────────────────────────────────────────
+  # Runs in parallel with validate; build consumes its output.
+  compute-matrix:
+    name: Compute Build Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.set.outputs.platforms }}
+    steps:
+      - id: set
+        shell: bash
+        run: |
+          TARGET="${{ inputs.target }}"
+          PLATFORM="${{ inputs.platform || 'both' }}"
+
+          if [[ "$TARGET" != "build-and-metadata" && "$TARGET" != "full-release" ]]; then
+            echo 'platforms=[]' >> "$GITHUB_OUTPUT"
+          elif [[ "$PLATFORM" == "ios" ]]; then
+            echo 'platforms=["ios"]' >> "$GITHUB_OUTPUT"
+          elif [[ "$PLATFORM" == "android" ]]; then
+            echo 'platforms=["android"]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'platforms=["ios","android"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  # ── 3. BUILD ───────────────────────────────────────────────────────────────
+  build:
+    name: EAS Build (${{ matrix.platform }})
+    runs-on: ubuntu-latest
+    needs: [validate, compute-matrix]
+    # Skip entirely when matrix is empty (metadata-only / push trigger)
+    if: needs.compute-matrix.outputs.platforms != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJSON(needs.compute-matrix.outputs.platforms) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: EAS Build — ${{ matrix.platform }}
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas build \
+            --platform ${{ matrix.platform }} \
+            --profile production \
+            --non-interactive \
+            --no-wait
+
+  # ── 4. DEPLOY iOS ──────────────────────────────────────────────────────────
+  deploy-ios:
+    name: Deploy iOS Metadata
+    runs-on: macos-latest
+    needs: validate
+    # Runs when: push trigger (inputs.platform == '') OR platform is ios/both
+    if: >
+      inputs.platform == '' ||
+      inputs.platform == 'ios' ||
+      inputs.platform == 'both'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Fastlane — iOS metadata
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          REVIEW_EMAIL: ${{ secrets.REVIEW_EMAIL }}
+          REVIEW_PHONE: ${{ secrets.REVIEW_PHONE }}
+        run: bundle exec fastlane ios metadata
+
+  # ── 5. DEPLOY Android ──────────────────────────────────────────────────────
+  deploy-android:
+    name: Deploy Android Metadata
+    runs-on: ubuntu-latest
+    needs: validate
+    # Runs when: push trigger (inputs.platform == '') OR platform is android/both
+    if: >
+      inputs.platform == '' ||
+      inputs.platform == 'android' ||
+      inputs.platform == 'both'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Decode Google Play JSON key
+        env:
+          GOOGLE_PLAY_JSON_KEY_BASE64: ${{ secrets.GOOGLE_PLAY_JSON_KEY_BASE64 }}
+        run: |
+          echo "$GOOGLE_PLAY_JSON_KEY_BASE64" | base64 --decode > "${{ env.WORKING_DIR }}/google-play-key.json"
+
+      - name: Fastlane — Android metadata
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          GOOGLE_PLAY_KEY_FILE: google-play-key.json
+        run: bundle exec fastlane android metadata
+
+      - name: Remove Google Play key
+        if: always()
+        run: rm -f "${{ env.WORKING_DIR }}/google-play-key.json"
+
+  # ── 6. SUBMIT ──────────────────────────────────────────────────────────────
+  # full-release only; runs after both deploys (skipped deploys are OK).
+  submit:
+    name: Submit for Review / Promote
+    runs-on: macos-latest
+    needs: [deploy-ios, deploy-android]
+    if: >
+      inputs.target == 'full-release' &&
+      (needs.deploy-ios.result == 'success' || needs.deploy-ios.result == 'skipped') &&
+      (needs.deploy-android.result == 'success' || needs.deploy-android.result == 'skipped') &&
+      (needs.deploy-ios.result == 'success' || needs.deploy-android.result == 'success')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Fastlane — iOS submit for review
+        if: >
+          inputs.platform == '' ||
+          inputs.platform == 'ios' ||
+          inputs.platform == 'both'
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          REVIEW_EMAIL: ${{ secrets.REVIEW_EMAIL }}
+          REVIEW_PHONE: ${{ secrets.REVIEW_PHONE }}
+        run: bundle exec fastlane ios submit_review
+
+      - name: Decode Google Play JSON key
+        if: >
+          inputs.platform == '' ||
+          inputs.platform == 'android' ||
+          inputs.platform == 'both'
+        env:
+          GOOGLE_PLAY_JSON_KEY_BASE64: ${{ secrets.GOOGLE_PLAY_JSON_KEY_BASE64 }}
+        run: |
+          echo "$GOOGLE_PLAY_JSON_KEY_BASE64" | base64 --decode > "${{ env.WORKING_DIR }}/google-play-key.json"
+
+      - name: Fastlane — Android promote internal → production
+        if: >
+          inputs.platform == '' ||
+          inputs.platform == 'android' ||
+          inputs.platform == 'both'
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          GOOGLE_PLAY_KEY_FILE: google-play-key.json
+        run: bundle exec fastlane android promote from:internal to:production
+
+      - name: Remove Google Play key
+        if: always()
+        run: rm -f "${{ env.WORKING_DIR }}/google-play-key.json"
+
+  # ── 7. NOTIFY ──────────────────────────────────────────────────────────────
+  notify:
+    name: Notify — Job Summary
+    runs-on: ubuntu-latest
+    needs: [validate, build, deploy-ios, deploy-android, submit]
+    if: always()
+    steps:
+      - name: Write step summary
+        env:
+          R_VALIDATE:        ${{ needs.validate.result }}
+          R_BUILD:           ${{ needs.build.result }}
+          R_DEPLOY_IOS:      ${{ needs.deploy-ios.result }}
+          R_DEPLOY_ANDROID:  ${{ needs.deploy-android.result }}
+          R_SUBMIT:          ${{ needs.submit.result }}
+          TARGET:            ${{ inputs.target || 'metadata-only (push)' }}
+          PLATFORM:          ${{ inputs.platform || 'both (push)' }}
+        run: |
+          emoji() {
+            case "$1" in
+              success)   echo "✅ success"   ;;
+              failure)   echo "❌ failure"   ;;
+              skipped)   echo "⏭️ skipped"   ;;
+              cancelled) echo "🚫 cancelled" ;;
+              *)         echo "❓ $1"        ;;
+            esac
+          }
+
+          {
+            echo "## 🚀 Store Deploy — Results"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **Trigger** | \`${{ github.event_name }}\` |"
+            echo "| **Target** | \`${TARGET}\` |"
+            echo "| **Platform** | \`${PLATFORM}\` |"
+            echo "| **Branch** | \`${{ github.ref_name }}\` |"
+            echo "| **Commit** | \`${{ github.sha }}\` |"
+            echo ""
+            echo "| Job | Result |"
+            echo "|---|---|"
+            echo "| validate | $(emoji "$R_VALIDATE") |"
+            echo "| build | $(emoji "$R_BUILD") |"
+            echo "| deploy-ios | $(emoji "$R_DEPLOY_IOS") |"
+            echo "| deploy-android | $(emoji "$R_DEPLOY_ANDROID") |"
+            echo "| submit | $(emoji "$R_SUBMIT") |"
+          } >> "$GITHUB_STEP_SUMMARY"

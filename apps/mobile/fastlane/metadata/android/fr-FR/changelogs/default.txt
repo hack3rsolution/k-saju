@@ -1,0 +1,1 @@
+v2.3.0 — Prise en charge de 15 langues, intégration K-Culture améliorée, motifs de fortune hebdomadaires et améliorations du moteur saju.
