@@ -12,6 +12,7 @@ import { useAuthStore } from '../store/authStore';
 import { useRelationshipStore } from '../store/relationshipStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 import type {
   Relationship,
   AddRelationshipInput,
@@ -73,7 +74,7 @@ export function useRelationships() {
       if (dbErr) throw new Error(dbErr.message);
       setRelationships((data ?? []).map(rowToRelationship));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load relationships');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ export function useRelationships() {
       if (data) addRelationship(rowToRelationship(data as Record<string, unknown>));
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to add relationship');
+      setError(friendlyApiError(e));
       return false;
     } finally {
       setLoading(false);
@@ -126,7 +127,7 @@ export function useRelationships() {
       removeRelationship(id);
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to delete relationship');
+      setError(friendlyApiError(e));
       return false;
     }
   }, [session, removeRelationship]);
@@ -193,7 +194,7 @@ export function useRelationships() {
 
         return data;
       } catch (e) {
-        setFortuneError(e instanceof Error ? e.message : 'Failed to load fortune');
+        setFortuneError(friendlyApiError(e));
         return null;
       } finally {
         setFortuneLoading(false);

@@ -78,8 +78,8 @@ export default function SettingsScreen() {
         const granted = await requestNotificationPermission();
         if (!granted) {
           Alert.alert(
-            'Permission Required',
-            'Enable notifications in your device Settings to receive daily fortune reminders.',
+            t('notificationPermTitle'),
+            t('notificationPermMsg'),
           );
           return;
         }
@@ -167,12 +167,12 @@ export default function SettingsScreen() {
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>{t('settings')}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Account</Text>
+          <Text style={styles.sectionLabel}>{t('account')}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowText}>Email</Text>
+            <Text style={styles.rowText}>{t('email')}</Text>
             <Text style={styles.rowValue}>{user?.email ?? '—'}</Text>
           </View>
           <TouchableOpacity
@@ -190,7 +190,7 @@ export default function SettingsScreen() {
             )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.row} onPress={handleRestore} disabled={restoring}>
-            <Text style={styles.rowText}>Restore Purchases</Text>
+            <Text style={styles.rowText}>{t('restorePurchases')}</Text>
             {restoring ? (
               <ActivityIndicator color="#9d8fbe" size="small" />
             ) : (
@@ -200,12 +200,12 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Preferences</Text>
+          <Text style={styles.sectionLabel}>{t('preferences')}</Text>
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.rowText}>Daily Notification</Text>
+              <Text style={styles.rowText}>{t('dailyNotification')}</Text>
               <Text style={[styles.rowValue, { fontSize: 11, marginTop: 2 }]}>
-                Reminder every day at 8:00 AM
+                {t('dailyNotificationDesc')}
               </Text>
             </View>
             {notifLoading ? (
@@ -220,7 +220,7 @@ export default function SettingsScreen() {
             )}
           </View>
           <TouchableOpacity style={styles.row} onPress={() => setFramePickerVisible(true)}>
-            <Text style={styles.rowText}>Cultural Frame</Text>
+            <Text style={styles.rowText}>{t('culturalFrame')}</Text>
             {frameSaving ? (
               <ActivityIndicator color="#9d8fbe" size="small" />
             ) : (
@@ -230,7 +230,7 @@ export default function SettingsScreen() {
             )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.row} onPress={() => setLangPickerVisible(true)}>
-            <Text style={styles.rowText}>Language</Text>
+            <Text style={styles.rowText}>{t('language')}</Text>
             <Text style={styles.rowValue}>
               {currentLang ? `${currentLang.flag} ${currentLang.label}` : language} →
             </Text>
@@ -238,9 +238,9 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>About</Text>
+          <Text style={styles.sectionLabel}>{t('about')}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowText}>Version</Text>
+            <Text style={styles.rowText}>{t('version')}</Text>
             <Text style={styles.rowValue}>{Constants.expoConfig?.version ?? '2.3.0'}</Text>
           </View>
         </View>

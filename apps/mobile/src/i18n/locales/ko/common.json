@@ -42,5 +42,75 @@
   "rerunOnboarding": "온보딩 다시 실행",
   "dailyNotification": "매일 알림",
   "comingSoon": "준비 중",
-  "serviceError": "서비스에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요."
+  "serviceError": "서비스에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  "tabs": {
+    "today": "오늘",
+    "myChart": "내 사주",
+    "fortune": "운세",
+    "relations": "인연",
+    "journal": "일지",
+    "settings": "설정"
+  },
+  "settings": "설정",
+  "account": "계정",
+  "email": "이메일",
+  "preferences": "환경설정",
+  "dailyNotificationDesc": "매일 오전 8시 알림",
+  "culturalFrame": "문화 프레임",
+  "language": "언어",
+  "about": "정보",
+  "version": "버전",
+  "notificationPermTitle": "알림 권한 필요",
+  "notificationPermMsg": "매일 운세 알림을 받으려면 기기 설정에서 알림을 허용해주세요.",
+  "login": {
+    "subtitle": "나의 사주 팔자를 발견하세요",
+    "sendMagicLink": "매직 링크 전송",
+    "or": "또는",
+    "continueWithGoogle": "Google로 계속",
+    "signInWithApple": "Apple로 로그인",
+    "checkInbox": "매직 링크를 보냈습니다. 이메일을 확인해 주세요.",
+    "emailRequired": "이메일을 입력해주세요"
+  },
+  "addEvent": {
+    "title": "인생 이벤트 추가",
+    "subtitle": "인생의 주요 순간을 기록하세요",
+    "fieldTitle": "제목 *",
+    "fieldDate": "날짜 (YYYY-MM-DD) *",
+    "fieldCategory": "카테고리",
+    "fieldSentiment": "감정",
+    "fieldNote": "메모 (선택)",
+    "notePlaceholder": "무슨 일이 있었나요? 어떤 기분이었나요?",
+    "saveEvent": "저장",
+    "categories": {
+      "career": "💼 커리어",
+      "love": "💞 연애",
+      "health": "🌿 건강",
+      "family": "🏡 가족",
+      "travel": "✈️ 여행",
+      "finance": "💰 재정",
+      "education": "📚 공부",
+      "other": "⭐ 기타"
+    },
+    "sentiments": {
+      "positive": "😊 긍정",
+      "neutral": "😐 중립",
+      "negative": "😔 부정"
+    }
+  },
+  "compatScore": {
+    "excellent": "완벽한 오행 조화 — 천생연분에 가까운 궁합",
+    "strong": "강한 호환성 — 서로를 성장시키는 역동적인 궁합",
+    "moderate": "중간 조화 — 보완적인 차이로 성장하는 관계",
+    "challenging": "에너지 충돌 — 이해를 통해 깊어지는 관계",
+    "tension": "긴장된 궁합 — 인식을 통해 변화가 가능한 조합"
+  },
+  "compatRelation": {
+    "nourishes": "당신의 {{a}} 기운이 상대방의 {{b}}을(를) 生합니다",
+    "nourished_by": "상대방의 {{b}} 기운이 당신의 {{a}}을(를) 生합니다",
+    "challenges": "당신의 {{a}} 기운이 상대방의 {{b}}을(를) 剋합니다",
+    "challenged_by": "상대방의 {{b}} 기운이 당신의 {{a}}을(를) 剋합니다",
+    "same": "두 사람 모두 {{a}} 기운 — 강한 동질 에너지",
+    "independent": "{{a}}과(와) {{b}}는 독립적으로 흐릅니다"
+  },
+  "rlsError": "저장할 수 없습니다. 로그인 상태를 확인해주세요."
 }

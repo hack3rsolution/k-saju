@@ -94,6 +94,8 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
   const [error, setError] = useState<string | null>(null);
   const [weeklyLimitReached, setWeeklyLimitReached] = useState(false);
   const [tick, setTick] = useState(0);
+  // Keep last successful reading so it's shown even when the next fetch fails
+  const lastReadingRef = useRef<ReadingData | null>(null);
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
@@ -201,6 +203,7 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
 
         const data = await resp.json() as { ok: boolean; readingId?: string | null; reading: ReadingData };
         if (!cancelled) {
+          lastReadingRef.current = data.reading;
           setReading(data.reading);
           setReadingId(data.readingId ?? null);
         }
@@ -214,6 +217,10 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
       } catch (e: unknown) {
         if (!cancelled) {
           setError(friendlyApiError(e));
+          // Restore last successful reading if available so the UI stays populated
+          if (lastReadingRef.current && reading === null) {
+            setReading(lastReadingRef.current);
+          }
         }
       } finally {
         if (!cancelled) setLoading(false);

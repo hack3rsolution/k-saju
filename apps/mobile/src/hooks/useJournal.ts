@@ -12,11 +12,22 @@ import { useAuthStore } from '../store/authStore';
 import { useJournalStore } from '../store/journalStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 import type {
   LifeEvent,
   AddEventInput,
   JournalAnalysisData,
 } from '../types/journal';
+
+const RLS_ERROR_MSG = '저장할 수 없습니다. 로그인 상태를 확인해주세요.';
+
+function mapDbError(e: unknown): string {
+  const msg = e instanceof Error ? e.message : String(e);
+  if (msg.toLowerCase().includes('row-level security') || msg.toLowerCase().includes('rls')) {
+    return RLS_ERROR_MSG;
+  }
+  return friendlyApiError(e);
+}
 
 // ── DB row → app type ─────────────────────────────────────────────────────────
 
@@ -60,7 +71,7 @@ export function useJournal() {
       if (dbErr) throw new Error(dbErr.message);
       setEvents((data ?? []).map(rowToEvent));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load events');
+      setError(mapDbError(e));
     } finally {
       setLoading(false);
     }
@@ -90,7 +101,7 @@ export function useJournal() {
       if (data) addEvent(rowToEvent(data as Record<string, unknown>));
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to add event');
+      setError(mapDbError(e));
       return false;
     } finally {
       setLoading(false);
@@ -111,7 +122,7 @@ export function useJournal() {
       removeEvent(id);
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to delete event');
+      setError(mapDbError(e));
       return false;
     }
   }, [session, removeEvent]);

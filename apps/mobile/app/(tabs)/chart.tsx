@@ -59,8 +59,18 @@ export default function ChartScreen() {
   const dayStemEl = STEM_ELEMENT[dayStem];
   const dayStemColor = ELEM_COLOR[dayStemEl];
 
-  // ── Current 대운 index ────────────────────────────────────────────────────
-  const currentAge = birthData ? new Date().getFullYear() - birthData.year : -1;
+  // ── Current 대운 index (만 나이 기준) ────────────────────────────────────────
+  function calcManAge(): number {
+    if (!birthData) return -1;
+    const now = new Date();
+    const bMonth = birthData.month ?? 1;
+    const bDay   = birthData.day   ?? 1;
+    const hadBirthday =
+      now.getMonth() + 1 > bMonth ||
+      (now.getMonth() + 1 === bMonth && now.getDate() >= bDay);
+    return now.getFullYear() - birthData.year - (hadBirthday ? 0 : 1);
+  }
+  const currentAge = calcManAge();
   let currentDwIdx = -1;
   for (let i = daewoon.length - 1; i >= 0; i--) {
     if (daewoon[i].startAge <= currentAge) { currentDwIdx = i; break; }

@@ -24,6 +24,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import {
   calculateFourPillars,
   calculateElementBalance,
@@ -64,6 +65,14 @@ function scorePair(a: FiveElement, b: FiveElement): number {
   return 50; // neutral
 }
 
+interface RawCompatibility {
+  score: number;
+  summaryKey: 'excellent' | 'strong' | 'moderate' | 'challenging' | 'tension';
+  dayRelationType: 'nourishes' | 'nourished_by' | 'challenges' | 'challenged_by' | 'same' | 'independent';
+  dayElemA: FiveElement;
+  dayElemB: FiveElement;
+}
+
 interface LocalCompatibility {
   score: number;
   summary: string;
@@ -74,7 +83,7 @@ interface LocalCompatibility {
  * Calculate a 0-100 compatibility score from two saju charts using element harmony rules.
  * Day pillar 40%, Month 30%, Year 30%.
  */
-function calculateLocalCompatibility(userChart: SajuChart, partnerChart: SajuChart): LocalCompatibility {
+function calculateRawCompatibility(userChart: SajuChart, partnerChart: SajuChart): RawCompatibility {
   const dayScore   = scorePair(STEM_ELEMENT[userChart.pillars.day.stem]!,   STEM_ELEMENT[partnerChart.pillars.day.stem]!);
   const monthScore = scorePair(STEM_ELEMENT[userChart.pillars.month.stem]!, STEM_ELEMENT[partnerChart.pillars.month.stem]!);
   const yearScore  = scorePair(STEM_ELEMENT[userChart.pillars.year.stem]!,  STEM_ELEMENT[partnerChart.pillars.year.stem]!);
@@ -82,26 +91,25 @@ function calculateLocalCompatibility(userChart: SajuChart, partnerChart: SajuCha
   const weighted = dayScore * 0.4 + monthScore * 0.3 + yearScore * 0.3;
   const score = Math.round(weighted);
 
-  let summary: string;
-  let dayRelation: string;
-
-  // Day element relation label
   const dA = STEM_ELEMENT[userChart.pillars.day.stem]!;
   const dB = STEM_ELEMENT[partnerChart.pillars.day.stem]!;
-  if (GENERATES[dA] === dB) dayRelation = `Your ${dA} nourishes their ${dB}`;
-  else if (GENERATES[dB] === dA) dayRelation = `Their ${dB} nourishes your ${dA}`;
-  else if (CONTROLS[dA] === dB) dayRelation = `Your ${dA} challenges their ${dB}`;
-  else if (CONTROLS[dB] === dA) dayRelation = `Their ${dB} challenges your ${dA}`;
-  else if (dA === dB) dayRelation = `Both carry ${dA} energy — strong resonance`;
-  else dayRelation = `${dA} and ${dB} flow independently`;
 
-  if (score >= 80) summary = 'Excellent elemental harmony — a naturally complementary pair';
-  else if (score >= 65) summary = 'Strong compatibility with a dynamic, growth-oriented bond';
-  else if (score >= 50) summary = 'Moderate harmony — growth through complementary differences';
-  else if (score >= 35) summary = 'Challenging energies that deepen with understanding';
-  else summary = 'High tension combination — transformation is possible through awareness';
+  let dayRelationType: RawCompatibility['dayRelationType'];
+  if (GENERATES[dA] === dB)       dayRelationType = 'nourishes';
+  else if (GENERATES[dB] === dA)  dayRelationType = 'nourished_by';
+  else if (CONTROLS[dA] === dB)   dayRelationType = 'challenges';
+  else if (CONTROLS[dB] === dA)   dayRelationType = 'challenged_by';
+  else if (dA === dB)             dayRelationType = 'same';
+  else                            dayRelationType = 'independent';
 
-  return { score, summary, dayRelation };
+  let summaryKey: RawCompatibility['summaryKey'];
+  if (score >= 80)      summaryKey = 'excellent';
+  else if (score >= 65) summaryKey = 'strong';
+  else if (score >= 50) summaryKey = 'moderate';
+  else if (score >= 35) summaryKey = 'challenging';
+  else                  summaryKey = 'tension';
+
+  return { score, summaryKey, dayRelationType, dayElemA: dA, dayElemB: dB };
 }
 
 // ── Section card ──────────────────────────────────────────────────────────────
@@ -185,6 +193,7 @@ const scoreStyles = StyleSheet.create({
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function CompatibilityScreen() {
+  const { t } = useTranslation('common');
   const { loading, report, error, generate, reset } = useAddonReport();
   const { addons } = useEntitlementStore();
   const { chart: userChart, frame } = useSajuStore();
@@ -243,7 +252,15 @@ export default function CompatibilityScreen() {
     setPartnerChart(result);
 
     if (userChart) {
-      setLocalCompat(calculateLocalCompatibility(userChart, result.chart));
+      const raw = calculateRawCompatibility(userChart, result.chart);
+      setLocalCompat({
+        score: raw.score,
+        summary: t(`compatScore.${raw.summaryKey}`),
+        dayRelation: t(`compatRelation.${raw.dayRelationType}`, {
+          a: raw.dayElemA,
+          b: raw.dayElemB,
+        }),
+      });
     }
   }
 
@@ -362,23 +379,24 @@ export default function CompatibilityScreen() {
               <Text style={styles.fullReportDesc}>
                 오행 조화, 강점, 긴장 관계, 관계 예측 등 5개 섹션으로 구성된 심층 분석 리포트입니다.
               </Text>
-              <TouchableOpacity
-                style={[styles.analyzeBtn, loading && styles.analyzeBtnDisabled]}
-                onPress={handleFullReport}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={styles.analyzeBtnText}>전체 리포트 생성</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {error && !loading && (
-            <View style={styles.errorCard}>
-              <Text style={styles.errorText}>{error}</Text>
+              {error && !loading ? (
+                <View style={styles.comingSoonBox}>
+                  <Text style={styles.comingSoonIcon}>🚧</Text>
+                  <Text style={styles.comingSoonText}>{t('comingSoon')} — 준비 중입니다</Text>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.analyzeBtn, loading && styles.analyzeBtnDisabled]}
+                  onPress={handleFullReport}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.analyzeBtnText}>전체 리포트 생성</Text>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           )}
 
@@ -466,6 +484,9 @@ const styles = StyleSheet.create({
   fullReportDesc: { color: '#9d8fbe', fontSize: 13, lineHeight: 20 },
 
   errorCard: { backgroundColor: '#2d1854', borderRadius: 14, padding: 20, alignItems: 'center', marginBottom: 16 },
+  comingSoonBox: { alignItems: 'center', paddingVertical: 16 },
+  comingSoonIcon: { fontSize: 28, marginBottom: 6 },
+  comingSoonText: { color: '#9d8fbe', fontSize: 13, fontWeight: '600', textAlign: 'center' },
 
   reportHeader: { marginBottom: 20 },
   reportTitle: { fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 10 },

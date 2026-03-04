@@ -37,5 +37,75 @@
   "rerunOnboarding": "Redo Onboarding",
   "dailyNotification": "Daily Notification",
   "comingSoon": "Coming Soon",
-  "serviceError": "A temporary issue occurred. Please try again shortly."
+  "serviceError": "A temporary issue occurred. Please try again shortly.",
+  "tabs": {
+    "today": "Today",
+    "myChart": "My Chart",
+    "fortune": "Fortune",
+    "relations": "Relations",
+    "journal": "Journal",
+    "settings": "Settings"
+  },
+  "settings": "Settings",
+  "account": "Account",
+  "email": "Email",
+  "preferences": "Preferences",
+  "dailyNotificationDesc": "Reminder every day at 8:00 AM",
+  "culturalFrame": "Cultural Frame",
+  "language": "Language",
+  "about": "About",
+  "version": "Version",
+  "notificationPermTitle": "Permission Required",
+  "notificationPermMsg": "Enable notifications in your device Settings to receive daily fortune reminders.",
+  "login": {
+    "subtitle": "Discover your cosmic blueprint",
+    "sendMagicLink": "Send magic link",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "signInWithApple": "Sign in with Apple",
+    "checkInbox": "Check your inbox for the magic link.",
+    "emailRequired": "Enter your email"
+  },
+  "addEvent": {
+    "title": "Add Life Event",
+    "subtitle": "Record a life event",
+    "fieldTitle": "Title *",
+    "fieldDate": "Date (YYYY-MM-DD) *",
+    "fieldCategory": "Category",
+    "fieldSentiment": "Sentiment",
+    "fieldNote": "Note (optional)",
+    "notePlaceholder": "What happened? How did it feel?",
+    "saveEvent": "Save Event",
+    "categories": {
+      "career": "💼 Career",
+      "love": "💞 Love",
+      "health": "🌿 Health",
+      "family": "🏡 Family",
+      "travel": "✈️ Travel",
+      "finance": "💰 Finance",
+      "education": "📚 Study",
+      "other": "⭐ Other"
+    },
+    "sentiments": {
+      "positive": "😊 Positive",
+      "neutral": "😐 Neutral",
+      "negative": "😔 Negative"
+    }
+  },
+  "compatScore": {
+    "excellent": "Excellent elemental harmony — a naturally complementary pair",
+    "strong": "Strong compatibility with a dynamic, growth-oriented bond",
+    "moderate": "Moderate harmony — growth through complementary differences",
+    "challenging": "Challenging energies that deepen with understanding",
+    "tension": "High tension combination — transformation is possible through awareness"
+  },
+  "compatRelation": {
+    "nourishes": "Your {{a}} nourishes their {{b}}",
+    "nourished_by": "Their {{b}} nourishes your {{a}}",
+    "challenges": "Your {{a}} challenges their {{b}}",
+    "challenged_by": "Their {{b}} challenges your {{a}}",
+    "same": "Both carry {{a}} energy — strong resonance",
+    "independent": "{{a}} and {{b}} flow independently"
+  },
+  "rlsError": "Could not save. Please check your login status."
 }
