@@ -36,8 +36,8 @@ const FRAMES: { id: CulturalFrame; label: string; region: string; flag: string }
   { id: 'kr', label: '사주팔자',       region: 'Korean',     flag: '🇰🇷' },
   { id: 'cn', label: 'BaZi / 四柱',   region: 'Chinese',    flag: '🇨🇳' },
   { id: 'jp', label: '四柱推命',       region: 'Japanese',   flag: '🇯🇵' },
-  { id: 'en', label: 'Cosmic Blueprint', region: 'Western', flag: '🌐' },
-  { id: 'es', label: 'Destino Cósmico', region: 'Latin',    flag: '🌐' },
+  { id: 'en', label: 'Cosmic Blueprint', region: 'Western', flag: '🌟' },
+  { id: 'es', label: 'Destino Cósmico', region: 'Latin',    flag: '🌺' },
   { id: 'in', label: 'Vedic Fusion',  region: 'South Asian', flag: '🇮🇳' },
 ];
 

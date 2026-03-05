@@ -58,11 +58,32 @@ export async function getCachedReading(
     (Date.now() - new Date(row.createdAt).getTime()) / 3_600_000;
   if (ageHours > CACHE_TTL_HOURS) return null;
 
+  // Safety: older DB records may have stored raw Claude JSON in the summary field.
+  // Parse it transparently so the client always receives a clean string.
+  let summary = row.summary;
+  let details = row.details;
+  let luckyItems = row.luckyItems;
+
+  if (typeof summary === 'string' && summary.trim().startsWith('{')) {
+    try {
+      const inner = JSON.parse(summary) as {
+        summary?: string;
+        details?: string[];
+        luckyItems?: Record<string, unknown> | null;
+      };
+      if (inner.summary) {
+        summary = inner.summary;
+        if (Array.isArray(inner.details)) details = inner.details;
+        if (inner.luckyItems !== undefined) luckyItems = inner.luckyItems as Record<string, unknown>;
+      }
+    } catch { /* keep original values */ }
+  }
+
   return {
     id: row.id,
-    summary: row.summary,
-    details: row.details,
-    luckyItems: row.luckyItems,
+    summary,
+    details,
+    luckyItems,
   };
 }
 

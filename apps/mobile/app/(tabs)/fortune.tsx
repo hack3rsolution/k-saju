@@ -11,82 +11,46 @@
  */
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { T } from '../../src/theme/tokens';
 
 const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 
-// ── Fortune period definitions ────────────────────────────────────────────────
+// ── Period type keys ──────────────────────────────────────────────────────────
 
-const FORTUNE_PERIODS = [
-  {
-    label: 'Daily',
-    icon: '☀️',
-    deco: '日',
-    type: 'daily' as const,
-    free: true,
-    desc: 'Today\'s luck & energy',
-  },
-  {
-    label: 'Weekly',
-    icon: '📆',
-    deco: '週',
-    type: 'weekly' as const,
-    premium: true,
-    hasPreview: true,
-    desc: 'This week\'s full cycle',
-    teaser: 'This week\'s Wood energy aligns with your day pillar — a significant window opens for...',
-  },
-  {
-    label: 'Monthly',
-    icon: '🌙',
-    deco: '月',
-    type: 'monthly' as const,
-    premium: true,
-    desc: 'Monthly luck & career',
-  },
-  {
-    label: 'Annual',
-    icon: '🎆',
-    deco: '年',
-    type: 'annual' as const,
-    premium: true,
-    desc: 'Full year forecast',
-  },
-  {
-    label: '大運 (10yr)',
-    icon: '♾️',
-    deco: '運',
-    type: 'daewoon' as const,
-    premium: true,
-    desc: '10-year destiny cycle',
-  },
-] as const;
+const PERIOD_TYPES = ['daily', 'weekly', 'monthly', 'annual', 'daewoon'] as const;
+type PeriodType = typeof PERIOD_TYPES[number];
 
-type Period = typeof FORTUNE_PERIODS[number];
+const PERIOD_META: Record<PeriodType, { icon: string; deco: string; free?: boolean; premium?: boolean; hasPreview?: boolean }> = {
+  daily:   { icon: '☀️', deco: '日', free: true },
+  weekly:  { icon: '📆', deco: '週', premium: true, hasPreview: true },
+  monthly: { icon: '🌙', deco: '月', premium: true },
+  annual:  { icon: '🎆', deco: '年', premium: true },
+  daewoon: { icon: '♾️', deco: '運', premium: true },
+};
 
-// ── Weekly preview card (first sentence + blur overlay) ───────────────────────
+// ── Weekly preview card ───────────────────────────────────────────────────────
 
-function WeeklyPreviewCard({ period }: { period: typeof FORTUNE_PERIODS[1] }) {
+function WeeklyPreviewCard() {
+  const { t } = useTranslation('fortune');
+  const meta = PERIOD_META.weekly;
   return (
     <View style={previewStyles.card}>
-      {/* Accent bar */}
       <View style={previewStyles.accentBar} />
 
       <View style={previewStyles.body}>
         <View style={previewStyles.headerRow}>
-          <Text style={previewStyles.icon}>{period.icon}</Text>
+          <Text style={previewStyles.icon}>{meta.icon}</Text>
           <View style={{ flex: 1 }}>
-            <Text style={previewStyles.label}>WEEKLY FORTUNE · 週運</Text>
-            <Text style={previewStyles.title}>{period.label}</Text>
+            <Text style={previewStyles.label}>{t('weeklyLabel')}</Text>
+            <Text style={previewStyles.title}>{t('periodLabel.weekly')}</Text>
           </View>
-          <Text style={previewStyles.deco}>{period.deco}</Text>
+          <Text style={previewStyles.deco}>{meta.deco}</Text>
         </View>
 
-        {/* Visible teaser sentence */}
-        <Text style={previewStyles.teaser}>{period.teaser}</Text>
+        <Text style={previewStyles.teaser}>{t('weeklyTeaser')}</Text>
 
-        {/* Blurred / obscured continuation */}
         <View style={previewStyles.blurWrap}>
           <View style={previewStyles.blurLines}>
             <View style={[previewStyles.blurLine, { width: '100%' }]} />
@@ -94,18 +58,16 @@ function WeeklyPreviewCard({ period }: { period: typeof FORTUNE_PERIODS[1] }) {
             <View style={[previewStyles.blurLine, { width: '92%' }]} />
             <View style={[previewStyles.blurLine, { width: '70%' }]} />
           </View>
-          {/* Fade overlay from transparent → card background */}
           <View style={previewStyles.fadeOverlay} pointerEvents="none" />
         </View>
 
-        {/* Upgrade CTA */}
         <View style={previewStyles.ctaRow}>
           <TouchableOpacity
             style={previewStyles.ctaBtn}
             onPress={() => router.push('/paywall')}
             activeOpacity={0.85}
           >
-            <Text style={previewStyles.ctaBtnText}>✨ Unlock full access — $9.99/month</Text>
+            <Text style={previewStyles.ctaBtnText}>{t('unlockWeekly')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -115,16 +77,19 @@ function WeeklyPreviewCard({ period }: { period: typeof FORTUNE_PERIODS[1] }) {
 
 // ── Standard period card ──────────────────────────────────────────────────────
 
-function PeriodCard({ period, unlocked }: { period: Period; unlocked: boolean }) {
+function PeriodCard({ type, unlocked }: { type: PeriodType; unlocked: boolean }) {
+  const { t } = useTranslation('fortune');
+  const meta = PERIOD_META[type];
+
   function handlePress() {
     if (!unlocked) {
       router.push('/paywall');
       return;
     }
-    if (period.type === 'daily') {
+    if (type === 'daily') {
       router.push('/(tabs)/home');
     } else {
-      router.push(`/fortune/${period.type}` as never);
+      router.push(`/fortune/${type}` as never);
     }
   }
 
@@ -134,11 +99,11 @@ function PeriodCard({ period, unlocked }: { period: Period; unlocked: boolean })
       onPress={handlePress}
       activeOpacity={0.75}
     >
-      <Text style={styles.cardIcon}>{period.icon}</Text>
+      <Text style={styles.cardIcon}>{meta.icon}</Text>
       <View style={styles.cardBody}>
-        <Text style={styles.cardTitle}>{period.label}</Text>
-        <Text style={styles.cardDesc}>{'desc' in period ? period.desc : ''}</Text>
-        {!unlocked && 'premium' in period && period.premium && (
+        <Text style={styles.cardTitle}>{t(`periodLabel.${type}`)}</Text>
+        <Text style={styles.cardDesc}>{t(`periodDesc.${type}`)}</Text>
+        {!unlocked && meta.premium && (
           <Text style={styles.premiumBadge}>Premium</Text>
         )}
       </View>
@@ -150,29 +115,31 @@ function PeriodCard({ period, unlocked }: { period: Period; unlocked: boolean })
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function FortuneScreen() {
+  const { t } = useTranslation('fortune');
   const { isPremium } = useEntitlementStore();
   const effectivePremium = DEV_BYPASS || isPremium;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Fortune Readings</Text>
-      <Text style={styles.subtitle}>流年 · Luck Cycles</Text>
+      <Text style={styles.title}>{t('readingsTitle')}</Text>
+      <Text style={styles.subtitle}>{t('luckCycles')}</Text>
 
-      {FORTUNE_PERIODS.map((p) => {
-        const unlocked = effectivePremium || !('premium' in p && p.premium);
+      {PERIOD_TYPES.map((type) => {
+        const meta = PERIOD_META[type];
+        const unlocked = effectivePremium || !meta.premium;
 
         // Weekly: show preview card for non-premium users
-        if ('hasPreview' in p && p.hasPreview && !effectivePremium) {
-          return <WeeklyPreviewCard key={p.label} period={p} />;
+        if (meta.hasPreview && !effectivePremium) {
+          return <WeeklyPreviewCard key={type} />;
         }
 
-        return <PeriodCard key={p.label} period={p} unlocked={unlocked} />;
+        return <PeriodCard key={type} type={type} unlocked={unlocked} />;
       })}
 
-        {/* Upgrade banner for free users */}
+      {/* Upgrade banner for free users */}
       {!effectivePremium && (
         <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
-          <Text style={styles.upgradeBtnText}>✨ Unlock all fortune readings — $9.99/month</Text>
+          <Text style={styles.upgradeBtnText}>{t('unlockAll')}</Text>
         </TouchableOpacity>
       )}
     </ScrollView>

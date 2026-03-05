@@ -6,6 +6,7 @@
  */
 import { useState } from 'react';
 import type { SajuChart, DaewoonPeriod } from '@k-saju/saju-engine';
+import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
@@ -100,13 +101,18 @@ export function useAddonReport(): AddonReportState {
         body.name = params.name;
       }
 
+      // Always fetch a fresh token — handles silent JWT refresh on expiry
+      const { data: { session: fresh } } = await supabase.auth.getSession();
+      const token = fresh?.access_token;
+      if (!token) throw new Error('Session expired. Please log in again.');
+
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/addon-report`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(body),
         },

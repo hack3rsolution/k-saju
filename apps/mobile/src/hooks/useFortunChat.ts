@@ -61,13 +61,18 @@ export function useFortunChat(
     try {
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
+      // Always fetch a fresh token — handles silent JWT refresh on expiry
+      const { data: { session: fresh } } = await supabase.auth.getSession();
+      const token = fresh?.access_token;
+      if (!token) { setError('Session expired. Please log in again.'); return; }
+
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/fortune-chat`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             fortuneId,
@@ -109,9 +114,21 @@ export function useFortunChat(
       // ── Stream reading ─────────────────────────────────────────────────────
       const reader = resp.body?.getReader();
       if (!reader) {
-        // Fallback: read as text if streaming not available
+        // Fallback: read as text if streaming not available.
+        // Parse SSE format so raw "data: {...}" lines are not shown to the user.
         const text = await resp.text();
-        setMessages([...nextMessages, { role: 'assistant', content: text }]);
+        let accumulated = '';
+        for (const line of text.split('\n')) {
+          if (line.startsWith('data: ')) {
+            const json = line.slice(6).trim();
+            if (json === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(json) as { token?: string };
+              if (parsed.token) accumulated += parsed.token;
+            } catch { /* skip malformed line */ }
+          }
+        }
+        setMessages([...nextMessages, { role: 'assistant', content: accumulated || text }]);
         return;
       }
 

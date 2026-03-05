@@ -14,6 +14,7 @@ import {
   STEM_ELEMENT,
   type BirthData,
 } from '@k-saju/saju-engine';
+import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
@@ -90,13 +91,22 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
 
       // ── Call Edge Function ────────────────────────────────────────────────
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+
+      // Always fetch a fresh token — handles silent JWT refresh on expiry
+      const { data: { session: fresh } } = await supabase.auth.getSession();
+      const token = fresh?.access_token;
+      if (!token) {
+        setError('Session expired. Please log in again.');
+        return;
+      }
+
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/timing-advisor`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             chart: {

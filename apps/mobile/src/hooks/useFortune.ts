@@ -182,13 +182,21 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
         const { dayStr: todayDay } = ganjiRef.current;
         const yp = yearPillar(now.getFullYear());
 
+        // Always fetch a fresh token — handles silent JWT refresh on expiry
+        const { data: { session: fresh } } = await supabase.auth.getSession();
+        const token = fresh?.access_token;
+        if (!token) {
+          setError('Session expired. Please log in again.');
+          return;
+        }
+
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/saju-reading`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session!.access_token}`,
+              'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
               chart: {
@@ -216,9 +224,26 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
         }
 
         const data = await resp.json() as { ok: boolean; readingId?: string | null; reading: ReadingData };
+
+        // Safety: Edge Function may store the whole JSON in the summary field on
+        // parse-fallback. Unwrap transparently so the UI receives clean fields.
+        let parsedReading = data.reading;
+        if (typeof parsedReading.summary === 'string' && parsedReading.summary.trim().startsWith('{')) {
+          try {
+            const inner = JSON.parse(parsedReading.summary) as Partial<ReadingData>;
+            if (inner.summary) {
+              parsedReading = {
+                summary:    inner.summary,
+                details:    Array.isArray(inner.details) ? inner.details : parsedReading.details,
+                luckyItems: inner.luckyItems !== undefined ? inner.luckyItems : parsedReading.luckyItems,
+              };
+            }
+          } catch { /* keep original */ }
+        }
+
         if (!cancelled) {
-          lastReadingRef.current = data.reading;
-          setReading(data.reading);
+          lastReadingRef.current = parsedReading;
+          setReading(parsedReading);
           setReadingId(data.readingId ?? null);
         }
 

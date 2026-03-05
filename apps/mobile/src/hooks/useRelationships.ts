@@ -143,6 +143,11 @@ export function useRelationships() {
       const refMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
+      // Always fetch a fresh token — handles silent JWT refresh on expiry
+      const { data: { session: fresh } } = await supabase.auth.getSession();
+      const token = fresh?.access_token;
+      if (!token) { setFortuneError('Session expired. Please log in again.'); setFortuneLoading(false); return null; }
+
       try {
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/relationship-fortune`,
@@ -150,7 +155,7 @@ export function useRelationships() {
             method: 'POST',
             headers: {
               'Content-Type':  'application/json',
-              'Authorization': `Bearer ${session.access_token}`,
+              'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
               relationshipId:  rel.id,

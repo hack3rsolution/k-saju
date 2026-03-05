@@ -150,5 +150,6 @@ export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): 
   const base = SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
   const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
   if (!langName) return base;
-  return `${base}\n\nIMPORTANT: Respond ONLY in ${langName}. All text in the JSON must be in ${langName}. Do not mix languages.`;
+  // Prepend so the language instruction takes priority over any frame-level hints.
+  return `IMPORTANT: You must respond ONLY in ${langName}. All text in the JSON must be in ${langName}. Do not mix languages.\n\n${base}`;
 }

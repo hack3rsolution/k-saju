@@ -202,7 +202,7 @@ export function ContentRecommendationSection({ frame }: Props) {
       {loading && (
         <View style={styles.center}>
           <ActivityIndicator color={elemColor} />
-          <Text style={styles.loadingText}>{labels.loading}</Text>
+          <Text style={styles.loadingText}>{t('chart:generatingRecommendations')}</Text>
         </View>
       )}
 

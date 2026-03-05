@@ -2,7 +2,7 @@ import type { ClaudeReadingOutput } from './types.ts';
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 600;
+const MAX_TOKENS = 1200;
 
 interface AnthropicMessage {
   role: 'user' | 'assistant';

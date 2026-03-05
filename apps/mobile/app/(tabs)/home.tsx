@@ -517,6 +517,7 @@ export default function HomeScreen() {
         limitReached={limitReached}
         error={timingError}
         onClose={() => { setResultSheetVisible(false); resetTiming(); }}
+        onRetry={() => { setCategorySheetVisible(true); setResultSheetVisible(false); resetTiming(); }}
       />
     </>
   );

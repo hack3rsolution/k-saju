@@ -78,6 +78,7 @@ interface Props {
   limitReached: boolean;
   error: string | null;
   onClose: () => void;
+  onRetry?: () => void;
   /** Days until free timing analysis resets. If not provided, computed from end of month. */
   timingDaysUntilFree?: number;
 }
@@ -87,7 +88,7 @@ function daysUntilMonthEnd(): number {
   return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
 }
 
-export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose, timingDaysUntilFree }: Props) {
+export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose, onRetry, timingDaysUntilFree }: Props) {
   const { t } = useTranslation('fortune');
   const daysLeft = timingDaysUntilFree ?? daysUntilMonthEnd();
 
@@ -128,6 +129,14 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           ) : error ? (
             <View style={styles.centerBox}>
               <Text style={styles.errorText}>{t('timingAdvisor.analysisFailed')}</Text>
+              {__DEV__ && (
+                <Text style={styles.errorDetail}>{error}</Text>
+              )}
+              {onRetry && (
+                <TouchableOpacity style={styles.retryBtn} onPress={onRetry}>
+                  <Text style={styles.retryBtnText}>{t('timingAdvisor.retry', '다시 시도')}</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : advice ? (
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -201,7 +210,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   upgradeBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
-  errorText: { color: '#f87171', fontSize: 14, textAlign: 'center' },
+  errorText: { color: '#f87171', fontSize: 14, textAlign: 'center', marginBottom: 8 },
+  errorDetail: { color: '#f87171', fontSize: 11, textAlign: 'center', opacity: 0.7, marginTop: 4, paddingHorizontal: 16 },
+  retryBtn: { marginTop: 16, backgroundColor: '#3d2471', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 24 },
+  retryBtnText: { color: '#a78bfa', fontWeight: '700', fontSize: 14 },
   title: { color: '#a78bfa', fontSize: 12, fontWeight: '700', letterSpacing: 0.8, marginBottom: 16 },
   headline: {
     color: '#fff',

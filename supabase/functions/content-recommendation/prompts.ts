@@ -155,10 +155,12 @@ const LANGUAGE_NAMES: Record<string, string> = {
 
 export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
   const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  // Prepend language instruction so it takes precedence over any frame-level
+  // language hints (e.g. "Descriptions in English" in the 'en' frame prompt).
   const langInstruction = langName
-    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All titles and descriptions must be written in ${langName}. Do not mix languages.`
+    ? `IMPORTANT: You must respond ONLY in ${langName}. All titles, descriptions, and tags must be written in ${langName}. Do not use any other language.\n\n`
     : '';
-  return `${SYSTEM_PROMPTS[frame]}${langInstruction}`;
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}`;
 }
 
 export function buildUserPrompt(req: ContentRecommendationRequest): string {

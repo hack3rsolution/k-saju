@@ -122,6 +122,58 @@ const SHISHIN_INFO: Record<ShiShin, { category: string; desc: string; fortune: s
   },
 };
 
+// ── 천간 설명 데이터 ──────────────────────────────────────────────────────────
+
+const STEM_DESC: Record<Stem, { pinyin: string; meaning: string; fortune: string }> = {
+  甲: { pinyin: 'jiǎ', meaning: '큰 나무 · 시작의 힘', fortune: '새로운 출발과 성장 에너지. 리더십이 강화되는 시기.' },
+  乙: { pinyin: 'yǐ', meaning: '풀과 꽃 · 유연한 생명력', fortune: '부드러운 적응력으로 기회를 잡는 시기. 인간관계에서 귀인을 만납니다.' },
+  丙: { pinyin: 'bǐng', meaning: '태양 · 빛나는 열정', fortune: '밝고 활발한 기운. 표현과 창의성이 꽃피는 시기.' },
+  丁: { pinyin: 'dīng', meaning: '촛불 · 정밀한 화기', fortune: '깊은 사색과 집중력. 학문·기예에서 두각을 나타냅니다.' },
+  戊: { pinyin: 'wù', meaning: '큰 산 · 두터운 안정', fortune: '안정과 신뢰를 쌓는 시기. 부동산·토지 관련 운이 좋습니다.' },
+  己: { pinyin: 'jǐ', meaning: '경작지 · 포용하는 대지', fortune: '세심한 관리와 계획이 결실을 맺습니다. 내면을 다지는 시기.' },
+  庚: { pinyin: 'gēng', meaning: '철 · 결단과 변혁', fortune: '과감한 결단과 실행력. 불필요한 것을 정리하고 새롭게 거듭납니다.' },
+  辛: { pinyin: 'xīn', meaning: '보석 · 예리한 심미안', fortune: '정밀함과 완벽주의. 예술·미용·금융 분야에서 성과를 냅니다.' },
+  壬: { pinyin: 'rén', meaning: '큰 강 · 깊은 지혜', fortune: '광대한 시야와 유연한 전략. 사업 확장과 외부 활동에 좋습니다.' },
+  癸: { pinyin: 'guǐ', meaning: '빗물 · 섬세한 감수성', fortune: '직관과 감성이 빛나는 시기. 예술·영적 성장·치유에 유리합니다.' },
+};
+
+// ── 지지 설명 데이터 ──────────────────────────────────────────────────────────
+
+const BRANCH_DESC: Record<Branch, { animal: string; meaning: string; fortune: string }> = {
+  子: { animal: '🐭 쥐', meaning: '한밤중의 기운 · 지혜와 번식', fortune: '재물과 지식이 축적되는 시기. 조용히 준비하면 도약이 옵니다.' },
+  丑: { animal: '🐮 소', meaning: '겨울 끝 · 인내와 근면', fortune: '묵묵히 노력하면 반드시 결실이 맺힙니다. 건강·토지 관련 운 좋음.' },
+  寅: { animal: '🐯 호랑이', meaning: '이른 봄 · 용맹과 추진력', fortune: '적극적인 행동이 성과로 이어집니다. 직업·사업 변화에 유리합니다.' },
+  卯: { animal: '🐰 토끼', meaning: '봄의 꽃 · 문화와 예술', fortune: '인간관계가 풍요롭고 예술적 재능이 빛납니다. 귀인의 조력을 받습니다.' },
+  辰: { animal: '🐉 용', meaning: '봄비 · 변화와 신비', fortune: '큰 변화와 도약의 시기. 예상치 못한 행운이 찾아옵니다.' },
+  巳: { animal: '🐍 뱀', meaning: '초여름 · 지혜와 신중함', fortune: '차분한 전략이 성공을 부릅니다. 학문·연구·의료 분야에 유리합니다.' },
+  午: { animal: '🐴 말', meaning: '한여름 · 열정과 역동성', fortune: '활발한 활동과 교류. 여행·이동·사회적 활동에서 운이 강합니다.' },
+  未: { animal: '🐑 양', meaning: '한여름 끝 · 온화와 예술', fortune: '예술적 감각과 친화력이 돋보입니다. 협력과 팀워크로 성과를 냅니다.' },
+  申: { animal: '🐒 원숭이', meaning: '초가을 · 재기와 변화', fortune: '기민한 판단력과 변화 대응력. 기술·혁신 분야에서 두각을 냅니다.' },
+  酉: { animal: '🐓 닭', meaning: '가을 수확 · 정밀함과 규율', fortune: '꼼꼼한 실행력으로 결실을 맺습니다. 금융·관리·행정에 유리합니다.' },
+  戌: { animal: '🐕 개', meaning: '늦가을 · 충성과 의리', fortune: '신뢰와 의리로 좋은 인간관계를 형성합니다. 부동산·보안 관련 운 좋음.' },
+  亥: { animal: '🐷 돼지', meaning: '초겨울 · 풍요와 여유', fortune: '풍요로운 에너지. 학문·여행·정신적 성장에 좋은 시기입니다.' },
+};
+
+// ── 대운 기간 키워드 (오행 기반) ──────────────────────────────────────────────
+
+const ELEMENT_DW_KEYWORDS: Record<FiveElement, string[]> = {
+  木: ['성장', '창의', '도전'],
+  火: ['열정', '표현', '관계'],
+  土: ['안정', '신뢰', '성실'],
+  金: ['결단', '수확', '정제'],
+  水: ['지혜', '유연', '깊이'],
+};
+
+// ── 대운 기간 조언 (오행 기반) ────────────────────────────────────────────────
+
+const ELEMENT_DW_ADVICE: Record<FiveElement, { favor: string; caution: string }> = {
+  木: { favor: '새로운 시작, 창업, 학업, 여행에 유리합니다', caution: '고집을 내려놓고 타인의 의견을 수용하세요' },
+  火: { favor: '사교 활동, 발표, 예술, 리더십 역할에 유리합니다', caution: '충동적인 결정을 피하고 감정을 조절하세요' },
+  土: { favor: '부동산, 투자, 장기 계획, 가족 관계에 유리합니다', caution: '변화에 너무 보수적으로 반응하지 마세요' },
+  金: { favor: '직장, 법률, 재무 관리, 전문 기술 향상에 유리합니다', caution: '지나친 완벽주의가 관계를 해칠 수 있습니다' },
+  水: { favor: '학문, 연구, 외교, 영적 탐구에 유리합니다', caution: '방향 없이 흘러가지 않도록 목표를 명확히 하세요' },
+};
+
 // ── Pillar row data ───────────────────────────────────────────────────────────
 
 interface PillarInfo {
@@ -437,7 +489,7 @@ export default function ChartScreen() {
                     { borderColor: isCurrent ? T.semantic.gold : T.border.default },
                     isCurrent && { backgroundColor: T.semantic.gold + '0d' },
                   ]}
-                  onPress={() => setInfoModal({ kind: 'daewoon', dw, isCurrent })}
+                  onPress={() => { try { setInfoModal({ kind: 'daewoon', dw, isCurrent }); } catch (e) { console.warn('[Daewoon] onPress error:', e); } }}
                   activeOpacity={0.75}
                 >
                   {/* Element accent top bar */}
@@ -524,31 +576,118 @@ export default function ChartScreen() {
             const dwStemEl = STEM_ELEMENT[dw.pillar.stem];
             const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
             const dwColor = ELEM_COLOR[dw.element];
+            const dwIdx = daewoon.findIndex((d) => d.startAge === dw.startAge);
+            const prevDw = dwIdx > 0 ? daewoon[dwIdx - 1] : null;
+            const nextDw = dwIdx >= 0 && dwIdx < daewoon.length - 1 ? daewoon[dwIdx + 1] : null;
+            const stemInfo = STEM_DESC[dw.pillar.stem];
+            const branchInfo = BRANCH_DESC[dw.pillar.branch];
+            const keywords = ELEMENT_DW_KEYWORDS[dw.element] ?? [];
+            const advice = ELEMENT_DW_ADVICE[dw.element];
+            const elemInfo = ELEMENT_INFO[dw.element];
             return (
               <>
+                {/* Title */}
                 <Text style={[styles.infoTitle, { color: isCurrent ? T.semantic.gold : T.text.primary }]}>
-                  {dw.pillar.stem}{dw.pillar.branch} 대운
-                  {isCurrent ? '  ★ 현재' : ''}
+                  {dw.pillar.stem}{dw.pillar.branch} 대운{isCurrent ? '  ★ 현재' : ''}
                 </Text>
-                <Text style={styles.infoSubtitle}>{dw.startAge}–{dw.startAge + 9}세</Text>
+                <Text style={styles.infoSubtitle}>
+                  {dw.startAge}–{dw.startAge + 9}세{isCurrent ? ' · 현재 진행 중' : ''}
+                </Text>
+
+                {/* Stem / Branch boxes with meanings */}
                 <View style={styles.infoDwRow}>
                   <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwStemEl] }]}>
                     <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwStemEl] }]}>{dw.pillar.stem}</Text>
-                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwStemEl] }]}>천간</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwStemEl] }]}>천간 · {stemInfo?.pinyin ?? ''}</Text>
+                    <Text style={styles.infoDwMeaning}>{stemInfo?.meaning ?? ''}</Text>
                   </View>
                   <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwBranchEl] }]}>
                     <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwBranchEl] }]}>{dw.pillar.branch}</Text>
-                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwBranchEl] }]}>지지</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwBranchEl] }]}>지지 · {branchInfo?.animal ?? ''}</Text>
+                    <Text style={styles.infoDwMeaning}>{branchInfo?.meaning ?? ''}</Text>
                   </View>
                 </View>
+
+                {/* Element energy */}
                 <View style={[styles.infoHighlight, { borderLeftColor: dwColor }]}>
-                  <Text style={styles.infoHighlightLabel}>🌊 오행 기운</Text>
+                  <Text style={styles.infoHighlightLabel}>{elemInfo?.symbol ?? ''} 오행 기운 · {t(`common:elements.${ELEM_KEY[dw.element] ?? dw.element}`)}</Text>
                   <Text style={styles.infoHighlightText}>
                     {dw.element === dayStemEl
-                      ? `${t(`common:elements.${ELEM_KEY[dw.element]}`)} 기운이 일간(${dayStem})과 같은 오행입니다. 나의 본래 에너지가 강화되는 시기입니다.`
-                      : `${t(`common:elements.${ELEM_KEY[dw.element]}`)} 기운이 들어옵니다. ${ELEMENT_INFO[dw.element].desc}`}
+                      ? `${t(`common:elements.${ELEM_KEY[dw.element] ?? dw.element}`)} 기운이 일간(${dayStem})과 같은 오행입니다. 나의 본래 에너지가 크게 강화되는 시기입니다.`
+                      : elemInfo?.desc ?? ''}
                   </Text>
                 </View>
+
+                {/* Period summary */}
+                <View style={[styles.infoHighlight, { borderLeftColor: T.primary.DEFAULT }]}>
+                  <Text style={styles.infoHighlightLabel}>📖 이 대운의 흐름</Text>
+                  <Text style={styles.infoHighlightText}>
+                    {stemInfo?.fortune ?? ''}{'\n'}{branchInfo?.fortune ?? ''}
+                  </Text>
+                </View>
+
+                {/* Keywords */}
+                {keywords.length > 0 && (
+                  <View style={styles.infoDwKeywordRow}>
+                    {keywords.map((kw) => (
+                      <View key={kw} style={[styles.infoDwKeywordPill, { backgroundColor: dwColor + '22', borderColor: dwColor + '66' }]}>
+                        <Text style={[styles.infoDwKeywordText, { color: dwColor }]}>{kw}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+
+                {/* Advice */}
+                {advice && (
+                  <>
+                    <View style={[styles.infoHighlight, { borderLeftColor: '#22c55e' }]}>
+                      <Text style={styles.infoHighlightLabel}>✅ 유리한 방향</Text>
+                      <Text style={styles.infoHighlightText}>{advice.favor}</Text>
+                    </View>
+                    <View style={[styles.infoHighlight, { borderLeftColor: '#eab308' }]}>
+                      <Text style={styles.infoHighlightLabel}>⚠️ 주의할 점</Text>
+                      <Text style={styles.infoHighlightText}>{advice.caution}</Text>
+                    </View>
+                  </>
+                )}
+
+                {/* Previous / Current / Next flow */}
+                {(prevDw || nextDw) && (
+                  <View style={[styles.infoHighlight, { borderLeftColor: T.border.default }]}>
+                    <Text style={styles.infoHighlightLabel}>🔄 대운 흐름</Text>
+                    <View style={styles.infoDwFlow}>
+                      {prevDw && (
+                        <View style={styles.infoDwFlowItem}>
+                          <Text style={[styles.infoDwFlowChar, { color: ELEM_COLOR[prevDw.element] + 'aa' }]}>
+                            {prevDw.pillar.stem}{prevDw.pillar.branch}
+                          </Text>
+                          <Text style={styles.infoDwFlowAge}>{prevDw.startAge}–{prevDw.startAge + 9}세</Text>
+                          <Text style={styles.infoDwFlowLabel}>이전</Text>
+                        </View>
+                      )}
+                      <View style={[styles.infoDwFlowItem, styles.infoDwFlowCurrent]}>
+                        <Text style={[styles.infoDwFlowChar, { color: isCurrent ? T.semantic.gold : dwColor }]}>
+                          {dw.pillar.stem}{dw.pillar.branch}
+                        </Text>
+                        <Text style={[styles.infoDwFlowAge, isCurrent && { color: T.semantic.gold }]}>
+                          {dw.startAge}–{dw.startAge + 9}세
+                        </Text>
+                        <Text style={[styles.infoDwFlowLabel, isCurrent && { color: T.semantic.gold }]}>
+                          {isCurrent ? '현재' : '선택'}
+                        </Text>
+                      </View>
+                      {nextDw && (
+                        <View style={styles.infoDwFlowItem}>
+                          <Text style={[styles.infoDwFlowChar, { color: ELEM_COLOR[nextDw.element] + 'aa' }]}>
+                            {nextDw.pillar.stem}{nextDw.pillar.branch}
+                          </Text>
+                          <Text style={styles.infoDwFlowAge}>{nextDw.startAge}–{nextDw.startAge + 9}세</Text>
+                          <Text style={styles.infoDwFlowLabel}>다음</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
               </>
             );
           })()}
@@ -759,6 +898,23 @@ const styles = StyleSheet.create({
   },
   infoDwChar: { fontSize: 48, fontWeight: '800', lineHeight: 56 },
   infoDwLabel: { fontSize: T.fontSize.xs, fontWeight: '700', marginTop: 4 },
+  infoDwMeaning: { fontSize: 9, color: T.text.faint, marginTop: 3, textAlign: 'center', paddingHorizontal: 4 },
+  infoDwKeywordRow: { flexDirection: 'row', gap: T.spacing[2], marginBottom: T.spacing[4], flexWrap: 'wrap' },
+  infoDwKeywordPill: {
+    borderRadius: T.radius.lg, borderWidth: 1,
+    paddingHorizontal: T.spacing[3], paddingVertical: T.spacing[1] + 1,
+  },
+  infoDwKeywordText: { fontSize: T.fontSize.sm, fontWeight: '700' },
+  infoDwFlow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: T.spacing[2] },
+  infoDwFlowItem: { alignItems: 'center', flex: 1 },
+  infoDwFlowCurrent: {
+    borderWidth: 1, borderColor: T.border.default,
+    borderRadius: T.radius.md, paddingVertical: T.spacing[2],
+    backgroundColor: T.bg.card,
+  },
+  infoDwFlowChar: { fontSize: 20, fontWeight: '800' },
+  infoDwFlowAge: { fontSize: 9, color: T.text.faint, marginTop: 2 },
+  infoDwFlowLabel: { fontSize: 9, color: T.text.disabled, marginTop: 2, fontWeight: '600' },
 
   // 대운 timeline
   daewoonScroll: { paddingBottom: T.spacing[2], paddingRight: T.spacing[5], marginBottom: T.spacing[8] },

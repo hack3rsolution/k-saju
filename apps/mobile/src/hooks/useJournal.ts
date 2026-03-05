@@ -139,13 +139,18 @@ export function useJournal() {
     const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
     try {
+      // Always fetch a fresh token — handles silent JWT refresh on expiry
+      const { data: { session: fresh } } = await supabase.auth.getSession();
+      const token = fresh?.access_token;
+      if (!token) { setError('세션이 만료되었습니다. 다시 로그인해 주세요.'); return null; }
+
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/journal-analysis`,
         {
           method: 'POST',
           headers: {
             'Content-Type':  'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             events,

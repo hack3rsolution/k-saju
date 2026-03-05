@@ -47,10 +47,7 @@ export function calculateDaewoon(birth: BirthData, count = 8): DaewoonPeriod[] {
       index: i,
       startAge: startAge + i * 10,
       pillar: { stem, branch },
-      element: (() => {
-        const map: Record<string, any> = { 木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water' };
-        return map[BRANCH_ELEMENT[branch]];
-      })(),
+      element: BRANCH_ELEMENT[branch],
     });
   }
 
