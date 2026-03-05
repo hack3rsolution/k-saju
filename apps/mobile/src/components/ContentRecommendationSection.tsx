@@ -17,6 +17,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type { CulturalFrame } from '@k-saju/saju-engine';
@@ -120,7 +121,14 @@ interface Props {
 }
 
 export function ContentRecommendationSection({ frame }: Props) {
+  const { t } = useTranslation(['chart']);
   const labels = FRAME_TAB_LABELS[frame];
+  const tabLabels = {
+    music: t('chart:tabs.music'),
+    books: t('chart:tabs.books'),
+    travel: t('chart:tabs.travel'),
+    share: t('chart:share'),
+  };
   const [activeTab, setActiveTab] = useState<TabKey>('music');
   const [sharing, setSharing]     = useState(false);
   const shareRef = useRef<View>(null);
@@ -174,7 +182,7 @@ export function ContentRecommendationSection({ frame }: Props) {
       {/* Section header */}
       <View style={styles.header}>
         <Text style={[styles.sectionTitle, { color: elemColor }]}>
-          {labels.sectionTitle}
+          {t('chart:recommendations')}
         </Text>
         {data && (
           <TouchableOpacity
@@ -184,7 +192,7 @@ export function ContentRecommendationSection({ frame }: Props) {
             activeOpacity={0.7}
           >
             <Text style={[styles.shareBtnText, { color: elemColor }]}>
-              {sharing ? '…' : labels.share}
+              {sharing ? '…' : tabLabels.share}
             </Text>
           </TouchableOpacity>
         )}
@@ -214,9 +222,9 @@ export function ContentRecommendationSection({ frame }: Props) {
           <View style={styles.tabs}>
             {(['music', 'books', 'travel'] as TabKey[]).map((tab) => {
               const label =
-                tab === 'music' ? labels.music :
-                tab === 'books' ? labels.books :
-                labels.travel;
+                tab === 'music' ? tabLabels.music :
+                tab === 'books' ? tabLabels.books :
+                tabLabels.travel;
               const isActive = activeTab === tab;
               return (
                 <TouchableOpacity
@@ -240,9 +248,9 @@ export function ContentRecommendationSection({ frame }: Props) {
           <View ref={shareRef} collapsable={false} style={styles.shareCapture}>
             <View style={[styles.shareCaptureHeader, { backgroundColor: elemColor + '18' }]}>
               <Text style={[styles.shareCaptureTitle, { color: elemColor }]}>
-                {activeTab === 'music' ? labels.music :
-                 activeTab === 'books' ? labels.books :
-                 labels.travel}
+                {activeTab === 'music' ? tabLabels.music :
+                 activeTab === 'books' ? tabLabels.books :
+                 tabLabels.travel}
               </Text>
               <Text style={styles.shareCaptureWatermark}>k-saju.app</Text>
             </View>

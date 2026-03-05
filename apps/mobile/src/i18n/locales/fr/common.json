@@ -29,7 +29,12 @@
   "fiveElements": "Cinq Éléments",
   "yin": "Yin",
   "yang": "Yang",
-  "greeting": { "morning": "Bonjour", "afternoon": "Bonjour", "evening": "Bonsoir", "night": "Bonne nuit" },
+  "greeting": {
+    "morning": "Bonjour",
+    "afternoon": "Bonjour",
+    "evening": "Bonsoir",
+    "night": "Bonne nuit"
+  },
   "explore": "Explorer",
   "compatibility": "Compatibilité",
   "analyzeNow": "Analyser maintenant",
@@ -37,5 +42,24 @@
   "rerunOnboarding": "Refaire l'intégration",
   "dailyNotification": "Notification quotidienne",
   "comingSoon": "Bientôt disponible",
-  "serviceError": "Un problème temporaire s'est produit. Veuillez réessayer dans un moment."
+  "serviceError": "Un problème temporaire s'est produit. Veuillez réessayer dans un moment.",
+  "relationships": {
+    "title": "Carte des Relations",
+    "subtitle": "人脈運 · Relations Cosmiques",
+    "noRelationships": "Aucune relation enregistrée",
+    "emptyDesc": "Appuyez sur le bouton + pour ajouter un partenaire, un ami ou un membre de la famille et voir votre compatibilité cosmique.",
+    "loading": "Chargement des relations…",
+    "premiumTitle": "Fonctionnalité Premium",
+    "premiumDesc": "Consultez les scores de compatibilité, les flux d'énergie mensuels et la synergie des cinq éléments pour tous dans votre vie.",
+    "unlockBtn": "Déverrouiller la Carte des Relations →"
+  },
+  "culturalFrameSubtitle": "La même lecture saju — adaptée à votre contexte culturel",
+  "frames": {
+    "kr": "Coréen",
+    "cn": "Chinois",
+    "jp": "Japonais",
+    "en": "Occidental",
+    "es": "Latin",
+    "in": "Sud-asiatique"
+  }
 }

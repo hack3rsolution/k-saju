@@ -8,6 +8,7 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune, type ReadingType } from '../../src/hooks/useFortune';
 import { T } from '../../src/theme/tokens';
@@ -27,6 +28,7 @@ const ELEMENT_COLOR: Record<FiveElement, string> = T.element;
 // ── Screen ────────────────────────────────────────────────────────────────────
 
 export default function FortuneReadingScreen() {
+  const { t } = useTranslation(['common']);
   const { type } = useLocalSearchParams<{ type: string }>();
 
   const VALID = ['weekly', 'monthly', 'annual', 'daewoon'];
@@ -70,13 +72,13 @@ export default function FortuneReadingScreen() {
           {loading ? (
             <View style={styles.loadingBox}>
               <ActivityIndicator color={T.primary.light} size="small" />
-              <Text style={styles.loadingText}>Reading the stars…</Text>
+              <Text style={styles.loadingText}>{t('common:loading')}</Text>
             </View>
           ) : error ? (
             <View style={styles.errorBox}>
               <Text style={styles.errorText}>{error}</Text>
               <TouchableOpacity style={styles.retryBtn} onPress={refresh}>
-                <Text style={styles.retryText}>Try again</Text>
+                <Text style={styles.retryText}>{t('common:retry')}</Text>
               </TouchableOpacity>
             </View>
           ) : reading ? (

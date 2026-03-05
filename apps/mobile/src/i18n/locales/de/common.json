@@ -29,7 +29,12 @@
   "fiveElements": "Fünf Elemente",
   "yin": "Yin",
   "yang": "Yang",
-  "greeting": { "morning": "Guten Morgen", "afternoon": "Guten Nachmittag", "evening": "Guten Abend", "night": "Gute Nacht" },
+  "greeting": {
+    "morning": "Guten Morgen",
+    "afternoon": "Guten Nachmittag",
+    "evening": "Guten Abend",
+    "night": "Gute Nacht"
+  },
   "explore": "Erkunden",
   "compatibility": "Kompatibilität",
   "analyzeNow": "Jetzt analysieren",
@@ -37,5 +42,24 @@
   "rerunOnboarding": "Einführung wiederholen",
   "dailyNotification": "Tägliche Benachrichtigung",
   "comingSoon": "Demnächst verfügbar",
-  "serviceError": "Ein temporäres Problem ist aufgetreten. Bitte versuchen Sie es in Kürze erneut."
+  "serviceError": "Ein temporäres Problem ist aufgetreten. Bitte versuchen Sie es in Kürze erneut.",
+  "relationships": {
+    "title": "Beziehungskarte",
+    "subtitle": "人脈運 · Kosmische Beziehungen",
+    "noRelationships": "Noch keine Beziehungen registriert",
+    "emptyDesc": "Tippen Sie auf die +-Schaltfläche, um einen Partner, Freund oder ein Familienmitglied hinzuzufügen und Ihre kosmische Kompatibilität zu sehen.",
+    "loading": "Beziehungen werden geladen…",
+    "premiumTitle": "Premium-Funktion",
+    "premiumDesc": "Sehen Sie Kompatibilitätswerte, monatliche Energieflüsse und die Fünf-Elemente-Synergie für alle in Ihrem Leben.",
+    "unlockBtn": "Beziehungskarte freischalten →"
+  },
+  "culturalFrameSubtitle": "Dieselbe Saju-Lesung — lokalisiert auf Ihren kulturellen Kontext",
+  "frames": {
+    "kr": "Koreanisch",
+    "cn": "Chinesisch",
+    "jp": "Japanisch",
+    "en": "Westlich",
+    "es": "Lateinisch",
+    "in": "Südasiatisch"
+  }
 }

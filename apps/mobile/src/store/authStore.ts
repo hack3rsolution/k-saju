@@ -158,13 +158,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     // Ensure user_metadata has the dev birth data and premium flags
-    if (!result.data.user?.user_metadata?.birth_year || !result.data.user?.user_metadata?.is_premium) {
-      await supabase.auth.updateUser({ data: DEV_META });
+    let finalUser = result.data.session?.user ?? null;
+    if (!finalUser?.user_metadata?.birth_year || !finalUser?.user_metadata?.is_premium) {
+      const { data: updateData } = await supabase.auth.updateUser({ data: DEV_META });
+      if (updateData?.user) finalUser = updateData.user;
     }
 
     set({
-      session: result.data.session,
-      user: result.data.session?.user ?? null,
+      session: result.data.session ? { ...result.data.session, user: finalUser! } : null,
+      user: finalUser,
       initialized: true,
     });
 

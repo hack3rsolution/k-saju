@@ -34,5 +34,11 @@
     "정관": "Pejabat Langsung",
     "편인": "Sumber Daya Tidak Langsung",
     "정인": "Sumber Daya Langsung"
-  }
+  },
+  "tabs": {
+    "music": "🎵 Musik",
+    "books": "📚 Buku",
+    "travel": "✈️ Perjalanan"
+  },
+  "share": "Bagikan"
 }

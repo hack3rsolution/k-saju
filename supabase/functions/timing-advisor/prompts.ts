@@ -96,7 +96,7 @@ export function buildUserPrompt(req: TimingRequest): string {
     .map(([el, n]) => `${el}:${n}`)
     .join(' ');
 
-  const activeDaewoon = chart.daewoonList.find((d) => d.index === 0);
+  const activeDaewoon = (chart.daewoonList ?? []).find((d) => d.index === 0);
   const daewoonText = activeDaewoon
     ? `Current 대운: ${activeDaewoon.pillar.stem}${activeDaewoon.pillar.branch} (starts age ${activeDaewoon.startAge})`
     : '';

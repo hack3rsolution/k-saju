@@ -107,5 +107,24 @@
     "same": "Both carry {{a}} energy — strong resonance",
     "independent": "{{a}} and {{b}} flow independently"
   },
-  "rlsError": "Could not save. Please check your login status."
+  "rlsError": "Could not save. Please check your login status.",
+  "relationships": {
+    "title": "Relationship Map",
+    "subtitle": "人脈運 · Relationship Map",
+    "noRelationships": "No relationships yet",
+    "emptyDesc": "Tap the + button to add a partner, friend, or family member and see your cosmic compatibility.",
+    "loading": "Loading relationships…",
+    "premiumTitle": "Premium Feature",
+    "premiumDesc": "See compatibility scores, monthly energy flows, and five-element synergy for everyone in your life.",
+    "unlockBtn": "Unlock Relationship Map →"
+  },
+  "culturalFrameSubtitle": "Same saju reading — localized to your cultural context",
+  "frames": {
+    "kr": "Korean",
+    "cn": "Chinese",
+    "jp": "Japanese",
+    "en": "Western",
+    "es": "Latin",
+    "in": "South Asian"
+  }
 }

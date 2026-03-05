@@ -20,6 +20,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
+import { useEntitlementStore } from '../store/entitlementStore';
 import { friendlyApiError } from '../lib/apiError';
 
 // ── Response types (mirrors supabase/functions/saju-reading/types.ts) ────────
@@ -100,6 +101,7 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
   const { language } = useLanguageStore();
+  const { isPremium: entitlementPremium } = useEntitlementStore();
 
   const ganji = todayGanji();
   // Stable ref so the effect below doesn't re-fire when ganji object changes identity
@@ -148,10 +150,22 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
           setChart(activeChart, birthData, dw, activeFrame!);
         }
 
-        // ── 2. Check free weekly limit (daily only) ────────────────────────
+        // ── 1b. Fallback: reconstruct daewoon if missing from store ────────
         const meta = session!.user.user_metadata;
+        if (!activeDaewoon && meta?.birth_year) {
+          const bd: BirthData = {
+            year: meta.birth_year,
+            month: meta.birth_month,
+            day: meta.birth_day,
+            hour: meta.birth_hour ?? undefined,
+            gender: (meta.gender as 'M' | 'F') ?? 'M',
+          };
+          activeDaewoon = calculateDaewoon(bd);
+        }
+
+        // ── 2. Check free weekly limit (daily only) ────────────────────────
         const currentWeek = isoWeek(now);
-        const isPremium = meta?.is_premium === true;
+        const isPremium = meta?.is_premium === true || entitlementPremium;
         const usedThisWeek = type === 'daily' && !isPremium && meta?.last_free_reading_week === currentWeek;
 
         if (usedThisWeek) {
@@ -229,7 +243,7 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
 
     fetch();
     return () => { cancelled = true; };
-  }, [session, tick, language, type]);
+  }, [session, tick, language, type, entitlementPremium]);
 
   return {
     loading,

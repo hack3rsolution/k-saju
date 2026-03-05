@@ -34,5 +34,11 @@
     "정관": "Oficial Directo",
     "편인": "Recurso Indirecto",
     "정인": "Recurso Directo"
-  }
+  },
+  "tabs": {
+    "music": "🎵 Música",
+    "books": "📚 Libros",
+    "travel": "✈️ Viajes"
+  },
+  "share": "Compartir"
 }

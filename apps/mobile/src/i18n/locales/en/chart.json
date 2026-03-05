@@ -22,6 +22,12 @@
   "now": "NOW",
   "noChart": "Complete onboarding to view your Cosmic Blueprint.",
   "recommendations": "Recommended for Your Element",
+  "tabs": {
+    "music": "🎵 Music",
+    "books": "📚 Books",
+    "travel": "✈️ Travel"
+  },
+  "share": "Share",
   "shishin": {
     "title": "Ten Gods",
     "비견": "Companion",

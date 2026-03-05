@@ -29,7 +29,12 @@
   "fiveElements": "五行",
   "yin": "陰",
   "yang": "陽",
-  "greeting": { "morning": "早上好", "afternoon": "下午好", "evening": "晚上好", "night": "晚安" },
+  "greeting": {
+    "morning": "早上好",
+    "afternoon": "下午好",
+    "evening": "晚上好",
+    "night": "晚安"
+  },
   "explore": "探索",
   "compatibility": "合婚",
   "analyzeNow": "立即分析",
@@ -37,5 +42,24 @@
   "rerunOnboarding": "重新引導",
   "dailyNotification": "每日通知",
   "comingSoon": "即將推出",
-  "serviceError": "服務暫時出現問題，請稍後再試。"
+  "serviceError": "服務暫時出現問題，請稍後再試。",
+  "relationships": {
+    "title": "關係地圖",
+    "subtitle": "人脈運（人脈運）",
+    "noRelationships": "暫無關係記錄",
+    "emptyDesc": "點擊＋按鈕新增伴侶、朋友或家人，查看四柱合盤結果。",
+    "loading": "載入關係中…",
+    "premiumTitle": "進階功能",
+    "premiumDesc": "查看生活中每個人的合盤分數、月度能量流向和五行協同效果。",
+    "unlockBtn": "解鎖關係地圖 →"
+  },
+  "culturalFrameSubtitle": "相同的四柱推算 — 根據您的文化背景本地化",
+  "frames": {
+    "kr": "韓國式",
+    "cn": "中國式",
+    "jp": "日本式",
+    "en": "西方式",
+    "es": "拉丁式",
+    "in": "南亞式"
+  }
 }

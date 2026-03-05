@@ -225,7 +225,7 @@ export default function SettingsScreen() {
               <ActivityIndicator color="#9d8fbe" size="small" />
             ) : (
               <Text style={styles.rowValue}>
-                {currentFrame.flag} {currentFrame.region} →
+                {currentFrame.flag} {t(`frames.${currentFrame.id}`)} →
               </Text>
             )}
           </TouchableOpacity>
@@ -252,7 +252,7 @@ export default function SettingsScreen() {
         {/* DEV-only: Re-run Onboarding */}
         {__DEV__ && (
           <TouchableOpacity style={styles.devBtn} onPress={handleRerunOnboarding}>
-            <Text style={styles.devBtnText}>⚡ Re-run Onboarding</Text>
+            <Text style={styles.devBtnText}>⚡ {t('rerunOnboarding')}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>
@@ -298,10 +298,8 @@ export default function SettingsScreen() {
       >
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setFramePickerVisible(false)} />
         <View style={styles.sheet}>
-          <Text style={styles.sheetTitle}>Cultural Frame</Text>
-          <Text style={styles.sheetSubtitle}>
-            Same saju reading — localized to your cultural context
-          </Text>
+          <Text style={styles.sheetTitle}>{t('culturalFrame')}</Text>
+          <Text style={styles.sheetSubtitle}>{t('culturalFrameSubtitle')}</Text>
           <FlatList
             data={FRAMES}
             keyExtractor={(item) => item.id}
@@ -315,7 +313,7 @@ export default function SettingsScreen() {
                   <Text style={[styles.langLabel, item.id === currentFrameId && styles.langLabelActive]}>
                     {item.label}
                   </Text>
-                  <Text style={styles.frameRegion}>{item.region}</Text>
+                  <Text style={styles.frameRegion}>{t(`frames.${item.id}`)}</Text>
                 </View>
                 {item.id === currentFrameId && <Text style={styles.checkmark}>✓</Text>}
               </TouchableOpacity>

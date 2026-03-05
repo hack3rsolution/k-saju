@@ -34,5 +34,11 @@
     "정관": "Direkter Beamter",
     "편인": "Indirekte Ressource",
     "정인": "Direkte Ressource"
-  }
+  },
+  "tabs": {
+    "music": "🎵 Musik",
+    "books": "📚 Bücher",
+    "travel": "✈️ Reisen"
+  },
+  "share": "Teilen"
 }

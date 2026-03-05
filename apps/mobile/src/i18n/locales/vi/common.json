@@ -29,7 +29,12 @@
   "fiveElements": "Ngũ Hành",
   "yin": "Âm",
   "yang": "Dương",
-  "greeting": { "morning": "Chào buổi sáng", "afternoon": "Chào buổi chiều", "evening": "Chào buổi tối", "night": "Chúc ngủ ngon" },
+  "greeting": {
+    "morning": "Chào buổi sáng",
+    "afternoon": "Chào buổi chiều",
+    "evening": "Chào buổi tối",
+    "night": "Chúc ngủ ngon"
+  },
   "explore": "Khám phá",
   "compatibility": "Tương hợp",
   "analyzeNow": "Phân tích ngay",
@@ -37,5 +42,24 @@
   "rerunOnboarding": "Làm lại hướng dẫn",
   "dailyNotification": "Thông báo hàng ngày",
   "comingSoon": "Sắp ra mắt",
-  "serviceError": "Đã xảy ra sự cố tạm thời. Vui lòng thử lại sau."
+  "serviceError": "Đã xảy ra sự cố tạm thời. Vui lòng thử lại sau.",
+  "relationships": {
+    "title": "Bản Đồ Nhân Duyên",
+    "subtitle": "人脈運 · Nhân Duyên",
+    "noRelationships": "Chưa có nhân duyên nào được đăng ký",
+    "emptyDesc": "Nhấn nút + để thêm bạn đời, bạn bè hoặc thành viên gia đình và xem độ tương hợp tứ trụ.",
+    "loading": "Đang tải danh sách nhân duyên…",
+    "premiumTitle": "Tính Năng Cao Cấp",
+    "premiumDesc": "Xem điểm tương hợp, luồng năng lượng hàng tháng và sức mạnh ngũ hành cho tất cả mọi người trong cuộc đời bạn.",
+    "unlockBtn": "Mở Khóa Bản Đồ Nhân Duyên →"
+  },
+  "culturalFrameSubtitle": "Cùng bài đọc saju — được bản địa hóa theo bối cảnh văn hóa của bạn",
+  "frames": {
+    "kr": "Hàn Quốc",
+    "cn": "Trung Quốc",
+    "jp": "Nhật Bản",
+    "en": "Phương Tây",
+    "es": "La-tinh",
+    "in": "Nam Á"
+  }
 }

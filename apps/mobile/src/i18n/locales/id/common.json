@@ -29,7 +29,12 @@
   "fiveElements": "Lima Elemen",
   "yin": "Yin",
   "yang": "Yang",
-  "greeting": { "morning": "Selamat pagi", "afternoon": "Selamat siang", "evening": "Selamat malam", "night": "Selamat malam" },
+  "greeting": {
+    "morning": "Selamat pagi",
+    "afternoon": "Selamat siang",
+    "evening": "Selamat malam",
+    "night": "Selamat malam"
+  },
   "explore": "Jelajahi",
   "compatibility": "Kecocokan",
   "analyzeNow": "Analisis sekarang",
@@ -37,5 +42,24 @@
   "rerunOnboarding": "Ulangi pengenalan",
   "dailyNotification": "Notifikasi harian",
   "comingSoon": "Segera hadir",
-  "serviceError": "Terjadi masalah sementara. Silakan coba lagi sebentar."
+  "serviceError": "Terjadi masalah sementara. Silakan coba lagi sebentar.",
+  "relationships": {
+    "title": "Peta Hubungan",
+    "subtitle": "人脈運 · Hubungan Kosmik",
+    "noRelationships": "Belum ada hubungan terdaftar",
+    "emptyDesc": "Ketuk tombol + untuk menambahkan pasangan, teman, atau anggota keluarga dan lihat kompatibilitas kosmik Anda.",
+    "loading": "Memuat hubungan…",
+    "premiumTitle": "Fitur Premium",
+    "premiumDesc": "Lihat skor kompatibilitas, aliran energi bulanan, dan sinergi lima elemen untuk semua orang dalam hidup Anda.",
+    "unlockBtn": "Buka Kunci Peta Hubungan →"
+  },
+  "culturalFrameSubtitle": "Bacaan saju yang sama — disesuaikan dengan konteks budaya Anda",
+  "frames": {
+    "kr": "Korea",
+    "cn": "China",
+    "jp": "Jepang",
+    "en": "Barat",
+    "es": "Latin",
+    "in": "Asia Selatan"
+  }
 }

@@ -181,8 +181,9 @@ Deno.serve(async (req: Request) => {
     return errorResponse((e as Error).message);
   }
 
-  // Cache lookup
-  const cacheKey = `${request.dayStem}-${request.frame}`;
+  // Cache lookup — include language so different locales get distinct cached results
+  const userLanguage = (request as unknown as Record<string, unknown>).userLanguage as string | undefined;
+  const cacheKey = `${request.dayStem}-${request.frame}-${userLanguage ?? 'en'}`;
   const cached = getCached(cacheKey);
   if (cached) {
     const response: ContentRecommendationResponse = { ok: true, ...cached };
@@ -192,7 +193,6 @@ Deno.serve(async (req: Request) => {
   // Call Claude (fallback to static data on error)
   let result: ClaudeRecommendationOutput;
   try {
-    const userLanguage = (request as unknown as Record<string, unknown>).userLanguage as string | undefined;
     const systemPrompt = buildSystemPrompt(request.frame, userLanguage);
     const userPrompt   = buildUserPrompt(request);
     result = await callClaude(systemPrompt, userPrompt, ANTHROPIC_API_KEY);

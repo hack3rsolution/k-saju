@@ -1,1 +1,65 @@
-{"appName":"K-Saju","loading":"Cargando…","error":"Algo salió mal","retry":"Reintentar","cancel":"Cancelar","confirm":"Confirmar","save":"Guardar","back":"Volver","next":"Siguiente","close":"Cerrar","signIn":"Iniciar sesión","signOut":"Cerrar sesión","upgrade":"Mejorar","free":"Gratis","premium":"Premium","locked":"Bloqueado","today":"Hoy","week":"Esta semana","month":"Este mes","year":"Este año","elements":{"Wood":"Madera","Fire":"Fuego","Earth":"Tierra","Metal":"Metal","Water":"Agua"},"fiveElements":"Cinco Elementos","yin":"Yin","yang":"Yang","greeting":{"morning":"Buenos días","afternoon":"Buenas tardes","evening":"Buenas noches","night":"Buenas noches"},"explore":"Explorar","compatibility":"Compatibilidad","analyzeNow":"Analizar ahora","restorePurchases":"Restaurar compras","rerunOnboarding":"Reiniciar incorporación","dailyNotification":"Notificación diaria","comingSoon":"Próximamente","serviceError":"Se produjo un problema temporal. Por favor, inténtelo de nuevo en breve."}
+{
+  "appName": "K-Saju",
+  "loading": "Cargando…",
+  "error": "Algo salió mal",
+  "retry": "Reintentar",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "save": "Guardar",
+  "back": "Volver",
+  "next": "Siguiente",
+  "close": "Cerrar",
+  "signIn": "Iniciar sesión",
+  "signOut": "Cerrar sesión",
+  "upgrade": "Mejorar",
+  "free": "Gratis",
+  "premium": "Premium",
+  "locked": "Bloqueado",
+  "today": "Hoy",
+  "week": "Esta semana",
+  "month": "Este mes",
+  "year": "Este año",
+  "elements": {
+    "Wood": "Madera",
+    "Fire": "Fuego",
+    "Earth": "Tierra",
+    "Metal": "Metal",
+    "Water": "Agua"
+  },
+  "fiveElements": "Cinco Elementos",
+  "yin": "Yin",
+  "yang": "Yang",
+  "greeting": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches",
+    "night": "Buenas noches"
+  },
+  "explore": "Explorar",
+  "compatibility": "Compatibilidad",
+  "analyzeNow": "Analizar ahora",
+  "restorePurchases": "Restaurar compras",
+  "rerunOnboarding": "Reiniciar incorporación",
+  "dailyNotification": "Notificación diaria",
+  "comingSoon": "Próximamente",
+  "serviceError": "Se produjo un problema temporal. Por favor, inténtelo de nuevo en breve.",
+  "relationships": {
+    "title": "Mapa de Relaciones",
+    "subtitle": "人脈運 · Relaciones Cósmicas",
+    "noRelationships": "Aún no hay relaciones registradas",
+    "emptyDesc": "Toca el botón + para agregar una pareja, amigo o familiar y ver su compatibilidad cósmica.",
+    "loading": "Cargando relaciones…",
+    "premiumTitle": "Función Premium",
+    "premiumDesc": "Consulta puntuaciones de compatibilidad, flujos de energía mensuales y sinergia de los cinco elementos para todos en tu vida.",
+    "unlockBtn": "Desbloquear Mapa de Relaciones →"
+  },
+  "culturalFrameSubtitle": "La misma lectura saju — localizada a tu contexto cultural",
+  "frames": {
+    "kr": "Coreano",
+    "cn": "Chino",
+    "jp": "Japonés",
+    "en": "Occidental",
+    "es": "Latino",
+    "in": "Surasiático"
+  }
+}

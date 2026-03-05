@@ -34,5 +34,11 @@
     "정관": "Chính Quan",
     "편인": "Thiên Ấn",
     "정인": "Chính Ấn"
-  }
+  },
+  "tabs": {
+    "music": "🎵 Âm nhạc",
+    "books": "📚 Sách",
+    "travel": "✈️ Du lịch"
+  },
+  "share": "Chia sẻ"
 }

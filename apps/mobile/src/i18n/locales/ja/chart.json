@@ -1,7 +1,13 @@
 {
   "title": "私の四柱",
   "subtitle": "四柱推命 · BaZi · 사주팔자",
-  "pillars": { "year": "年柱", "month": "月柱", "day": "日柱", "hour": "時柱", "hourUnknown": "時柱\n不明" },
+  "pillars": {
+    "year": "年柱",
+    "month": "月柱",
+    "day": "日柱",
+    "hour": "時柱",
+    "hourUnknown": "時柱\n不明"
+  },
   "stem": "天干",
   "branch": "地支",
   "dayStem": "日干（自分）",
@@ -28,5 +34,11 @@
     "정관": "正官",
     "편인": "偏印",
     "정인": "正印"
-  }
+  },
+  "tabs": {
+    "music": "🎵 音楽",
+    "books": "📚 本",
+    "travel": "✈️ 旅行"
+  },
+  "share": "シェア"
 }
