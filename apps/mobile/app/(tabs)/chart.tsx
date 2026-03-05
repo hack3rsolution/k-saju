@@ -7,17 +7,20 @@
  *  - 십신 (Ten Gods) table
  *  - 대운 (Major Luck Cycle) horizontal timeline — current period highlighted
  */
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
 import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
+import { PillarDetailModal } from '../../src/components/PillarDetailModal';
 import { T } from '../../src/theme/tokens';
 import type {
   FiveElement,
   Stem,
   Branch,
   ShiShin,
+  DaewoonPeriod,
 } from '@k-saju/saju-engine';
 
 // ── Element colours & labels ───────────────────────────────────────────────────
@@ -27,6 +30,96 @@ const ELEM_COLOR: Record<FiveElement, string> = T.element;
 // Maps FiveElement kanji → common:elements key
 const ELEM_KEY: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
+};
+
+// ── 오행 설명 데이터 ──────────────────────────────────────────────────────────
+
+const ELEMENT_INFO: Record<FiveElement, { symbol: string; season: string; desc: string; strong: string; weak: string }> = {
+  木: {
+    symbol: '🌳', season: '봄',
+    desc: '목(木)은 봄의 기운으로, 성장·창조·시작을 상징합니다. 위로 뻗으려는 진취적인 에너지입니다.',
+    strong: '목 기운이 강하면 추진력·창의성·리더십이 뛰어나지만, 고집이 세고 타인과 충돌하기 쉽습니다.',
+    weak: '목 기운이 부족하면 유연성과 계획력이 약해지고, 새로운 시작이 두려울 수 있습니다.',
+  },
+  火: {
+    symbol: '🔥', season: '여름',
+    desc: '화(火)는 여름의 기운으로, 열정·표현·소통을 상징합니다. 빛처럼 주변을 밝히는 에너지입니다.',
+    strong: '화 기운이 강하면 카리스마와 열정이 넘치지만, 성급하고 감정 기복이 심할 수 있습니다.',
+    weak: '화 기운이 부족하면 표현력과 사교성이 다소 약해질 수 있습니다.',
+  },
+  土: {
+    symbol: '⛰️', season: '환절기',
+    desc: '토(土)는 환절기의 기운으로, 안정·신뢰·중심을 상징합니다. 모든 오행을 품는 대지의 에너지입니다.',
+    strong: '토 기운이 강하면 신뢰감과 포용력이 있지만, 변화에 보수적이고 답답해 보일 수 있습니다.',
+    weak: '토 기운이 부족하면 중심 잡기 어렵고 감정적으로 불안정할 수 있습니다.',
+  },
+  金: {
+    symbol: '⚔️', season: '가을',
+    desc: '금(金)은 가을의 기운으로, 결단·수확·정의를 상징합니다. 불필요한 것을 잘라내는 에너지입니다.',
+    strong: '금 기운이 강하면 결단력과 정확성이 뛰어나지만, 날카롭고 냉정해 보일 수 있습니다.',
+    weak: '금 기운이 부족하면 결단력과 실행력이 약하고, 마무리가 흐지부지될 수 있습니다.',
+  },
+  水: {
+    symbol: '🌊', season: '겨울',
+    desc: '수(水)는 겨울의 기운으로, 지혜·감수성·포용을 상징합니다. 낮은 곳으로 흐르며 모든 것을 담는 에너지입니다.',
+    strong: '수 기운이 강하면 지혜와 유연성이 뛰어나지만, 방향 없이 흘러 목표를 잃을 수 있습니다.',
+    weak: '수 기운이 부족하면 직관력과 감수성이 약해지고, 고집이 세질 수 있습니다.',
+  },
+};
+
+// ── 십신 설명 데이터 ──────────────────────────────────────────────────────────
+
+const SHISHIN_INFO: Record<ShiShin, { category: string; desc: string; fortune: string }> = {
+  '비견': {
+    category: '형제성 (兄弟星)',
+    desc: '비견은 나와 같은 오행·같은 음양의 별로, 형제·동료·경쟁자를 상징합니다.',
+    fortune: '독립심과 자존심이 강하며, 협력보다 단독 행동을 선호합니다. 동업 시 갈등에 주의하세요.',
+  },
+  '겁재': {
+    category: '형제성 (兄弟星)',
+    desc: '겁재는 같은 오행이나 다른 음양으로, 강한 경쟁자·재물을 빼앗는 기운을 상징합니다.',
+    fortune: '추진력이 강하나 충동적 결정을 조심하세요. 재물 손실에 주의가 필요합니다.',
+  },
+  '식신': {
+    category: '표현성 (表現星)',
+    desc: '식신은 일간이 생하는 오행·같은 음양으로, 재능·식복·창의성을 상징합니다.',
+    fortune: '예술적 감각과 표현력이 뛰어나고 식복이 좋습니다. 여유롭고 즐거운 기운입니다.',
+  },
+  '상관': {
+    category: '표현성 (表現星)',
+    desc: '상관은 일간이 생하는 오행·다른 음양으로, 총명함·반항심·창의적 재능을 상징합니다.',
+    fortune: '뛰어난 재치와 언변이 있으나, 권위에 반발하는 성향이 있습니다. 관직·직장에서 충돌 주의.',
+  },
+  '편재': {
+    category: '재성 (財星)',
+    desc: '편재는 일간이 극하는 오행·같은 음양으로, 편의성 재물·투기·아버지를 상징합니다.',
+    fortune: '투자와 사업 기회를 포착하는 능력이 있습니다. 위험을 감수한 큰 수익도 가능합니다.',
+  },
+  '정재': {
+    category: '재성 (財星)',
+    desc: '정재는 일간이 극하는 오행·다른 음양으로, 안정적인 재물·성실함을 상징합니다.',
+    fortune: '꼼꼼하고 계획적인 재물 관리에 강점이 있습니다. 안정적이고 지속적인 수입을 추구합니다.',
+  },
+  '편관': {
+    category: '관성 (官星)',
+    desc: '편관(七殺)은 일간을 극하는 오행·같은 음양으로, 압박·도전·무관을 상징합니다.',
+    fortune: '강한 의지로 역경을 돌파하는 힘이 있습니다. 스트레스와 경쟁이 많지만 그만큼 성장합니다.',
+  },
+  '정관': {
+    category: '관성 (官星)',
+    desc: '정관은 일간을 극하는 오행·다른 음양으로, 명예·규범·관직을 상징합니다.',
+    fortune: '원칙과 책임감이 강하며 사회적 평판이 높습니다. 공직·관리직에서 강점을 발휘합니다.',
+  },
+  '편인': {
+    category: '인성 (印星)',
+    desc: '편인(梟神)은 일간을 생하는 오행·같은 음양으로, 편학·종교·이색적 재능을 상징합니다.',
+    fortune: '독창적 사고와 특수한 기술을 지닙니다. 외로움을 느끼기 쉽고, 의존 관계에 주의하세요.',
+  },
+  '정인': {
+    category: '인성 (印星)',
+    desc: '정인은 일간을 생하는 오행·다른 음양으로, 학문·어머니·지식·인자함을 상징합니다.',
+    fortune: '학습 능력과 윤리의식이 뛰어납니다. 어머니의 도움이나 귀인의 후원을 받기 좋습니다.',
+  },
 };
 
 // ── Pillar row data ───────────────────────────────────────────────────────────
@@ -45,6 +138,25 @@ interface PillarInfo {
 export default function ChartScreen() {
   const { t } = useTranslation(['chart', 'common']);
   const { chart, daewoon, frame, birthData } = useSajuStore();
+
+  // ── Pillar detail modal state ────────────────────────────────────────────
+  const [modalPillarKey, setModalPillarKey] = useState<'year' | 'month' | 'day' | 'hour' | null>(null);
+  const [modalStem, setModalStem]   = useState<Stem | null>(null);
+  const [modalBranch, setModalBranch] = useState<Branch | null>(null);
+
+  function openPillarDetail(key: 'year' | 'month' | 'day' | 'hour', stem: Stem, branch: Branch) {
+    setModalPillarKey(key);
+    setModalStem(stem);
+    setModalBranch(branch);
+  }
+  function closeModal() { setModalPillarKey(null); setModalStem(null); setModalBranch(null); }
+
+  // ── Info modal state (오행 / 십신 / 대운) ─────────────────────────────────
+  type InfoModal =
+    | { kind: 'element'; element: FiveElement; score: number }
+    | { kind: 'shishin'; shishin: ShiShin; pillarLabel: string }
+    | { kind: 'daewoon'; dw: DaewoonPeriod; isCurrent: boolean };
+  const [infoModal, setInfoModal] = useState<InfoModal | null>(null);
 
   if (!chart) {
     return (
@@ -127,6 +239,7 @@ export default function ChartScreen() {
   const maxScore = Math.max(...elementRows.map((r) => r.score), 1);
 
   return (
+    <>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
       {/* ── Header ── */}
@@ -162,7 +275,12 @@ export default function ChartScreen() {
             const sc = ELEM_COLOR[stemEl];
             const bc = ELEM_COLOR[branchEl];
             return (
-              <View key={p.key} style={styles.pillar}>
+              <TouchableOpacity
+                key={p.key}
+                style={styles.pillar}
+                onPress={() => openPillarDetail(p.key as 'year' | 'month' | 'day' | 'hour', p.stem, p.branch)}
+                activeOpacity={0.7}
+              >
                 <Text style={styles.pillarLabel}>{p.label}</Text>
 
                 {/* 십신 badge */}
@@ -202,7 +320,7 @@ export default function ChartScreen() {
                 <Text style={[styles.branchElem, { color: bc + 'aa' }]}>
                   {t(`common:elements.${ELEM_KEY[branchEl]}`)}
                 </Text>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -217,7 +335,12 @@ export default function ChartScreen() {
         {elementRows.map((r) => {
           const pct = r.score / maxScore;
           return (
-            <View key={r.key} style={styles.elementRow}>
+            <TouchableOpacity
+              key={r.key}
+              style={styles.elementRow}
+              onPress={() => setInfoModal({ kind: 'element', element: r.key, score: r.score })}
+              activeOpacity={0.7}
+            >
               <View style={styles.elementLabelCol}>
                 <Text style={[styles.elementKanji, { color: ELEM_COLOR[r.key] }]}>{r.key}</Text>
                 <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>
@@ -237,7 +360,7 @@ export default function ChartScreen() {
                 <View style={{ flex: Math.max(totalScore - r.score, 0) }} />
               </View>
               <Text style={[styles.elementScore, { color: ELEM_COLOR[r.key] }]}>{r.score}</Text>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -261,7 +384,14 @@ export default function ChartScreen() {
           const stemEl = STEM_ELEMENT[p.stem];
           const branchEl = BRANCH_ELEMENT[p.branch];
           return (
-            <View key={p.key} style={[styles.tableRow, p.isDay && styles.tableRowDay]}>
+            <TouchableOpacity
+              key={p.key}
+              style={[styles.tableRow, p.isDay && styles.tableRowDay]}
+              onPress={() => {
+                if (!p.isDay && p.shiShin) setInfoModal({ kind: 'shishin', shishin: p.shiShin, pillarLabel: p.label });
+              }}
+              activeOpacity={p.isDay || !p.shiShin ? 1 : 0.7}
+            >
               <Text style={[styles.cell, styles.cellText, p.isDay && { color: T.semantic.gold }]}>
                 {p.label}
               </Text>
@@ -277,7 +407,7 @@ export default function ChartScreen() {
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: T.fontSize.xs, textAlign: 'center' }]}>
                 {t(`common:elements.${ELEM_KEY[branchEl]}`)}
               </Text>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -300,13 +430,15 @@ export default function ChartScreen() {
               const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
               const dwColor = ELEM_COLOR[dw.element];
               return (
-                <View
+                <TouchableOpacity
                   key={i}
                   style={[
                     styles.daewoonCard,
                     { borderColor: isCurrent ? T.semantic.gold : T.border.default },
                     isCurrent && { backgroundColor: T.semantic.gold + '0d' },
                   ]}
+                  onPress={() => setInfoModal({ kind: 'daewoon', dw, isCurrent })}
+                  activeOpacity={0.75}
                 >
                   {/* Element accent top bar */}
                   <View style={[styles.dwAccentBar, { backgroundColor: dwColor }]} />
@@ -329,7 +461,7 @@ export default function ChartScreen() {
                     {dw.pillar.branch}
                   </Text>
                   <View style={[styles.dwDot, { backgroundColor: dwColor }]} />
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -341,6 +473,100 @@ export default function ChartScreen() {
 
       <View style={{ height: 48 }} />
     </ScrollView>
+
+    {/* ── Info Modal (오행 / 십신 / 대운) ── */}
+    <Modal
+      visible={infoModal !== null}
+      animationType="slide"
+      transparent
+      onRequestClose={() => setInfoModal(null)}
+    >
+      <TouchableOpacity style={styles.infoBackdrop} activeOpacity={1} onPress={() => setInfoModal(null)} />
+      <View style={styles.infoSheet}>
+        <View style={styles.infoHandle} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {infoModal?.kind === 'element' && (() => {
+            const info = ELEMENT_INFO[infoModal.element];
+            const color = ELEM_COLOR[infoModal.element];
+            const total = elementRows.reduce((s, r) => s + r.score, 0) || 1;
+            const pct = Math.round((infoModal.score / total) * 100);
+            const level = infoModal.score === 0 ? '없음' : infoModal.score >= Math.ceil(total / 3) ? '강함' : '약함';
+            return (
+              <>
+                <Text style={[styles.infoTitle, { color }]}>{info.symbol} {infoModal.element} {t(`common:elements.${ELEM_KEY[infoModal.element]}`)}</Text>
+                <Text style={styles.infoSubtitle}>{info.season}의 기운 · {pct}% ({level})</Text>
+                <Text style={styles.infoDesc}>{info.desc}</Text>
+                <View style={[styles.infoHighlight, { borderLeftColor: color }]}>
+                  <Text style={styles.infoHighlightLabel}>{infoModal.score > 0 ? '💪 강할 때' : '🔍 부족할 때'}</Text>
+                  <Text style={styles.infoHighlightText}>{infoModal.score > 0 ? info.strong : info.weak}</Text>
+                </View>
+              </>
+            );
+          })()}
+
+          {infoModal?.kind === 'shishin' && (() => {
+            const info = SHISHIN_INFO[infoModal.shishin];
+            return (
+              <>
+                <Text style={styles.infoTitle}>{infoModal.shishin}</Text>
+                <Text style={styles.infoSubtitle}>{infoModal.pillarLabel} · {info.category}</Text>
+                <Text style={styles.infoDesc}>{info.desc}</Text>
+                <View style={[styles.infoHighlight, { borderLeftColor: T.primary.DEFAULT }]}>
+                  <Text style={styles.infoHighlightLabel}>✨ 운세</Text>
+                  <Text style={styles.infoHighlightText}>{info.fortune}</Text>
+                </View>
+              </>
+            );
+          })()}
+
+          {infoModal?.kind === 'daewoon' && (() => {
+            const { dw, isCurrent } = infoModal;
+            const dwStemEl = STEM_ELEMENT[dw.pillar.stem];
+            const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
+            const dwColor = ELEM_COLOR[dw.element];
+            return (
+              <>
+                <Text style={[styles.infoTitle, { color: isCurrent ? T.semantic.gold : T.text.primary }]}>
+                  {dw.pillar.stem}{dw.pillar.branch} 대운
+                  {isCurrent ? '  ★ 현재' : ''}
+                </Text>
+                <Text style={styles.infoSubtitle}>{dw.startAge}–{dw.startAge + 9}세</Text>
+                <View style={styles.infoDwRow}>
+                  <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwStemEl] }]}>
+                    <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwStemEl] }]}>{dw.pillar.stem}</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwStemEl] }]}>천간</Text>
+                  </View>
+                  <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwBranchEl] }]}>
+                    <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwBranchEl] }]}>{dw.pillar.branch}</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwBranchEl] }]}>지지</Text>
+                  </View>
+                </View>
+                <View style={[styles.infoHighlight, { borderLeftColor: dwColor }]}>
+                  <Text style={styles.infoHighlightLabel}>🌊 오행 기운</Text>
+                  <Text style={styles.infoHighlightText}>
+                    {dw.element === dayStemEl
+                      ? `${t(`common:elements.${ELEM_KEY[dw.element]}`)} 기운이 일간(${dayStem})과 같은 오행입니다. 나의 본래 에너지가 강화되는 시기입니다.`
+                      : `${t(`common:elements.${ELEM_KEY[dw.element]}`)} 기운이 들어옵니다. ${ELEMENT_INFO[dw.element].desc}`}
+                  </Text>
+                </View>
+              </>
+            );
+          })()}
+
+          <View style={{ height: 48 }} />
+        </ScrollView>
+      </View>
+    </Modal>
+
+    {/* ── Pillar Detail Modal ── */}
+    <PillarDetailModal
+      visible={modalPillarKey !== null}
+      pillarKey={modalPillarKey}
+      stem={modalStem}
+      branch={modalBranch}
+      onClose={closeModal}
+    />
+    </>
   );
 }
 
@@ -489,6 +715,50 @@ const styles = StyleSheet.create({
   cellWide: { flex: 1.4 },
   cellHeader: { fontSize: T.fontSize.xs, fontWeight: '700', color: T.text.disabled },
   cellText: { fontSize: T.fontSize.sm, color: T.primary.lighter, textAlign: 'center' },
+
+  // Info modal
+  infoBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)' },
+  infoSheet: {
+    backgroundColor: T.bg.elevated,
+    borderTopLeftRadius: T.radius['2xl'],
+    borderTopRightRadius: T.radius['2xl'],
+    paddingHorizontal: T.spacing[6],
+    paddingBottom: T.spacing[4],
+    maxHeight: '72%',
+  },
+  infoHandle: {
+    width: 40, height: 4, backgroundColor: T.border.default,
+    borderRadius: 2, alignSelf: 'center',
+    marginTop: T.spacing[3], marginBottom: T.spacing[4],
+  },
+  infoTitle: {
+    fontSize: T.fontSize['2xl'], fontWeight: '800', color: T.text.primary,
+    marginBottom: T.spacing[1],
+  },
+  infoSubtitle: {
+    fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[4], fontWeight: '600',
+  },
+  infoDesc: {
+    fontSize: T.fontSize.base, color: T.text.secondary, lineHeight: 22,
+    marginBottom: T.spacing[4],
+  },
+  infoHighlight: {
+    borderLeftWidth: 3, paddingLeft: T.spacing[4],
+    backgroundColor: T.bg.card, borderRadius: T.radius.md,
+    padding: T.spacing[4], marginBottom: T.spacing[4],
+  },
+  infoHighlightLabel: {
+    fontSize: T.fontSize.xs, color: T.text.faint, fontWeight: '700', marginBottom: T.spacing[2],
+  },
+  infoHighlightText: { fontSize: T.fontSize.sm, color: T.text.secondary, lineHeight: 20 },
+  infoDwRow: { flexDirection: 'row', gap: T.spacing[4], marginBottom: T.spacing[4] },
+  infoDwBox: {
+    flex: 1, alignItems: 'center', paddingVertical: T.spacing[4],
+    borderRadius: T.radius.md, borderWidth: 1.5,
+    backgroundColor: T.bg.card,
+  },
+  infoDwChar: { fontSize: 48, fontWeight: '800', lineHeight: 56 },
+  infoDwLabel: { fontSize: T.fontSize.xs, fontWeight: '700', marginTop: 4 },
 
   // 대운 timeline
   daewoonScroll: { paddingBottom: T.spacing[2], paddingRight: T.spacing[5], marginBottom: T.spacing[8] },

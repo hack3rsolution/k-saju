@@ -36,7 +36,7 @@ const FRAMES: {
   {
     id: 'en',
     label: 'Cosmic Blueprint',
-    region: '🌏 Western',
+    region: '🌍 Western',
     desc: 'Personality-first, psychology overlay (like MBTI)',
     kanji: '✦',
   },
