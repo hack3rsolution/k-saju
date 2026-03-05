@@ -84,6 +84,22 @@
     "金": "금(金)일",
     "水": "수(水)일"
   },
+  "readingLoading": "별을 읽고 있어요…",
+  "feedback": {
+    "titlePositive": "👍 도움이 됐군요!",
+    "titleNegative": "👎 아쉽네요",
+    "chooseReason": "이유를 선택해주세요",
+    "accurate": "정확해요",
+    "tooVague": "너무 모호해요",
+    "notMe": "나와 맞지 않아요"
+  },
+  "typeLabelCard": {
+    "daily": "일간 운세",
+    "weekly": "주간 운세",
+    "monthly": "월간 운세",
+    "annual": "연간 운세",
+    "daewoon": "대운 분석"
+  },
   "timingAdvisor": {
     "title": "타이밍 어드바이저",
     "subtitle": "어떤 결정을 분석할까요?",

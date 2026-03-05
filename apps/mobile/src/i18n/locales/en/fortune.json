@@ -64,6 +64,22 @@
     "金": "Metal Day",
     "水": "Water Day"
   },
+  "readingLoading": "Reading the stars…",
+  "feedback": {
+    "titlePositive": "👍 Glad it helped!",
+    "titleNegative": "👎 Sorry about that",
+    "chooseReason": "Choose a reason",
+    "accurate": "Accurate",
+    "tooVague": "Too vague",
+    "notMe": "Doesn't fit me"
+  },
+  "typeLabelCard": {
+    "daily": "DAILY FORTUNE",
+    "weekly": "WEEKLY FORTUNE",
+    "monthly": "MONTHLY FORTUNE",
+    "annual": "ANNUAL FORTUNE",
+    "daewoon": "大運 CYCLE"
+  },
   "timingAdvisor": {
     "title": "Timing Advisor",
     "subtitle": "Which decision should we analyze?",

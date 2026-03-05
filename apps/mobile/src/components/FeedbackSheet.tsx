@@ -6,19 +6,8 @@
  * Step 2: Sheet shows reason chips → submit
  */
 import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { FeedbackRating, FeedbackType } from '../hooks/useFeedback';
-
-interface Reason {
-  key: FeedbackType;
-  emoji: string;
-  label: string;
-}
-
-const REASONS: Reason[] = [
-  { key: 'accurate',  emoji: '✨', label: 'Accurate' },
-  { key: 'too_vague', emoji: '🌫️', label: 'Too vague' },
-  { key: 'not_me',    emoji: '🤔', label: "Doesn't fit me" },
-];
 
 interface Props {
   visible: boolean;
@@ -29,6 +18,14 @@ interface Props {
 }
 
 export function FeedbackSheet({ visible, initialRating, submitting, onSelect, onClose }: Props) {
+  const { t } = useTranslation('fortune');
+
+  const REASONS: { key: FeedbackType; emoji: string; label: string }[] = [
+    { key: 'accurate',  emoji: '✨', label: t('feedback.accurate') },
+    { key: 'too_vague', emoji: '🌫️', label: t('feedback.tooVague') },
+    { key: 'not_me',    emoji: '🤔', label: t('feedback.notMe') },
+  ];
+
   return (
     <Modal
       visible={visible}
@@ -41,9 +38,9 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
           <View style={styles.handle} />
 
           <Text style={styles.title}>
-            {initialRating === 1 ? '👍 Glad it helped!' : '👎 Sorry about that'}
+            {initialRating === 1 ? t('feedback.titlePositive') : t('feedback.titleNegative')}
           </Text>
-          <Text style={styles.subtitle}>Choose a reason</Text>
+          <Text style={styles.subtitle}>{t('feedback.chooseReason')}</Text>
 
           {submitting ? (
             <ActivityIndicator color="#a78bfa" style={styles.spinner} />
@@ -61,7 +58,7 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
           )}
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={styles.cancelText}>{t('common:cancel')}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -13,14 +13,14 @@ import type { FiveElement } from '@k-saju/saju-engine';
 import { useFortune, type ReadingType } from '../../src/hooks/useFortune';
 import { T } from '../../src/theme/tokens';
 
-// ── Meta per type ─────────────────────────────────────────────────────────────
+// ── Icon / deco per type (not localised) ─────────────────────────────────────
 
-const TYPE_META: Record<ReadingType, { label: string; deco: string; icon: string }> = {
-  daily:   { label: 'Daily Fortune',     deco: '日', icon: '☀️' },
-  weekly:  { label: 'Weekly Fortune',    deco: '週', icon: '📆' },
-  monthly: { label: 'Monthly Fortune',   deco: '月', icon: '🌙' },
-  annual:  { label: 'Annual Fortune',    deco: '年', icon: '🎆' },
-  daewoon: { label: '大運 — 10yr Cycle', deco: '運', icon: '♾️' },
+const TYPE_DECO: Record<ReadingType, { deco: string; icon: string }> = {
+  daily:   { deco: '日', icon: '☀️' },
+  weekly:  { deco: '週', icon: '📆' },
+  monthly: { deco: '月', icon: '🌙' },
+  annual:  { deco: '年', icon: '🎆' },
+  daewoon: { deco: '運', icon: '♾️' },
 };
 
 const ELEMENT_COLOR: Record<FiveElement, string> = T.element;
@@ -28,7 +28,7 @@ const ELEMENT_COLOR: Record<FiveElement, string> = T.element;
 // ── Screen ────────────────────────────────────────────────────────────────────
 
 export default function FortuneReadingScreen() {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'fortune']);
   const { type } = useLocalSearchParams<{ type: string }>();
 
   const VALID = ['weekly', 'monthly', 'annual', 'daewoon'];
@@ -36,7 +36,7 @@ export default function FortuneReadingScreen() {
 
   const { loading, reading, error, ganji, todayDay, todayElement, refresh } = useFortune(readingType);
 
-  const meta = TYPE_META[readingType];
+  const deco = TYPE_DECO[readingType];
   const elementColor = ELEMENT_COLOR[todayElement] ?? T.primary.DEFAULT;
 
   return (
@@ -47,7 +47,7 @@ export default function FortuneReadingScreen() {
           <Ionicons name="chevron-back" size={20} color={T.primary.light} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{meta.icon} {meta.label}</Text>
+          <Text style={styles.title}>{deco.icon} {t(`fortune:types.${readingType}`)}</Text>
           <Text style={styles.ganji}>{ganji}</Text>
         </View>
         <TouchableOpacity style={styles.refreshBtn} onPress={refresh} disabled={loading}>
@@ -61,18 +61,18 @@ export default function FortuneReadingScreen() {
         <View style={styles.cardInner}>
           <View style={styles.cardHeader}>
             <View>
-              <Text style={styles.cardLabel}>{meta.label.toUpperCase()}</Text>
+              <Text style={styles.cardLabel}>{t(`fortune:typeLabelCard.${readingType}`)}</Text>
               <View style={[styles.dayBadge, { backgroundColor: elementColor + '22', borderColor: elementColor + '44' }]}>
                 <Text style={[styles.dayBadgeText, { color: elementColor }]}>{todayDay}</Text>
               </View>
             </View>
-            <Text style={[styles.deco, { color: elementColor }]}>{meta.deco}</Text>
+            <Text style={[styles.deco, { color: elementColor }]}>{deco.deco}</Text>
           </View>
 
           {loading ? (
             <View style={styles.loadingBox}>
               <ActivityIndicator color={T.primary.light} size="small" />
-              <Text style={styles.loadingText}>{t('common:loading')}</Text>
+              <Text style={styles.loadingText}>{t('fortune:readingLoading')}</Text>
             </View>
           ) : error ? (
             <View style={styles.errorBox}>
@@ -99,33 +99,33 @@ export default function FortuneReadingScreen() {
       {/* ── Lucky items ── */}
       {reading?.luckyItems && (
         <View style={styles.luckyCard}>
-          <Text style={styles.luckyTitle}>LUCKY ITEMS · 吉</Text>
+          <Text style={styles.luckyTitle}>{t('fortune:luckyItems.title')} · 吉</Text>
           <View style={styles.luckyGrid}>
             {reading.luckyItems.color && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🎨</Text>
-                <Text style={styles.pillLabel}>Color</Text>
+                <Text style={styles.pillLabel}>{t('fortune:luckyItems.color')}</Text>
                 <Text style={styles.pillValue}>{reading.luckyItems.color}</Text>
               </View>
             )}
             {reading.luckyItems.number != null && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🔢</Text>
-                <Text style={styles.pillLabel}>Number</Text>
+                <Text style={styles.pillLabel}>{t('fortune:luckyItems.number')}</Text>
                 <Text style={styles.pillValue}>{reading.luckyItems.number}</Text>
               </View>
             )}
             {reading.luckyItems.direction && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🧭</Text>
-                <Text style={styles.pillLabel}>Direction</Text>
+                <Text style={styles.pillLabel}>{t('fortune:luckyItems.direction')}</Text>
                 <Text style={styles.pillValue}>{reading.luckyItems.direction}</Text>
               </View>
             )}
             {reading.luckyItems.food && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🍽️</Text>
-                <Text style={styles.pillLabel}>Food</Text>
+                <Text style={styles.pillLabel}>{t('fortune:luckyItems.food')}</Text>
                 <Text style={styles.pillValue}>{reading.luckyItems.food}</Text>
               </View>
             )}

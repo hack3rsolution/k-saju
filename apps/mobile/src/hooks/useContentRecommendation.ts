@@ -89,7 +89,7 @@ export function useContentRecommendation(): ContentRecommendationState {
     } finally {
       setLoading(false);
     }
-  }, [session, chart, frame]);
+  }, [session, chart, frame, language]);
 
   return { loading, data, error, fetch };
 }

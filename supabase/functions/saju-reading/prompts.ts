@@ -129,7 +129,7 @@ IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
     "food": "<recommended food>"
   }
 }
-No markdown. No explanation outside the JSON. The luckyItems can be null if not applicable.`;
+CRITICAL: Output ONLY the raw JSON object. No markdown code fences (no \`\`\`json). No explanatory text before or after. Start your response with { and end with }. The luckyItems can be null if not applicable.`;
 }
 
 export function buildUserPrompt(req: SajuReadingRequest): string {

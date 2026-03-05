@@ -63,12 +63,17 @@ export async function callClaude(
  * Parses Claude's JSON output. Falls back to a minimal safe structure on error.
  */
 export function parseClaudeOutput(raw: string): ClaudeReadingOutput {
-  // Extract JSON from raw (handles markdown code fences if any)
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  // Strip markdown code fences (```json ... ```) before parsing
+  const stripped = raw
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/g, '')
+    .trim();
+  // Extract JSON object from the cleaned text
+  const jsonMatch = stripped.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     return {
-      summary: raw.slice(0, 100).trim(),
-      details: [raw.trim()],
+      summary: stripped.slice(0, 100).trim(),
+      details: [stripped.trim()],
       luckyItems: null,
     };
   }
@@ -85,8 +90,8 @@ export function parseClaudeOutput(raw: string): ClaudeReadingOutput {
     };
   } catch {
     return {
-      summary: raw.slice(0, 100).trim(),
-      details: [raw.trim()],
+      summary: stripped.slice(0, 100).trim(),
+      details: [stripped.trim()],
       luckyItems: null,
     };
   }

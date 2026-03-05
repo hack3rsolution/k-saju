@@ -77,7 +77,7 @@ function validateRequest(body: unknown): ContentRecommendationRequest {
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 700;
+const MAX_TOKENS = 1200;
 
 async function callClaude(
   systemPrompt: string,
@@ -110,10 +110,11 @@ async function callClaude(
 }
 
 function parseOutput(raw: string): ClaudeRecommendationOutput {
-  const match = raw.match(/\{[\s\S]*\}/);
+  const stripped = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  const match = stripped.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('No JSON found in Claude response');
   try {
-    const parsed = JSON.parse(match[0]) as Partial<ClaudeRecommendationOutput>;
+    const parsed = JSON.parse(match[0].trim()) as Partial<ClaudeRecommendationOutput>;
     const sanitise = (arr: unknown): ClaudeRecommendationOutput['music'] =>
       Array.isArray(arr)
         ? (arr as { title: unknown; description: unknown; tag: unknown }[])

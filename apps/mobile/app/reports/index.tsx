@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
@@ -57,6 +58,7 @@ function ReportResult({
   onReset: () => void;
   showPdfExport?: boolean;
 }) {
+  const { t } = useTranslation('common');
   const [exporting, setExporting] = useState(false);
 
   async function handleExportPdf() {
@@ -124,12 +126,12 @@ function ReportResult({
             {exporting ? (
               <ActivityIndicator color="#fff" size="small" />
             ) : (
-              <Text style={rStyles.pdfBtnText}>📄 Export PDF</Text>
+              <Text style={rStyles.pdfBtnText}>{t('reports.exportPdf')}</Text>
             )}
           </TouchableOpacity>
         )}
         <TouchableOpacity style={rStyles.resetBtn} onPress={onReset}>
-          <Text style={rStyles.resetText}>Generate New Report →</Text>
+          <Text style={rStyles.resetText}>{t('reports.generateNew')}</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -174,6 +176,7 @@ function ReportCard({
   isUnlocked: boolean;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation('common');
   return (
     <View style={cardStyles.card}>
       <View style={cardStyles.header}>
@@ -187,7 +190,7 @@ function ReportCard({
       <Text style={cardStyles.desc}>{desc}</Text>
       {isUnlocked ? children : (
         <TouchableOpacity style={cardStyles.unlockBtn} onPress={() => router.push('/paywall')}>
-          <Text style={cardStyles.unlockText}>Unlock — {unlockPrice}</Text>
+          <Text style={cardStyles.unlockText}>{t('reports.unlock')}{unlockPrice}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -214,6 +217,7 @@ const cardStyles = StyleSheet.create({
 // ── Generate button ───────────────────────────────────────────────────────────
 
 function GenerateButton({ onPress, loading }: { onPress: () => void; loading: boolean }) {
+  const { t } = useTranslation('common');
   return (
     <TouchableOpacity
       style={[genStyles.btn, loading && genStyles.btnDisabled]}
@@ -223,7 +227,7 @@ function GenerateButton({ onPress, loading }: { onPress: () => void; loading: bo
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={genStyles.btnText}>Generate Report</Text>
+        <Text style={genStyles.btnText}>{t('reports.generateReport')}</Text>
       )}
     </TouchableOpacity>
   );
@@ -238,6 +242,7 @@ const genStyles = StyleSheet.create({
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function ReportsScreen() {
+  const { t } = useTranslation('common');
   const { addons } = useEntitlementStore();
   const { chart } = useSajuStore();
 
@@ -251,24 +256,24 @@ export default function ReportsScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Back</Text>
+        <Text style={styles.backText}>← {t('back')}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Reports</Text>
-      <Text style={styles.subtitle}>In-depth AI analysis of your destiny chart</Text>
+      <Text style={styles.title}>{t('reports.title')}</Text>
+      <Text style={styles.subtitle}>{t('reports.subtitle')}</Text>
 
       {!chart && (
         <View style={styles.noChart}>
-          <Text style={styles.noChartText}>Complete onboarding to access reports.</Text>
+          <Text style={styles.noChartText}>{t('reports.noChart')}</Text>
         </View>
       )}
 
       {/* ── 1. Compatibility ──────────────────────────────────────────────── */}
       <ReportCard
         icon="💞"
-        title="Deep Compatibility"
-        subtitle="合婚 · Compatibility Analysis"
-        desc="Compare two saju charts for element harmony, clash cycles, and long-term relationship forecast."
+        title={t('reports.deepCompat')}
+        subtitle={t('reports.deepCompatSub')}
+        desc={t('reports.deepCompatDesc')}
         unlockPrice="$4.99"
         isUnlocked={addons.deepCompatibility}
       >
@@ -276,16 +281,16 @@ export default function ReportsScreen() {
           style={cardStyles.unlockBtn}
           onPress={() => router.push('/compatibility')}
         >
-          <Text style={[cardStyles.unlockText, { color: '#a78bfa' }]}>Open Compatibility →</Text>
+          <Text style={[cardStyles.unlockText, { color: '#a78bfa' }]}>{t('reports.deepCompatOpen')}</Text>
         </TouchableOpacity>
       </ReportCard>
 
       {/* ── 2. Career & Wealth ────────────────────────────────────────────── */}
       <ReportCard
         icon="💼"
-        title="Career & Wealth"
-        subtitle="財官 · Wealth & Career"
-        desc="Analyse wealth and career stars, optimal career domains, wealth accumulation patterns, and timing windows."
+        title={t('reports.career')}
+        subtitle={t('reports.careerSub')}
+        desc={t('reports.careerDesc')}
         unlockPrice="$4.99"
         isUnlocked={addons.careerWealth}
       >
@@ -310,9 +315,9 @@ export default function ReportsScreen() {
       {/* ── 3. Full 대운 Report ───────────────────────────────────────────── */}
       <ReportCard
         icon="🌊"
-        title="Full 大運 Report"
-        subtitle="大運 · 10-Year Luck Cycle PDF"
-        desc="Comprehensive analysis of all 8 major luck periods covering your full life arc, with PDF export."
+        title={t('reports.daewoon')}
+        subtitle={t('reports.daewoonSub')}
+        desc={t('reports.daewoonDesc')}
         unlockPrice="$6.99"
         isUnlocked={addons.daewoonPdf}
       >
@@ -338,9 +343,9 @@ export default function ReportsScreen() {
       {/* ── 4. Name Analysis ─────────────────────────────────────────────── */}
       <ReportCard
         icon="📝"
-        title="Name Analysis"
-        subtitle="名分析 · Name Element Analysis"
-        desc="Analyse your name's hanja strokes and elemental energy against your natal chart. Get rename recommendations."
+        title={t('reports.nameAnalysis')}
+        subtitle={t('reports.nameAnalysisSub')}
+        desc={t('reports.nameAnalysisDesc')}
         unlockPrice="$9.99"
         isUnlocked={addons.nameAnalysis}
       >
@@ -355,7 +360,7 @@ export default function ReportsScreen() {
               style={styles.nameInput}
               value={nameInput}
               onChangeText={setNameInput}
-              placeholder="Enter name (e.g. Kim Minjun or 金敏俊)"
+              placeholder={t('reports.namePlaceholder')}
               placeholderTextColor="#5b4d7e"
             />
             {nameReport.error && (
