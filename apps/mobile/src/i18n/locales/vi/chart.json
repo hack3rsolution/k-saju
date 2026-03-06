@@ -40,5 +40,6 @@
     "books": "📚 Sách",
     "travel": "✈️ Du lịch"
   },
-  "share": "Chia sẻ"
+  "share": "Chia sẻ",
+  "generatingRecommendations": "Đang tạo gợi ý…"
 }

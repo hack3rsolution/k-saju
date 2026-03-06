@@ -104,29 +104,37 @@ export default function FortuneReadingScreen() {
             {reading.luckyItems.color && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🎨</Text>
-                <Text style={styles.pillLabel}>{t('fortune:luckyItems.color')}</Text>
-                <Text style={styles.pillValue}>{reading.luckyItems.color}</Text>
+                <View style={styles.pillText}>
+                  <Text style={styles.pillLabel}>{t('fortune:luckyItems.color')}</Text>
+                  <Text style={styles.pillValue}>{reading.luckyItems.color}</Text>
+                </View>
               </View>
             )}
             {reading.luckyItems.number != null && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🔢</Text>
-                <Text style={styles.pillLabel}>{t('fortune:luckyItems.number')}</Text>
-                <Text style={styles.pillValue}>{reading.luckyItems.number}</Text>
+                <View style={styles.pillText}>
+                  <Text style={styles.pillLabel}>{t('fortune:luckyItems.number')}</Text>
+                  <Text style={styles.pillValue}>{reading.luckyItems.number}</Text>
+                </View>
               </View>
             )}
             {reading.luckyItems.direction && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🧭</Text>
-                <Text style={styles.pillLabel}>{t('fortune:luckyItems.direction')}</Text>
-                <Text style={styles.pillValue}>{reading.luckyItems.direction}</Text>
+                <View style={styles.pillText}>
+                  <Text style={styles.pillLabel}>{t('fortune:luckyItems.direction')}</Text>
+                  <Text style={styles.pillValue}>{reading.luckyItems.direction}</Text>
+                </View>
               </View>
             )}
             {reading.luckyItems.food && (
               <View style={styles.pill}>
                 <Text style={styles.pillIcon}>🍽️</Text>
-                <Text style={styles.pillLabel}>{t('fortune:luckyItems.food')}</Text>
-                <Text style={styles.pillValue}>{reading.luckyItems.food}</Text>
+                <View style={styles.pillText}>
+                  <Text style={styles.pillLabel}>{t('fortune:luckyItems.food')}</Text>
+                  <Text style={styles.pillValue}>{reading.luckyItems.food}</Text>
+                </View>
               </View>
             )}
           </View>
@@ -196,12 +204,13 @@ const styles = StyleSheet.create({
   luckyTitle: { color: T.text.faint, fontSize: T.fontSize.xs, fontWeight: '700', letterSpacing: 1, marginBottom: T.spacing[3] },
   luckyGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: T.spacing[2] },
   pill: {
-    flexDirection: 'row', alignItems: 'center', gap: T.spacing[2],
+    flexDirection: 'row', alignItems: 'flex-start', gap: T.spacing[2],
     backgroundColor: T.bg.base, borderRadius: T.radius.md,
     paddingHorizontal: T.spacing[3], paddingVertical: T.spacing[2],
     flex: 1, minWidth: '44%', borderWidth: 1, borderColor: T.border.default,
   },
-  pillIcon: { fontSize: 18 },
+  pillIcon: { fontSize: 18, marginTop: 1 },
+  pillText: { flex: 1 },
   pillLabel: { color: T.text.faint, fontSize: T.fontSize.xs, fontWeight: '600' },
-  pillValue: { color: T.text.primary, fontSize: T.fontSize.sm, fontWeight: '700' },
+  pillValue: { color: T.text.primary, fontSize: T.fontSize.sm, fontWeight: '700', flexShrink: 1 },
 });

@@ -78,7 +78,7 @@ function LuckyPill({ icon, label, value }: { icon: string; label: string; value:
   return (
     <View style={lStyles.pill}>
       <Text style={lStyles.icon}>{icon}</Text>
-      <View>
+      <View style={lStyles.textWrap}>
         <Text style={lStyles.label}>{label}</Text>
         <Text style={lStyles.value}>{String(value)}</Text>
       </View>
@@ -89,10 +89,10 @@ function LuckyPill({ icon, label, value }: { icon: string; label: string; value:
 const lStyles = StyleSheet.create({
   pill: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: T.bg.base,
     borderRadius: T.radius.md,
-    paddingHorizontal: T.spacing[3],
+    paddingHorizontal: T.spacing[2],
     paddingVertical: T.spacing[2],
     gap: T.spacing[2],
     flex: 1,
@@ -100,9 +100,10 @@ const lStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: T.border.default,
   },
-  icon: { fontSize: 20 },
+  icon: { fontSize: 18 },
+  textWrap: { flex: 1 },
   label: { color: T.text.faint, fontSize: T.fontSize.xs, fontWeight: '600', letterSpacing: 0.5 },
-  value: { color: T.text.primary, fontSize: T.fontSize.sm, fontWeight: '700' },
+  value: { color: T.text.primary, fontSize: T.fontSize.xs, fontWeight: '700', lineHeight: 18 },
 });
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -147,10 +148,11 @@ export default function HomeScreen() {
 
   // ── Quick action grid items ───────────────────────────────────────────────
   const gridItems = [
-    { key: 'compatibility', label: t('common:compatibility'), icon: '💞', route: '/compatibility', deco: '合' },
-    { key: 'annualReport',  label: t('fortune:annualReport'), icon: '📅', route: '/reports',         deco: '年' },
-    { key: 'myChart',       label: t('fortune:myChart'),      icon: '☯️', route: '/(tabs)/chart',    deco: '命' },
-    { key: 'fortune',       label: t('fortune:title'),        icon: '⭐', route: '/(tabs)/fortune',  deco: '運' },
+    { key: 'compatibility', label: t('common:compatibility'), icon: '💞', route: '/compatibility', deco: '合', fullWidth: false },
+    { key: 'annualReport',  label: t('fortune:annualReport'), icon: '📅', route: '/reports',         deco: '年', fullWidth: false },
+    { key: 'myChart',       label: t('fortune:myChart'),      icon: '☯️', route: '/(tabs)/chart',    deco: '命', fullWidth: false },
+    { key: 'fortune',       label: t('fortune:title'),        icon: '⭐', route: '/(tabs)/fortune',  deco: '運', fullWidth: false },
+    { key: 'timing',        label: t('common:analyzeNow'),    icon: '⏰', route: null,               deco: '時', fullWidth: true },
   ];
 
   // ── Feedback state ────────────────────────────────────────────────────────
@@ -429,8 +431,8 @@ export default function HomeScreen() {
           {gridItems.map((item) => (
             <TouchableOpacity
               key={item.key}
-              style={styles.gridItem}
-              onPress={() => router.push(item.route as never)}
+              style={[styles.gridItem, item.fullWidth && styles.gridItemFull]}
+              onPress={() => item.route ? router.push(item.route as never) : handleTimingPress()}
               activeOpacity={0.75}
             >
               {/* Deco glyph watermark */}
@@ -494,16 +496,6 @@ export default function HomeScreen() {
           </View>
         </View>
       </Modal>
-
-      {/* ── Timing Advisor FAB ── */}
-      <TouchableOpacity
-        style={fabStyles.fab}
-        onPress={handleTimingPress}
-        activeOpacity={0.85}
-      >
-        <Text style={fabStyles.fabIcon}>⏰</Text>
-        <Text style={fabStyles.fabLabel}>{t('common:analyzeNow')}</Text>
-      </TouchableOpacity>
 
       <TimingCategorySheet
         visible={categorySheetVisible}
@@ -681,6 +673,14 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: T.border.default, overflow: 'hidden',
     position: 'relative',
   },
+  gridItemFull: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: T.spacing[3],
+    borderColor: T.primary.subtle,
+    backgroundColor: T.bg.elevated,
+  },
   gridDeco: {
     position: 'absolute', fontSize: 56, fontWeight: '900',
     color: T.primary.DEFAULT, opacity: 0.06,
@@ -688,26 +688,6 @@ const styles = StyleSheet.create({
   },
   gridIcon: { fontSize: 28, marginBottom: T.spacing[2], zIndex: 1 },
   gridLabel: { color: T.primary.lighter, fontWeight: '600', fontSize: T.fontSize.base, zIndex: 1 },
-});
-
-// ── FAB styles ────────────────────────────────────────────────────────────────
-
-const fabStyles = StyleSheet.create({
-  fab: {
-    position: 'absolute',
-    bottom: 32,
-    right: T.spacing[6],
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: T.spacing[2],
-    backgroundColor: T.primary.DEFAULT,
-    borderRadius: T.radius['2xl'],
-    paddingVertical: T.spacing[4] - 2,
-    paddingHorizontal: T.spacing[5],
-    ...T.shadow.xl,
-  },
-  fabIcon: { fontSize: 18 },
-  fabLabel: { color: '#fff', fontWeight: '700', fontSize: T.fontSize.base },
 });
 
 // ── Modal styles ──────────────────────────────────────────────────────────────

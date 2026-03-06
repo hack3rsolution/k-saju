@@ -179,7 +179,7 @@ export default function JournalScreen() {
         {events.length > 0 && events.length < MIN_EVENTS_FOR_ANALYSIS && (
           <View style={styles.lockedAnalysis}>
             <Text style={styles.lockedAnalysisText}>
-              🔒 Add {MIN_EVENTS_FOR_ANALYSIS - events.length} more event{events.length < 4 ? 's' : ''} to unlock AI Pattern Analysis
+              🔒 AI 패턴 분석을 열려면 이벤트 {MIN_EVENTS_FOR_ANALYSIS - events.length}개를 더 추가하세요
             </Text>
           </View>
         )}

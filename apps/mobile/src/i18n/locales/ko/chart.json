@@ -40,5 +40,6 @@
     "books": "📚 책",
     "travel": "✈️ 여행"
   },
-  "share": "공유하기"
+  "share": "공유하기",
+  "generatingRecommendations": "추천 생성 중…"
 }

@@ -40,5 +40,6 @@
     "books": "📚 Buku",
     "travel": "✈️ Perjalanan"
   },
-  "share": "Bagikan"
+  "share": "Bagikan",
+  "generatingRecommendations": "Membuat rekomendasi…"
 }

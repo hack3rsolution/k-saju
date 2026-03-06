@@ -15,11 +15,11 @@ import type { AddRelationshipInput, RelationshipType } from '../types/relationsh
 // ── Option sets ───────────────────────────────────────────────────────────────
 
 const REL_TYPES: { value: RelationshipType; label: string; icon: string }[] = [
-  { value: 'romantic',  label: 'Romantic',  icon: '💞' },
-  { value: 'friend',    label: 'Friend',    icon: '🤝' },
-  { value: 'family',    label: 'Family',    icon: '👨‍👩‍👧' },
-  { value: 'colleague', label: 'Colleague', icon: '💼' },
-  { value: 'other',     label: 'Other',     icon: '⭐' },
+  { value: 'romantic',  label: '연인',  icon: '💞' },
+  { value: 'friend',    label: '친구',    icon: '🤝' },
+  { value: 'family',    label: '가족',    icon: '👨‍👩‍👧' },
+  { value: 'colleague', label: '동료', icon: '💼' },
+  { value: 'other',     label: '기타',     icon: '⭐' },
 ];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -57,14 +57,14 @@ export function AddRelationshipModal({
     const d = parseInt(day, 10);
 
     const maxBirthYear = new Date().getFullYear() - 16;
-    if (!name.trim())                            return Alert.alert('Name required');
-    if (!y || y < 1900 || y > maxBirthYear) return Alert.alert(`Enter a valid birth year (1900–${maxBirthYear})`);
-    if (!m || m < 1 || m > 12)      return Alert.alert('Enter a valid birth month (1–12)');
-    if (!d || d < 1 || d > 31)      return Alert.alert('Enter a valid birth day (1–31)');
+    if (!name.trim())                            return Alert.alert('이름을 입력하세요');
+    if (!y || y < 1900 || y > maxBirthYear) return Alert.alert(`올바른 출생 연도를 입력하세요 (1900–${maxBirthYear})`);
+    if (!m || m < 1 || m > 12)      return Alert.alert('올바른 출생 월을 입력하세요 (1–12)');
+    if (!d || d < 1 || d > 31)      return Alert.alert('올바른 출생 일을 입력하세요 (1–31)');
 
     const parsedHour = hour.trim() ? parseInt(hour, 10) : undefined;
     if (parsedHour != null && (isNaN(parsedHour) || parsedHour < 0 || parsedHour > 23)) {
-      return Alert.alert('Birth hour must be 0–23');
+      return Alert.alert('태어난 시간은 0–23 사이여야 합니다');
     }
 
     onSubmit({
@@ -85,13 +85,13 @@ export function AddRelationshipModal({
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.title}>Add Relationship</Text>
+            <Text style={styles.title}>인연 추가</Text>
 
             {/* Name */}
-            <Text style={styles.label}>Name</Text>
+            <Text style={styles.label}>이름</Text>
             <TextInput
               style={styles.input}
-              placeholder="Partner, Friend, etc."
+              placeholder="파트너, 친구 등"
               placeholderTextColor="#5b4d7e"
               value={name}
               onChangeText={setName}
@@ -99,11 +99,11 @@ export function AddRelationshipModal({
             />
 
             {/* Birth date */}
-            <Text style={styles.label}>Birth Date</Text>
+            <Text style={styles.label}>생년월일</Text>
             <View style={styles.row}>
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Year"
+                placeholder="년"
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={year}
@@ -112,7 +112,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Month"
+                placeholder="월"
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={month}
@@ -121,7 +121,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Day"
+                placeholder="일"
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={day}
@@ -131,10 +131,10 @@ export function AddRelationshipModal({
             </View>
 
             {/* Birth hour (optional) */}
-            <Text style={styles.label}>Birth Hour <Text style={styles.optional}>(optional, 0–23)</Text></Text>
+            <Text style={styles.label}>태어난 시간 <Text style={styles.optional}>(선택, 0–23)</Text></Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. 14 for 2 PM"
+              placeholder="예: 오후 2시 = 14"
               placeholderTextColor="#5b4d7e"
               keyboardType="number-pad"
               value={hour}
@@ -143,7 +143,7 @@ export function AddRelationshipModal({
             />
 
             {/* Gender */}
-            <Text style={styles.label}>Gender</Text>
+            <Text style={styles.label}>성별</Text>
             <View style={styles.row}>
               {(['M', 'F'] as const).map((g) => (
                 <TouchableOpacity
@@ -152,14 +152,14 @@ export function AddRelationshipModal({
                   onPress={() => setGender(g)}
                 >
                   <Text style={[styles.chipText, gender === g && styles.chipTextActive]}>
-                    {g === 'M' ? '♂ Male' : '♀ Female'}
+                    {g === 'M' ? '♂ 남성' : '♀ 여성'}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
             {/* Relationship type */}
-            <Text style={styles.label}>Relationship Type</Text>
+            <Text style={styles.label}>관계 유형</Text>
             <View style={styles.typeGrid}>
               {REL_TYPES.map((t) => (
                 <TouchableOpacity
@@ -184,12 +184,12 @@ export function AddRelationshipModal({
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.submitText}>Add Relationship</Text>
+                <Text style={styles.submitText}>인연 추가</Text>
               )}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
+              <Text style={styles.cancelText}>취소</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

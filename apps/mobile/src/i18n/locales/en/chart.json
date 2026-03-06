@@ -40,5 +40,6 @@
     "정관": "Direct Officer",
     "편인": "Indirect Resource",
     "정인": "Direct Resource"
-  }
+  },
+  "generatingRecommendations": "Generating recommendations…"
 }

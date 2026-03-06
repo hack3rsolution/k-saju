@@ -13,11 +13,11 @@ const TYPE_ICON: Record<string, string> = {
 };
 
 const TYPE_LABEL: Record<string, string> = {
-  romantic:  'Romantic',
-  friend:    'Friend',
-  family:    'Family',
-  colleague: 'Colleague',
-  other:     'Other',
+  romantic:  '연인',
+  friend:    '친구',
+  family:    '가족',
+  colleague: '동료',
+  other:     '기타',
 };
 
 // ── Status colour & emoji ─────────────────────────────────────────────────────

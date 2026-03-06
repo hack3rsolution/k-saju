@@ -77,7 +77,7 @@ function validateRequest(body: unknown): ContentRecommendationRequest {
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 1200;
+const MAX_TOKENS = 2000;
 
 async function callClaude(
   systemPrompt: string,
@@ -203,7 +203,7 @@ Deno.serve(async (req: Request) => {
     // so the app shows an error state instead of mismatched-language content.
     const isEnglishLike = !userLanguage || userLanguage === 'en' || userLanguage === 'in';
     if (!isEnglishLike) {
-      return errorResponse('AI recommendation failed. Please try again.', 502);
+      return errorResponse('AI 추천을 불러오지 못했습니다. 다시 시도해주세요.', 502);
     }
     const dominant = getDominantElement(request.elementBalance);
     result = FALLBACK[dominant];

@@ -40,5 +40,6 @@
     "books": "📚 หนังสือ",
     "travel": "✈️ การเดินทาง"
   },
-  "share": "แชร์"
+  "share": "แชร์",
+  "generatingRecommendations": "กำลังสร้างคำแนะนำ…"
 }

@@ -40,5 +40,6 @@
     "books": "📚 本",
     "travel": "✈️ 旅行"
   },
-  "share": "シェア"
+  "share": "シェア",
+  "generatingRecommendations": "おすすめを生成中…"
 }

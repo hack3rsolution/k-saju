@@ -33,8 +33,8 @@ export function useAuthGuard() {
       // Signed in but onboarding not complete → birth-input
       if (!inOnboarding) router.replace('/(onboarding)/birth-input');
     } else {
-      // Signed in + onboarded → home (skip auth/onboarding screens)
-      if (inAuth || inOnboarding) router.replace('/(tabs)/home');
+      // Signed in + onboarded → home (skip auth screens only; allow intentional onboarding nav e.g. edit from settings)
+      if (inAuth) router.replace('/(tabs)/home');
     }
   }, [session, initialized, segments, router]);
 }

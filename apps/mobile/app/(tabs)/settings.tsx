@@ -41,6 +41,20 @@ const FRAMES: { id: CulturalFrame; label: string; region: string; flag: string }
   { id: 'in', label: 'Vedic Fusion',  region: 'South Asian', flag: '🇮🇳' },
 ];
 
+// ── Day stem Korean readings ─────────────────────────────────────────────────
+
+const STEM_KR: Record<string, string> = {
+  甲: '갑', 乙: '을', 丙: '병', 丁: '정', 戊: '무',
+  己: '기', 庚: '경', 辛: '신', 壬: '임', 癸: '계',
+};
+
+function formatBirthTime(hour: number | undefined): string {
+  if (hour === undefined || hour === null) return '미입력';
+  const period = hour < 12 ? '오전' : '오후';
+  const h = hour % 12 === 0 ? 12 : hour % 12;
+  return `${period} ${h}시`;
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function SettingsScreen() {
@@ -55,7 +69,17 @@ export default function SettingsScreen() {
   const { language, setLanguage } = useLanguageStore();
   const { user, signOut, setOnboardingCompleted } = useAuthStore();
   const { isPremium } = useEntitlementStore();
-  const { frame, updateFrame, clear: clearSaju } = useSajuStore();
+  const { frame, updateFrame, clear: clearSaju, birthData, chart } = useSajuStore();
+
+  // Resolve birth info: prefer in-memory store, fall back to user_metadata
+  const meta = user?.user_metadata;
+  const resolvedBirth = birthData ?? (meta?.birth_year ? {
+    year: meta.birth_year as number,
+    month: meta.birth_month as number,
+    day: meta.birth_day as number,
+    hour: meta.birth_hour as number | undefined,
+    gender: (meta.gender ?? 'M') as 'M' | 'F',
+  } : null);
 
   // Derive current frame: prefer store, then user_metadata
   const metaFrame = user?.user_metadata?.cultural_frame as CulturalFrame | undefined;
@@ -170,7 +194,7 @@ export default function SettingsScreen() {
         <Text style={styles.title}>{t('settings')}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t('account')}</Text>
+          <Text style={[styles.sectionLabel, { marginBottom: 8 }]}>{t('account')}</Text>
           <View style={styles.row}>
             <Text style={styles.rowText}>{t('email')}</Text>
             <Text style={styles.rowValue}>{user?.email ?? '—'}</Text>
@@ -199,8 +223,41 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
+        {resolvedBirth && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionLabel}>내 정보</Text>
+              <TouchableOpacity onPress={() => router.push('/(onboarding)/birth-input')}>
+                <Text style={styles.sectionEditBtn}>수정 →</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>생년월일</Text>
+              <Text style={styles.rowValue}>
+                {resolvedBirth.year}년 {resolvedBirth.month}월 {resolvedBirth.day}일 (양력)
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>태어난 시간</Text>
+              <Text style={styles.rowValue}>{formatBirthTime(resolvedBirth.hour)}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowText}>성별</Text>
+              <Text style={styles.rowValue}>{resolvedBirth.gender === 'M' ? '남성' : '여성'}</Text>
+            </View>
+            {chart && (
+              <View style={styles.row}>
+                <Text style={styles.rowText}>일간(日主)</Text>
+                <Text style={styles.rowValue}>
+                  {chart.dayStem} ({STEM_KR[chart.dayStem] ?? ''})
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t('preferences')}</Text>
+          <Text style={[styles.sectionLabel, { marginBottom: 8 }]}>{t('preferences')}</Text>
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <Text style={styles.rowText}>{t('dailyNotification')}</Text>
@@ -238,7 +295,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t('about')}</Text>
+          <Text style={[styles.sectionLabel, { marginBottom: 8 }]}>{t('about')}</Text>
           <View style={styles.row}>
             <Text style={styles.rowText}>{t('version')}</Text>
             <Text style={styles.rowValue}>{Constants.expoConfig?.version ?? '2.3.0'}</Text>
@@ -332,8 +389,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1a0a2e' },
   content: { padding: 24, paddingTop: 60 },
   title: { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 32 },
-  section: { marginBottom: 32 },
-  sectionLabel: { fontSize: 12, color: '#7c3aed', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 },
+  section: { marginBottom: 24 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  sectionLabel: { fontSize: 12, color: '#7c3aed', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 },
+  sectionEditBtn: { fontSize: 13, color: '#a78bfa', fontWeight: '600' },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
