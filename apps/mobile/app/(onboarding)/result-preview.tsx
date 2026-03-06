@@ -23,6 +23,16 @@ import {
   registerPushToken,
 } from '../../src/lib/notifications';
 
+// ── Frame titles ─────────────────────────────────────────────────────────────
+const FRAME_TITLE: Record<string, string> = {
+  kr: '나의 사주팔자',
+  cn: '나의 사주추명 (四柱推命)',
+  jp: '나의 사주추명',
+  en: '나의 코스믹 블루프린트',
+  es: '나의 데스티노 코스미코',
+  in: '나의 베딕 퓨전',
+};
+
 // ── Element colour palette ──────────────────────────────────────────────────
 const ELEMENT_COLOR: Record<FiveElement, string> = {
   木: '#22c55e',
@@ -49,8 +59,8 @@ function PillarCard({
     return (
       <View style={pStyles.card}>
         <Text style={pStyles.title}>{title}</Text>
-        <Text style={pStyles.na}>N/A</Text>
-        <Text style={pStyles.naHint}>Time unknown</Text>
+        <Text style={pStyles.na}>미상</Text>
+        <Text style={pStyles.naHint}>시간 미상</Text>
       </View>
     );
   }
@@ -68,8 +78,8 @@ function PillarCard({
         <Text style={pStyles.lockHint}>🔒</Text>
       ) : (
         <>
-          <Text style={[pStyles.elLabel, { color: stemColor }]}>{ELEMENT_LABEL[stemEl]}</Text>
-          <Text style={[pStyles.elLabel, { color: branchColor }]}>{ELEMENT_LABEL[branchEl]}</Text>
+          <Text style={[pStyles.elLabel, { color: stemColor }]}>{stemEl}</Text>
+          <Text style={[pStyles.elLabel, { color: branchColor }]}>{branchEl}</Text>
         </>
       )}
     </View>
@@ -217,16 +227,18 @@ export default function ResultPreviewScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>Step 3 of 3</Text>
-      <Text style={styles.title}>Your Cosmic Blueprint</Text>
+      <Text style={styles.step}>3단계 / 3</Text>
+      <Text style={styles.title}>{FRAME_TITLE[frame ?? 'en'] ?? '나의 사주팔자'}</Text>
       <Text style={styles.subtitle}>
-        Born {birthYear}/{String(birthMonth).padStart(2,'0')}/{String(birthDay).padStart(2,'0')}
-        {birthHour != null ? ` at ${String(birthHour).padStart(2,'0')}:00` : ' (time unknown)'}
+        생년월일: {birthYear}년 {birthMonth}월 {birthDay}일
+        {birthHour != null
+          ? ` · 태어난 시간: ${birthHour < 12 ? '오전' : '오후'} ${birthHour === 0 ? 12 : birthHour > 12 ? birthHour - 12 : birthHour}시`
+          : ' (시간 미상)'}
       </Text>
 
       {/* Pillar grid */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>四柱 — Four Pillars</Text>
+        <Text style={styles.sectionTitle}>사주 (四柱)</Text>
         <View style={styles.pillarsRow}>
           <PillarCard title="年" pillar={pillars.year} />
           <PillarCard title="月" pillar={pillars.month} />
@@ -238,21 +250,21 @@ export default function ResultPreviewScreen() {
           />
         </View>
         <Text style={styles.dayStemHint}>
-          일간 (self) · {chart.dayStem} · {ELEMENT_LABEL[chart.dayElement]}
+          일간 (self) · {chart.dayStem} · {chart.dayElement}
         </Text>
       </View>
 
       {/* Element balance */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>五行 — Element Balance</Text>
+        <Text style={styles.sectionTitle}>오행 균형 (五行)</Text>
         <ElementBar balance={elements} />
       </View>
 
       {/* Paywall teaser */}
       <View style={styles.teaser}>
-        <Text style={styles.teaserTitle}>🔓 Unlock the full reading</Text>
+        <Text style={styles.teaserTitle}>🔓 전체 리딩 잠금 해제</Text>
         <Text style={styles.teaserDesc}>
-          Daily fortune · Compatibility · Annual luck cycle · 大運 report — all with Premium.
+          일운 · 궁합 · 연간 운세 · 대운 리포트 — 프리미엄으로 이용 가능
         </Text>
       </View>
 
@@ -265,7 +277,7 @@ export default function ResultPreviewScreen() {
         {saving ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.btnText}>Explore free features →</Text>
+          <Text style={styles.btnText}>무료 기능 둘러보기 →</Text>
         )}
       </TouchableOpacity>
 
@@ -273,7 +285,7 @@ export default function ResultPreviewScreen() {
         style={styles.secondaryBtn}
         onPress={() => router.push('/paywall')}
       >
-        <Text style={styles.secondaryBtnText}>View Premium plans</Text>
+        <Text style={styles.secondaryBtnText}>프리미엄 플랜 보기</Text>
       </TouchableOpacity>
     </ScrollView>
   );

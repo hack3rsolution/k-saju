@@ -15,43 +15,43 @@ const FRAMES: {
   {
     id: 'kr',
     label: '사주팔자',
-    region: '🇰🇷 Korean',
-    desc: 'Traditional classical: destiny, family line, karma',
+    region: '🇰🇷 한국',
+    desc: '전통 고전: 운명, 가문, 인연',
     kanji: '命',
   },
   {
     id: 'cn',
     label: '四柱推命 / BaZi',
-    region: '🇨🇳 Chinese',
-    desc: 'Precision forecasting, business timing',
+    region: '🇨🇳 중국',
+    desc: '정밀 예측, 사업 타이밍',
     kanji: '八',
   },
   {
     id: 'jp',
     label: '四柱推命',
-    region: '🇯🇵 Japanese',
-    desc: 'Harmony, workplace fit, subtle personality',
+    region: '🇯🇵 일본',
+    desc: '조화, 직장 적합성, 섬세한 성격',
     kanji: '運',
   },
   {
     id: 'en',
     label: 'Cosmic Blueprint',
-    region: '🌍 Western',
-    desc: 'Personality-first, psychology overlay (like MBTI)',
+    region: '🌍 서양',
+    desc: '성격 중심, 심리학적 해석 (MBTI 유사)',
     kanji: '✦',
   },
   {
     id: 'es',
     label: 'Destino Cósmico',
-    region: '🌎 Latin',
-    desc: 'Horoscope-adjacent, relationship & passion focus',
+    region: '🌎 라틴',
+    desc: '별자리 기반, 관계와 열정 중심',
     kanji: '★',
   },
   {
     id: 'in',
     label: 'Vedic Fusion',
-    region: '🇮🇳 South Asian',
-    desc: 'Jyotish vocabulary, karma & dharma framing',
+    region: '🇮🇳 남아시아',
+    desc: '조티시 어휘, 카르마와 다르마 중심',
     kanji: 'ॐ',
   },
 ];
@@ -77,8 +77,8 @@ export default function CulturalFrameScreen() {
           />
         ))}
       </View>
-      <Text style={styles.step}>Step 2 of 3</Text>
-      <Text style={styles.title}>Choose Your Lens</Text>
+      <Text style={styles.step}>2단계 / 3</Text>
+      <Text style={styles.title}>나의 문화 프레임 선택</Text>
 
       {/* ── Decorative line ── */}
       <View style={styles.titleDivider}>
@@ -88,7 +88,7 @@ export default function CulturalFrameScreen() {
       </View>
 
       <Text style={styles.subtitle}>
-        Same cosmic data — personalized to your cultural context.
+        같은 사주 데이터 — 당신의 문화적 맥락에 맞게
       </Text>
 
       {FRAMES.map((f) => {
@@ -135,7 +135,7 @@ export default function CulturalFrameScreen() {
         onPress={handleContinue}
         disabled={!selected}
       >
-        <Text style={styles.buttonText}>Continue →</Text>
+        <Text style={styles.buttonText}>다음 →</Text>
       </TouchableOpacity>
     </ScrollView>
   );
