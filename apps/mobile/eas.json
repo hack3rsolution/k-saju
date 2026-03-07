@@ -15,7 +15,8 @@
       "distribution": "internal",
       "channel": "preview",
       "env": { "APP_ENV": "preview" },
-      "android": { "buildType": "apk" }
+      "android": { "buildType": "apk" },
+      "prebuildCommand": "npx expo prebuild --no-install --platform android"
     },
     "production": {
       "channel": "production",
