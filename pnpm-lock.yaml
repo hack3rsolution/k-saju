@@ -126,9 +126,12 @@ importers:
       react:
         specifier: 18.2.0
         version: 18.2.0
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@18.2.0)
       react-i18next:
         specifier: ^16.5.4
-        version: 16.5.4(i18next@25.8.13)(react-native@0.74.5)(react@18.2.0)(typescript@5.3.3)
+        version: 16.5.4(i18next@25.8.13)(react-dom@19.2.4)(react-native@0.74.5)(react@18.2.0)(typescript@5.3.3)
       react-native:
         specifier: 0.74.5
         version: 0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.0)(@types/react@18.2.79)(react@18.2.0)
@@ -10467,6 +10470,15 @@ packages:
       scheduler: 0.23.2
     dev: false
 
+  /react-dom@19.2.4(react@18.2.0):
+    resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
+    peerDependencies:
+      react: ^19.2.4
+    dependencies:
+      react: 18.2.0
+      scheduler: 0.27.0
+    dev: false
+
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
     dev: false
@@ -10480,7 +10492,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-i18next@16.5.4(i18next@25.8.13)(react-native@0.74.5)(react@18.2.0)(typescript@5.3.3):
+  /react-i18next@16.5.4(i18next@25.8.13)(react-dom@19.2.4)(react-native@0.74.5)(react@18.2.0)(typescript@5.3.3):
     resolution: {integrity: sha512-6yj+dcfMncEC21QPhOTsW8mOSO+pzFmT6uvU7XXdvM/Cp38zJkmTeMeKmTrmCMD5ToT79FmiE/mRWiYWcJYW4g==}
     peerDependencies:
       i18next: '>= 25.6.2'
@@ -10500,6 +10512,7 @@ packages:
       html-parse-stringify: 3.0.1
       i18next: 25.8.13(typescript@5.3.3)
       react: 18.2.0
+      react-dom: 19.2.4(react@18.2.0)
       react-native: 0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.0)(@types/react@18.2.79)(react@18.2.0)
       typescript: 5.3.3
       use-sync-external-store: 1.6.0(react@18.2.0)
@@ -11111,7 +11124,6 @@ packages:
 
   /scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
-    dev: true
 
   /schema-utils@4.3.3:
     resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}

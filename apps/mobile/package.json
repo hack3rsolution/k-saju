@@ -10,19 +10,10 @@
   "version": "1.2.0",
   "main": "./index.js",
   "scripts": {
-    "expo": "expo",
+    "expo": "./node_modules/.bin/expo",
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios",
-    "lint": "eslint .",
-    "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:e2e:build:ios": "detox build --configuration ios.sim.debug",
-    "test:e2e:build:android": "detox build --configuration android.emu.debug",
-    "test:e2e:ios": "detox test --configuration ios.sim.debug",
-    "test:e2e:android": "detox test --configuration android.emu.debug"
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@babel/runtime": "^7.28.6",
@@ -51,6 +42,7 @@
     "i18next": "^25.8.13",
     "lunar-javascript": "^1.7.7",
     "react": "18.2.0",
+    "react-dom": "^19.2.4",
     "react-i18next": "^16.5.4",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.0",
