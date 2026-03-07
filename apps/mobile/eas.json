@@ -16,7 +16,6 @@
       "channel": "preview",
       "env": { "APP_ENV": "preview" },
       "android": { "buildType": "apk" },
-      "prebuildCommand": "cd ../../ && pnpm build --filter @k-saju/saju-engine && cd apps/mobile && npx expo prebuild --no-install --platform android"
     },
     "production": {
       "channel": "production",
