@@ -10,19 +10,29 @@
       "env": {
         "APP_ENV": "development"
       },
-      "channel": "development"
+      "channel": "development",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
       "env": {
         "APP_ENV": "preview"
+      },
+      "android": {
+        "buildType": "apk"
       }
     },
     "production": {
       "channel": "production",
       "env": {
         "APP_ENV": "production"
+      },
+      "android": {
+        "buildType": "app-bundle"
       }
     }
   },
