@@ -7,45 +7,20 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": {
-        "APP_ENV": "development"
-      },
+      "env": { "APP_ENV": "development" },
       "channel": "development",
-      "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
-      }
+      "android": { "buildType": "apk" }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "env": {
-        "APP_ENV": "preview"
-      },
-      "android": {
-        "buildType": "apk"
-      }
+      "env": { "APP_ENV": "preview" },
+      "android": { "buildType": "apk" }
     },
     "production": {
       "channel": "production",
-      "env": {
-        "APP_ENV": "production"
-      },
-      "android": {
-        "buildType": "app-bundle"
-      }
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "appleId": "$APPLE_ID",
-        "ascAppId": "$ASC_APP_ID",
-        "appleTeamId": "$APPLE_TEAM_ID"
-      },
-      "android": {
-        "track": "internal"
-      }
+      "env": { "APP_ENV": "production" },
+      "android": { "buildType": "app-bundle" }
     }
   }
 }
