@@ -4,8 +4,14 @@
  * Career, 대운 Full (+ PDF export), Name Analysis generated inline.
  * Compatibility links to /compatibility screen.
  * Each report is gated behind its addon entitlement.
+ *
+ * Reports are permanently cached server-side (DB) by period:
+ *   - Career: annual (expires Jan 1 next year)
+ *   - 대운 Full: per 대운 period (expires on period end)
+ *   - Compatibility / Name Analysis: monthly (expires on next month 1st)
+ * Once generated, reports are auto-loaded on every visit — no regeneration button.
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -51,15 +57,14 @@ const sStyles = StyleSheet.create({
 
 function ReportResult({
   report,
-  onReset,
   showPdfExport,
 }: {
   report: AddonReport;
-  onReset: () => void;
   showPdfExport?: boolean;
 }) {
   const { t } = useTranslation('common');
   const [exporting, setExporting] = useState(false);
+  console.log('[RENDER_DEBUG] parsed:', JSON.stringify(report).slice(0, 300));
 
   async function handleExportPdf() {
     setExporting(true);
@@ -116,8 +121,8 @@ function ReportResult({
         <SectionCard key={i} section={s} index={i} />
       ))}
 
-      <View style={rStyles.actions}>
-        {showPdfExport && (
+      {showPdfExport && (
+        <View style={rStyles.actions}>
           <TouchableOpacity
             style={[rStyles.pdfBtn, exporting && rStyles.btnDisabled]}
             onPress={handleExportPdf}
@@ -129,11 +134,8 @@ function ReportResult({
               <Text style={rStyles.pdfBtnText}>{t('reports.exportPdf')}</Text>
             )}
           </TouchableOpacity>
-        )}
-        <TouchableOpacity style={rStyles.resetBtn} onPress={onReset}>
-          <Text style={rStyles.resetText}>{t('reports.generateNew')}</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      )}
     </>
   );
 }
@@ -142,7 +144,7 @@ const rStyles = StyleSheet.create({
   header: { marginBottom: 16 },
   title: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 8 },
   overview: { fontSize: 14, color: '#b8a9d9', lineHeight: 22 },
-  actions: { marginTop: 8, gap: 12 },
+  actions: { marginTop: 8 },
   pdfBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -153,8 +155,6 @@ const rStyles = StyleSheet.create({
   },
   pdfBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
   btnDisabled: { opacity: 0.6 },
-  resetBtn: { alignItems: 'center', paddingVertical: 12 },
-  resetText: { color: '#7c3aed', fontWeight: '600', fontSize: 13 },
 });
 
 // ── Report card wrapper ───────────────────────────────────────────────────────
@@ -214,9 +214,38 @@ const cardStyles = StyleSheet.create({
   unlockText: { color: '#d8b4fe', fontWeight: '700', fontSize: 14 },
 });
 
-// ── Generate button ───────────────────────────────────────────────────────────
+// ── Inline loading / error states ─────────────────────────────────────────────
 
-function GenerateButton({ onPress, loading }: { onPress: () => void; loading: boolean }) {
+function ReportLoading() {
+  return (
+    <View style={inlineStyles.center}>
+      <ActivityIndicator color="#a78bfa" />
+    </View>
+  );
+}
+
+function ReportError({ error, onRetry }: { error: string; onRetry: () => void }) {
+  const { t } = useTranslation('common');
+  return (
+    <View style={inlineStyles.center}>
+      <Text style={inlineStyles.errorText}>{error}</Text>
+      <TouchableOpacity style={inlineStyles.retryBtn} onPress={onRetry}>
+        <Text style={inlineStyles.retryText}>{t('retry')}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const inlineStyles = StyleSheet.create({
+  center: { alignItems: 'center', paddingVertical: 16 },
+  errorText: { color: '#f87171', fontSize: 13, marginBottom: 10, textAlign: 'center' },
+  retryBtn: { paddingHorizontal: 20, paddingVertical: 8, backgroundColor: '#4c1d95', borderRadius: 8 },
+  retryText: { color: '#d8b4fe', fontWeight: '600', fontSize: 13 },
+});
+
+// ── Name analysis generate button (first-time only, needs name input) ─────────
+
+function NameGenerateButton({ onPress, loading }: { onPress: () => void; loading: boolean }) {
   const { t } = useTranslation('common');
   return (
     <TouchableOpacity
@@ -246,12 +275,26 @@ export default function ReportsScreen() {
   const { addons } = useEntitlementStore();
   const { chart } = useSajuStore();
 
-  // Each report type gets its own hook instance via a wrapper
   const career      = useAddonReport();
   const daewoonFull = useAddonReport();
   const nameReport  = useAddonReport();
 
   const [nameInput, setNameInput] = useState('');
+
+  // Auto-generate career + daewoon reports on mount (server returns cache if available)
+  useEffect(() => {
+    if (!chart) return;
+    if (addons.careerWealth && !career.report && !career.loading) {
+      career.generate({ reportType: 'career' });
+    }
+  }, [chart, addons.careerWealth]);
+
+  useEffect(() => {
+    if (!chart) return;
+    if (addons.daewoonPdf && !daewoonFull.report && !daewoonFull.loading) {
+      daewoonFull.generate({ reportType: 'daewoon_full' });
+    }
+  }, [chart, addons.daewoonPdf]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -294,21 +337,15 @@ export default function ReportsScreen() {
         unlockPrice="$4.99"
         isUnlocked={addons.careerWealth}
       >
-        {career.report ? (
-          <ReportResult
-            report={career.report}
-            onReset={career.reset}
+        {career.loading && <ReportLoading />}
+        {!career.loading && career.error && (
+          <ReportError
+            error={career.error}
+            onRetry={() => career.generate({ reportType: 'career' })}
           />
-        ) : (
-          <>
-            {career.error && (
-              <Text style={styles.errorText}>{career.error}</Text>
-            )}
-            <GenerateButton
-              onPress={() => career.generate({ reportType: 'career' })}
-              loading={career.loading}
-            />
-          </>
+        )}
+        {!career.loading && career.report && (
+          <ReportResult report={career.report} />
         )}
       </ReportCard>
 
@@ -321,22 +358,15 @@ export default function ReportsScreen() {
         unlockPrice="$6.99"
         isUnlocked={addons.daewoonPdf}
       >
-        {daewoonFull.report ? (
-          <ReportResult
-            report={daewoonFull.report}
-            onReset={daewoonFull.reset}
-            showPdfExport
+        {daewoonFull.loading && <ReportLoading />}
+        {!daewoonFull.loading && daewoonFull.error && (
+          <ReportError
+            error={daewoonFull.error}
+            onRetry={() => daewoonFull.generate({ reportType: 'daewoon_full' })}
           />
-        ) : (
-          <>
-            {daewoonFull.error && (
-              <Text style={styles.errorText}>{daewoonFull.error}</Text>
-            )}
-            <GenerateButton
-              onPress={() => daewoonFull.generate({ reportType: 'daewoon_full' })}
-              loading={daewoonFull.loading}
-            />
-          </>
+        )}
+        {!daewoonFull.loading && daewoonFull.report && (
+          <ReportResult report={daewoonFull.report} showPdfExport />
         )}
       </ReportCard>
 
@@ -349,12 +379,21 @@ export default function ReportsScreen() {
         unlockPrice="$9.99"
         isUnlocked={addons.nameAnalysis}
       >
-        {nameReport.report ? (
-          <ReportResult
-            report={nameReport.report}
-            onReset={() => { nameReport.reset(); setNameInput(''); }}
+        {nameReport.loading && <ReportLoading />}
+        {!nameReport.loading && nameReport.error && (
+          <ReportError
+            error={nameReport.error}
+            onRetry={() => {
+              if (nameInput.trim()) {
+                nameReport.generate({ reportType: 'name_analysis', name: nameInput.trim() });
+              }
+            }}
           />
-        ) : (
+        )}
+        {!nameReport.loading && nameReport.report && (
+          <ReportResult report={nameReport.report} />
+        )}
+        {!nameReport.loading && !nameReport.report && !nameReport.error && (
           <>
             <TextInput
               style={styles.nameInput}
@@ -363,10 +402,7 @@ export default function ReportsScreen() {
               placeholder={t('reports.namePlaceholder')}
               placeholderTextColor="#5b4d7e"
             />
-            {nameReport.error && (
-              <Text style={styles.errorText}>{nameReport.error}</Text>
-            )}
-            <GenerateButton
+            <NameGenerateButton
               onPress={() => {
                 if (!nameInput.trim()) return;
                 nameReport.generate({ reportType: 'name_analysis', name: nameInput.trim() });
@@ -391,7 +427,6 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, color: '#9d8fbe', marginBottom: 28 },
   noChart: { backgroundColor: '#2d1854', borderRadius: 12, padding: 20, marginBottom: 20 },
   noChartText: { color: '#9d8fbe', textAlign: 'center', fontSize: 14 },
-  errorText: { color: '#f87171', fontSize: 13, marginBottom: 10, textAlign: 'center' },
   nameInput: {
     backgroundColor: '#1a0a2e',
     borderRadius: 10,

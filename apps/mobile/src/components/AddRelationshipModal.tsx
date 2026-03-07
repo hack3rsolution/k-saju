@@ -10,17 +10,20 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { AddRelationshipInput, RelationshipType } from '../types/relationship';
 
 // ── Option sets ───────────────────────────────────────────────────────────────
 
-const REL_TYPES: { value: RelationshipType; label: string; icon: string }[] = [
-  { value: 'romantic',  label: '연인',  icon: '💞' },
-  { value: 'friend',    label: '친구',    icon: '🤝' },
-  { value: 'family',    label: '가족',    icon: '👨‍👩‍👧' },
-  { value: 'colleague', label: '동료', icon: '💼' },
-  { value: 'other',     label: '기타',     icon: '⭐' },
-];
+const REL_TYPE_ICONS: Record<RelationshipType, string> = {
+  romantic:  '💞',
+  friend:    '🤝',
+  family:    '👨‍👩‍👧',
+  colleague: '💼',
+  other:     '⭐',
+};
+
+const REL_TYPE_KEYS: RelationshipType[] = ['romantic', 'friend', 'family', 'colleague', 'other'];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -36,6 +39,7 @@ interface AddRelationshipModalProps {
 export function AddRelationshipModal({
   visible, loading, onClose, onSubmit,
 }: AddRelationshipModalProps) {
+  const { t } = useTranslation('common');
   const [name,   setName]   = useState('');
   const [year,   setYear]   = useState('');
   const [month,  setMonth]  = useState('');
@@ -57,14 +61,14 @@ export function AddRelationshipModal({
     const d = parseInt(day, 10);
 
     const maxBirthYear = new Date().getFullYear() - 16;
-    if (!name.trim())                            return Alert.alert('이름을 입력하세요');
-    if (!y || y < 1900 || y > maxBirthYear) return Alert.alert(`올바른 출생 연도를 입력하세요 (1900–${maxBirthYear})`);
-    if (!m || m < 1 || m > 12)      return Alert.alert('올바른 출생 월을 입력하세요 (1–12)');
-    if (!d || d < 1 || d > 31)      return Alert.alert('올바른 출생 일을 입력하세요 (1–31)');
+    if (!name.trim())                           return Alert.alert(t('addRelationship.alertName'));
+    if (!y || y < 1900 || y > maxBirthYear)    return Alert.alert(t('addRelationship.alertYear', { max: maxBirthYear }));
+    if (!m || m < 1 || m > 12)                 return Alert.alert(t('addRelationship.alertMonth'));
+    if (!d || d < 1 || d > 31)                 return Alert.alert(t('addRelationship.alertDay'));
 
     const parsedHour = hour.trim() ? parseInt(hour, 10) : undefined;
     if (parsedHour != null && (isNaN(parsedHour) || parsedHour < 0 || parsedHour > 23)) {
-      return Alert.alert('태어난 시간은 0–23 사이여야 합니다');
+      return Alert.alert(t('addRelationship.alertHour'));
     }
 
     onSubmit({
@@ -85,13 +89,13 @@ export function AddRelationshipModal({
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.title}>인연 추가</Text>
+            <Text style={styles.title}>{t('addRelationship.title')}</Text>
 
             {/* Name */}
-            <Text style={styles.label}>이름</Text>
+            <Text style={styles.label}>{t('addRelationship.nameLabel')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="파트너, 친구 등"
+              placeholder={t('addRelationship.namePlaceholder')}
               placeholderTextColor="#5b4d7e"
               value={name}
               onChangeText={setName}
@@ -99,11 +103,11 @@ export function AddRelationshipModal({
             />
 
             {/* Birth date */}
-            <Text style={styles.label}>생년월일</Text>
+            <Text style={styles.label}>{t('myInfo.birthDate')}</Text>
             <View style={styles.row}>
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="년"
+                placeholder={t('onboarding:yearPlaceholder', 'YYYY')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={year}
@@ -112,7 +116,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="월"
+                placeholder={t('onboarding:monthPlaceholder', 'MM')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={month}
@@ -121,7 +125,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="일"
+                placeholder={t('onboarding:dayPlaceholder', 'DD')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={day}
@@ -131,10 +135,13 @@ export function AddRelationshipModal({
             </View>
 
             {/* Birth hour (optional) */}
-            <Text style={styles.label}>태어난 시간 <Text style={styles.optional}>(선택, 0–23)</Text></Text>
+            <Text style={styles.label}>
+              {t('myInfo.birthTime')}{' '}
+              <Text style={styles.optional}>{t('addRelationship.birthHourOptional')}</Text>
+            </Text>
             <TextInput
               style={styles.input}
-              placeholder="예: 오후 2시 = 14"
+              placeholder={t('addRelationship.birthHourPlaceholder')}
               placeholderTextColor="#5b4d7e"
               keyboardType="number-pad"
               value={hour}
@@ -143,7 +150,7 @@ export function AddRelationshipModal({
             />
 
             {/* Gender */}
-            <Text style={styles.label}>성별</Text>
+            <Text style={styles.label}>{t('myInfo.gender')}</Text>
             <View style={styles.row}>
               {(['M', 'F'] as const).map((g) => (
                 <TouchableOpacity
@@ -152,24 +159,24 @@ export function AddRelationshipModal({
                   onPress={() => setGender(g)}
                 >
                   <Text style={[styles.chipText, gender === g && styles.chipTextActive]}>
-                    {g === 'M' ? '♂ 남성' : '♀ 여성'}
+                    {g === 'M' ? `♂ ${t('myInfo.male')}` : `♀ ${t('myInfo.female')}`}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
             {/* Relationship type */}
-            <Text style={styles.label}>관계 유형</Text>
+            <Text style={styles.label}>{t('addRelationship.relTypeLabel')}</Text>
             <View style={styles.typeGrid}>
-              {REL_TYPES.map((t) => (
+              {REL_TYPE_KEYS.map((key) => (
                 <TouchableOpacity
-                  key={t.value}
-                  style={[styles.typeChip, relType === t.value && styles.typeChipActive]}
-                  onPress={() => setRelType(t.value)}
+                  key={key}
+                  style={[styles.typeChip, relType === key && styles.typeChipActive]}
+                  onPress={() => setRelType(key)}
                 >
-                  <Text style={styles.typeIcon}>{t.icon}</Text>
-                  <Text style={[styles.typeLabel, relType === t.value && styles.typeLabelActive]}>
-                    {t.label}
+                  <Text style={styles.typeIcon}>{REL_TYPE_ICONS[key]}</Text>
+                  <Text style={[styles.typeLabel, relType === key && styles.typeLabelActive]}>
+                    {t(`addRelationship.relTypes.${key}`)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -184,12 +191,12 @@ export function AddRelationshipModal({
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.submitText}>인연 추가</Text>
+                <Text style={styles.submitText}>{t('addRelationship.submit')}</Text>
               )}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
-              <Text style={styles.cancelText}>취소</Text>
+              <Text style={styles.cancelText}>{t('cancel')}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

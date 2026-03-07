@@ -7,7 +7,7 @@
  * - getAnalysis(): call the journal-analysis Edge Function (requires >= 5 events)
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useJournalStore } from '../store/journalStore';
 import { useSajuStore } from '../store/sajuStore';
@@ -139,32 +139,27 @@ export function useJournal() {
     const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
     try {
-      // Always fetch a fresh token — handles silent JWT refresh on expiry
-      const { data: { session: fresh } } = await supabase.auth.getSession();
-      const token = fresh?.access_token;
-      if (!token) { setError('세션이 만료되었습니다. 다시 로그인해 주세요.'); return null; }
+      const encodedBody = JSON.stringify({
+        events,
+        chart: {
+          yearPillar:     chart.pillars.year,
+          monthPillar:    chart.pillars.month,
+          dayPillar:      chart.pillars.day,
+          hourPillar:     chart.pillars.hour,
+          elementBalance: chart.elements,
+          dayStem:        chart.dayStem,
+        },
+        frame: frame ?? 'en',
+        userLanguage: language,
+      });
 
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/journal-analysis`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type':  'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            events,
-            chart: {
-              yearPillar:     chart.pillars.year,
-              monthPillar:    chart.pillars.month,
-              dayPillar:      chart.pillars.day,
-              hourPillar:     chart.pillars.hour,
-              elementBalance: chart.elements,
-              dayStem:        chart.dayStem,
-            },
-            frame: frame ?? 'en',
-            userLanguage: language,
-          }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 
@@ -178,7 +173,7 @@ export function useJournal() {
     } finally {
       setAnalysisLoading(false);
     }
-  }, [session, chart, frame, events]);
+  }, [session, chart, frame, events, language]);
 
   return {
     events,

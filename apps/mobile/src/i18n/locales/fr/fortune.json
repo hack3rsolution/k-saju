@@ -69,10 +69,22 @@
     "subtitle": "Quelle décision analyser ?",
     "analyzing": "Analyse en cours…",
     "categories": {
-      "business": { "label": "Affaires / Startup", "desc": "Lancer ou développer une entreprise" },
-      "investment": { "label": "Investissement / Finance", "desc": "Investir de l'argent ou des actifs" },
-      "romance": { "label": "Romance / Mariage", "desc": "Commencer une relation ou se marier" },
-      "relocation": { "label": "Déménagement / Voyage", "desc": "Déménager ou planifier un voyage" }
+      "business": {
+        "label": "Affaires / Startup",
+        "desc": "Lancer ou développer une entreprise"
+      },
+      "investment": {
+        "label": "Investissement / Finance",
+        "desc": "Investir de l'argent ou des actifs"
+      },
+      "romance": {
+        "label": "Romance / Mariage",
+        "desc": "Commencer une relation ou se marier"
+      },
+      "relocation": {
+        "label": "Déménagement / Voyage",
+        "desc": "Déménager ou planifier un voyage"
+      }
     },
     "resultTitle": "ANALYSE TEMPORELLE",
     "positiveFactors": "FACTEURS POSITIFS",
@@ -88,5 +100,59 @@
     "nextFreeToday": "Votre analyse gratuite se réinitialise demain — ou passez à l'accès illimité.",
     "upgradeCta": "Passer à Premium →",
     "analysisFailed": "L'analyse IA a échoué. Veuillez réessayer."
+  },
+  "readingLoading": "Lecture des étoiles…",
+  "feedback": {
+    "titlePositive": "👍 Ravi que ça ait aidé !",
+    "titleNegative": "👎 Nous sommes désolés",
+    "chooseReason": "Choisir une raison",
+    "accurate": "Précis",
+    "tooVague": "Trop vague",
+    "notMe": "Ne me correspond pas",
+    "reasons": {
+      "accurate": "Précis",
+      "want_more_depth": "Je veux plus de profondeur",
+      "new_perspective": "Nouvelle perspective",
+      "too_generic": "Trop générique",
+      "factually_wrong": "Factuellement incorrect",
+      "hard_to_understand": "Difficile à comprendre",
+      "customInput": "Écrire le mien",
+      "send": "Envoyer",
+      "customPlaceholder": "Partagez vos pensées…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "FORTUNE DU JOUR",
+    "weekly": "FORTUNE HEBDOMADAIRE",
+    "monthly": "FORTUNE MENSUELLE",
+    "annual": "FORTUNE ANNUELLE",
+    "daewoon": "CYCLE 大運"
+  },
+  "journal": {
+    "title": "Journal de Vie",
+    "subtitle": "Événements de Vie · 命運流",
+    "addEvent": "Ajouter un Événement de Vie",
+    "recordPlaceholder": "Enregistrez les moments clés de votre vie",
+    "noEvents": "Aucun événement enregistré",
+    "saveEvent": "Enregistrer",
+    "savedToast": "Événement enregistré",
+    "aiAnalysis": "Analyse de Motifs IA",
+    "aiAnalysisDesc": "Découvrez comment vos cycles de saju ont influencé vos événements de vie",
+    "emptyDesc": "Enregistrez les moments clés — changements de carrière, relations, santé — et découvrez des liens avec votre carte cosmique.",
+    "loading": "Chargement du journal…",
+    "lockedAnalysis": "🔒 Ajoutez {{count}} événement(s) de plus pour débloquer l'analyse de motifs IA"
+  },
+  "compatibility": {
+    "title": "Compatibilité",
+    "subtitle": "Compatibilité · 合婚 · Harmonie Élémentale",
+    "partnerBirthDate": "Date de Naissance du Partenaire",
+    "checkBtn": "Vérifier la Compatibilité",
+    "generateReport": "Générer le Rapport Complet",
+    "analyzeAnother": "Analyser une Autre Personne",
+    "fullReport": "Rapport IA Complet",
+    "partnerHint": "Entrez la date de naissance de votre partenaire pour voir votre score de compatibilité élémentale.",
+    "genderLabel": "Genre du Partenaire",
+    "seeWhy": "Voir pourquoi — Débloquer le rapport complet $4.99",
+    "fullReportDesc": "Analyse approfondie en 5 sections : harmonie élémentale, forces, tensions et prévision de relation."
   }
 }

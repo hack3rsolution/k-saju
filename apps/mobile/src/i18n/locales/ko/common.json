@@ -154,5 +154,52 @@
     "en": "서양식",
     "es": "라틴식",
     "in": "남아시아식"
+  },
+  "myInfo": {
+    "title": "내 정보",
+    "edit": "수정 →",
+    "birthDate": "생년월일",
+    "birthDateFmt": "{{year}}년 {{month}}월 {{day}}일 (양력)",
+    "birthTime": "태어난 시간",
+    "gender": "성별",
+    "dayStem": "일간(日主)",
+    "notEntered": "미입력",
+    "male": "남성",
+    "female": "여성",
+    "am": "오전",
+    "pm": "오후",
+    "hourSuffix": "시"
+  },
+  "notifUpdateError": "알림을 업데이트할 수 없습니다.",
+  "purchasesRestored": "구매 복원 완료",
+  "purchasesRestoredMsg": "구독이 복원되었습니다.",
+  "nothingToRestore": "복원할 항목 없음",
+  "nothingToRestoreMsg": "이 계정에 대한 이전 구매를 찾을 수 없습니다.",
+  "restoreFailed": "복원 실패",
+  "frameSaveError": "문화 프레임을 저장할 수 없습니다. 다시 시도해 주세요.",
+  "addRelationship": {
+    "title": "인연 추가",
+    "nameLabel": "이름",
+    "namePlaceholder": "파트너, 친구 등",
+    "birthHourOptional": "(선택, 0–23)",
+    "birthHourPlaceholder": "예: 오후 2시 = 14",
+    "relTypeLabel": "관계 유형",
+    "submit": "인연 추가",
+    "alertName": "이름을 입력하세요",
+    "alertYear": "올바른 출생 연도를 입력하세요 (1900–{{max}})",
+    "alertMonth": "올바른 출생 월을 입력하세요 (1–12)",
+    "alertDay": "올바른 출생 일을 입력하세요 (1–31)",
+    "alertHour": "태어난 시간은 0–23 사이여야 합니다",
+    "tapHint": "탭하여 분석하기 →",
+    "statusGood": "좋은 궁합",
+    "statusNeutral": "균형 잡힌",
+    "statusCaution": "주의 필요",
+    "relTypes": {
+      "romantic": "연인",
+      "friend": "친구",
+      "family": "가족",
+      "colleague": "동료",
+      "other": "기타"
+    }
   }
 }

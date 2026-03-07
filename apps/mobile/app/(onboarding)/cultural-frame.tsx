@@ -1,62 +1,22 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { T } from '../../src/theme/tokens';
 
-const FRAMES: {
-  id: CulturalFrame;
-  label: string;
-  region: string;
-  desc: string;
-  kanji: string;
-}[] = [
-  {
-    id: 'kr',
-    label: '사주팔자',
-    region: '🇰🇷 한국',
-    desc: '전통 고전: 운명, 가문, 인연',
-    kanji: '命',
-  },
-  {
-    id: 'cn',
-    label: '四柱推命 / BaZi',
-    region: '🇨🇳 중국',
-    desc: '정밀 예측, 사업 타이밍',
-    kanji: '八',
-  },
-  {
-    id: 'jp',
-    label: '四柱推命',
-    region: '🇯🇵 일본',
-    desc: '조화, 직장 적합성, 섬세한 성격',
-    kanji: '運',
-  },
-  {
-    id: 'en',
-    label: 'Cosmic Blueprint',
-    region: '🌍 서양',
-    desc: '성격 중심, 심리학적 해석 (MBTI 유사)',
-    kanji: '✦',
-  },
-  {
-    id: 'es',
-    label: 'Destino Cósmico',
-    region: '🌎 라틴',
-    desc: '별자리 기반, 관계와 열정 중심',
-    kanji: '★',
-  },
-  {
-    id: 'in',
-    label: 'Vedic Fusion',
-    region: '🇮🇳 남아시아',
-    desc: '조티시 어휘, 카르마와 다르마 중심',
-    kanji: 'ॐ',
-  },
+const FRAME_IDS: { id: CulturalFrame; kanji: string }[] = [
+  { id: 'kr', kanji: '命' },
+  { id: 'cn', kanji: '八' },
+  { id: 'jp', kanji: '運' },
+  { id: 'en', kanji: '✦' },
+  { id: 'es', kanji: '★' },
+  { id: 'in', kanji: 'ॐ' },
 ];
 
 export default function CulturalFrameScreen() {
+  const { t } = useTranslation(['common', 'onboarding']);
   const { setFrame } = useOnboardingStore();
   const [selected, setSelected] = useState<CulturalFrame | null>(null);
 
@@ -77,8 +37,8 @@ export default function CulturalFrameScreen() {
           />
         ))}
       </View>
-      <Text style={styles.step}>2단계 / 3</Text>
-      <Text style={styles.title}>나의 문화 프레임 선택</Text>
+      <Text style={styles.step}>{t('onboarding:step', { current: 2, total: 3 })}</Text>
+      <Text style={styles.title}>{t('onboarding:culturalFrame.title')}</Text>
 
       {/* ── Decorative line ── */}
       <View style={styles.titleDivider}>
@@ -87,11 +47,9 @@ export default function CulturalFrameScreen() {
         <View style={styles.titleDividerLine} />
       </View>
 
-      <Text style={styles.subtitle}>
-        같은 사주 데이터 — 당신의 문화적 맥락에 맞게
-      </Text>
+      <Text style={styles.subtitle}>{t('onboarding:culturalFrame.subtitle')}</Text>
 
-      {FRAMES.map((f) => {
+      {FRAME_IDS.map((f) => {
         const accent = T.frameAccent[f.id];
         const isSelected = selected === f.id;
         return (
@@ -114,7 +72,7 @@ export default function CulturalFrameScreen() {
 
             <View style={styles.cardInner}>
               <View style={styles.cardHeader}>
-                <Text style={styles.region}>{f.region}</Text>
+                <Text style={styles.region}>{t(`onboarding:culturalFrame.frames.${f.id}.region`)}</Text>
                 {isSelected && (
                   <View style={[styles.checkBadge, { backgroundColor: accent }]}>
                     <Text style={styles.checkText}>✓</Text>
@@ -122,9 +80,9 @@ export default function CulturalFrameScreen() {
                 )}
               </View>
               <Text style={[styles.label, isSelected && { color: accent === T.frameAccent.en ? T.primary.light : '#fff' }]}>
-                {f.label}
+                {t(`onboarding:culturalFrame.frames.${f.id}.label`)}
               </Text>
-              <Text style={styles.desc}>{f.desc}</Text>
+              <Text style={styles.desc}>{t(`onboarding:culturalFrame.frames.${f.id}.desc`)}</Text>
             </View>
           </TouchableOpacity>
         );
@@ -135,7 +93,7 @@ export default function CulturalFrameScreen() {
         onPress={handleContinue}
         disabled={!selected}
       >
-        <Text style={styles.buttonText}>다음 →</Text>
+        <Text style={styles.buttonText}>{t('onboarding:culturalFrame.continue')} →</Text>
       </TouchableOpacity>
     </ScrollView>
   );

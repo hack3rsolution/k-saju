@@ -18,6 +18,7 @@ import {
   Animated,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useJournal } from '../../src/hooks/useJournal';
 import { JournalEventCard } from '../../src/components/JournalEventCard';
@@ -44,6 +45,7 @@ function currentYearPillar(): string {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function JournalScreen() {
+  const { t } = useTranslation('fortune');
   const { daewoon, birthData } = useSajuStore();
   const { isPremium } = useEntitlementStore();
   const effectivePremium = DEV_BYPASS || isPremium;
@@ -128,8 +130,8 @@ export default function JournalScreen() {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
         {/* Header */}
-        <Text style={styles.title}>인생 일지</Text>
-        <Text style={styles.subtitle}>인생 이벤트 · 命運流</Text>
+        <Text style={styles.title}>{t('journal.title')}</Text>
+        <Text style={styles.subtitle}>{t('journal.subtitle')}</Text>
 
         {/* 대운/세운 overlay banner */}
         <View style={styles.cycleBanner}>
@@ -160,10 +162,8 @@ export default function JournalScreen() {
           >
             <Text style={styles.analysisBannerIcon}>🔮</Text>
             <View style={styles.analysisBannerText}>
-              <Text style={styles.analysisBannerTitle}>AI 패턴 분석</Text>
-              <Text style={styles.analysisBannerDesc}>
-                사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요
-              </Text>
+              <Text style={styles.analysisBannerTitle}>{t('journal.aiAnalysis')}</Text>
+              <Text style={styles.analysisBannerDesc}>{t('journal.aiAnalysisDesc')}</Text>
             </View>
             {effectivePremium ? (
               <Ionicons name="chevron-forward" size={18} color="#a78bfa" />
@@ -179,7 +179,7 @@ export default function JournalScreen() {
         {events.length > 0 && events.length < MIN_EVENTS_FOR_ANALYSIS && (
           <View style={styles.lockedAnalysis}>
             <Text style={styles.lockedAnalysisText}>
-              🔒 AI 패턴 분석을 열려면 이벤트 {MIN_EVENTS_FOR_ANALYSIS - events.length}개를 더 추가하세요
+              {t('journal.lockedAnalysis', { count: MIN_EVENTS_FOR_ANALYSIS - events.length })}
             </Text>
           </View>
         )}
@@ -195,10 +195,8 @@ export default function JournalScreen() {
         {!loading && events.length === 0 && (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyIcon}>📖</Text>
-            <Text style={styles.emptyTitle}>아직 기록된 이벤트가 없습니다</Text>
-            <Text style={styles.emptyDesc}>
-              커리어 변화, 인간관계, 건강 등 인생의 주요 순간을 기록하고 사주 패턴과의 연결을 찾아보세요.
-            </Text>
+            <Text style={styles.emptyTitle}>{t('journal.noEvents')}</Text>
+            <Text style={styles.emptyDesc}>{t('journal.emptyDesc')}</Text>
           </View>
         )}
 
@@ -206,7 +204,7 @@ export default function JournalScreen() {
         {loading && events.length === 0 && (
           <View style={styles.loadingBox}>
             <ActivityIndicator color="#a78bfa" size="large" />
-            <Text style={styles.loadingText}>인생 일지 로딩 중…</Text>
+            <Text style={styles.loadingText}>{t('journal.loading')}</Text>
           </View>
         )}
 
@@ -254,7 +252,7 @@ export default function JournalScreen() {
 
       {/* Save success toast */}
       <Animated.View style={[styles.toast, { opacity: toastOpacity }]} pointerEvents="none">
-        <Text style={styles.toastText}>✅ 이벤트가 저장되었습니다</Text>
+        <Text style={styles.toastText}>✅ {t('journal.savedToast')}</Text>
       </Animated.View>
     </View>
   );

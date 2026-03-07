@@ -25,12 +25,36 @@
     "title": "나에게 맞는 시각 선택",
     "subtitle": "같은 사주 데이터를 문화적 맥락에 맞게 해석합니다.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 한국", "desc": "전통 한국 명리학" },
-      "cn": { "label": "四柱推命", "region": "🇨🇳 중국", "desc": "BaZi 전통 체계" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 일본", "desc": "일본식 운명 분석" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 서양", "desc": "성격 · 인생 경로 중심" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 라틴", "desc": "별자리 스타일 해석" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 남아시아", "desc": "조티시 영감 관점" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 한국",
+        "desc": "전통 한국 명리학"
+      },
+      "cn": {
+        "label": "四柱推命",
+        "region": "🇨🇳 중국",
+        "desc": "BaZi 전통 체계"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 일본",
+        "desc": "일본식 운명 분석"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 서양",
+        "desc": "성격 · 인생 경로 중심"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 라틴",
+        "desc": "별자리 스타일 해석"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 남아시아",
+        "desc": "조티시 영감 관점"
+      }
     },
     "continue": "선택 완료"
   },
@@ -40,6 +64,19 @@
     "unlockTitle": "전체 분석 잠금 해제",
     "unlockDesc": "일운, 궁합, 연운, 대운 분석을 프리미엄으로 확인하세요.",
     "exploreFree": "무료 기능 탐색하기",
-    "viewPremium": "프리미엄 요금제 보기"
+    "viewPremium": "프리미엄 요금제 보기",
+    "frameTitles": {
+      "kr": "나의 사주팔자",
+      "cn": "나의 사주추명 (四柱推命)",
+      "jp": "나의 사주추명",
+      "en": "나의 코스믹 블루프린트",
+      "es": "나의 데스티노 코스미코",
+      "in": "나의 베딕 퓨전"
+    },
+    "unknown": "미상",
+    "hourUnknown": "(시간 미상)",
+    "pillarsSection": "사주 (四柱)",
+    "dayStemHint": "일간 (self) · {{stem}} · {{element}}",
+    "elementSection": "오행 균형 (五行)"
   }
 }

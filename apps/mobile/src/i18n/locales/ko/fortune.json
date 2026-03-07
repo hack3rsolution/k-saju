@@ -52,7 +52,10 @@
     "saveEvent": "저장",
     "savedToast": "이벤트가 저장되었습니다",
     "aiAnalysis": "AI 패턴 분석",
-    "aiAnalysisDesc": "사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요"
+    "aiAnalysisDesc": "사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요",
+    "emptyDesc": "커리어 변화, 인간관계, 건강 등 인생의 주요 순간을 기록하고 사주 패턴과의 연결을 찾아보세요.",
+    "loading": "인생 일지 로딩 중…",
+    "lockedAnalysis": "🔒 AI 패턴 분석을 열려면 이벤트 {{count}}개를 더 추가하세요"
   },
   "compatibility": {
     "title": "궁합",
@@ -61,7 +64,11 @@
     "checkBtn": "궁합 확인하기",
     "generateReport": "전체 리포트 생성",
     "analyzeAnother": "다른 사람 분석하기",
-    "fullReport": "Full AI 리포트"
+    "fullReport": "Full AI 리포트",
+    "partnerHint": "파트너의 생년월일을 입력하면 오행 궁합 점수를 확인할 수 있습니다.",
+    "genderLabel": "파트너 성별",
+    "seeWhy": "이유 보기 — 전체 리포트 잠금 해제 $4.99",
+    "fullReportDesc": "오행 조화, 강점, 긴장 관계, 관계 예측 등 5개 섹션으로 구성된 심층 분석 리포트입니다."
   },
   "myChart": "내 사주",
   "wasHelpful": "도움이 됐나요?",
@@ -91,7 +98,18 @@
     "chooseReason": "이유를 선택해주세요",
     "accurate": "정확해요",
     "tooVague": "너무 모호해요",
-    "notMe": "나와 맞지 않아요"
+    "notMe": "나와 맞지 않아요",
+    "reasons": {
+      "accurate": "정확해요",
+      "want_more_depth": "더 깊이 알고 싶어요",
+      "new_perspective": "새로운 시각이에요",
+      "too_generic": "너무 일반적이에요",
+      "factually_wrong": "사실과 달라요",
+      "hard_to_understand": "이해하기 어려워요",
+      "customInput": "직접 입력",
+      "send": "전송",
+      "customPlaceholder": "의견을 입력해주세요"
+    }
   },
   "typeLabelCard": {
     "daily": "일간 운세",
@@ -105,10 +123,22 @@
     "subtitle": "어떤 결정을 분석할까요?",
     "analyzing": "분석 중…",
     "categories": {
-      "business": { "label": "사업 / 창업", "desc": "사업을 시작하거나 확장" },
-      "investment": { "label": "투자 / 금전", "desc": "자산을 투자" },
-      "romance": { "label": "연애 / 결혼", "desc": "연애를 시작하거나 결혼" },
-      "relocation": { "label": "이사 / 여행", "desc": "이사하거나 여행 계획" }
+      "business": {
+        "label": "사업 / 창업",
+        "desc": "사업을 시작하거나 확장"
+      },
+      "investment": {
+        "label": "투자 / 금전",
+        "desc": "자산을 투자"
+      },
+      "romance": {
+        "label": "연애 / 결혼",
+        "desc": "연애를 시작하거나 결혼"
+      },
+      "relocation": {
+        "label": "이사 / 여행",
+        "desc": "이사하거나 여행 계획"
+      }
     },
     "resultTitle": "타이밍 분석",
     "positiveFactors": "긍정적 요소",

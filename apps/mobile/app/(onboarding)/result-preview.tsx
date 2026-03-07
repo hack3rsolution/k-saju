@@ -13,6 +13,7 @@ import {
   type DaewoonPeriod,
   type FiveElement,
 } from '@k-saju/saju-engine';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../src/lib/supabase';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useSajuStore } from '../../src/store/sajuStore';
@@ -22,16 +23,6 @@ import {
   scheduleDailyNotification,
   registerPushToken,
 } from '../../src/lib/notifications';
-
-// ── Frame titles ─────────────────────────────────────────────────────────────
-const FRAME_TITLE: Record<string, string> = {
-  kr: '나의 사주팔자',
-  cn: '나의 사주추명 (四柱推命)',
-  jp: '나의 사주추명',
-  en: '나의 코스믹 블루프린트',
-  es: '나의 데스티노 코스미코',
-  in: '나의 베딕 퓨전',
-};
 
 // ── Element colour palette ──────────────────────────────────────────────────
 const ELEMENT_COLOR: Record<FiveElement, string> = {
@@ -50,17 +41,21 @@ function PillarCard({
   title,
   pillar,
   blurred = false,
+  unknownLabel,
+  hourUnknownLabel,
 }: {
   title: string;
   pillar: { stem: string; branch: string } | null;
   blurred?: boolean;
+  unknownLabel?: string;
+  hourUnknownLabel?: string;
 }) {
   if (!pillar) {
     return (
       <View style={pStyles.card}>
         <Text style={pStyles.title}>{title}</Text>
-        <Text style={pStyles.na}>미상</Text>
-        <Text style={pStyles.naHint}>시간 미상</Text>
+        <Text style={pStyles.na}>{unknownLabel ?? '?'}</Text>
+        <Text style={pStyles.naHint}>{hourUnknownLabel ?? ''}</Text>
       </View>
     );
   }
@@ -140,6 +135,7 @@ const eStyles = StyleSheet.create({
 
 // ── Main screen ──────────────────────────────────────────────────────────────
 export default function ResultPreviewScreen() {
+  const { t } = useTranslation(['common', 'onboarding']);
   const { birthYear, birthMonth, birthDay, birthHour, gender, frame } = useOnboardingStore();
   const { setChart } = useSajuStore();
   const { setOnboardingCompleted } = useAuthStore();
@@ -225,20 +221,25 @@ export default function ResultPreviewScreen() {
     router.replace('/(tabs)/home');
   }
 
+  const frameTitle = t(`onboarding:resultPreview.frameTitles.${frame ?? 'en'}`, t('onboarding:resultPreview.frameTitles.en'));
+  const amLabel = t('common:myInfo.am');
+  const pmLabel = t('common:myInfo.pm');
+  const hourSuffix = t('common:myInfo.hourSuffix');
+  const hourStr = birthHour != null
+    ? ` · ${birthHour < 12 ? amLabel : pmLabel} ${birthHour === 0 ? 12 : birthHour > 12 ? birthHour - 12 : birthHour}${hourSuffix}`
+    : ` ${t('onboarding:resultPreview.hourUnknown')}`;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>3단계 / 3</Text>
-      <Text style={styles.title}>{FRAME_TITLE[frame ?? 'en'] ?? '나의 사주팔자'}</Text>
+      <Text style={styles.step}>{t('onboarding:step', { current: 3, total: 3 })}</Text>
+      <Text style={styles.title}>{frameTitle}</Text>
       <Text style={styles.subtitle}>
-        생년월일: {birthYear}년 {birthMonth}월 {birthDay}일
-        {birthHour != null
-          ? ` · 태어난 시간: ${birthHour < 12 ? '오전' : '오후'} ${birthHour === 0 ? 12 : birthHour > 12 ? birthHour - 12 : birthHour}시`
-          : ' (시간 미상)'}
+        {birthYear}-{birthMonth}-{birthDay}{hourStr}
       </Text>
 
       {/* Pillar grid */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>사주 (四柱)</Text>
+        <Text style={styles.sectionTitle}>{t('onboarding:resultPreview.pillarsSection')}</Text>
         <View style={styles.pillarsRow}>
           <PillarCard title="年" pillar={pillars.year} />
           <PillarCard title="月" pillar={pillars.month} />
@@ -247,25 +248,25 @@ export default function ResultPreviewScreen() {
             title="時"
             pillar={pillars.hour}
             blurred={pillars.hour !== null}
+            unknownLabel={t('onboarding:resultPreview.unknown')}
+            hourUnknownLabel={t('onboarding:resultPreview.hourUnknown')}
           />
         </View>
         <Text style={styles.dayStemHint}>
-          일간 (self) · {chart.dayStem} · {chart.dayElement}
+          {t('onboarding:resultPreview.dayStemHint', { stem: chart.dayStem, element: chart.dayElement })}
         </Text>
       </View>
 
       {/* Element balance */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>오행 균형 (五行)</Text>
+        <Text style={styles.sectionTitle}>{t('onboarding:resultPreview.elementSection')}</Text>
         <ElementBar balance={elements} />
       </View>
 
       {/* Paywall teaser */}
       <View style={styles.teaser}>
-        <Text style={styles.teaserTitle}>🔓 전체 리딩 잠금 해제</Text>
-        <Text style={styles.teaserDesc}>
-          일운 · 궁합 · 연간 운세 · 대운 리포트 — 프리미엄으로 이용 가능
-        </Text>
+        <Text style={styles.teaserTitle}>🔓 {t('onboarding:resultPreview.unlockTitle')}</Text>
+        <Text style={styles.teaserDesc}>{t('onboarding:resultPreview.unlockDesc')}</Text>
       </View>
 
       {/* CTAs */}
@@ -277,7 +278,7 @@ export default function ResultPreviewScreen() {
         {saving ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.btnText}>무료 기능 둘러보기 →</Text>
+          <Text style={styles.btnText}>{t('onboarding:resultPreview.exploreFree')} →</Text>
         )}
       </TouchableOpacity>
 
@@ -285,7 +286,7 @@ export default function ResultPreviewScreen() {
         style={styles.secondaryBtn}
         onPress={() => router.push('/paywall')}
       >
-        <Text style={styles.secondaryBtnText}>프리미엄 플랜 보기</Text>
+        <Text style={styles.secondaryBtnText}>{t('onboarding:resultPreview.viewPremium')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

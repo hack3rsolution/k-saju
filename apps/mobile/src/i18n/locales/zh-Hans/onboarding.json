@@ -25,14 +25,40 @@
     "title": "选择您的视角",
     "subtitle": "相同的命理数据，不同的文化诠释。",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 韩国", "desc": "韩国传统四柱命理" },
-      "cn": { "label": "四柱推命", "region": "🇨🇳 中国", "desc": "BaZi 经典体系" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 日本", "desc": "日本命运解读" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 西方", "desc": "性格与人生道路" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 拉丁", "desc": "星座风格解读" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 南亚", "desc": "吠陀启发视角" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 韩国",
+        "desc": "韩国传统四柱命理"
+      },
+      "cn": {
+        "label": "四柱推命",
+        "region": "🇨🇳 中国",
+        "desc": "BaZi 经典体系"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 日本",
+        "desc": "日本命运解读"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 西方",
+        "desc": "性格与人生道路"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 拉丁",
+        "desc": "星座风格解读"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 南亚",
+        "desc": "吠陀启发视角"
+      }
     },
-    "continue": "选择完成"
+    "continue": "选择完成",
+    "screenTitle": "选择我的文化框架",
+    "screenSubtitle": "相同的四柱数据 — 以您的文化背景呈现"
   },
   "resultPreview": {
     "title": "命盘预览",
@@ -40,6 +66,19 @@
     "unlockTitle": "解锁完整分析",
     "unlockDesc": "通过高级版查看日运、合婚、年运和大运分析。",
     "exploreFree": "探索免费功能",
-    "viewPremium": "查看高级方案"
+    "viewPremium": "查看高级方案",
+    "frameTitles": {
+      "kr": "我的四柱八字",
+      "cn": "我的四柱推命",
+      "jp": "我的四柱推命",
+      "en": "我的宇宙蓝图",
+      "es": "我的命运蓝图",
+      "in": "我的吠陀融合"
+    },
+    "unknown": "未知",
+    "hourUnknown": "（时辰未知）",
+    "pillarsSection": "四柱",
+    "dayStemHint": "日干 · {{stem}} · {{element}}",
+    "elementSection": "五行平衡"
   }
 }

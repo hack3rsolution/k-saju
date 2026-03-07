@@ -5,7 +5,7 @@
  * dominant 오행 (Five Element) and Day Master (일간).
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
@@ -61,20 +61,15 @@ export function useContentRecommendation(): ContentRecommendationState {
         userLanguage:   language,
       };
 
-      // Always fetch a fresh token — handles silent JWT refresh on expiry
-      const { data: { session: fresh } } = await supabase.auth.getSession();
-      const token = fresh?.access_token;
-      if (!token) { setError('Session expired. Please log in again.'); return; }
+      const encodedBody = JSON.stringify(body);
 
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/content-recommendation`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 

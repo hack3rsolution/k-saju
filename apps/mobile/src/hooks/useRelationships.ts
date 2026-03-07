@@ -7,7 +7,7 @@
  * - getFortune(): call the relationship-fortune Edge Function
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useRelationshipStore } from '../store/relationshipStore';
 import { useSajuStore } from '../store/sajuStore';
@@ -143,43 +143,38 @@ export function useRelationships() {
       const refMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
-      // Always fetch a fresh token — handles silent JWT refresh on expiry
-      const { data: { session: fresh } } = await supabase.auth.getSession();
-      const token = fresh?.access_token;
-      if (!token) { setFortuneError('Session expired. Please log in again.'); setFortuneLoading(false); return null; }
+      const encodedBody = JSON.stringify({
+        relationshipId:  rel.id,
+        ownerChart: {
+          yearPillar:     chart.pillars.year,
+          monthPillar:    chart.pillars.month,
+          dayPillar:      chart.pillars.day,
+          hourPillar:     chart.pillars.hour,
+          elementBalance: chart.elements,
+          dayStem:        chart.dayStem,
+        },
+        partnerBirth: {
+          year:   rel.birthYear,
+          month:  rel.birthMonth,
+          day:    rel.birthDay,
+          hour:   rel.birthHour,
+          gender: rel.gender,
+        },
+        partnerName:      rel.name,
+        relationshipType: rel.relationshipType,
+        frame:            frame ?? 'en',
+        refMonth,
+        userLanguage:     language,
+      });
 
       try {
+        const accessToken = await getFreshToken();
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/relationship-fortune`,
           {
             method: 'POST',
-            headers: {
-              'Content-Type':  'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              relationshipId:  rel.id,
-              ownerChart: {
-                yearPillar:     chart.pillars.year,
-                monthPillar:    chart.pillars.month,
-                dayPillar:      chart.pillars.day,
-                hourPillar:     chart.pillars.hour,
-                elementBalance: chart.elements,
-                dayStem:        chart.dayStem,
-              },
-              partnerBirth: {
-                year:   rel.birthYear,
-                month:  rel.birthMonth,
-                day:    rel.birthDay,
-                hour:   rel.birthHour,
-                gender: rel.gender,
-              },
-              partnerName:      rel.name,
-              relationshipType: rel.relationshipType,
-              frame:            frame ?? 'en',
-              refMonth,
-              userLanguage:     language,
-            }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+            body: encodedBody,
           },
         );
 

@@ -6,7 +6,7 @@
  * Premium users limited to 20 messages/day (enforced server-side).
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
@@ -61,34 +61,29 @@ export function useFortunChat(
     try {
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
-      // Always fetch a fresh token — handles silent JWT refresh on expiry
-      const { data: { session: fresh } } = await supabase.auth.getSession();
-      const token = fresh?.access_token;
-      if (!token) { setError('Session expired. Please log in again.'); return; }
+      const encodedBody = JSON.stringify({
+        fortuneId,
+        messages: nextMessages,
+        frame: frame ?? 'en',
+        chart: {
+          yearPillar:     chart.pillars.year,
+          monthPillar:    chart.pillars.month,
+          dayPillar:      chart.pillars.day,
+          hourPillar:     chart.pillars.hour,
+          elementBalance: chart.elements,
+          dayStem:        chart.dayStem,
+        },
+        todayReading,
+        userLanguage: language,
+      });
 
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/fortune-chat`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            fortuneId,
-            messages: nextMessages,
-            frame: frame ?? 'en',
-            chart: {
-              yearPillar:     chart.pillars.year,
-              monthPillar:    chart.pillars.month,
-              dayPillar:      chart.pillars.day,
-              hourPillar:     chart.pillars.hour,
-              elementBalance: chart.elements,
-              dayStem:        chart.dayStem,
-            },
-            todayReading,
-            userLanguage: language,
-          }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 

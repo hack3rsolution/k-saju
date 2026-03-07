@@ -41,5 +41,337 @@
     "travel": "✈️ سفر"
   },
   "share": "مشاركة",
-  "generatingRecommendations": "جارٍ إنشاء التوصيات…"
+  "generatingRecommendations": "جارٍ إنشاء التوصيات…",
+  "elementInfo": {
+    "Wood": {
+      "season": "الربيع",
+      "desc": "الخشب يجسّد طاقة الربيع — النمو والخلق والبدايات الجديدة. قوة تقدمية تمتد نحو الأعلى.",
+      "strong": "الخشب القوي يمنح المبادرة والإبداع والقيادة، لكنه قد يسبب العناد والاحتكاك مع الآخرين.",
+      "weak": "الخشب الضعيف يقلل من المرونة والتخطيط؛ وقد تبدو البدايات الجديدة مرعبة."
+    },
+    "Fire": {
+      "season": "الصيف",
+      "desc": "النار تجسّد طاقة الصيف — الشغف والتعبير والتواصل. تضيء كل شيء من حولها كضوء الشمس.",
+      "strong": "النار القوية تمنح الكاريزما والحماس، لكنها قد تفضي إلى الاندفاع وتقلبات المزاج.",
+      "weak": "النار الضعيفة تقلل من القدرة على التعبير والتواصل الاجتماعي."
+    },
+    "Earth": {
+      "season": "الفصل الانتقالي",
+      "desc": "الأرض تجسّد طاقة فصول الانتقال — الاستقرار والثقة والمركزية. الأساس الذي يحمل جميع العناصر ويغذيها.",
+      "strong": "الأرض القوية تمنح الموثوقية والشمولية، لكنها قد تبدو محافظة ومقاومة للتغيير.",
+      "weak": "الأرض الضعيفة تجعل الحفاظ على التوازن أمراً صعباً وقد تسبب عدم الاستقرار العاطفي."
+    },
+    "Metal": {
+      "season": "الخريف",
+      "desc": "المعدن يجسّد طاقة الخريف — الحزم والحصاد والعدالة. يقطع ما لم يعد ضرورياً.",
+      "strong": "المعدن القوي يمنح الحزم والدقة، لكنه قد يبدو حاداً وبارداً للآخرين.",
+      "weak": "المعدن الضعيف يقلل من الحزم والمتابعة، تاركاً المهام غير مكتملة."
+    },
+    "Water": {
+      "season": "الشتاء",
+      "desc": "الماء يجسّد طاقة الشتاء — الحكمة والحساسية والتقبّل. يتدفق نحو أدنى نقطة، يحتوي كل شيء في داخله.",
+      "strong": "الماء القوي يمنح الحكمة والتكيّف، لكنه قد يتسرب دون اتجاه ويفقد التركيز.",
+      "weak": "الماء الضعيف يقلل من الحدس والحساسية وقد يزيد العناد."
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "نجم الرفيق (兄弟星)",
+      "desc": "الرفيق يشارك نفس العنصر والقطبية مع سيد اليوم — رمز الأشقاء والأقران والمنافسين.",
+      "fortune": "استقلالية وثقة بالنفس قوية؛ يفضّل العمل المنفرد. احذر التعارض في الشراكات."
+    },
+    "겁재": {
+      "category": "نجم سارق الثروة (兄弟星)",
+      "desc": "سارق الثروة يشارك نفس العنصر لكن بقطبية معاكسة — منافسة شرسة وطاقة تستولي على الثروة.",
+      "fortune": "دافع قوي لكن ميّال للقرارات المتهورة. احذر الخسائر المالية."
+    },
+    "식신": {
+      "category": "نجم إله الطعام (表現星)",
+      "desc": "إله الطعام ينتجه سيد اليوم بنفس القطبية — رمز الموهبة وبركة الطعام والإبداع.",
+      "fortune": "موهبة فنية وقدرة تعبيرية. تجلب الحياة الراحة والمتعة والإنجاز الإبداعي."
+    },
+    "상관": {
+      "category": "نجم الضابط الجارح (表現星)",
+      "desc": "الضابط الجارح ينتجه سيد اليوم بقطبية معاكسة — تألق وتمرد وموهبة إبداعية.",
+      "fortune": "ذكاء حاد وفصاحة، لكن نزعة لتحدي السلطة. انتبه للصراعات في مكان العمل."
+    },
+    "편재": {
+      "category": "نجم الثروة غير المباشرة (財星)",
+      "desc": "الثروة غير المباشرة يتحكم بها سيد اليوم بنفس القطبية — الحظ المفاجئ والمضاربة والأب.",
+      "fortune": "قدرة قوية على اكتشاف فرص الاستثمار. المغامرات عالية المخاطر قد تجلب عوائد كبيرة."
+    },
+    "정재": {
+      "category": "نجم الثروة المباشرة (財星)",
+      "desc": "الثروة المباشرة يتحكم بها سيد اليوم بقطبية معاكسة — ثروة مستقرة واجتهاد.",
+      "fortune": "يتفوق في إدارة الثروة بعناية. يسعى إلى دخل ثابت ومستدام."
+    },
+    "편관": {
+      "category": "نجم السبعة قاتلون (官星)",
+      "desc": "السبعة قاتلون يتحكم في سيد اليوم بنفس القطبية — ضغط وتحدٍّ وسلطة عسكرية.",
+      "fortune": "إرادة قوية للتغلب على الشدائد. منافسة شديدة، لكن نمو كبير يتبعها."
+    },
+    "정관": {
+      "category": "نجم الضابط المباشر (官星)",
+      "desc": "الضابط المباشر يتحكم في سيد اليوم بقطبية معاكسة — شرف وقواعد ومنصب رسمي.",
+      "fortune": "مبادئ راسخة وسمعة اجتماعية عالية. يتفوق في الخدمة العامة وأدوار الإدارة."
+    },
+    "편인": {
+      "category": "نجم المورد غير المباشر (印星)",
+      "desc": "المورد غير المباشر يغذّي سيد اليوم بنفس القطبية — تعلّم غير تقليدي ودين ومواهب فريدة.",
+      "fortune": "تفكير أصيل ومهارات متخصصة. عرضة للشعور بالوحدة؛ احذر الاعتمادية غير الصحية."
+    },
+    "정인": {
+      "category": "نجم المورد المباشر (印星)",
+      "desc": "المورد المباشر يغذّي سيد اليوم بقطبية معاكسة — علم وأمومة ومعرفة وحنان.",
+      "fortune": "قدرة تعليمية ممتازة وأخلاق راسخة. من المرجح تلقّي دعم من شخصية أمومية أو راعٍ."
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "الشجرة الكبرى · قوة البداية",
+      "fortune": "طاقة البدايات الجديدة والنمو. فترة تعزيز القيادة.",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "العشب والزهر · حيوية مرنة",
+      "fortune": "اغتنم الفرص بقدرة تكيّف لطيفة. تظهر المحسنون في العلاقات.",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "الشمس · شغف متوهج",
+      "fortune": "طاقة مشرقة ونابضة. وقت للتعبير والإبداع المتفتح.",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "الشمعة · نار دقيقة",
+      "fortune": "تأمل عميق وتركيز. التميز في الأوساط الأكاديمية والحرف.",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "الجبل العظيم · استقرار متين",
+      "fortune": "وقت لبناء الاستقرار والثقة. مفيد للعقارات والأراضي.",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "الحقل المزروع · أرض مغذّية",
+      "fortune": "الإدارة والتخطيط الدقيق يؤتيان ثمارهما. وقت لتعزيز الذات الداخلية.",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "الحديد · تحوّل حاسم",
+      "fortune": "حزم جريء وتنفيذ. أزل غير الضروري وولد من جديد.",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "الجوهرة · حس جمالي حاد",
+      "fortune": "الدقة والكمالية. تحقّق النتائج في الفن والجمال والمال.",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "النهر الكبير · حكمة عميقة",
+      "fortune": "منظور واسع واستراتيجية مرنة. ممتاز لتوسيع الأعمال والنشاط الخارجي.",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "ماء المطر · حساسية رقيقة",
+      "fortune": "تتألق الحدس والعاطفة. مفيد للفن والنمو الروحاني والشفاء.",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 الفأر",
+      "meaning": "طاقة منتصف الليل · حكمة وفير",
+      "fortune": "وقت لتراكم الثروة والمعرفة. استعدّ بصمت لقفزة كبيرة.",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 الثور",
+      "meaning": "نهاية الشتاء · صبر ومثابرة",
+      "fortune": "الجهد الثابت سيؤتي ثماره حتماً. مفيد للصحة وشؤون الأراضي.",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 النمر",
+      "meaning": "أوائل الربيع · شجاعة ودافع",
+      "fortune": "السعي النشط يقود إلى نتائج. مفيد لتغييرات المسيرة المهنية والأعمال.",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 الأرنب",
+      "meaning": "أزهار الربيع · ثقافة وفنون",
+      "fortune": "علاقات غنية ومواهب فنية تتألق. يقدّم المحسنون مساعدتهم.",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 التنين",
+      "meaning": "مطر الربيع · تغيير وغموض",
+      "fortune": "وقت التحوّل الكبير. يحلّ الحظ غير المتوقع.",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 الثعبان",
+      "meaning": "أوائل الصيف · حكمة وحذر",
+      "fortune": "الاستراتيجية الهادئة تقود إلى النجاح. مفيد للدراسة والبحث والطب.",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 الحصان",
+      "meaning": "منتصف الصيف · شغف وحيوية",
+      "fortune": "التواصل الاجتماعي النشط والتبادلات. طاقة قوية للسفر والأنشطة الاجتماعية.",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 الماعز",
+      "meaning": "نهاية الصيف · لطف وفن",
+      "fortune": "الحساسية الفنية والودّ تبرزان. تحقّق النتائج من خلال العمل الجماعي.",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 القرد",
+      "meaning": "أوائل الخريف · ذكاء وتغيير",
+      "fortune": "حكم حاد وقدرة تكيّف. التميز في التكنولوجيا والابتكار.",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 الديك",
+      "meaning": "حصاد الخريف · دقة وانضباط",
+      "fortune": "التنفيذ الدقيق يقود إلى نتائج. مفيد للتمويل والإدارة.",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 الكلب",
+      "meaning": "نهاية الخريف · ولاء وأمانة",
+      "fortune": "بناء علاقات متينة عبر الثقة. طاقة مفيدة للعقارات والأمن.",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 الخنزير",
+      "meaning": "أوائل الشتاء · وفرة وراحة",
+      "fortune": "طاقة وفيرة. وقت مناسب للدراسة والسفر والنمو الروحاني.",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "نمو|إبداع|تحدٍّ",
+    "Fire": "شغف|تعبير|تواصل",
+    "Earth": "استقرار|ثقة|تفانٍ",
+    "Metal": "حزم|حصاد|صقل",
+    "Water": "حكمة|مرونة|عمق"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "مفيد للبدايات الجديدة وريادة الأعمال والدراسة والسفر.",
+      "caution": "تخلَّ عن العناد وكن منفتحاً على وجهات نظر الآخرين."
+    },
+    "Fire": {
+      "favor": "مفيد للتواصل الاجتماعي والعروض التقديمية والفن وأدوار القيادة.",
+      "caution": "تجنّب القرارات المتهورة وأدِر عواطفك."
+    },
+    "Earth": {
+      "favor": "مفيد للعقارات والاستثمار والتخطيط طويل الأمد والعائلة.",
+      "caution": "لا تتفاعل بشكل محافظ مع التغيير."
+    },
+    "Metal": {
+      "favor": "مفيد للمسيرة المهنية والقانون وإدارة المال وتطوير المهارات.",
+      "caution": "الكمالية المفرطة قد تضر بالعلاقات."
+    },
+    "Water": {
+      "favor": "مفيد للدراسة والبحث والدبلوماسية والاستكشاف الروحاني.",
+      "caution": "ضع أهدافاً واضحة حتى لا تجرفك الأمواج."
+    }
+  },
+  "modal": {
+    "none": "لا شيء",
+    "strong": "قوي",
+    "weak": "ضعيف",
+    "seasonOf": "طاقة {{season}}",
+    "whenStrong": "💪 عند القوة",
+    "whenWeak": "🔍 عند الضعف",
+    "fortuneLabel": "✨ الحظ",
+    "daewoonTitle": "دورة {{pillars}}",
+    "currentStar": "★ الحالي",
+    "inProgress": "نشط حالياً",
+    "heavenlyStem": "الجذع السماوي",
+    "earthlyBranch": "الفرع الأرضي",
+    "elementEnergy": "طاقة العنصر",
+    "sameElem": "طاقة {{element}} تتوافق مع سيد يومك ({{stem}}). طاقتك الجوهرية معززة بشكل كبير خلال هذه الفترة.",
+    "periodFlow": "📖 تدفق هذه الفترة",
+    "favorLabel": "✅ الاتجاهات المواتية",
+    "cautionLabel": "⚠️ نقاط الحذر",
+    "flowLabel": "🔄 تدفق الحظ",
+    "prevLabel": "السابق",
+    "selectedLabel": "محدد",
+    "nextLabel": "التالي"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "الجذع السماوي (天干)",
+    "earthlyBranch": "الفرع الأرضي (地支)",
+    "fiveElement": "العنصر",
+    "polarity": "القطبية",
+    "animal": "الحيوان",
+    "solarTerm": "المصطلح الشمسي",
+    "symbolLabel": "🌿 الرمز",
+    "personalityLabel": "✨ الشخصية",
+    "strengthLabel": "💪 نقاط القوة",
+    "cautionLabel": "⚠️ تنبيه",
+    "tendencyLabel": "✨ النزعة"
+  },
+  "pillarLabels": {
+    "year": "ركيزة السنة",
+    "month": "ركيزة الشهر",
+    "day": "ركيزة اليوم",
+    "hour": "ركيزة الساعة",
+    "default": "ركيزة"
+  },
+  "frameTitles": {
+    "kr": "ساجو الخاص بي",
+    "cn": "باتزي الخاص بي",
+    "jp": "أعمدتي الأربعة",
+    "en": "مخططي الكوني",
+    "es": "مصيري الكوني",
+    "in": "اندماجي الفيدي"
+  }
 }

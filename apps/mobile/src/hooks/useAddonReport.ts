@@ -6,7 +6,7 @@
  */
 import { useState } from 'react';
 import type { SajuChart, DaewoonPeriod } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
+import { getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
@@ -46,6 +46,68 @@ export interface AddonReportState {
   error: string | null;
   generate: (params: GenerateParams) => Promise<void>;
   reset: () => void;
+}
+
+// ── Report parser (client-side defensive re-parsing) ─────────────────────────
+
+function extractJsonString(raw: string): string | null {
+  const clean = raw
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/gi, '')
+    .trim();
+  const match = clean.match(/\{[\s\S]*\}/);
+  return match ? match[0] : null;
+}
+
+function tryParseReport(jsonStr: string): AddonReport | null {
+  try {
+    const parsed = JSON.parse(jsonStr) as Partial<AddonReport>;
+    if (parsed && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+      return {
+        title: String(parsed.title ?? ''),
+        overview: String(parsed.overview ?? ''),
+        sections: parsed.sections.map((s: ReportSection) => ({
+          heading: String(s.heading ?? ''),
+          content: String(s.content ?? ''),
+        })),
+      };
+    }
+  } catch {
+    // fall through
+  }
+  return null;
+}
+
+function parseAddonReport(raw: AddonReport | string): AddonReport {
+  // Case 1: edge function returned a raw string (unusual but handle it)
+  if (typeof raw === 'string') {
+    const jsonStr = extractJsonString(raw);
+    if (jsonStr) {
+      const parsed = tryParseReport(jsonStr);
+      if (parsed) return parsed;
+    }
+    return { title: '', overview: raw.slice(0, 500), sections: [] };
+  }
+
+  // Case 2: already an object — check for fallback formats where JSON ended up in a field
+
+  // Old fallback: single section { heading: 'Analysis', content: <raw Claude response> }
+  if (raw.sections?.length === 1 && raw.sections[0].heading === 'Analysis') {
+    const jsonStr = extractJsonString(raw.sections[0].content ?? '');
+    if (jsonStr) {
+      const parsed = tryParseReport(jsonStr);
+      if (parsed) return parsed;
+    }
+    // Re-parse failed — return as-is (showing raw content is better than blank)
+    return raw;
+  }
+
+  // If sections is empty and overview looks like raw JSON, clear it
+  if (!raw.sections?.length && raw.overview?.trimStart().startsWith('{')) {
+    return { title: raw.title || '', overview: '', sections: [] };
+  }
+
+  return raw;
 }
 
 // ── Chart serialiser ──────────────────────────────────────────────────────────
@@ -101,20 +163,15 @@ export function useAddonReport(): AddonReportState {
         body.name = params.name;
       }
 
-      // Always fetch a fresh token — handles silent JWT refresh on expiry
-      const { data: { session: fresh } } = await supabase.auth.getSession();
-      const token = fresh?.access_token;
-      if (!token) throw new Error('Session expired. Please log in again.');
+      const encodedBody = JSON.stringify(body);
 
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/addon-report`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 
@@ -123,8 +180,9 @@ export function useAddonReport(): AddonReportState {
         throw new Error(err.error ?? `HTTP ${resp.status}`);
       }
 
-      const data = await resp.json() as { ok: boolean; report: AddonReport };
-      setReport(data.report);
+      const data = await resp.json() as { ok: boolean; report: AddonReport | string };
+      const rawReport = data.report;
+      setReport(parseAddonReport(rawReport));
     } catch (e: unknown) {
       setError(friendlyApiError(e));
     } finally {

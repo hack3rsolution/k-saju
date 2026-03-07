@@ -29,7 +29,12 @@
   "fiveElements": "Five Elements",
   "yin": "Yin",
   "yang": "Yang",
-  "greeting": { "morning": "Good morning", "afternoon": "Good afternoon", "evening": "Good evening", "night": "Good night" },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "night": "Good night"
+  },
   "explore": "Explore",
   "compatibility": "Compatibility",
   "analyzeNow": "Analyze Now",
@@ -149,5 +154,52 @@
     "en": "Western",
     "es": "Latin",
     "in": "South Asian"
+  },
+  "myInfo": {
+    "title": "My Info",
+    "edit": "Edit →",
+    "birthDate": "Date of Birth",
+    "birthDateFmt": "{{year}}-{{month}}-{{day}} (Solar)",
+    "birthTime": "Birth Time",
+    "gender": "Gender",
+    "dayStem": "Day Stem (日主)",
+    "notEntered": "Not entered",
+    "male": "Male",
+    "female": "Female",
+    "am": "AM",
+    "pm": "PM",
+    "hourSuffix": ""
+  },
+  "notifUpdateError": "Could not update notifications.",
+  "purchasesRestored": "Purchases Restored",
+  "purchasesRestoredMsg": "Your subscription has been restored.",
+  "nothingToRestore": "Nothing to Restore",
+  "nothingToRestoreMsg": "No previous purchases found for this account.",
+  "restoreFailed": "Restore Failed",
+  "frameSaveError": "Could not save cultural frame. Please try again.",
+  "addRelationship": {
+    "title": "Add Connection",
+    "nameLabel": "Name",
+    "namePlaceholder": "Partner, friend, etc.",
+    "birthHourOptional": "(optional, 0–23)",
+    "birthHourPlaceholder": "e.g. 2 PM = 14",
+    "relTypeLabel": "Relationship Type",
+    "submit": "Add Connection",
+    "alertName": "Please enter a name",
+    "alertYear": "Enter a valid birth year (1900–{{max}})",
+    "alertMonth": "Enter a valid birth month (1–12)",
+    "alertDay": "Enter a valid birth day (1–31)",
+    "alertHour": "Birth hour must be between 0–23",
+    "tapHint": "Tap to analyze →",
+    "statusGood": "Harmonious",
+    "statusNeutral": "Balanced",
+    "statusCaution": "Challenging",
+    "relTypes": {
+      "romantic": "Romantic",
+      "friend": "Friend",
+      "family": "Family",
+      "colleague": "Colleague",
+      "other": "Other"
+    }
   }
 }

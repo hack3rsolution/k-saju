@@ -69,10 +69,22 @@
     "subtitle": "要分析哪个决定？",
     "analyzing": "分析中…",
     "categories": {
-      "business": { "label": "事业 / 创业", "desc": "开始或扩展业务" },
-      "investment": { "label": "投资 / 财务", "desc": "投资资产" },
-      "romance": { "label": "恋爱 / 婚姻", "desc": "开始恋爱或结婚" },
-      "relocation": { "label": "搬家 / 旅行", "desc": "搬家或规划旅行" }
+      "business": {
+        "label": "事业 / 创业",
+        "desc": "开始或扩展业务"
+      },
+      "investment": {
+        "label": "投资 / 财务",
+        "desc": "投资资产"
+      },
+      "romance": {
+        "label": "恋爱 / 婚姻",
+        "desc": "开始恋爱或结婚"
+      },
+      "relocation": {
+        "label": "搬家 / 旅行",
+        "desc": "搬家或规划旅行"
+      }
     },
     "resultTitle": "时机分析",
     "positiveFactors": "有利因素",
@@ -88,5 +100,59 @@
     "nextFreeToday": "明天重置免费分析 — 或升级享无限访问",
     "upgradeCta": "升级至高级版 →",
     "analysisFailed": "AI分析失败，请重试。"
+  },
+  "readingLoading": "正在解读星象…",
+  "feedback": {
+    "titlePositive": "👍 很高兴能帮到你！",
+    "titleNegative": "👎 非常抱歉",
+    "chooseReason": "选择原因",
+    "accurate": "准确",
+    "tooVague": "太模糊",
+    "notMe": "不适合我",
+    "reasons": {
+      "accurate": "准确",
+      "want_more_depth": "想要更深入",
+      "new_perspective": "全新视角",
+      "too_generic": "太笼统",
+      "factually_wrong": "事实有误",
+      "hard_to_understand": "难以理解",
+      "customInput": "自定义输入",
+      "send": "发送",
+      "customPlaceholder": "分享您的想法…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "日运",
+    "weekly": "周运",
+    "monthly": "月运",
+    "annual": "年运",
+    "daewoon": "大运周期"
+  },
+  "journal": {
+    "title": "人生日记",
+    "subtitle": "人生事件 · 命運流",
+    "addEvent": "添加人生事件",
+    "recordPlaceholder": "记录人生中的重要时刻",
+    "noEvents": "还没有记录的事件",
+    "saveEvent": "保存",
+    "savedToast": "事件已保存",
+    "aiAnalysis": "AI模式分析",
+    "aiAnalysisDesc": "了解您的四柱周期如何影响人生事件",
+    "emptyDesc": "记录职业变化、人际关系、健康等人生重要时刻，探索与四柱命理的关联。",
+    "loading": "加载生命日志中…",
+    "lockedAnalysis": "🔒 再添加 {{count}} 个事件即可解锁AI模式分析"
+  },
+  "compatibility": {
+    "title": "合婚",
+    "subtitle": "合婚 · 五行相性",
+    "partnerBirthDate": "对方生日",
+    "checkBtn": "查看相性",
+    "generateReport": "生成完整报告",
+    "analyzeAnother": "分析其他人",
+    "fullReport": "完整AI报告",
+    "partnerHint": "输入对方的生日以查看五行相性分数。",
+    "genderLabel": "对方性别",
+    "seeWhy": "查看原因 — 解锁完整报告 $4.99",
+    "fullReportDesc": "5部分深度分析：五行和谐、优势、紧张关系及关系预测。"
   }
 }

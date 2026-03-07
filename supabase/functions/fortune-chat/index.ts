@@ -56,7 +56,7 @@ function validateRequest(body: unknown): FortuneChatRequest {
 // ── Streaming Claude call (SSE) ───────────────────────────────────────────────
 
 const ANTHROPIC_STREAM_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 512;
 
 async function streamClaudeResponse(
@@ -170,6 +170,20 @@ Deno.serve(async (req: Request) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return errorResponse('Unauthorized', 401);
 
+  // ── Rate limit ────────────────────────────────────────────────────────────
+  if (!checkRateLimit(user.id)) {
+    return errorResponse('Daily limit of 20 chat messages reached. Try again tomorrow.', 429);
+  }
+
+  // ── Parse & validate (done before freemium check to get userLanguage) ─────
+  let request: FortuneChatRequest;
+  try {
+    const body = await req.json();
+    request = validateRequest(body);
+  } catch (e) {
+    return errorResponse((e as Error).message);
+  }
+
   // ── Freemium / Premium gate ───────────────────────────────────────────────
   const isPremium = user.user_metadata?.is_premium === true;
   if (!isPremium) {
@@ -186,26 +200,14 @@ Deno.serve(async (req: Request) => {
       .gte('created_at', todayStart.toISOString());
 
     if ((count ?? 0) >= 1) {
+      // Use the user's cultural frame to pick language-appropriate suggested questions
+      const suggestFrame = VALID_FRAMES.has(request.frame) ? request.frame : 'en';
       return jsonResponse({
         ok:    false,
         error: 'free_limit_reached',
-        suggestedQuestions: SUGGESTED_QUESTIONS['en'],
+        suggestedQuestions: SUGGESTED_QUESTIONS[suggestFrame],
       }, 402);
     }
-  }
-
-  // ── Rate limit ────────────────────────────────────────────────────────────
-  if (!checkRateLimit(user.id)) {
-    return errorResponse('Daily limit of 20 chat messages reached. Try again tomorrow.', 429);
-  }
-
-  // ── Parse & validate ──────────────────────────────────────────────────────
-  let request: FortuneChatRequest;
-  try {
-    const body = await req.json();
-    request = validateRequest(body);
-  } catch (e) {
-    return errorResponse((e as Error).message);
   }
 
   // ── Build Claude messages ─────────────────────────────────────────────────

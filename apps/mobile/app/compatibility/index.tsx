@@ -141,10 +141,12 @@ function ScoreCard({
   compat,
   hasFullAccess,
   onUnlock,
+  seeWhyLabel,
 }: {
   compat: LocalCompatibility;
   hasFullAccess: boolean;
   onUnlock: () => void;
+  seeWhyLabel: string;
 }) {
   const scoreColor = compat.score >= 70 ? '#22c55e' : compat.score >= 50 ? '#a78bfa' : '#ef4444';
 
@@ -165,7 +167,7 @@ function ScoreCard({
       {/* Gate CTA or full-report trigger */}
       {!hasFullAccess ? (
         <TouchableOpacity style={scoreStyles.ctaBtn} onPress={onUnlock}>
-          <Text style={scoreStyles.ctaBtnText}>See why — Unlock full report $4.99</Text>
+          <Text style={scoreStyles.ctaBtnText}>{seeWhyLabel}</Text>
         </TouchableOpacity>
       ) : null}
     </View>
@@ -193,7 +195,7 @@ const scoreStyles = StyleSheet.create({
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function CompatibilityScreen() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'fortune', 'onboarding']);
   const { loading, report, error, generate, reset } = useAddonReport();
   const { addons } = useEntitlementStore();
   const { chart: userChart, frame } = useSajuStore();
@@ -285,19 +287,17 @@ export default function CompatibilityScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Back</Text>
+        <Text style={styles.backText}>← {t('common:back')}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>궁합</Text>
-      <Text style={styles.subtitle}>궁합 · 合婚 · 관계 조화</Text>
+      <Text style={styles.title}>{t('fortune:compatibility.title')}</Text>
+      <Text style={styles.subtitle}>{t('fortune:compatibility.subtitle')}</Text>
 
       {/* Input form — shown when no result yet */}
       {!localCompat && !report && (
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>파트너 생년월일</Text>
-          <Text style={styles.formHint}>
-            파트너의 생년월일을 입력하면 오행 궁합 점수를 확인할 수 있습니다.
-          </Text>
+          <Text style={styles.formTitle}>{t('fortune:compatibility.partnerBirthDate')}</Text>
+          <Text style={styles.formHint}>{t('fortune:compatibility.partnerHint')}</Text>
 
           {/* Lunar / Solar toggle */}
           <View style={styles.calendarToggle}>
@@ -321,9 +321,9 @@ export default function CompatibilityScreen() {
 
           <View style={styles.inputRow}>
             {[
-              { label: '년도', value: pYear, onChange: setPYear, maxLength: 4, placeholder: '1990' },
-              { label: '월', value: pMonth, onChange: setPMonth, maxLength: 2, placeholder: '06' },
-              { label: '일', value: pDay, onChange: setPDay, maxLength: 2, placeholder: '15' },
+              { label: t('onboarding:birthInput.year'),  value: pYear,  onChange: setPYear,  maxLength: 4, placeholder: '1990' },
+              { label: t('onboarding:birthInput.month'), value: pMonth, onChange: setPMonth, maxLength: 2, placeholder: '06' },
+              { label: t('onboarding:birthInput.day'),   value: pDay,   onChange: setPDay,   maxLength: 2, placeholder: '15' },
             ].map((f) => (
               <View key={f.label} style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>{f.label}</Text>
@@ -340,7 +340,7 @@ export default function CompatibilityScreen() {
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>파트너 성별</Text>
+          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>{t('fortune:compatibility.genderLabel')}</Text>
           <View style={styles.genderRow}>
             {(['M', 'F'] as const).map((g) => (
               <TouchableOpacity
@@ -349,7 +349,7 @@ export default function CompatibilityScreen() {
                 onPress={() => setPGender(g)}
               >
                 <Text style={[styles.genderText, pGender === g && styles.genderTextActive]}>
-                  {g === 'M' ? '♂ 남성' : '♀ 여성'}
+                  {g === 'M' ? `♂ ${t('common:myInfo.male')}` : `♀ ${t('common:myInfo.female')}`}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -358,7 +358,7 @@ export default function CompatibilityScreen() {
           {inputError && <Text style={styles.errorText}>{inputError}</Text>}
 
           <TouchableOpacity style={styles.analyzeBtn} onPress={handleAnalyze}>
-            <Text style={styles.analyzeBtnText}>궁합 확인하기</Text>
+            <Text style={styles.analyzeBtnText}>{t('fortune:compatibility.checkBtn')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -370,19 +370,18 @@ export default function CompatibilityScreen() {
             compat={localCompat}
             hasFullAccess={hasFullAccess}
             onUnlock={() => router.push('/paywall')}
+            seeWhyLabel={t('fortune:compatibility.seeWhy')}
           />
 
           {/* Full report — addon users only */}
           {hasFullAccess && (
             <View style={styles.fullReportCard}>
-              <Text style={styles.fullReportTitle}>Full AI 리포트</Text>
-              <Text style={styles.fullReportDesc}>
-                오행 조화, 강점, 긴장 관계, 관계 예측 등 5개 섹션으로 구성된 심층 분석 리포트입니다.
-              </Text>
+              <Text style={styles.fullReportTitle}>{t('fortune:compatibility.fullReport')}</Text>
+              <Text style={styles.fullReportDesc}>{t('fortune:compatibility.fullReportDesc')}</Text>
               {error && !loading ? (
                 <View style={styles.comingSoonBox}>
                   <Text style={styles.comingSoonIcon}>🚧</Text>
-                  <Text style={styles.comingSoonText}>{t('comingSoon')} — 준비 중입니다</Text>
+                  <Text style={styles.comingSoonText}>{t('common:comingSoon')}</Text>
                 </View>
               ) : (
                 <TouchableOpacity
@@ -393,7 +392,7 @@ export default function CompatibilityScreen() {
                   {loading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.analyzeBtnText}>전체 리포트 생성</Text>
+                    <Text style={styles.analyzeBtnText}>{t('fortune:compatibility.generateReport')}</Text>
                   )}
                 </TouchableOpacity>
               )}
@@ -401,7 +400,7 @@ export default function CompatibilityScreen() {
           )}
 
           <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-            <Text style={styles.resetBtnText}>← 다른 사람 분석하기</Text>
+            <Text style={styles.resetBtnText}>← {t('fortune:compatibility.analyzeAnother')}</Text>
           </TouchableOpacity>
         </>
       )}
@@ -417,7 +416,7 @@ export default function CompatibilityScreen() {
             <SectionCard key={i} section={s} index={i} />
           ))}
           <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-            <Text style={styles.resetBtnText}>다른 사람 분석하기 →</Text>
+            <Text style={styles.resetBtnText}>{t('fortune:compatibility.analyzeAnother')} →</Text>
           </TouchableOpacity>
         </>
       )}

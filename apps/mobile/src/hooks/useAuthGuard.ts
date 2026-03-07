@@ -10,7 +10,13 @@ export function useAuthGuard() {
 
   // Bootstrap session and subscribe to auth state changes
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => setSession(s));
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      setSession(s);
+      // DEV: if session is null (e.g. refresh token expired), auto-sign in
+      if (!s && __DEV__) {
+        useAuthStore.getState().setDevSession().catch(() => setSession(null));
+      }
+    });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);

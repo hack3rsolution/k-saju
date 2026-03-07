@@ -112,11 +112,13 @@ export function buildSystemPrompt(
 ): string {
   const feedbackNote = buildFeedbackNote(feedbacks);
   const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame says "한국어로", cn frame says "中文回答" — these must be superseded)
   const langInstruction = langName
-    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All fortune text, analysis, and explanations must be in ${langName}. Do not mix languages.`
+    ? `CRITICAL: You must respond ONLY in ${langName}. All fortune text, analysis, and explanations must be written in ${langName}. Do not use Korean or any other language regardless of the instructions that follow.\n\n`
     : '';
 
-  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}${langInstruction}
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}${feedbackNote}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {

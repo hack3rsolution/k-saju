@@ -21,10 +21,22 @@
     "annual": "一年間の運勢予測",
     "daewoon": "十年の運命サイクル"
   },
-  "types": { "daily": "今日の運勢", "weekly": "今週の運勢", "monthly": "今月の運勢", "annual": "今年の運勢", "daewoon": "大運分析" },
+  "types": {
+    "daily": "今日の運勢",
+    "weekly": "今週の運勢",
+    "monthly": "今月の運勢",
+    "annual": "今年の運勢",
+    "daewoon": "大運分析"
+  },
   "freeLimit": "今週の無料残り回数：{{remaining}}",
   "freeLimitExhausted": "今週の無料回数を使い切りました",
-  "luckyItems": { "title": "本日の開運アイテム", "color": "ラッキーカラー", "number": "ラッキーナンバー", "direction": "吉方位", "food": "おすすめ食材" },
+  "luckyItems": {
+    "title": "本日の開運アイテム",
+    "color": "ラッキーカラー",
+    "number": "ラッキーナンバー",
+    "direction": "吉方位",
+    "food": "おすすめ食材"
+  },
   "refresh": "更新",
   "share": "シェア",
   "premiumRequired": "プレミアム限定",
@@ -57,10 +69,22 @@
     "subtitle": "どの決断を分析しますか？",
     "analyzing": "分析中…",
     "categories": {
-      "business": { "label": "事業 / 起業", "desc": "事業を始めたり拡大する" },
-      "investment": { "label": "投資 / 資産", "desc": "資産を投資する" },
-      "romance": { "label": "恋愛 / 結婚", "desc": "恋愛を始めたり結婚する" },
-      "relocation": { "label": "引越し / 旅行", "desc": "引越しや旅行の計画" }
+      "business": {
+        "label": "事業 / 起業",
+        "desc": "事業を始めたり拡大する"
+      },
+      "investment": {
+        "label": "投資 / 資産",
+        "desc": "資産を投資する"
+      },
+      "romance": {
+        "label": "恋愛 / 結婚",
+        "desc": "恋愛を始めたり結婚する"
+      },
+      "relocation": {
+        "label": "引越し / 旅行",
+        "desc": "引越しや旅行の計画"
+      }
     },
     "resultTitle": "タイミング分析",
     "positiveFactors": "好意的な要素",
@@ -76,5 +100,59 @@
     "nextFreeToday": "明日リセットされます — またはアップグレードで無制限アクセス",
     "upgradeCta": "プレミアムにアップグレード →",
     "analysisFailed": "AI分析に失敗しました。もう一度お試しください。"
+  },
+  "readingLoading": "星を読んでいます…",
+  "feedback": {
+    "titlePositive": "👍 お役に立てて嬉しいです！",
+    "titleNegative": "👎 申し訳ありません",
+    "chooseReason": "理由を選んでください",
+    "accurate": "正確",
+    "tooVague": "曖昧すぎる",
+    "notMe": "自分に合わない",
+    "reasons": {
+      "accurate": "正確です",
+      "want_more_depth": "もっと深く知りたい",
+      "new_perspective": "新しい視点です",
+      "too_generic": "一般的すぎます",
+      "factually_wrong": "事実と違います",
+      "hard_to_understand": "理解しにくいです",
+      "customInput": "自分で入力",
+      "send": "送信",
+      "customPlaceholder": "ご意見をお聞かせください"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "日運",
+    "weekly": "週運",
+    "monthly": "月運",
+    "annual": "年運",
+    "daewoon": "大運サイクル"
+  },
+  "journal": {
+    "title": "人生日誌",
+    "subtitle": "人生イベント · 命運流",
+    "addEvent": "人生イベントを追加",
+    "recordPlaceholder": "人生の重要な瞬間を記録しましょう",
+    "noEvents": "まだ記録されたイベントがありません",
+    "saveEvent": "保存",
+    "savedToast": "イベントが保存されました",
+    "aiAnalysis": "AIパターン分析",
+    "aiAnalysisDesc": "四柱推命のサイクルが人生イベントにどう影響したかを探りましょう",
+    "emptyDesc": "キャリアの変化、人間関係、健康など人生の重要な瞬間を記録し、四柱推命のパターンとの繋がりを見つけましょう。",
+    "loading": "ライフジャーナルを読み込み中…",
+    "lockedAnalysis": "🔒 AIパターン分析を解除するには{{count}}件のイベントを追加してください"
+  },
+  "compatibility": {
+    "title": "相性",
+    "subtitle": "相性 · 合婚 · 五行ハーモニー",
+    "partnerBirthDate": "相手の生年月日",
+    "checkBtn": "相性を確認",
+    "generateReport": "完全レポートを生成",
+    "analyzeAnother": "別の人を分析する",
+    "fullReport": "完全AIレポート",
+    "partnerHint": "相手の生年月日を入力して五行相性スコアを確認しましょう。",
+    "genderLabel": "相手の性別",
+    "seeWhy": "理由を見る — 完全レポートを解除 $4.99",
+    "fullReportDesc": "五行の調和、強み、緊張関係、関係予測の5セクション深層分析レポート。"
   }
 }

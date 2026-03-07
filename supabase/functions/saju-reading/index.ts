@@ -103,6 +103,7 @@ Deno.serve(async (req: Request) => {
     request.type,
     request.refDate,
     request.frame,
+    request.userLanguage ?? 'ko',
   );
 
   if (cached) {
@@ -146,6 +147,7 @@ Deno.serve(async (req: Request) => {
       request.frame,
       output,
       output.rawContent,
+      request.userLanguage ?? 'ko',
     );
   } catch (e) {
     console.error('[saju-reading] store error:', e);

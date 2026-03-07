@@ -41,5 +41,337 @@
     "travel": "✈️ Perjalanan"
   },
   "share": "Bagikan",
-  "generatingRecommendations": "Membuat rekomendasi…"
+  "generatingRecommendations": "Membuat rekomendasi…",
+  "elementInfo": {
+    "Wood": {
+      "season": "Musim Semi",
+      "desc": "Kayu (木) mewujudkan energi musim semi — pertumbuhan, penciptaan, dan awal baru. Kekuatan progresif yang terus meninggi.",
+      "strong": "Kayu kuat membawa inisiatif, kreativitas, dan kepemimpinan, tetapi dapat menyebabkan keras kepala dan gesekan.",
+      "weak": "Kayu lemah mengurangi fleksibilitas dan kemampuan perencanaan; memulai hal baru bisa terasa menakutkan."
+    },
+    "Fire": {
+      "season": "Musim Panas",
+      "desc": "Api (火) mewujudkan energi musim panas — semangat, ekspresi, dan komunikasi. Menerangi segalanya seperti cahaya matahari.",
+      "strong": "Api kuat membawa karisma dan antusiasme, tetapi bisa mengarah pada impulsivitas dan perubahan emosi.",
+      "weak": "Api lemah mengurangi ekspresivitas dan kemampuan bersosialisasi."
+    },
+    "Earth": {
+      "season": "Peralihan",
+      "desc": "Tanah (土) mewujudkan energi musim peralihan — stabilitas, kepercayaan, dan sentralitas. Fondasi yang menopang dan memelihara semua elemen.",
+      "strong": "Tanah kuat membawa keandalan dan inklusivitas, tetapi bisa tampak konservatif dan menolak perubahan.",
+      "weak": "Tanah lemah menyulitkan keseimbangan dan dapat menyebabkan ketidakstabilan emosi."
+    },
+    "Metal": {
+      "season": "Musim Gugur",
+      "desc": "Logam (金) mewujudkan energi musim gugur — ketegasan, panen, dan keadilan. Memotong apa yang tidak lagi diperlukan.",
+      "strong": "Logam kuat membawa ketegasan dan presisi, tetapi bisa tampak tajam dan dingin bagi orang lain.",
+      "weak": "Logam lemah mengurangi ketegasan dan tindak lanjut, membiarkan tugas tidak selesai."
+    },
+    "Water": {
+      "season": "Musim Dingin",
+      "desc": "Air (水) mewujudkan energi musim dingin — kebijaksanaan, kepekaan, dan pelukan. Mengalir ke tempat terendah, menampung segalanya.",
+      "strong": "Air kuat membawa kebijaksanaan dan kemampuan beradaptasi, tetapi bisa hanyut tanpa arah.",
+      "weak": "Air lemah mengurangi intuisi dan kepekaan serta dapat meningkatkan keras kepala."
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "Bintang Pendamping (兄弟星)",
+      "desc": "Pendamping berbagi elemen dan polaritas yang sama dengan Tuan Hari — melambangkan saudara, rekan, dan rival.",
+      "fortune": "Kemandirian dan harga diri yang kuat; lebih suka bertindak sendiri. Waspadai konflik dalam kemitraan."
+    },
+    "겁재": {
+      "category": "Bintang Perampas Kekayaan (兄弟星)",
+      "desc": "Perampas Kekayaan berbagi elemen yang sama tetapi polaritas berlawanan — persaingan sengit dan energi yang merebut kekayaan.",
+      "fortune": "Dorongan kuat tetapi rentan terhadap keputusan impulsif. Waspadai kerugian finansial."
+    },
+    "식신": {
+      "category": "Bintang Dewa Makan (表現星)",
+      "desc": "Dewa Makan dihasilkan oleh Tuan Hari dengan polaritas yang sama — melambangkan bakat, berkah pangan, dan kreativitas.",
+      "fortune": "Bakat seni dan kemampuan ekspresif. Kehidupan membawa kenyamanan, kesenangan, dan pemenuhan kreatif."
+    },
+    "상관": {
+      "category": "Bintang Pejabat Peluka (表現星)",
+      "desc": "Pejabat Peluka dihasilkan oleh Tuan Hari dengan polaritas berlawanan — kecemerlangan, pemberontakan, dan bakat kreatif.",
+      "fortune": "Kecerdasan dan kefasihan bicara, tetapi cenderung menantang otoritas. Waspadai konflik di tempat kerja."
+    },
+    "편재": {
+      "category": "Bintang Kekayaan Tidak Langsung (財星)",
+      "desc": "Kekayaan Tidak Langsung dikendalikan oleh Tuan Hari dengan polaritas yang sama — keberuntungan tak terduga, spekulasi, dan ayah.",
+      "fortune": "Kemampuan kuat menangkap peluang investasi. Usaha berisiko tinggi dapat menghasilkan keuntungan besar."
+    },
+    "정재": {
+      "category": "Bintang Kekayaan Langsung (財星)",
+      "desc": "Kekayaan Langsung dikendalikan oleh Tuan Hari dengan polaritas berlawanan — kekayaan stabil dan ketekunan.",
+      "fortune": "Unggul dalam manajemen kekayaan yang hati-hati. Mencari pendapatan yang stabil dan berkelanjutan."
+    },
+    "편관": {
+      "category": "Bintang Tujuh Pembunuhan (官星)",
+      "desc": "Tujuh Pembunuhan mengendalikan Tuan Hari dengan polaritas yang sama — tekanan, tantangan, dan otoritas militer.",
+      "fortune": "Kemauan kuat untuk mengatasi kesulitan. Persaingan sengit, tetapi pertumbuhan besar mengikuti."
+    },
+    "정관": {
+      "category": "Bintang Pejabat Langsung (官星)",
+      "desc": "Pejabat Langsung mengendalikan Tuan Hari dengan polaritas berlawanan — kehormatan, aturan, dan jabatan resmi.",
+      "fortune": "Prinsip yang kuat dan reputasi sosial tinggi. Unggul dalam pelayanan publik dan peran manajemen."
+    },
+    "편인": {
+      "category": "Bintang Sumber Daya Tidak Langsung (印星)",
+      "desc": "Sumber Daya Tidak Langsung memelihara Tuan Hari dengan polaritas yang sama — pembelajaran tidak konvensional, agama, dan bakat unik.",
+      "fortune": "Pemikiran orisinal dan keterampilan khusus. Rentan terhadap kesepian; waspadai ketergantungan yang tidak sehat."
+    },
+    "정인": {
+      "category": "Bintang Sumber Daya Langsung (印星)",
+      "desc": "Sumber Daya Langsung memelihara Tuan Hari dengan polaritas berlawanan — keilmuan, ibu, pengetahuan, dan kebajikan.",
+      "fortune": "Kemampuan belajar yang sangat baik dan etika yang kuat. Kemungkinan mendapat dukungan dari figur ibu atau penolong."
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "Pohon Besar · Kekuatan Awal",
+      "fortune": "Energi awal baru dan pertumbuhan. Periode penguatan kepemimpinan.",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "Rumput & Bunga · Vitalitas Fleksibel",
+      "fortune": "Manfaatkan peluang dengan adaptabilitas yang lembut. Penolong muncul dalam hubungan.",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "Matahari · Semangat yang Memancar",
+      "fortune": "Energi cerah dan bersemangat. Waktu untuk ekspresi dan kreativitas yang mekar.",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "Lilin · Api yang Presisi",
+      "fortune": "Refleksi mendalam dan konsentrasi. Unggul dalam akademisi dan kerajinan.",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "Pegunungan Besar · Stabilitas Kokoh",
+      "fortune": "Waktu membangun stabilitas dan kepercayaan. Menguntungkan untuk properti dan tanah.",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "Ladang · Tanah yang Memelihara",
+      "fortune": "Manajemen dan perencanaan yang cermat membuahkan hasil. Waktu memperkuat diri.",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "Besi · Transformasi yang Tegas",
+      "fortune": "Ketegasan berani dan eksekusi. Singkirkan yang tidak perlu dan terlahir kembali.",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "Perhiasan · Selera Estetis yang Tajam",
+      "fortune": "Presisi dan perfeksionisme. Capai hasil di seni, kecantikan, dan keuangan.",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "Sungai Besar · Kebijaksanaan Dalam",
+      "fortune": "Perspektif luas dan strategi fleksibel. Sangat baik untuk ekspansi bisnis dan aktivitas keluar.",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "Air Hujan · Kepekaan yang Halus",
+      "fortune": "Intuisi dan emosi bersinar. Menguntungkan untuk seni, pertumbuhan spiritual, dan penyembuhan.",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 Tikus",
+      "meaning": "Energi Tengah Malam · Kebijaksanaan & Kelimpahan",
+      "fortune": "Waktu untuk mengumpulkan kekayaan dan pengetahuan. Bersiaplah dengan diam untuk lompatan besar.",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 Sapi",
+      "meaning": "Akhir Musim Dingin · Ketahanan & Ketekunan",
+      "fortune": "Upaya yang teguh pasti akan membuahkan hasil. Menguntungkan untuk kesehatan dan urusan tanah.",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 Harimau",
+      "meaning": "Awal Musim Semi · Keberanian & Dorongan",
+      "fortune": "Pengejaran aktif menghasilkan hasil. Menguntungkan untuk perubahan karier dan bisnis.",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 Kelinci",
+      "meaning": "Bunga Musim Semi · Budaya & Seni",
+      "fortune": "Hubungan yang kaya dan bakat seni bersinar. Penolong menawarkan bantuan.",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 Naga",
+      "meaning": "Hujan Musim Semi · Perubahan & Misteri",
+      "fortune": "Waktu transformasi besar. Keberuntungan tak terduga datang.",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 Ular",
+      "meaning": "Awal Musim Panas · Kebijaksanaan & Kehati-hatian",
+      "fortune": "Strategi tenang membawa kesuksesan. Menguntungkan untuk studi, penelitian, dan kedokteran.",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 Kuda",
+      "meaning": "Pertengahan Musim Panas · Semangat & Dinamisme",
+      "fortune": "Pergaulan dan pertukaran aktif. Energi kuat untuk perjalanan dan aktivitas sosial.",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 Kambing",
+      "meaning": "Akhir Musim Panas · Kelembutan & Seni",
+      "fortune": "Kepekaan artistik dan keramahan menonjol. Capai hasil melalui kerja tim.",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 Monyet",
+      "meaning": "Awal Musim Gugur · Kecerdikan & Perubahan",
+      "fortune": "Penilaian tajam dan kemampuan adaptasi. Menonjol dalam teknologi dan inovasi.",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 Ayam",
+      "meaning": "Panen Musim Gugur · Presisi & Disiplin",
+      "fortune": "Eksekusi yang teliti menghasilkan hasil. Menguntungkan untuk keuangan dan administrasi.",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 Anjing",
+      "meaning": "Akhir Musim Gugur · Kesetiaan & Integritas",
+      "fortune": "Bangun hubungan kuat melalui kepercayaan. Energi menguntungkan untuk properti dan keamanan.",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 Babi",
+      "meaning": "Awal Musim Dingin · Kelimpahan & Kemudahan",
+      "fortune": "Energi berlimpah. Waktu yang baik untuk belajar, perjalanan, dan pertumbuhan spiritual.",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "Pertumbuhan|Kreativitas|Tantangan",
+    "Fire": "Semangat|Ekspresi|Koneksi",
+    "Earth": "Stabilitas|Kepercayaan|Dedikasi",
+    "Metal": "Ketegasan|Panen|Penyempurnaan",
+    "Water": "Kebijaksanaan|Fleksibilitas|Kedalaman"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "Menguntungkan untuk awal baru, kewirausahaan, belajar, dan perjalanan.",
+      "caution": "Lepaskan keras kepala dan terbuka terhadap perspektif orang lain."
+    },
+    "Fire": {
+      "favor": "Menguntungkan untuk bersosialisasi, presentasi, seni, dan peran kepemimpinan.",
+      "caution": "Hindari keputusan impulsif dan kelola emosi Anda."
+    },
+    "Earth": {
+      "favor": "Menguntungkan untuk properti, investasi, perencanaan jangka panjang, dan keluarga.",
+      "caution": "Jangan bereaksi terlalu konservatif terhadap perubahan."
+    },
+    "Metal": {
+      "favor": "Menguntungkan untuk karier, hukum, manajemen keuangan, dan pengembangan keterampilan.",
+      "caution": "Perfeksionisme berlebihan dapat merusak hubungan."
+    },
+    "Water": {
+      "favor": "Menguntungkan untuk belajar, penelitian, diplomasi, dan eksplorasi spiritual.",
+      "caution": "Tetapkan tujuan yang jelas agar tidak hanyut tanpa arah."
+    }
+  },
+  "modal": {
+    "none": "Tidak Ada",
+    "strong": "Kuat",
+    "weak": "Lemah",
+    "seasonOf": "Energi {{season}}",
+    "whenStrong": "💪 Saat Kuat",
+    "whenWeak": "🔍 Saat Lemah",
+    "fortuneLabel": "✨ Keberuntungan",
+    "daewoonTitle": "Siklus {{pillars}}",
+    "currentStar": "★ Saat Ini",
+    "inProgress": "Sedang Aktif",
+    "heavenlyStem": "Batang",
+    "earthlyBranch": "Cabang",
+    "elementEnergy": "Energi Elemen",
+    "sameElem": "Energi {{element}} cocok dengan Tuan Hari Anda ({{stem}}). Energi inti Anda sangat diperkuat selama periode ini.",
+    "periodFlow": "📖 Aliran Periode Ini",
+    "favorLabel": "✅ Arah yang Menguntungkan",
+    "cautionLabel": "⚠️ Poin yang Perlu Diperhatikan",
+    "flowLabel": "🔄 Aliran Keberuntungan",
+    "prevLabel": "Sebelumnya",
+    "selectedLabel": "Dipilih",
+    "nextLabel": "Berikutnya"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "Batang Surgawi (天干)",
+    "earthlyBranch": "Cabang Bumi (地支)",
+    "fiveElement": "Elemen",
+    "polarity": "Polaritas",
+    "animal": "Hewan",
+    "solarTerm": "Istilah Surya",
+    "symbolLabel": "🌿 Simbol",
+    "personalityLabel": "✨ Kepribadian",
+    "strengthLabel": "💪 Kekuatan",
+    "cautionLabel": "⚠️ Perhatian",
+    "tendencyLabel": "✨ Kecenderungan"
+  },
+  "pillarLabels": {
+    "year": "Pilar Tahun",
+    "month": "Pilar Bulan",
+    "day": "Pilar Hari",
+    "hour": "Pilar Jam",
+    "default": "Pilar"
+  },
+  "frameTitles": {
+    "kr": "Saju Saya",
+    "cn": "BaZi Saya",
+    "jp": "Empat Pilar Saya",
+    "en": "Blueprint Kosmik Saya",
+    "es": "Destino Cósmico Saya",
+    "in": "Vedic Fusion Saya"
+  }
 }

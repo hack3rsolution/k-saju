@@ -71,7 +71,18 @@
     "chooseReason": "Choose a reason",
     "accurate": "Accurate",
     "tooVague": "Too vague",
-    "notMe": "Doesn't fit me"
+    "notMe": "Doesn't fit me",
+    "reasons": {
+      "accurate": "Accurate",
+      "want_more_depth": "Want more depth",
+      "new_perspective": "Fresh perspective",
+      "too_generic": "Too generic",
+      "factually_wrong": "Factually wrong",
+      "hard_to_understand": "Hard to understand",
+      "customInput": "Write your own",
+      "send": "Send",
+      "customPlaceholder": "Share your thoughts…"
+    }
   },
   "typeLabelCard": {
     "daily": "DAILY FORTUNE",
@@ -85,10 +96,22 @@
     "subtitle": "Which decision should we analyze?",
     "analyzing": "Analyzing…",
     "categories": {
-      "business": { "label": "Business / Startup", "desc": "Start or expand a business" },
-      "investment": { "label": "Investment / Finance", "desc": "Invest money or assets" },
-      "romance": { "label": "Romance / Marriage", "desc": "Start a relationship or wed" },
-      "relocation": { "label": "Moving / Travel", "desc": "Move home or plan a trip" }
+      "business": {
+        "label": "Business / Startup",
+        "desc": "Start or expand a business"
+      },
+      "investment": {
+        "label": "Investment / Finance",
+        "desc": "Invest money or assets"
+      },
+      "romance": {
+        "label": "Romance / Marriage",
+        "desc": "Start a relationship or wed"
+      },
+      "relocation": {
+        "label": "Moving / Travel",
+        "desc": "Move home or plan a trip"
+      }
     },
     "resultTitle": "TIMING ANALYSIS",
     "positiveFactors": "POSITIVE FACTORS",
@@ -104,5 +127,32 @@
     "nextFreeToday": "Your free analysis resets tomorrow — or upgrade for unlimited access.",
     "upgradeCta": "Upgrade to Premium →",
     "analysisFailed": "AI analysis failed. Please try again."
+  },
+  "journal": {
+    "title": "Life Journal",
+    "subtitle": "Life Events · 命運流",
+    "addEvent": "Add Life Event",
+    "recordPlaceholder": "Record key moments in your life",
+    "noEvents": "No events recorded yet",
+    "saveEvent": "Save",
+    "savedToast": "Event saved",
+    "aiAnalysis": "AI Pattern Analysis",
+    "aiAnalysisDesc": "Discover how your saju cycles influenced life events",
+    "emptyDesc": "Record key life moments — career changes, relationships, health — and discover patterns in your cosmic chart.",
+    "loading": "Loading journal…",
+    "lockedAnalysis": "🔒 Add {{count}} more event(s) to unlock AI pattern analysis"
+  },
+  "compatibility": {
+    "title": "Compatibility",
+    "subtitle": "Compatibility · 合婚 · Elemental Harmony",
+    "partnerBirthDate": "Partner's Birth Date",
+    "checkBtn": "Check Compatibility",
+    "generateReport": "Generate Full Report",
+    "analyzeAnother": "Analyze Another Person",
+    "fullReport": "Full AI Report",
+    "partnerHint": "Enter your partner's birth date to see your elemental compatibility score.",
+    "genderLabel": "Partner's Gender",
+    "seeWhy": "See why — Unlock full report $4.99",
+    "fullReportDesc": "5-section deep-dive: elemental harmony, strengths, tensions, and relationship forecast."
   }
 }

@@ -69,10 +69,22 @@
     "subtitle": "Keputusan apa yang akan kita analisis?",
     "analyzing": "Menganalisis…",
     "categories": {
-      "business": { "label": "Bisnis / Startup", "desc": "Memulai atau mengembangkan bisnis" },
-      "investment": { "label": "Investasi / Keuangan", "desc": "Menginvestasikan uang atau aset" },
-      "romance": { "label": "Romansa / Pernikahan", "desc": "Memulai hubungan atau menikah" },
-      "relocation": { "label": "Pindah / Perjalanan", "desc": "Pindah rumah atau merencanakan perjalanan" }
+      "business": {
+        "label": "Bisnis / Startup",
+        "desc": "Memulai atau mengembangkan bisnis"
+      },
+      "investment": {
+        "label": "Investasi / Keuangan",
+        "desc": "Menginvestasikan uang atau aset"
+      },
+      "romance": {
+        "label": "Romansa / Pernikahan",
+        "desc": "Memulai hubungan atau menikah"
+      },
+      "relocation": {
+        "label": "Pindah / Perjalanan",
+        "desc": "Pindah rumah atau merencanakan perjalanan"
+      }
     },
     "resultTitle": "ANALISIS TIMING",
     "positiveFactors": "FAKTOR POSITIF",
@@ -88,5 +100,59 @@
     "nextFreeToday": "Analisis gratis Anda direset besok — atau upgrade untuk akses tak terbatas.",
     "upgradeCta": "Upgrade ke Premium →",
     "analysisFailed": "Analisis AI gagal. Silakan coba lagi."
+  },
+  "readingLoading": "Membaca bintang…",
+  "feedback": {
+    "titlePositive": "👍 Senang bisa membantu!",
+    "titleNegative": "👎 Mohon maaf",
+    "chooseReason": "Pilih alasan",
+    "accurate": "Akurat",
+    "tooVague": "Terlalu samar",
+    "notMe": "Tidak cocok untuk saya",
+    "reasons": {
+      "accurate": "Akurat",
+      "want_more_depth": "Ingin lebih dalam",
+      "new_perspective": "Perspektif baru",
+      "too_generic": "Terlalu umum",
+      "factually_wrong": "Salah fakta",
+      "hard_to_understand": "Sulit dipahami",
+      "customInput": "Tulis sendiri",
+      "send": "Kirim",
+      "customPlaceholder": "Bagikan pendapatmu…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "KEBERUNTUNGAN HARIAN",
+    "weekly": "KEBERUNTUNGAN MINGGUAN",
+    "monthly": "KEBERUNTUNGAN BULANAN",
+    "annual": "KEBERUNTUNGAN TAHUNAN",
+    "daewoon": "SIKLUS 大運"
+  },
+  "journal": {
+    "title": "Jurnal Kehidupan",
+    "subtitle": "Peristiwa Hidup · 命運流",
+    "addEvent": "Tambah Peristiwa",
+    "recordPlaceholder": "Catat momen penting dalam hidupmu",
+    "noEvents": "Belum ada peristiwa yang dicatat",
+    "saveEvent": "Simpan",
+    "savedToast": "Peristiwa tersimpan",
+    "aiAnalysis": "Analisis Pola AI",
+    "aiAnalysisDesc": "Temukan bagaimana siklus saju kamu memengaruhi peristiwa hidupmu",
+    "emptyDesc": "Catat momen penting dalam hidup — perubahan karir, hubungan, kesehatan — dan temukan pola dalam chart kosmik kamu.",
+    "loading": "Memuat jurnal…",
+    "lockedAnalysis": "🔒 Tambah {{count}} event lagi untuk membuka analisis pola AI"
+  },
+  "compatibility": {
+    "title": "Kecocokan",
+    "subtitle": "Kecocokan · 合婚 · Harmoni Elemen",
+    "partnerBirthDate": "Tanggal Lahir Pasangan",
+    "checkBtn": "Cek Kecocokan",
+    "generateReport": "Buat Laporan Lengkap",
+    "analyzeAnother": "Analisis Orang Lain",
+    "fullReport": "Laporan AI Lengkap",
+    "partnerHint": "Masukkan tanggal lahir pasanganmu untuk melihat skor kecocokan elemen.",
+    "genderLabel": "Jenis Kelamin Pasangan",
+    "seeWhy": "Lihat alasannya — Buka laporan lengkap $4.99",
+    "fullReportDesc": "Analisis mendalam 5 bagian: harmoni elemen, kekuatan, ketegangan, dan prakiraan hubungan."
   }
 }

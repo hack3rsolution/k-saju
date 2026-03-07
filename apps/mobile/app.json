@@ -23,8 +23,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1a0a2e"
+        "foregroundImage": "./assets/ksaju-icon-foreground.png",
+        "backgroundColor": "#1E1535"
       },
       "package": "com.ksaju.global",
       "versionCode": 4,
@@ -35,6 +35,9 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE"
       ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",

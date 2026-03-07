@@ -25,12 +25,36 @@
     "title": "Choose Your Lens",
     "subtitle": "Same cosmic data — personalized to your cultural context.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 Korean", "desc": "Traditional Four Pillars reading" },
-      "cn": { "label": "BaZi", "region": "🇨🇳 Chinese", "desc": "Classical BaZi system" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 Japanese", "desc": "Japanese destiny reading" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 Western", "desc": "Personality & life path focus" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 Latin", "desc": "Horoscope-style framing" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 South Asian", "desc": "Jyotish-inspired perspective" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Korean",
+        "desc": "Traditional Four Pillars reading"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Chinese",
+        "desc": "Classical BaZi system"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Japanese",
+        "desc": "Japanese destiny reading"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 Western",
+        "desc": "Personality & life path focus"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Latin",
+        "desc": "Horoscope-style framing"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 South Asian",
+        "desc": "Jyotish-inspired perspective"
+      }
     },
     "continue": "Continue"
   },
@@ -40,6 +64,19 @@
     "unlockTitle": "Unlock Your Full Destiny",
     "unlockDesc": "Daily fortune, compatibility, annual luck cycle, and more with Premium.",
     "exploreFree": "Explore free features",
-    "viewPremium": "View Premium plans"
+    "viewPremium": "View Premium plans",
+    "frameTitles": {
+      "kr": "My Four Pillars",
+      "cn": "My BaZi Chart",
+      "jp": "My Four Pillars",
+      "en": "My Cosmic Blueprint",
+      "es": "My Destino Cósmico",
+      "in": "My Vedic Fusion"
+    },
+    "unknown": "Unknown",
+    "hourUnknown": "(Hour unknown)",
+    "pillarsSection": "Four Pillars (四柱)",
+    "dayStemHint": "Day Master · {{stem}} · {{element}}",
+    "elementSection": "Five Elements Balance (五行)"
   }
 }

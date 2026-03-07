@@ -155,10 +155,12 @@ const LANGUAGE_NAMES: Record<string, string> = {
 
 export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
   const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
-  // Prepend language instruction so it takes precedence over any frame-level
-  // language hints (e.g. "Descriptions in English" in the 'en' frame prompt).
+  // Append language instruction AFTER the frame prompt so it overrides any
+  // frame-level language directive (e.g. 'es' frame ends with "en español").
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame ends with "설명은 한국어로", cn frame says "描述使用简体中文")
   const langInstruction = langName
-    ? `IMPORTANT: You must respond ONLY in ${langName}. All titles, descriptions, and tags must be written in ${langName}. Do not use any other language.\n\n`
+    ? `CRITICAL: You must respond ONLY in ${langName}. All titles, descriptions, and tags must be written in ${langName}. Do not use Korean or any other language regardless of the instructions that follow.\n\n`
     : '';
   return `${langInstruction}${SYSTEM_PROMPTS[frame]}`;
 }

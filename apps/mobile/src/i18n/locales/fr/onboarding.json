@@ -25,14 +25,40 @@
     "title": "Choisissez votre prisme",
     "subtitle": "Mêmes données cosmiques — personnalisées selon votre contexte culturel.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 Coréen", "desc": "Lecture traditionnelle des Quatre Piliers" },
-      "cn": { "label": "BaZi", "region": "🇨🇳 Chinois", "desc": "Système BaZi classique" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 Japonais", "desc": "Lecture du destin japonais" },
-      "en": { "label": "Plan Cosmique", "region": "🌏 Occidental", "desc": "Focus personnalité et chemin de vie" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 Latin", "desc": "Style horoscope" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Asie du Sud", "desc": "Perspective inspirée du Jyotish" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Coréen",
+        "desc": "Lecture traditionnelle des Quatre Piliers"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Chinois",
+        "desc": "Système BaZi classique"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Japonais",
+        "desc": "Lecture du destin japonais"
+      },
+      "en": {
+        "label": "Plan Cosmique",
+        "region": "🌏 Occidental",
+        "desc": "Focus personnalité et chemin de vie"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Latin",
+        "desc": "Style horoscope"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 Asie du Sud",
+        "desc": "Perspective inspirée du Jyotish"
+      }
     },
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "screenTitle": "Choisissez votre cadre culturel",
+    "screenSubtitle": "Les mêmes données cosmiques — personnalisées selon votre contexte culturel"
   },
   "resultPreview": {
     "title": "Aperçu de votre thème",
@@ -40,6 +66,19 @@
     "unlockTitle": "Déverrouillez votre destin complet",
     "unlockDesc": "Fortune quotidienne, compatibilité, cycle de chance annuel et plus encore avec Premium.",
     "exploreFree": "Explorer les fonctionnalités gratuites",
-    "viewPremium": "Voir les offres Premium"
+    "viewPremium": "Voir les offres Premium",
+    "frameTitles": {
+      "kr": "Mon Saju",
+      "cn": "Mon BaZi",
+      "jp": "Mes Quatre Piliers",
+      "en": "Mon Plan Cosmique",
+      "es": "Mon Destino Cósmico",
+      "in": "Ma Fusion Védique"
+    },
+    "unknown": "Inconnu",
+    "hourUnknown": "(Heure inconnue)",
+    "pillarsSection": "Quatre Piliers (四柱)",
+    "dayStemHint": "Maître du Jour · {{stem}} · {{element}}",
+    "elementSection": "Équilibre des Cinq Éléments (五行)"
   }
 }

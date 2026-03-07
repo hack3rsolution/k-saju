@@ -41,5 +41,337 @@
     "travel": "✈️ การเดินทาง"
   },
   "share": "แชร์",
-  "generatingRecommendations": "กำลังสร้างคำแนะนำ…"
+  "generatingRecommendations": "กำลังสร้างคำแนะนำ…",
+  "elementInfo": {
+    "Wood": {
+      "season": "ฤดูใบไม้ผลิ",
+      "desc": "ธาตุไม้ (木) สื่อถึงพลังงานฤดูใบไม้ผลิ — การเติบโต การสร้างสรรค์ และการเริ่มต้นใหม่ พลังที่มุ่งสูงขึ้นอย่างก้าวหน้า",
+      "strong": "ธาตุไม้แรงนำความริเริ่ม ความคิดสร้างสรรค์ และภาวะผู้นำ แต่อาจทำให้ดื้อรั้นและขัดแย้งกับผู้อื่น",
+      "weak": "ธาตุไม้อ่อนลดความยืดหยุ่นและการวางแผน การเริ่มต้นใหม่อาจรู้สึกน่ากลัว"
+    },
+    "Fire": {
+      "season": "ฤดูร้อน",
+      "desc": "ธาตุไฟ (火) สื่อถึงพลังงานฤดูร้อน — ความหลงใหล การแสดงออก และการสื่อสาร ส่องสว่างทุกสิ่งรอบข้างดุจแสงอาทิตย์",
+      "strong": "ธาตุไฟแรงนำความมีเสน่ห์และความกระตือรือร้น แต่อาจนำไปสู่การหุนหันพลันแล่นและอารมณ์แปรปรวน",
+      "weak": "ธาตุไฟอ่อนลดความสามารถในการแสดงออกและการเข้าสังคม"
+    },
+    "Earth": {
+      "season": "ช่วงเปลี่ยนผ่าน",
+      "desc": "ธาตุดิน (土) สื่อถึงพลังงานช่วงเปลี่ยนฤดู — ความมั่นคง ความไว้วางใจ และความเป็นศูนย์กลาง พื้นดินที่หล่อเลี้ยงธาตุทั้งหมด",
+      "strong": "ธาตุดินแรงนำความน่าเชื่อถือและความรวมเป็นหนึ่ง แต่อาจดูอนุรักษ์นิยมและต้านการเปลี่ยนแปลง",
+      "weak": "ธาตุดินอ่อนทำให้รักษาสมดุลได้ยากและอาจนำไปสู่ความไม่มั่นคงทางอารมณ์"
+    },
+    "Metal": {
+      "season": "ฤดูใบไม้ร่วง",
+      "desc": "ธาตุโลหะ (金) สื่อถึงพลังงานฤดูใบไม้ร่วง — ความเด็ดขาด การเก็บเกี่ยว และความยุติธรรม ตัดสิ่งที่ไม่จำเป็นออก",
+      "strong": "ธาตุโลหะแรงนำความเด็ดขาดและความแม่นยำ แต่อาจดูคม และเย็นชาต่อผู้อื่น",
+      "weak": "ธาตุโลหะอ่อนลดความเด็ดขาดและการทำงานให้สำเร็จ ทิ้งงานไว้ไม่เสร็จ"
+    },
+    "Water": {
+      "season": "ฤดูหนาว",
+      "desc": "ธาตุน้ำ (水) สื่อถึงพลังงานฤดูหนาว — ปัญญา ความละเอียดอ่อน และการโอบกอด ไหลสู่ที่ต่ำสุด บรรจุทุกสิ่งภายใน",
+      "strong": "ธาตุน้ำแรงนำปัญญาและความยืดหยุ่น แต่อาจล่องลอยไร้ทิศทางและสูญเสียสมาธิ",
+      "weak": "ธาตุน้ำอ่อนลดสัญชาตญาณและความละเอียดอ่อน และอาจเพิ่มความดื้อรั้น"
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "ดาวสหาย (兄弟星)",
+      "desc": "สหายมีธาตุและขั้วเดียวกันกับเจ้าวัน — สัญลักษณ์ของพี่น้อง เพื่อนร่วมงาน และคู่แข่ง",
+      "fortune": "ความเป็นอิสระและความภาคภูมิใจในตนเองสูง ชอบทำงานคนเดียว ระวังความขัดแย้งในการร่วมมือ"
+    },
+    "겁재": {
+      "category": "ดาวปล้นทรัพย์ (兄弟星)",
+      "desc": "ปล้นทรัพย์มีธาตุเดียวกันแต่ขั้วตรงข้าม — การแข่งขันดุเดือดและพลังงานที่แย่งชิงทรัพย์สมบัติ",
+      "fortune": "แรงผลักดันแรงแต่เสี่ยงตัดสินใจหุนหันพลันแล่น ระวังการสูญเสียทางการเงิน"
+    },
+    "식신": {
+      "category": "ดาวเทพอาหาร (表現星)",
+      "desc": "เทพอาหารถูกสร้างโดยเจ้าวันด้วยขั้วเดียวกัน — สัญลักษณ์ของพรสวรรค์ โชควาสนาด้านอาหาร และความสร้างสรรค์",
+      "fortune": "พรสวรรค์ทางศิลปะและความสามารถในการแสดงออก ชีวิตนำความสะดวกสบายและความสำเร็จสร้างสรรค์"
+    },
+    "상관": {
+      "category": "ดาวเจ้าหน้าที่บาดเจ็บ (表現星)",
+      "desc": "เจ้าหน้าที่บาดเจ็บถูกสร้างโดยเจ้าวันด้วยขั้วตรงข้าม — ความเฉลียวฉลาด การกบฏ และพรสวรรค์สร้างสรรค์",
+      "fortune": "ไหวพริบและปฏิภาณดีแต่มีแนวโน้มท้าทายอำนาจ ระวังความขัดแย้งในที่ทำงาน"
+    },
+    "편재": {
+      "category": "ดาวทรัพย์ทางอ้อม (財星)",
+      "desc": "ทรัพย์ทางอ้อมถูกควบคุมโดยเจ้าวันด้วยขั้วเดียวกัน — โชคลาภ การเก็งกำไร และบิดา",
+      "fortune": "ความสามารถแรงในการค้นพบโอกาสการลงทุน การเสี่ยงสูงอาจนำกำไรมหาศาล"
+    },
+    "정재": {
+      "category": "ดาวทรัพย์โดยตรง (財星)",
+      "desc": "ทรัพย์โดยตรงถูกควบคุมโดยเจ้าวันด้วยขั้วตรงข้าม — ทรัพย์มั่นคงและความขยันหมั่นเพียร",
+      "fortune": "เก่งในการจัดการทรัพย์อย่างรอบคอบ แสวงหารายได้มั่นคงและยั่งยืน"
+    },
+    "편관": {
+      "category": "ดาวนักฆ่าเจ็ด (官星)",
+      "desc": "นักฆ่าเจ็ดควบคุมเจ้าวันด้วยขั้วเดียวกัน — ความกดดัน ความท้าทาย และอำนาจทางทหาร",
+      "fortune": "เจตจำนงแรงกล้าในการเอาชนะความทุกข์ยาก การแข่งขันรุนแรงแต่การเติบโตยิ่งใหญ่ตามมา"
+    },
+    "정관": {
+      "category": "ดาวเจ้าหน้าที่โดยตรง (官星)",
+      "desc": "เจ้าหน้าที่โดยตรงควบคุมเจ้าวันด้วยขั้วตรงข้าม — เกียรติยศ กฎระเบียบ และตำแหน่งทางการ",
+      "fortune": "หลักการแน่วแน่และชื่อเสียงทางสังคมสูง โดดเด่นในราชการและบทบาทการบริหาร"
+    },
+    "편인": {
+      "category": "ดาวทรัพยากรทางอ้อม (印星)",
+      "desc": "ทรัพยากรทางอ้อมหล่อเลี้ยงเจ้าวันด้วยขั้วเดียวกัน — การเรียนรู้ไม่ธรรมดา ศาสนา และพรสวรรค์เฉพาะตัว",
+      "fortune": "ความคิดริเริ่มและทักษะเฉพาะทาง มีแนวโน้มรู้สึกโดดเดี่ยว ระวังการพึ่งพาที่ไม่ดี"
+    },
+    "정인": {
+      "category": "ดาวทรัพยากรโดยตรง (印星)",
+      "desc": "ทรัพยากรโดยตรงหล่อเลี้ยงเจ้าวันด้วยขั้วตรงข้าม — วิชาการ มารดา ความรู้ และความเมตตา",
+      "fortune": "ความสามารถในการเรียนรู้ยอดเยี่ยมและจริยธรรมแข็งแกร่ง มีแนวโน้มได้รับการสนับสนุนจากมารดาหรือผู้อุปถัมภ์"
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "ต้นไม้ใหญ่ · พลังแห่งการเริ่มต้น",
+      "fortune": "พลังงานการเริ่มต้นใหม่และการเติบโต ช่วงเวลาที่ภาวะผู้นำแข็งแกร่งขึ้น",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "หญ้าและดอกไม้ · ความมีชีวิตชีวาที่ยืดหยุ่น",
+      "fortune": "คว้าโอกาสด้วยความยืดหยุ่นที่อ่อนโยน ผู้อุปถัมภ์ปรากฏในความสัมพันธ์",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "ดวงอาทิตย์ · ความหลงใหลที่สุกสว่าง",
+      "fortune": "พลังงานสดใสและมีชีวิตชีวา เวลาสำหรับการแสดงออกและความคิดสร้างสรรค์บานสะพรั่ง",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "เทียน · ไฟที่แม่นยำ",
+      "fortune": "การไตร่ตรองลึกซึ้งและสมาธิ โดดเด่นในวิชาการและงานฝีมือ",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "ภูเขาใหญ่ · ความมั่นคงหนักแน่น",
+      "fortune": "เวลาสร้างความมั่นคงและความเชื่อใจ เอื้อต่ออสังหาริมทรัพย์และที่ดิน",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "ทุ่งนาที่เพาะปลูก · ดินอันหล่อเลี้ยง",
+      "fortune": "การจัดการและการวางแผนอย่างรอบคอบให้ผล เวลาสร้างความแข็งแกร่งภายใน",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "เหล็ก · การเปลี่ยนแปลงที่เด็ดขาด",
+      "fortune": "ความเด็ดขาดกล้าหาญและการปฏิบัติ ขจัดสิ่งไม่จำเป็นและเกิดใหม่",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "อัญมณี · ความรู้สึกทางสุนทรียะที่คมกริบ",
+      "fortune": "ความแม่นยำและนิยมความสมบูรณ์แบบ ประสบความสำเร็จในศิลปะ ความงาม และการเงิน",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "แม่น้ำใหญ่ · ปัญญาลึกซึ้ง",
+      "fortune": "มุมมองกว้างขวางและกลยุทธ์ที่ยืดหยุ่น ยอดเยี่ยมสำหรับการขยายธุรกิจและกิจกรรมภายนอก",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "น้ำฝน · ความละเอียดอ่อนที่บอบบาง",
+      "fortune": "สัญชาตญาณและอารมณ์ส่องสว่าง เอื้อต่อศิลปะ การเติบโตทางจิตวิญญาณ และการรักษา",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 หนู",
+      "meaning": "พลังงานเที่ยงคืน · ปัญญาและความอุดมสมบูรณ์",
+      "fortune": "เวลาสะสมความมั่งคั่งและความรู้ เตรียมพร้อมอย่างเงียบๆ เพื่อก้าวกระโดดครั้งใหญ่",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 วัว",
+      "meaning": "ปลายฤดูหนาว · ความอดทนและความขยัน",
+      "fortune": "ความพยายามอย่างมุ่งมั่นจะให้ผล เอื้อต่อสุขภาพและกิจการที่ดิน",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 เสือ",
+      "meaning": "ต้นฤดูใบไม้ผลิ · ความกล้าหาญและแรงผลักดัน",
+      "fortune": "การไล่ตามอย่างแข็งขันนำไปสู่ผลลัพธ์ เอื้อต่อการเปลี่ยนอาชีพและธุรกิจ",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 กระต่าย",
+      "meaning": "ดอกไม้ฤดูใบไม้ผลิ · วัฒนธรรมและศิลปะ",
+      "fortune": "ความสัมพันธ์อันอุดมสมบูรณ์และพรสวรรค์ทางศิลปะส่องสว่าง ผู้อุปถัมภ์ให้ความช่วยเหลือ",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 มังกร",
+      "meaning": "ฝนฤดูใบไม้ผลิ · การเปลี่ยนแปลงและความลึกลับ",
+      "fortune": "เวลาแห่งการเปลี่ยนแปลงครั้งใหญ่ โชคลาภที่ไม่คาดคิดมาถึง",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 งู",
+      "meaning": "ต้นฤดูร้อน · ปัญญาและความรอบคอบ",
+      "fortune": "กลยุทธ์ที่สงบนำไปสู่ความสำเร็จ เอื้อต่อการศึกษา วิจัย และการแพทย์",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 ม้า",
+      "meaning": "กลางฤดูร้อน · ความหลงใหลและพลวัต",
+      "fortune": "การเข้าสังคมและการแลกเปลี่ยนที่คึกคัก พลังงานแรงสำหรับการเดินทางและกิจกรรมสังคม",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 แกะ",
+      "meaning": "ปลายฤดูร้อน · ความอ่อนโยนและศิลปะ",
+      "fortune": "ความไวทางศิลปะและความน่าคบหาโดดเด่น ประสบความสำเร็จด้วยการทำงานเป็นทีม",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 ลิง",
+      "meaning": "ต้นฤดูใบไม้ร่วง · ความฉลาดและการเปลี่ยนแปลง",
+      "fortune": "การตัดสินที่คมชัดและความสามารถในการปรับตัว โดดเด่นในเทคโนโลยีและนวัตกรรม",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 ไก่",
+      "meaning": "การเก็บเกี่ยวฤดูใบไม้ร่วง · ความแม่นยำและวินัย",
+      "fortune": "การปฏิบัติอย่างพิถีพิถันนำไปสู่ผลลัพธ์ เอื้อต่อการเงินและการบริหาร",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 สุนัข",
+      "meaning": "ปลายฤดูใบไม้ร่วง · ความซื่อสัตย์และความซื่อตรง",
+      "fortune": "สร้างความสัมพันธ์ที่แข็งแกร่งด้วยความไว้วางใจ พลังงานเอื้อต่ออสังหาริมทรัพย์และความปลอดภัย",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 หมู",
+      "meaning": "ต้นฤดูหนาว · ความอุดมสมบูรณ์และความสบาย",
+      "fortune": "พลังงานอุดมสมบูรณ์ เวลาดีสำหรับการศึกษา การเดินทาง และการเติบโตทางจิตวิญญาณ",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "การเติบโต|ความคิดสร้างสรรค์|ความท้าทาย",
+    "Fire": "ความหลงใหล|การแสดงออก|การเชื่อมต่อ",
+    "Earth": "ความมั่นคง|ความไว้วางใจ|ความทุ่มเท",
+    "Metal": "ความเด็ดขาด|การเก็บเกี่ยว|การขัดเกลา",
+    "Water": "ปัญญา|ความยืดหยุ่น|ความลึกซึ้ง"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "เอื้อต่อการเริ่มต้นใหม่ ผู้ประกอบการ การศึกษา และการเดินทาง",
+      "caution": "ปล่อยวางความดื้อรั้นและเปิดใจรับมุมมองของผู้อื่น"
+    },
+    "Fire": {
+      "favor": "เอื้อต่อการเข้าสังคม การนำเสนอ ศิลปะ และบทบาทผู้นำ",
+      "caution": "หลีกเลี่ยงการตัดสินใจหุนหันพลันแล่นและจัดการอารมณ์ของคุณ"
+    },
+    "Earth": {
+      "favor": "เอื้อต่ออสังหาริมทรัพย์ การลงทุน การวางแผนระยะยาว และครอบครัว",
+      "caution": "อย่าตอบสนองต่อการเปลี่ยนแปลงอย่างอนุรักษ์นิยมเกินไป"
+    },
+    "Metal": {
+      "favor": "เอื้อต่ออาชีพ กฎหมาย การจัดการทางการเงิน และการพัฒนาทักษะ",
+      "caution": "ความนิยมความสมบูรณ์แบบที่มากเกินไปอาจทำลายความสัมพันธ์"
+    },
+    "Water": {
+      "favor": "เอื้อต่อการศึกษา วิจัย การทูต และการสำรวจทางจิตวิญญาณ",
+      "caution": "ตั้งเป้าหมายที่ชัดเจนเพื่อไม่ให้ล่องลอยไร้ทิศทาง"
+    }
+  },
+  "modal": {
+    "none": "ไม่มี",
+    "strong": "แรง",
+    "weak": "อ่อน",
+    "seasonOf": "พลังงาน{{season}}",
+    "whenStrong": "💪 เมื่อแรง",
+    "whenWeak": "🔍 เมื่ออ่อน",
+    "fortuneLabel": "✨ ดวงชะตา",
+    "daewoonTitle": "รอบโชค{{pillars}}",
+    "currentStar": "★ ปัจจุบัน",
+    "inProgress": "กำลังดำเนินอยู่",
+    "heavenlyStem": "ลำต้นสวรรค์",
+    "earthlyBranch": "กิ่งแผ่นดิน",
+    "elementEnergy": "พลังงานธาตุ",
+    "sameElem": "พลังงาน{{element}}ตรงกับเจ้าวัน ({{stem}}) ของคุณ พลังงานหลักของคุณถูกขยายอย่างมากในช่วงนี้",
+    "periodFlow": "📖 การไหลของช่วงนี้",
+    "favorLabel": "✅ ทิศทางที่เอื้ออำนวย",
+    "cautionLabel": "⚠️ จุดที่ควรระวัง",
+    "flowLabel": "🔄 การไหลของโชค",
+    "prevLabel": "ก่อนหน้า",
+    "selectedLabel": "เลือกแล้ว",
+    "nextLabel": "ถัดไป"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "ก้านสวรรค์ (天干)",
+    "earthlyBranch": "กิ่งโลก (地支)",
+    "fiveElement": "ธาตุ",
+    "polarity": "ขั้ว",
+    "animal": "สัตว์",
+    "solarTerm": "ตำแหน่งสุริยะ",
+    "symbolLabel": "🌿 สัญลักษณ์",
+    "personalityLabel": "✨ บุคลิกภาพ",
+    "strengthLabel": "💪 จุดแข็ง",
+    "cautionLabel": "⚠️ ข้อควรระวัง",
+    "tendencyLabel": "✨ แนวโน้ม"
+  },
+  "pillarLabels": {
+    "year": "เสาปี",
+    "month": "เสาเดือน",
+    "day": "เสาวัน",
+    "hour": "เสาชั่วโมง",
+    "default": "เสา"
+  },
+  "frameTitles": {
+    "kr": "ซาจูของฉัน",
+    "cn": "BaZi ของฉัน",
+    "jp": "สี่เสาของฉัน",
+    "en": "แผนภูมิจักรวาลของฉัน",
+    "es": "เดสตีโนคอสมิโกของฉัน",
+    "in": "เวทิกฟิวชันของฉัน"
+  }
 }

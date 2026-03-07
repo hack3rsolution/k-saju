@@ -73,11 +73,13 @@ export function buildSystemPrompt(
   ].join('\n');
 
   const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame says "답변은 한국어로", cn frame says "用中文回答")
   const langInstruction = langName
-    ? `\n\nIMPORTANT: Respond ONLY in ${langName}. All text must be in ${langName}. Do not mix languages.`
+    ? `CRITICAL: You must respond ONLY in ${langName}. All text must be written in ${langName}. Do not use Korean or any other language regardless of the instructions that follow.\n\n`
     : '';
 
-  return `${FRAME_SYSTEM[frame]}
+  return `${langInstruction}${FRAME_SYSTEM[frame]}
 
 USER'S SAJU CHART:
 ${chartSummary}
@@ -86,5 +88,5 @@ TODAY'S FORTUNE CONTEXT:
 ${readingSummary}
 
 Always answer in the context of this specific chart and today's fortune reading.
-Keep responses focused, empathetic, and between 3-5 sentences.${langInstruction}`;
+Keep responses focused, empathetic, and between 3-5 sentences.`;
 }

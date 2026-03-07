@@ -25,14 +25,40 @@
     "title": "視点を選んでください",
     "subtitle": "同じ命式データを文化的コンテキストに合わせて解釈します。",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 韓国", "desc": "韓国伝統の四柱推命" },
-      "cn": { "label": "四柱推命", "region": "🇨🇳 中国", "desc": "BaZiクラシックシステム" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 日本", "desc": "日本の宿命解読" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 西洋", "desc": "性格・人生経路重視" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 ラテン", "desc": "星座スタイル解釈" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 南アジア", "desc": "ジョーティシュ視点" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 韓国",
+        "desc": "韓国伝統の四柱推命"
+      },
+      "cn": {
+        "label": "四柱推命",
+        "region": "🇨🇳 中国",
+        "desc": "BaZiクラシックシステム"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 日本",
+        "desc": "日本の宿命解読"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 西洋",
+        "desc": "性格・人生経路重視"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 ラテン",
+        "desc": "星座スタイル解釈"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 南アジア",
+        "desc": "ジョーティシュ視点"
+      }
     },
-    "continue": "選択完了"
+    "continue": "選択完了",
+    "screenTitle": "文化フレームを選択",
+    "screenSubtitle": "同じ四柱データ — あなたの文化的背景に合わせて"
   },
   "resultPreview": {
     "title": "命式プレビュー",
@@ -40,6 +66,19 @@
     "unlockTitle": "完全な鑑定を解放する",
     "unlockDesc": "日運・相性・年運・大運分析をプレミアムでご覧ください。",
     "exploreFree": "無料機能を探索する",
-    "viewPremium": "プレミアムプランを見る"
+    "viewPremium": "プレミアムプランを見る",
+    "frameTitles": {
+      "kr": "私の四柱八字",
+      "cn": "私の四柱推命",
+      "jp": "私の四柱推命",
+      "en": "私のコズミックブループリント",
+      "es": "私のデスティノ・コスミコ",
+      "in": "私のヴェーディックフュージョン"
+    },
+    "unknown": "不明",
+    "hourUnknown": "（時刻不明）",
+    "pillarsSection": "四柱",
+    "dayStemHint": "日干 · {{stem}} · {{element}}",
+    "elementSection": "五行バランス"
   }
 }

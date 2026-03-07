@@ -41,6 +41,7 @@ export async function getCachedReading(
   type: ReadingType,
   refDate: string,
   frame: CulturalFrame,
+  language = 'ko',
 ): Promise<CachedReading | null> {
   const { data, error } = await supabase
     .from('Reading')
@@ -49,6 +50,7 @@ export async function getCachedReading(
     .eq('type', type)
     .eq('refDate', refDate)
     .eq('culturalFrame', frame)
+    .eq('language', language)
     .single();
 
   if (error || !data) return null;
@@ -99,6 +101,7 @@ export async function storeReading(
   frame: CulturalFrame,
   output: ClaudeReadingOutput,
   rawContent: string,
+  language = 'ko',
 ): Promise<string | null> {
   const { data, error } = await supabase
     .from('Reading')
@@ -107,6 +110,7 @@ export async function storeReading(
       type,
       refDate,
       culturalFrame: frame,
+      language,
       summary: output.summary,
       details: output.details,
       luckyItems: output.luckyItems,

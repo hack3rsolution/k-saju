@@ -48,17 +48,18 @@ const STEM_KR: Record<string, string> = {
   己: '기', 庚: '경', 辛: '신', 壬: '임', 癸: '계',
 };
 
-function formatBirthTime(hour: number | undefined): string {
-  if (hour === undefined || hour === null) return '미입력';
-  const period = hour < 12 ? '오전' : '오후';
-  const h = hour % 12 === 0 ? 12 : hour % 12;
-  return `${period} ${h}시`;
-}
-
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function SettingsScreen() {
   const { t } = useTranslation('common');
+
+  function formatBirthTime(hour: number | undefined): string {
+    if (hour === undefined || hour === null) return t('myInfo.notEntered');
+    const period = hour < 12 ? t('myInfo.am') : t('myInfo.pm');
+    const h = hour % 12 === 0 ? 12 : hour % 12;
+    const suffix = t('myInfo.hourSuffix');
+    return suffix ? `${period} ${h}${suffix}` : `${h} ${period}`;
+  }
   const [notifications, setNotifications] = useState(false);
   const [notifLoading, setNotifLoading] = useState(false);
   const [langPickerVisible, setLangPickerVisible] = useState(false);
@@ -115,7 +116,7 @@ export default function SettingsScreen() {
       }
       setNotifications(value);
     } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not update notifications.');
+      Alert.alert(t('error'), e instanceof Error ? e.message : t('notifUpdateError'));
     } finally {
       setNotifLoading(false);
     }
@@ -127,13 +128,11 @@ export default function SettingsScreen() {
       const info = await restorePurchases();
       const hasActive = Object.keys(info.entitlements.active).length > 0;
       Alert.alert(
-        hasActive ? 'Purchases Restored' : 'Nothing to Restore',
-        hasActive
-          ? 'Your subscription has been restored.'
-          : 'No previous purchases found for this account.',
+        hasActive ? t('purchasesRestored') : t('nothingToRestore'),
+        hasActive ? t('purchasesRestoredMsg') : t('nothingToRestoreMsg'),
       );
     } catch (e: unknown) {
-      Alert.alert('Restore Failed', e instanceof Error ? e.message : 'Please try again.');
+      Alert.alert(t('restoreFailed'), e instanceof Error ? e.message : t('retry'));
     } finally {
       setRestoring(false);
     }
@@ -148,9 +147,13 @@ export default function SettingsScreen() {
       // 1) Update in-memory store immediately
       updateFrame(newFrame);
       // 2) Persist to Supabase user metadata
-      await supabase.auth.updateUser({ data: { cultural_frame: newFrame } });
+      const { error } = await supabase.auth.updateUser({ data: { cultural_frame: newFrame } });
+      if (error) throw error;
+      // 3) Explicitly refresh the session so hooks that re-run due to frame/language
+      //    dep changes receive a consistent fresh token and avoid "Invalid JWT" errors.
+      await supabase.auth.refreshSession();
     } catch (e) {
-      Alert.alert('Error', 'Could not save cultural frame. Please try again.');
+      Alert.alert(t('error'), t('frameSaveError'));
       // Revert
       updateFrame(currentFrameId);
     } finally {
@@ -226,28 +229,28 @@ export default function SettingsScreen() {
         {resolvedBirth && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionLabel}>내 정보</Text>
+              <Text style={styles.sectionLabel}>{t('myInfo.title')}</Text>
               <TouchableOpacity onPress={() => router.push('/(onboarding)/birth-input')}>
-                <Text style={styles.sectionEditBtn}>수정 →</Text>
+                <Text style={styles.sectionEditBtn}>{t('myInfo.edit')}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.row}>
-              <Text style={styles.rowText}>생년월일</Text>
+              <Text style={styles.rowText}>{t('myInfo.birthDate')}</Text>
               <Text style={styles.rowValue}>
-                {resolvedBirth.year}년 {resolvedBirth.month}월 {resolvedBirth.day}일 (양력)
+                {t('myInfo.birthDateFmt', { year: resolvedBirth.year, month: resolvedBirth.month, day: resolvedBirth.day })}
               </Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.rowText}>태어난 시간</Text>
+              <Text style={styles.rowText}>{t('myInfo.birthTime')}</Text>
               <Text style={styles.rowValue}>{formatBirthTime(resolvedBirth.hour)}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.rowText}>성별</Text>
-              <Text style={styles.rowValue}>{resolvedBirth.gender === 'M' ? '남성' : '여성'}</Text>
+              <Text style={styles.rowText}>{t('myInfo.gender')}</Text>
+              <Text style={styles.rowValue}>{resolvedBirth.gender === 'M' ? t('myInfo.male') : t('myInfo.female')}</Text>
             </View>
             {chart && (
               <View style={styles.row}>
-                <Text style={styles.rowText}>일간(日主)</Text>
+                <Text style={styles.rowText}>{t('myInfo.dayStem')}</Text>
                 <Text style={styles.rowValue}>
                   {chart.dayStem} ({STEM_KR[chart.dayStem] ?? ''})
                 </Text>
@@ -323,7 +326,7 @@ export default function SettingsScreen() {
       >
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setLangPickerVisible(false)} />
         <View style={styles.sheet}>
-          <Text style={styles.sheetTitle}>Language</Text>
+          <Text style={styles.sheetTitle}>{t('language')}</Text>
           <FlatList
             data={SUPPORTED_LANGUAGES}
             keyExtractor={(item) => item.code}

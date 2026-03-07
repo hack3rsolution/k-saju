@@ -25,14 +25,40 @@
     "title": "Chọn Góc Nhìn Của Bạn",
     "subtitle": "Cùng dữ liệu vũ trụ — cá nhân hóa theo văn hóa của bạn.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 Hàn Quốc", "desc": "Luận giải Tứ Trụ truyền thống" },
-      "cn": { "label": "BaZi", "region": "🇨🇳 Trung Quốc", "desc": "Hệ thống BaZi cổ điển" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 Nhật Bản", "desc": "Luận giải số mệnh Nhật Bản" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 Phương Tây", "desc": "Tập trung vào tính cách và con đường sống" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 Latinh", "desc": "Phong cách tử vi" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Nam Á", "desc": "Góc nhìn lấy cảm hứng từ Jyotish" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Hàn Quốc",
+        "desc": "Luận giải Tứ Trụ truyền thống"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Trung Quốc",
+        "desc": "Hệ thống BaZi cổ điển"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Nhật Bản",
+        "desc": "Luận giải số mệnh Nhật Bản"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 Phương Tây",
+        "desc": "Tập trung vào tính cách và con đường sống"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Latinh",
+        "desc": "Phong cách tử vi"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 Nam Á",
+        "desc": "Góc nhìn lấy cảm hứng từ Jyotish"
+      }
     },
-    "continue": "Tiếp tục"
+    "continue": "Tiếp tục",
+    "screenTitle": "Chọn Khung Văn Hóa",
+    "screenSubtitle": "Cùng dữ liệu vũ trụ — được cá nhân hóa theo bối cảnh văn hóa của bạn"
   },
   "resultPreview": {
     "title": "Xem Trước Lá Số Của Bạn",
@@ -40,6 +66,19 @@
     "unlockTitle": "Mở Khóa Toàn Bộ Số Mệnh",
     "unlockDesc": "Vận hàng ngày, hợp duyên, đại vận hàng năm và hơn thế nữa với Premium.",
     "exploreFree": "Khám phá tính năng miễn phí",
-    "viewPremium": "Xem gói Premium"
+    "viewPremium": "Xem gói Premium",
+    "frameTitles": {
+      "kr": "Saju của tôi",
+      "cn": "BaZi của tôi",
+      "jp": "Bốn Trụ của tôi",
+      "en": "Bản đồ Vũ trụ của tôi",
+      "es": "Destino Cósmico của tôi",
+      "in": "Vedic Fusion của tôi"
+    },
+    "unknown": "Không rõ",
+    "hourUnknown": "(Giờ không rõ)",
+    "pillarsSection": "Tứ Trụ (四柱)",
+    "dayStemHint": "Nhật Chủ · {{stem}} · {{element}}",
+    "elementSection": "Cân Bằng Ngũ Hành (五行)"
   }
 }

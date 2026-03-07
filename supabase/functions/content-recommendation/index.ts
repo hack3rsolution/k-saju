@@ -76,7 +76,7 @@ function validateRequest(body: unknown): ContentRecommendationRequest {
 // ── Claude API call ───────────────────────────────────────────────────────────
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 2000;
 
 async function callClaude(
