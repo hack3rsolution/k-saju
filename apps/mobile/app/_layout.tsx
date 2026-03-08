@@ -39,7 +39,7 @@ export default function RootLayout() {
     if (session?.user?.id) {
       initializePurchases(session.user.id);
       // Skip RevenueCat sync for dev session — entitlements are set in setDevSession()
-      if (__DEV__ && session.user.email === 'dev@k-saju.com') {
+      if (process.env.APP_ENV !== 'production' && session.user.email === 'dev@k-saju.com') {
         useEntitlementStore.getState().setEntitlements(true, {
           deepCompatibility: true,
           careerWealth: true,
