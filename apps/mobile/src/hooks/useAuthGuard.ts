@@ -13,7 +13,7 @@ export function useAuthGuard() {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       // DEV: if session is null (e.g. refresh token expired), auto-sign in
-      if (!s && __DEV__) {
+      if (!s && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true') {
         useAuthStore.getState().setDevSession().catch(() => setSession(null));
       }
     });

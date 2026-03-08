@@ -191,7 +191,7 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(response);
   }
 
-  // Call Claude (fallback to static data on error — only for English users)
+  // Call Claude (fallback to static data on error)
   let result: ClaudeRecommendationOutput;
   try {
     const systemPrompt = buildSystemPrompt(request.frame, userLanguage);
@@ -199,12 +199,8 @@ Deno.serve(async (req: Request) => {
     result = await callClaude(systemPrompt, userPrompt, ANTHROPIC_API_KEY);
   } catch (e) {
     console.error('[content-recommendation] Claude error:', e);
-    // For non-English languages the English fallback would be wrong — return an error
-    // so the app shows an error state instead of mismatched-language content.
-    const isEnglishLike = !userLanguage || userLanguage === 'en' || userLanguage === 'in';
-    if (!isEnglishLike) {
-      return errorResponse('AI 추천을 불러오지 못했습니다. 다시 시도해주세요.', 502);
-    }
+    // Fall back to static English content rather than returning an error.
+    // The client will still get useful recommendations even if AI is unavailable.
     const dominant = getDominantElement(request.elementBalance);
     result = FALLBACK[dominant];
   }

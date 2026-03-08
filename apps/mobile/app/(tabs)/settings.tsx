@@ -252,7 +252,7 @@ export default function SettingsScreen() {
               <View style={styles.row}>
                 <Text style={styles.rowText}>{t('myInfo.dayStem')}</Text>
                 <Text style={styles.rowValue}>
-                  {chart.dayStem} ({STEM_KR[chart.dayStem] ?? ''})
+                  {chart.dayStem}{language === 'ko' && STEM_KR[chart.dayStem] ? ` (${STEM_KR[chart.dayStem]})` : ''}
                 </Text>
               </View>
             )}

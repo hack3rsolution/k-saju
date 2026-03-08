@@ -14,7 +14,7 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "env": { "APP_ENV": "preview" },
+      "env": { "APP_ENV": "preview", "EXPO_PUBLIC_ENABLE_DEV_BYPASS": "true", "EXPO_PUBLIC_DEV_EMAIL": "dev-android@k-saju.com" },
       "android": { "buildType": "apk" },
     },
     "production": {

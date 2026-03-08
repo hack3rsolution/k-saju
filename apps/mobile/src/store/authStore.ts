@@ -98,9 +98,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     }),
 
   setDevSession: async () => {
-    if (!__DEV__) return;
-    const DEV_EMAIL = 'dev@k-saju.com';
-    const DEV_PASSWORD = 'devpassword123';
+    if (process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS !== 'true') return;
+    const DEV_EMAIL = process.env.EXPO_PUBLIC_DEV_EMAIL ?? 'dev@k-saju.com';
+    const DEV_PASSWORD = process.env.EXPO_PUBLIC_DEV_PASSWORD ?? 'devpassword123';
     const DEV_META = {
       onboarding_completed: true,
       birth_year: 1990,
@@ -113,49 +113,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       has_timing_advisor: true,
     };
 
-    // Try sign-in first; if user doesn't exist, sign up then sign in
-    let result = await supabase.auth.signInWithPassword({
+    const result = await supabase.auth.signInWithPassword({
       email: DEV_EMAIL,
       password: DEV_PASSWORD,
     });
 
-    if (result.error) {
-      // User may not exist — attempt sign-up (email confirm must be disabled in Supabase)
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: DEV_EMAIL,
-        password: DEV_PASSWORD,
-        options: { data: DEV_META },
-      });
-      if (signUpError) throw signUpError;
-
-      // signUp returns a session immediately only when email confirmation is disabled.
-      // If identities is empty, the user already existed but wasn't confirmed.
-      if (signUpData.session) {
-        // Email confirm disabled → session returned directly
-        set({
-          session: signUpData.session,
-          user: signUpData.session.user ?? null,
-          initialized: true,
-        });
-        return;
-      }
-
-      result = await supabase.auth.signInWithPassword({
-        email: DEV_EMAIL,
-        password: DEV_PASSWORD,
-      });
-    }
-
-    if (result.error) {
-      if (result.error.message?.toLowerCase().includes('email not confirmed')) {
-        console.warn(
-          '[DEV] Supabase "Email not confirmed" 에러 발생.\n' +
-          '→ Supabase Dashboard > Authentication > Providers > Email\n' +
-          '→ "Confirm email" 옵션을 OFF로 설정한 뒤 다시 시도하세요.'
-        );
-      }
-      throw result.error;
-    }
+    if (result.error) throw result.error;
 
     // Ensure user_metadata has the dev birth data and premium flags
     let finalUser = result.data.session?.user ?? null;

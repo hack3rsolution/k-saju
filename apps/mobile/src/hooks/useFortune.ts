@@ -214,10 +214,12 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
           activeDaewoon = calculateDaewoon(bd);
         }
 
-        // ── 2. Check free weekly limit (daily only) ────────────────────────
+        // ── 2. Check free weekly limit (weekly only — daily is unlimited) ───
         const currentWeek = isoWeek(now);
         const isPremium = meta?.is_premium === true || entitlementPremium;
-        const usedThisWeek = type === 'daily' && !isPremium && meta?.last_free_reading_week === currentWeek;
+        // Daily fortune is free and unlimited per MEMORY.md freemium strategy.
+        // Weekly limit only applies to the 'weekly' reading type for free users.
+        const usedThisWeek = type === 'weekly' && !isPremium && meta?.last_free_reading_week === currentWeek;
 
         if (usedThisWeek) {
           setWeeklyLimitReached(true);

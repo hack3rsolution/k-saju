@@ -10,11 +10,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
 import { useTranslation } from 'react-i18next';
 
-const DEV_BYPASS =
-  __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
+const DEV_BYPASS = process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
 
 type LoadingKey = 'magic' | 'google' | 'apple' | null;
 
@@ -25,6 +25,7 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const { t } = useTranslation('common');
+  const router = useRouter();
   const { signInWithMagicLink, signInWithGoogle, signInWithApple, setDevSession } =
     useAuthStore();
 
@@ -35,6 +36,7 @@ export default function LoginScreen() {
       await fn();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Something went wrong';
+      console.log('[Login] withLoading error:', e);
       setError(msg);
     } finally {
       setLoading(null);
@@ -124,7 +126,15 @@ export default function LoginScreen() {
             {DEV_BYPASS && (
               <TouchableOpacity
                 style={[styles.devButton, !!loading && styles.buttonDisabled]}
-                onPress={() => withLoading('magic', setDevSession)}
+                onPress={() => {
+                  console.log('[DevLogin] Dev Login 버튼 눌림');
+                  withLoading('magic', async () => {
+                    console.log('[DevLogin] setDevSession 시작');
+                    await setDevSession();
+                    console.log('[DevLogin] setDevSession 완료 → home 이동');
+                    router.replace('/(tabs)/home');
+                  });
+                }}
                 disabled={!!loading}
               >
                 {loading === 'magic' ? (
