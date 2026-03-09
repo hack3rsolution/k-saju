@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useEntitlementStore } from '../../../store/entitlementStore';
 import { useAuthStore } from '../../../store/authStore';
+import { useLanguageStore } from '../../../store/languageStore';
 import { T } from '../../../theme/tokens';
 import { FaceModeCard } from '../components/FaceModeCard';
 import { FaceImageInputSheet } from '../components/FaceImageInputSheet';
@@ -24,6 +25,7 @@ export function FaceInsightHomeScreen() {
   const isPremium = useEntitlementStore((s) => s.isPremium);
   const user = useAuthStore((s) => s.user);
   const store = useFaceInsightStore();
+  const { language } = useLanguageStore();
 
   const [sheetVisible, setSheetVisible] = useState(false);
   const [selectedMode, setSelectedMode] = useState<FaceInsightMode | null>(null);
@@ -59,9 +61,10 @@ export function FaceInsightHomeScreen() {
         mode: selectedMode,
         imageUrl: uploadedUrl,
         imageSource: source,
-        locale: 'en',
+        locale: language,
         culturalFrame,
         userId: user.id,
+        userLanguage: language,
       });
 
       store.setSessionId(response.sessionId);

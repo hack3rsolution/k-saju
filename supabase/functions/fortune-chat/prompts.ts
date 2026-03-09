@@ -1,4 +1,5 @@
 import type { CulturalFrame, ChartSnapshot, TodayReading } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural-frame system prompts ─────────────────────────────────────────────
 
@@ -39,13 +40,6 @@ export const SUGGESTED_QUESTIONS: Record<CulturalFrame, string[]> = {
   in: ['Is today auspicious for new beginnings?', 'How can I align with my dharma today?', 'What karma should I be mindful of this week?'],
 };
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
-  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
-  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
-  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
-};
-
 // ── System prompt builder ─────────────────────────────────────────────────────
 
 export function buildSystemPrompt(
@@ -72,12 +66,9 @@ export function buildSystemPrompt(
     `Details: ${reading.details.join(' / ')}`,
   ].join('\n');
 
-  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
   // Language instruction goes FIRST so it overrides frame-level language directives
   // (e.g. kr frame says "답변은 한국어로", cn frame says "用中文回答")
-  const langInstruction = langName
-    ? `CRITICAL: You must respond ONLY in ${langName}. All text must be written in ${langName}. Do not use Korean or any other language regardless of the instructions that follow.\n\n`
-    : '';
+  const langInstruction = buildLangInstruction(userLanguage);
 
   return `${langInstruction}${FRAME_SYSTEM[frame]}
 

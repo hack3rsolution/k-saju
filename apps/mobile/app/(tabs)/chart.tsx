@@ -276,9 +276,6 @@ export default function ChartScreen() {
             >
               <View style={styles.elementLabelCol}>
                 <Text style={[styles.elementKanji, { color: ELEM_COLOR[r.key] }]}>{r.key}</Text>
-                <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>
-                  {t(`common:elements.${ELEM_KEY[r.key]}`)}
-                </Text>
               </View>
               <View style={styles.barBg}>
                 {/* Segmented bar */}
@@ -432,7 +429,7 @@ export default function ChartScreen() {
             const level = infoModal.score === 0 ? t('chart:modal.none') : infoModal.score >= Math.ceil(total / 3) ? t('chart:modal.strong') : t('chart:modal.weak');
             return (
               <>
-                <Text style={[styles.infoTitle, { color }]}>{symbol} {infoModal.element} {t(`common:elements.${elemKey}`)}</Text>
+                <Text style={[styles.infoTitle, { color }]}>{symbol} {infoModal.element}</Text>
                 <Text style={styles.infoSubtitle}>{t('chart:modal.seasonOf', { season: t(`chart:elementInfo.${elemKey}.season`) })} · {pct}% ({level})</Text>
                 <Text style={styles.infoDesc}>{t(`chart:elementInfo.${elemKey}.desc`)}</Text>
                 <View style={[styles.infoHighlight, { borderLeftColor: color }]}>

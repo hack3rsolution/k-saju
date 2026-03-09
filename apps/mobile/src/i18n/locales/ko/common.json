@@ -20,11 +20,11 @@
   "month": "이번 달",
   "year": "올해",
   "elements": {
-    "Wood": "木 목",
-    "Fire": "火 화",
-    "Earth": "土 토",
-    "Metal": "金 금",
-    "Water": "水 수"
+    "Wood": "목",
+    "Fire": "화",
+    "Earth": "토",
+    "Metal": "금",
+    "Water": "수"
   },
   "fiveElements": "오행(五行)",
   "yin": "음(陰)",

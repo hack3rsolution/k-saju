@@ -53,7 +53,8 @@ export function PillarDetailModal({
   if (!pillarKey || !stem) return null;
 
   const stemEl = STEM_ELEMENT[stem];
-  const elementLabel = `${stemEl} (${t(`common:elements.${FE_ENG[stemEl] ?? 'Wood'}`)})`;
+  const elemTranslated = t(`common:elements.${FE_ENG[stemEl] ?? 'Wood'}`);
+  const elementLabel = elemTranslated === stemEl ? stemEl : `${stemEl} (${elemTranslated})`;
   const polarityLabel = t(`common:${STEM_POLARITY[stem]}`);
 
   const pillarLabel = t(`chart:pillarLabels.${pillarKey}`, t('chart:pillarLabels.default'));

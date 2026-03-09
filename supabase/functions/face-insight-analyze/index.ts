@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -48,9 +49,12 @@ async function fetchImageAsBase64(url: string): Promise<{ base64: string; mediaT
 
 // ── Prompts ───────────────────────────────────────────────────────────────────
 
-function buildSystemPrompt(mode: string): string {
+function buildSystemPrompt(mode: string, userLanguage?: string): string {
+  // Language instruction goes FIRST so it overrides any implicit language from context
+  const langInstruction = buildLangInstruction(userLanguage);
+
   if (mode === 'traditional') {
-    return `You are a traditional physiognomy (관상, 面相) interpreter with deep knowledge of East Asian face-reading traditions.
+    return `${langInstruction}You are a traditional physiognomy (관상, 面相) interpreter with deep knowledge of East Asian face-reading traditions.
 Provide culturally-informed, entertainment-oriented interpretations only.
 ALLOWED phrases: "may suggest", "often associated with", "can be interpreted as", "traditionally linked to", "tends toward".
 FORBIDDEN words/phrases: "guaranteed", "proven", "exact prediction", "will definitely", "certainly".
@@ -58,7 +62,7 @@ Always remind that physiognomy is a cultural art form, not a predictive science.
 Respond in JSON only.`;
   }
 
-  return `You are a wellness-oriented facial expression and appearance analyst.
+  return `${langInstruction}You are a wellness-oriented facial expression and appearance analyst.
 Provide general wellness observations based on visible facial cues (skin tone, expression, tension, eye brightness).
 This is NOT medical diagnosis. Use observational, supportive language only.
 ALLOWED phrases: "possible signal", "may reflect", "wellness-oriented observation", "appears to suggest", "could indicate".
@@ -185,9 +189,9 @@ serve(async (req) => {
   const userId = user.id;
 
   // ── Parse body ────────────────────────────────────────────────────────────
-  let mode: string, imageUrl: string, imageSource: string, locale: string, culturalFrame: string;
+  let mode: string, imageUrl: string, imageSource: string, locale: string, culturalFrame: string, userLanguage: string;
   try {
-    ({ mode, imageUrl, imageSource, locale, culturalFrame } = await req.json());
+    ({ mode, imageUrl, imageSource, locale, culturalFrame, userLanguage } = await req.json());
   } catch {
     return errorResponse('Invalid JSON body');
   }
@@ -210,7 +214,7 @@ serve(async (req) => {
     }
 
     // ── 2. Call Claude (face detection + analysis in one call) ───────────────
-    const systemPrompt  = buildSystemPrompt(mode);
+    const systemPrompt  = buildSystemPrompt(mode, userLanguage ?? locale ?? 'en');
     const analysisPrompt = buildAnalysisPrompt(mode);
 
     let parsed: Record<string, unknown>;

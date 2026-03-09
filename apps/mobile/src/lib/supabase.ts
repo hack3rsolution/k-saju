@@ -35,6 +35,10 @@ export async function getFreshToken(): Promise<string> {
       if (expiresAt - nowSec < 60) {
         const { data: refreshed } = await supabase.auth.refreshSession();
         if (refreshed?.session?.access_token) return refreshed.session.access_token;
+        // Refresh failed (e.g. refresh token expired or network error).
+        // Returning an expired JWT would cause "Invalid JWT" on the Edge Function.
+        // Fall through to the anon-key fallback instead.
+        return supabaseAnonKey;
       }
       return session.access_token;
     }

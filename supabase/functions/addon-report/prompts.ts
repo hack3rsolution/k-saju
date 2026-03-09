@@ -4,6 +4,7 @@ import type {
   ChartPayload,
   AddonReportRequest,
 } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Output format instructions ────────────────────────────────────────────────
 
@@ -153,19 +154,11 @@ const REPORT_BUILDERS: Record<
   name_analysis: buildNameAnalysisPrompt,
 };
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
-  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
-  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
-  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
-};
-
 export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
   const base = SYSTEM_PROMPTS[frame];
-  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
-  if (!langName) return base;
   // Language instruction goes FIRST so it overrides frame-level language directives
-  return `CRITICAL: You must respond ONLY in ${langName}. All report text (title, overview, sections) must be written entirely in ${langName}. Do not use Korean or any other language regardless of the instructions that follow.\n\n${base}`;
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${base}`;
 }
 
 export function buildUserPrompt(req: AddonReportRequest): string {

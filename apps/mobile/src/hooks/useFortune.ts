@@ -141,6 +141,8 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
   // Stable ref so the effect below doesn't re-fire when ganji object changes identity
   const ganjiRef = useRef(ganji);
   ganjiRef.current = ganji;
+  // Track previous language to detect changes and bust stale cache
+  const prevLanguageRef = useRef<string>(language);
 
   useEffect(() => {
     if (!session) return;
@@ -155,6 +157,15 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
       // ── 0. Client-side cache check — no loading spinner on hit ────────────
       const earlyFrame = frame ?? (session!.user.user_metadata?.cultural_frame as string ?? 'en');
       const ck = fortuneCacheKey(userId, refDate, type, earlyFrame, language);
+
+      // If language changed since last render, wipe the stale cache entry for the
+      // new language (it may contain content generated with the old prompt before
+      // the language-instruction fix). This forces a fresh server round-trip.
+      if (prevLanguageRef.current !== language) {
+        prevLanguageRef.current = language;
+        await AsyncStorage.removeItem(ck);
+        if (!cancelled) setReading(null);
+      }
       const clientCached = await loadFortuneCache(ck);
       if (clientCached) {
         if (!cancelled) {

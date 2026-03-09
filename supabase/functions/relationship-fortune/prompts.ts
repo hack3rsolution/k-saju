@@ -4,6 +4,7 @@ import type {
   BirthDataInput,
   RelationshipType,
 } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural system prompts ───────────────────────────────────────────────────
 
@@ -139,17 +140,9 @@ Respond ONLY with valid JSON matching this exact schema:
 }`;
 }
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  ko: 'Korean', 'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
-  ja: 'Japanese', en: 'English', es: 'Spanish', 'pt-BR': 'Portuguese',
-  hi: 'Hindi', vi: 'Vietnamese', id: 'Indonesian',
-  fr: 'French', de: 'German', th: 'Thai', ar: 'Arabic',
-};
-
 export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
   const base = SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
-  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? userLanguage) : null;
-  if (!langName) return base;
-  // Prepend so the language instruction takes priority over any frame-level hints.
-  return `IMPORTANT: You must respond ONLY in ${langName}. All text in the JSON must be in ${langName}. Do not mix languages.\n\n${base}`;
+  // Language instruction goes FIRST so it overrides frame-level language directives.
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${base}`;
 }
