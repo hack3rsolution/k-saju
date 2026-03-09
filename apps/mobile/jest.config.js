@@ -40,17 +40,23 @@ module.exports = {
 
   // Coverage: pure business-logic that has unit tests.
   // Excluded from measurement (but still exercised via other tests):
-  //   components/hooks  → Detox E2E
-  //   authStore         → async OAuth/Supabase methods need integration tests
-  //   purchases.ts      → RevenueCat SDK needs integration tests
-  //   thin stores       → no real logic to measure
+  //   components/hooks         → Detox E2E
+  //   authStore                → async OAuth/Supabase methods need integration tests
+  //   purchases.ts             → RevenueCat SDK needs integration tests
+  //   thin stores              → no real logic to measure
+  //   types/**                 → type-only definitions, no runtime logic
+  //   theme/**                 → design tokens/constants, no runtime logic
+  //   kculture-references.ts   → tested via integration (Edge Function context)
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/i18n/**',
     '!src/components/**',
     '!src/hooks/**',
+    '!src/types/**',
+    '!src/theme/**',
     '!src/lib/purchases.ts',
+    '!src/lib/kculture-references.ts',
     '!src/store/authStore.ts',       // async OAuth methods are integration territory
     '!src/store/languageStore.ts',
     '!src/store/onboardingStore.ts',

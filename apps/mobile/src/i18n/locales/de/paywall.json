@@ -1,0 +1,37 @@
+{
+  "title": "Entdecken Sie Ihr volles Schicksal",
+  "subtitle": "Premium gibt Ihnen unbegrenzten Zugang zu allen Lesungen, Berichten und kosmischen Erkenntnissen.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Monatlich",
+      "price": "8,99 €",
+      "period": "/Monat",
+      "cta": "Monatlich holen"
+    },
+    "annual": {
+      "name": "Premium Jährlich",
+      "price": "59,99 €",
+      "period": "/Jahr",
+      "badge": "Bestes Angebot · 44% sparen",
+      "cta": "Jährlich holen"
+    }
+  },
+  "addons": {
+    "title": "Erweiterungen (einmalig)",
+    "deep_compatibility": "Tiefe Kompatibilitätsanalyse",
+    "career_wealth": "Karriere & Reichtumsbericht",
+    "daewoon_report_pdf": "Vollständiger Glückszyklus-Bericht (PDF)",
+    "name_analysis": "Namensanalyse"
+  },
+  "legal": "Zahlung wird Ihrem App Store/Google Play-Konto belastet. Jederzeit kündbar. Preise können je nach Region variieren.",
+  "restore": "Käufe wiederherstellen",
+  "features": {
+    "unlimited_daily": "Unbegrenzte tägliche & wöchentliche Lesungen",
+    "monthly_annual": "Monatliches & jährliches Glück",
+    "daewoon": "Analyse des großen Glückszyklus (10 Jahre)",
+    "compatibility": "Kompatibilitätsberichte",
+    "all_frames": "Alle 6 kulturellen Stile",
+    "priority_ai": "Priorisierte KI-Lesungen",
+    "early_access": "Frühzeitiger Zugang zu neuen Funktionen"
+  }
+}

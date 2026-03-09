@@ -10,17 +10,20 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { AddRelationshipInput, RelationshipType } from '../types/relationship';
 
 // ── Option sets ───────────────────────────────────────────────────────────────
 
-const REL_TYPES: { value: RelationshipType; label: string; icon: string }[] = [
-  { value: 'romantic',  label: 'Romantic',  icon: '💞' },
-  { value: 'friend',    label: 'Friend',    icon: '🤝' },
-  { value: 'family',    label: 'Family',    icon: '👨‍👩‍👧' },
-  { value: 'colleague', label: 'Colleague', icon: '💼' },
-  { value: 'other',     label: 'Other',     icon: '⭐' },
-];
+const REL_TYPE_ICONS: Record<RelationshipType, string> = {
+  romantic:  '💞',
+  friend:    '🤝',
+  family:    '👨‍👩‍👧',
+  colleague: '💼',
+  other:     '⭐',
+};
+
+const REL_TYPE_KEYS: RelationshipType[] = ['romantic', 'friend', 'family', 'colleague', 'other'];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -36,6 +39,7 @@ interface AddRelationshipModalProps {
 export function AddRelationshipModal({
   visible, loading, onClose, onSubmit,
 }: AddRelationshipModalProps) {
+  const { t } = useTranslation('common');
   const [name,   setName]   = useState('');
   const [year,   setYear]   = useState('');
   const [month,  setMonth]  = useState('');
@@ -56,14 +60,15 @@ export function AddRelationshipModal({
     const m = parseInt(month, 10);
     const d = parseInt(day, 10);
 
-    if (!name.trim())               return Alert.alert('Name required');
-    if (!y || y < 1900 || y > 2025) return Alert.alert('Enter a valid birth year (1900–2025)');
-    if (!m || m < 1 || m > 12)      return Alert.alert('Enter a valid birth month (1–12)');
-    if (!d || d < 1 || d > 31)      return Alert.alert('Enter a valid birth day (1–31)');
+    const maxBirthYear = new Date().getFullYear() - 16;
+    if (!name.trim())                           return Alert.alert(t('addRelationship.alertName'));
+    if (!y || y < 1900 || y > maxBirthYear)    return Alert.alert(t('addRelationship.alertYear', { max: maxBirthYear }));
+    if (!m || m < 1 || m > 12)                 return Alert.alert(t('addRelationship.alertMonth'));
+    if (!d || d < 1 || d > 31)                 return Alert.alert(t('addRelationship.alertDay'));
 
     const parsedHour = hour.trim() ? parseInt(hour, 10) : undefined;
     if (parsedHour != null && (isNaN(parsedHour) || parsedHour < 0 || parsedHour > 23)) {
-      return Alert.alert('Birth hour must be 0–23');
+      return Alert.alert(t('addRelationship.alertHour'));
     }
 
     onSubmit({
@@ -84,13 +89,13 @@ export function AddRelationshipModal({
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.title}>Add Relationship</Text>
+            <Text style={styles.title}>{t('addRelationship.title')}</Text>
 
             {/* Name */}
-            <Text style={styles.label}>Name</Text>
+            <Text style={styles.label}>{t('addRelationship.nameLabel')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Partner, Friend, etc."
+              placeholder={t('addRelationship.namePlaceholder')}
               placeholderTextColor="#5b4d7e"
               value={name}
               onChangeText={setName}
@@ -98,11 +103,11 @@ export function AddRelationshipModal({
             />
 
             {/* Birth date */}
-            <Text style={styles.label}>Birth Date</Text>
+            <Text style={styles.label}>{t('myInfo.birthDate')}</Text>
             <View style={styles.row}>
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Year"
+                placeholder={t('onboarding:yearPlaceholder', 'YYYY')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={year}
@@ -111,7 +116,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Month"
+                placeholder={t('onboarding:monthPlaceholder', 'MM')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={month}
@@ -120,7 +125,7 @@ export function AddRelationshipModal({
               />
               <TextInput
                 style={[styles.input, styles.flex1]}
-                placeholder="Day"
+                placeholder={t('onboarding:dayPlaceholder', 'DD')}
                 placeholderTextColor="#5b4d7e"
                 keyboardType="number-pad"
                 value={day}
@@ -130,10 +135,13 @@ export function AddRelationshipModal({
             </View>
 
             {/* Birth hour (optional) */}
-            <Text style={styles.label}>Birth Hour <Text style={styles.optional}>(optional, 0–23)</Text></Text>
+            <Text style={styles.label}>
+              {t('myInfo.birthTime')}{' '}
+              <Text style={styles.optional}>{t('addRelationship.birthHourOptional')}</Text>
+            </Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. 14 for 2 PM"
+              placeholder={t('addRelationship.birthHourPlaceholder')}
               placeholderTextColor="#5b4d7e"
               keyboardType="number-pad"
               value={hour}
@@ -142,7 +150,7 @@ export function AddRelationshipModal({
             />
 
             {/* Gender */}
-            <Text style={styles.label}>Gender</Text>
+            <Text style={styles.label}>{t('myInfo.gender')}</Text>
             <View style={styles.row}>
               {(['M', 'F'] as const).map((g) => (
                 <TouchableOpacity
@@ -151,24 +159,24 @@ export function AddRelationshipModal({
                   onPress={() => setGender(g)}
                 >
                   <Text style={[styles.chipText, gender === g && styles.chipTextActive]}>
-                    {g === 'M' ? '♂ Male' : '♀ Female'}
+                    {g === 'M' ? `♂ ${t('myInfo.male')}` : `♀ ${t('myInfo.female')}`}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
             {/* Relationship type */}
-            <Text style={styles.label}>Relationship Type</Text>
+            <Text style={styles.label}>{t('addRelationship.relTypeLabel')}</Text>
             <View style={styles.typeGrid}>
-              {REL_TYPES.map((t) => (
+              {REL_TYPE_KEYS.map((key) => (
                 <TouchableOpacity
-                  key={t.value}
-                  style={[styles.typeChip, relType === t.value && styles.typeChipActive]}
-                  onPress={() => setRelType(t.value)}
+                  key={key}
+                  style={[styles.typeChip, relType === key && styles.typeChipActive]}
+                  onPress={() => setRelType(key)}
                 >
-                  <Text style={styles.typeIcon}>{t.icon}</Text>
-                  <Text style={[styles.typeLabel, relType === t.value && styles.typeLabelActive]}>
-                    {t.label}
+                  <Text style={styles.typeIcon}>{REL_TYPE_ICONS[key]}</Text>
+                  <Text style={[styles.typeLabel, relType === key && styles.typeLabelActive]}>
+                    {t(`addRelationship.relTypes.${key}`)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -183,12 +191,12 @@ export function AddRelationshipModal({
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.submitText}>Add Relationship</Text>
+                <Text style={styles.submitText}>{t('addRelationship.submit')}</Text>
               )}
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
+              <Text style={styles.cancelText}>{t('cancel')}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

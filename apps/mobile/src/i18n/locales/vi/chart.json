@@ -14,6 +14,14 @@
   "elementBalance": "Cân Bằng Ngũ Hành",
   "daewoon": "Đại Vận",
   "daewoonPeriod": "Tuổi {{age}}+",
+  "cosmicBlueprint": "Bản Đồ Vũ Trụ",
+  "destinyMap": "Bản Đồ Vận Mệnh",
+  "dayMaster": "Nhật Can",
+  "majorLuckCycle": "Đại Vận",
+  "ageSuffix": "tuổi",
+  "now": "HIỆN TẠI",
+  "noChart": "Hoàn thành hướng dẫn để xem tử vi của bạn.",
+  "recommendations": "Đề xuất theo ngũ hành của bạn",
   "shishin": {
     "title": "Thập Thần",
     "비견": "Tỷ Kiên",
@@ -26,5 +34,344 @@
     "정관": "Chính Quan",
     "편인": "Thiên Ấn",
     "정인": "Chính Ấn"
+  },
+  "tabs": {
+    "music": "🎵 Âm nhạc",
+    "books": "📚 Sách",
+    "travel": "✈️ Du lịch"
+  },
+  "share": "Chia sẻ",
+  "generatingRecommendations": "Đang tạo gợi ý…",
+  "elementInfo": {
+    "Wood": {
+      "season": "Xuân",
+      "desc": "Mộc (木) mang năng lượng mùa xuân — tượng trưng cho tăng trưởng, sáng tạo và khởi đầu mới. Một lực tiến bộ hướng lên.",
+      "strong": "Mộc mạnh mang lại chủ động, sáng tạo và khả năng lãnh đạo, nhưng có thể gây bướng bỉnh và xung đột.",
+      "weak": "Mộc yếu làm giảm tính linh hoạt và khả năng lập kế hoạch; những khởi đầu mới có thể cảm thấy đáng sợ."
+    },
+    "Fire": {
+      "season": "Hạ",
+      "desc": "Hỏa (火) mang năng lượng mùa hè — tượng trưng cho đam mê, biểu đạt và giao tiếp. Chiếu sáng mọi thứ xung quanh như ánh mặt trời.",
+      "strong": "Hỏa mạnh mang lại sức hút và nhiệt huyết, nhưng có thể dẫn đến bốc đồng và biến động cảm xúc.",
+      "weak": "Hỏa yếu làm giảm khả năng biểu đạt và tính hòa đồng."
+    },
+    "Earth": {
+      "season": "Giao mùa",
+      "desc": "Thổ (土) mang năng lượng thời giao mùa — tượng trưng cho sự ổn định, tin tưởng và trung tâm. Nền đất nuôi dưỡng tất cả các nguyên tố.",
+      "strong": "Thổ mạnh mang lại sự đáng tin cậy và bao dung, nhưng có thể tỏ ra bảo thủ và chống lại thay đổi.",
+      "weak": "Thổ yếu khiến khó giữ cân bằng và có thể dẫn đến bất ổn cảm xúc."
+    },
+    "Metal": {
+      "season": "Thu",
+      "desc": "Kim (金) mang năng lượng mùa thu — tượng trưng cho quyết đoán, thu hoạch và công lý. Cắt bỏ những gì không còn cần thiết.",
+      "strong": "Kim mạnh mang lại tính quyết đoán và chính xác, nhưng có thể tỏ ra sắc bén và lạnh lùng.",
+      "weak": "Kim yếu làm giảm quyết đoán và khả năng hoàn thành, để lại công việc dang dở."
+    },
+    "Water": {
+      "season": "Đông",
+      "desc": "Thủy (水) mang năng lượng mùa đông — tượng trưng cho trí tuệ, nhạy cảm và bao dung. Chảy xuống chỗ thấp nhất, chứa đựng mọi thứ.",
+      "strong": "Thủy mạnh mang lại trí tuệ và khả năng thích nghi, nhưng có thể trôi dạt không định hướng.",
+      "weak": "Thủy yếu làm giảm trực giác và nhạy cảm và có thể tăng sự bướng bỉnh."
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "Tỷ Kiên (兄弟星)",
+      "desc": "Tỷ Kiên chia sẻ cùng nguyên tố và cực tính với Nhật Can — tượng trưng cho anh chị em, đồng nghiệp và đối thủ.",
+      "fortune": "Tính độc lập và tự trọng mạnh mẽ; thích hành động độc lập. Cẩn thận xung đột trong hợp tác."
+    },
+    "겁재": {
+      "category": "Kiếp Tài (兄弟星)",
+      "desc": "Kiếp Tài chia sẻ cùng nguyên tố nhưng cực tính ngược — cạnh tranh khốc liệt và năng lượng cướp đoạt tài lộc.",
+      "fortune": "Động lực mạnh nhưng dễ quyết định bốc đồng. Cẩn thận tổn thất tài chính."
+    },
+    "식신": {
+      "category": "Thực Thần (表現星)",
+      "desc": "Thực Thần được tạo ra bởi Nhật Can cùng cực tính — tượng trưng cho tài năng, phúc lộc ẩm thực và sáng tạo.",
+      "fortune": "Tài nghệ nghệ thuật và khả năng biểu đạt. Cuộc sống mang lại sự thoải mái và hoàn thành sáng tạo."
+    },
+    "상관": {
+      "category": "Thương Quan (表現星)",
+      "desc": "Thương Quan được tạo ra bởi Nhật Can với cực tính ngược — tài năng, nổi loạn và tài năng sáng tạo.",
+      "fortune": "Nhanh trí và hùng biện, nhưng có xu hướng thách thức quyền uy. Cẩn thận xung đột nơi làm việc."
+    },
+    "편재": {
+      "category": "Thiên Tài (財星)",
+      "desc": "Thiên Tài bị kiểm soát bởi Nhật Can cùng cực tính — tài lộc bất ngờ, đầu cơ và người cha.",
+      "fortune": "Khả năng mạnh trong phát hiện cơ hội đầu tư. Mạo hiểm cao có thể mang lợi nhuận lớn."
+    },
+    "정재": {
+      "category": "Chính Tài (財星)",
+      "desc": "Chính Tài bị kiểm soát bởi Nhật Can với cực tính ngược — tài lộc ổn định và cần cù.",
+      "fortune": "Xuất sắc trong quản lý tài chính cẩn thận. Tìm kiếm thu nhập ổn định và bền vững."
+    },
+    "편관": {
+      "category": "Thiên Quan / Thất Sát (官星)",
+      "desc": "Thất Sát kiểm soát Nhật Can cùng cực tính — áp lực, thách thức và quyền lực quân sự.",
+      "fortune": "Ý chí mạnh mẽ vượt qua nghịch cảnh. Cạnh tranh gay gắt, nhưng sự phát triển lớn theo sau."
+    },
+    "정관": {
+      "category": "Chính Quan (官星)",
+      "desc": "Chính Quan kiểm soát Nhật Can với cực tính ngược — danh dự, quy tắc và vị trí chính thức.",
+      "fortune": "Nguyên tắc mạnh mẽ và danh tiếng xã hội cao. Xuất sắc trong công vụ và vai trò quản lý."
+    },
+    "편인": {
+      "category": "Thiên Ấn (印星)",
+      "desc": "Thiên Ấn nuôi dưỡng Nhật Can cùng cực tính — học vấn phi truyền thống, tôn giáo và tài năng độc đáo.",
+      "fortune": "Tư duy sáng tạo và kỹ năng chuyên biệt. Dễ cô đơn; cẩn thận phụ thuộc không lành mạnh."
+    },
+    "정인": {
+      "category": "Chính Ấn (印星)",
+      "desc": "Chính Ấn nuôi dưỡng Nhật Can với cực tính ngược — học thức, người mẹ, tri thức và nhân từ.",
+      "fortune": "Khả năng học tập xuất sắc và đạo đức mạnh mẽ. Có khả năng nhận được sự hỗ trợ từ người mẹ hoặc ân nhân."
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "Đại Mộc · Sức Mạnh Khởi Đầu",
+      "fortune": "Năng lượng khởi đầu mới và tăng trưởng. Giai đoạn tăng cường lãnh đạo.",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "Cỏ và Hoa · Sức Sống Linh Hoạt",
+      "fortune": "Nắm bắt cơ hội qua sự thích nghi nhẹ nhàng. Ân nhân xuất hiện trong các mối quan hệ.",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "Mặt Trời · Đam Mê Rực Rỡ",
+      "fortune": "Năng lượng tươi sáng và rực rỡ. Thời điểm cho sự biểu đạt và sáng tạo nở rộ.",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "Nến · Lửa Chính Xác",
+      "fortune": "Suy ngẫm sâu sắc và tập trung. Xuất sắc trong học thuật và thủ công.",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "Núi Lớn · Sự Ổn Định Vững Chắc",
+      "fortune": "Thời điểm xây dựng sự ổn định và tin tưởng. Thuận lợi cho bất động sản và đất đai.",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "Ruộng Đất · Đất Nuôi Dưỡng",
+      "fortune": "Quản lý và lập kế hoạch cẩn thận mang lại kết quả. Thời điểm củng cố nội tâm.",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "Sắt · Biến Đổi Quyết Đoán",
+      "fortune": "Quyết đoán táo bạo và thực thi. Loại bỏ điều không cần thiết và tái sinh.",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "Châu Báu · Óc Thẩm Mỹ Sắc Bén",
+      "fortune": "Chính xác và chủ nghĩa hoàn hảo. Đạt kết quả trong nghệ thuật, làm đẹp và tài chính.",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "Sông Lớn · Trí Tuệ Sâu Sắc",
+      "fortune": "Tầm nhìn rộng và chiến lược linh hoạt. Xuất sắc cho mở rộng kinh doanh và hoạt động đối ngoại.",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "Nước Mưa · Nhạy Cảm Tinh Tế",
+      "fortune": "Trực giác và cảm xúc tỏa sáng. Thuận lợi cho nghệ thuật, phát triển tâm linh và chữa lành.",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 Chuột",
+      "meaning": "Năng Lượng Nửa Đêm · Trí Tuệ và Phong Phú",
+      "fortune": "Thời điểm tích lũy tài lộc và kiến thức. Chuẩn bị lặng lẽ cho một bước nhảy vọt lớn.",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 Trâu",
+      "meaning": "Cuối Đông · Bền Bỉ và Cần Cù",
+      "fortune": "Nỗ lực kiên định chắc chắn sẽ có kết quả. Thuận lợi cho sức khỏe và đất đai.",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 Hổ",
+      "meaning": "Đầu Xuân · Dũng Cảm và Động Lực",
+      "fortune": "Theo đuổi tích cực dẫn đến kết quả. Thuận lợi cho thay đổi nghề nghiệp và kinh doanh.",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 Thỏ",
+      "meaning": "Hoa Xuân · Văn Hóa và Nghệ Thuật",
+      "fortune": "Các mối quan hệ phong phú và tài năng nghệ thuật tỏa sáng. Ân nhân cung cấp hỗ trợ.",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 Rồng",
+      "meaning": "Mưa Xuân · Thay Đổi và Huyền Bí",
+      "fortune": "Thời điểm biến đổi lớn. Vận may bất ngờ đến.",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 Rắn",
+      "meaning": "Đầu Hạ · Trí Tuệ và Thận Trọng",
+      "fortune": "Chiến lược bình tĩnh dẫn đến thành công. Thuận lợi cho học tập, nghiên cứu và y tế.",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 Ngựa",
+      "meaning": "Giữa Hạ · Đam Mê và Năng Động",
+      "fortune": "Giao lưu và trao đổi tích cực. Năng lượng mạnh cho du lịch và hoạt động xã hội.",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 Dê",
+      "meaning": "Cuối Hạ · Nhẹ Nhàng và Nghệ Thuật",
+      "fortune": "Nhạy cảm nghệ thuật và dễ mến nổi bật. Đạt kết quả qua làm việc nhóm.",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 Khỉ",
+      "meaning": "Đầu Thu · Lanh Lợi và Thay Đổi",
+      "fortune": "Phán đoán sắc bén và khả năng thích nghi. Nổi bật trong công nghệ và đổi mới.",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 Gà",
+      "meaning": "Thu Hoạch · Chính Xác và Kỷ Luật",
+      "fortune": "Thực thi tỉ mỉ dẫn đến kết quả. Thuận lợi cho tài chính và hành chính.",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 Chó",
+      "meaning": "Cuối Thu · Trung Thành và Chính Trực",
+      "fortune": "Xây dựng mối quan hệ vững chắc qua sự tin tưởng. Năng lượng thuận lợi cho bất động sản và an ninh.",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 Lợn",
+      "meaning": "Đầu Đông · Phong Phú và Thư Thái",
+      "fortune": "Năng lượng dồi dào. Thời điểm tốt cho học tập, du lịch và phát triển tâm linh.",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "Tăng trưởng|Sáng tạo|Thách thức",
+    "Fire": "Đam mê|Biểu đạt|Kết nối",
+    "Earth": "Ổn định|Tin tưởng|Cống hiến",
+    "Metal": "Quyết đoán|Thu hoạch|Tinh luyện",
+    "Water": "Trí tuệ|Linh hoạt|Chiều sâu"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "Thuận lợi cho khởi đầu mới, khởi nghiệp, học tập và du lịch.",
+      "caution": "Buông bỏ bướng bỉnh và cởi mở với quan điểm của người khác."
+    },
+    "Fire": {
+      "favor": "Thuận lợi cho giao lưu xã hội, thuyết trình, nghệ thuật và vai trò lãnh đạo.",
+      "caution": "Tránh quyết định bốc đồng và quản lý cảm xúc của bạn."
+    },
+    "Earth": {
+      "favor": "Thuận lợi cho bất động sản, đầu tư, kế hoạch dài hạn và gia đình.",
+      "caution": "Đừng phản ứng quá bảo thủ với sự thay đổi."
+    },
+    "Metal": {
+      "favor": "Thuận lợi cho sự nghiệp, pháp lý, quản lý tài chính và phát triển kỹ năng.",
+      "caution": "Chủ nghĩa hoàn hảo thái quá có thể gây hại cho các mối quan hệ."
+    },
+    "Water": {
+      "favor": "Thuận lợi cho học tập, nghiên cứu, ngoại giao và khám phá tâm linh.",
+      "caution": "Đặt mục tiêu rõ ràng để không trôi dạt vô định."
+    }
+  },
+  "modal": {
+    "none": "Không có",
+    "strong": "Mạnh",
+    "weak": "Yếu",
+    "seasonOf": "Năng lượng {{season}}",
+    "whenStrong": "💪 Khi Mạnh",
+    "whenWeak": "🔍 Khi Thiếu",
+    "fortuneLabel": "✨ Vận Mệnh",
+    "daewoonTitle": "Đại Vận {{pillars}}",
+    "currentStar": "★ Hiện Tại",
+    "inProgress": "Đang Hoạt Động",
+    "heavenlyStem": "Thiên Can",
+    "earthlyBranch": "Địa Chi",
+    "elementEnergy": "Ngũ Hành",
+    "sameElem": "Năng lượng {{element}} trùng khớp với Nhật Can ({{stem}}) của bạn. Năng lượng cốt lõi của bạn được khuếch đại rất nhiều trong giai đoạn này.",
+    "periodFlow": "📖 Dòng Chảy Giai Đoạn Này",
+    "favorLabel": "✅ Hướng Thuận Lợi",
+    "cautionLabel": "⚠️ Điểm Cần Lưu Ý",
+    "flowLabel": "🔄 Dòng Chảy Vận Mệnh",
+    "prevLabel": "Trước",
+    "selectedLabel": "Đã Chọn",
+    "nextLabel": "Tiếp"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "Thiên Can (天干)",
+    "earthlyBranch": "Địa Chi (地支)",
+    "fiveElement": "Ngũ Hành",
+    "polarity": "Âm Dương",
+    "animal": "Con Giáp",
+    "solarTerm": "Tiết Khí",
+    "symbolLabel": "🌿 Biểu tượng",
+    "personalityLabel": "✨ Tính cách",
+    "strengthLabel": "💪 Điểm mạnh",
+    "cautionLabel": "⚠️ Lưu ý",
+    "tendencyLabel": "✨ Xu hướng"
+  },
+  "pillarLabels": {
+    "year": "Trụ Năm",
+    "month": "Trụ Tháng",
+    "day": "Trụ Ngày",
+    "hour": "Trụ Giờ",
+    "default": "Trụ"
+  },
+  "frameTitles": {
+    "kr": "Saju của tôi",
+    "cn": "BaZi của tôi",
+    "jp": "Bốn Trụ của tôi",
+    "en": "Bản đồ Vũ trụ của tôi",
+    "es": "Destino Cósmico của tôi",
+    "in": "Vedic Fusion của tôi"
   }
 }

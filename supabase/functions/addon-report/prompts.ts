@@ -4,20 +4,21 @@ import type {
   ChartPayload,
   AddonReportRequest,
 } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Output format instructions ────────────────────────────────────────────────
 
 const JSON_FORMAT = `
-IMPORTANT: Respond ONLY with a valid JSON object in this exact format (no markdown):
+
+OUTPUT: Raw JSON only. Start with { end with }. No markdown, no prose.
 {
-  "title": "<report title>",
-  "overview": "<2–3 sentence executive summary>",
+  "title": "<short title>",
+  "overview": "<1-2 sentences>",
   "sections": [
-    { "heading": "<section title>", "content": "<detailed paragraph>" },
-    ...
+    { "heading": "<heading>", "content": "<max 150 chars>" }
   ]
 }
-Produce 4–6 sections. Each section content should be 3–6 sentences.`;
+Exactly 2 sections. Content under 150 characters each.`;
 
 // ── Cultural system prompts (brief, report-focused variants) ──────────────────
 
@@ -78,16 +79,8 @@ ${userChart}
 
 ${partnerChart}
 
-Analyze the compatibility between these two charts:
-1. Element harmony and clashes (합충형파해 — harmony/clash/penalty/destruction)
-2. Day stem relationship (십신 interaction between the two 일간)
-3. Elemental balance complement or conflict
-4. Long-term relationship energy (5-year outlook by 대운)
-5. Communication style compatibility
-6. Areas of natural alignment and potential friction
-7. Advice for strengthening the relationship
-
-Provide a thorough compatibility report with an overall harmony score concept (very high/high/moderate/challenging).`;
+Analyze: element harmony/clashes, day stem relationship, elemental complement or conflict, and key advice.
+Give an overall harmony level (very high/high/moderate/challenging).`;
 }
 
 function buildCareerPrompt(req: AddonReportRequest): string {
@@ -106,16 +99,8 @@ ${chart}
 ${dwText}
 Current approximate age: ${currentAge || 'unknown'}
 
-Analyze this person's career and wealth potential:
-1. 재성(財星) — wealth stars: presence, strength, and timing
-2. 관성(官星) — authority/career stars: leadership potential and career trajectory
-3. 식상(食傷) — creative output stars: entrepreneurship and innovation potential
-4. Optimal career domains based on dominant elements
-5. Best timing windows for career advancement, business launch, or investment (by current 대운)
-6. Wealth accumulation patterns and risk-taking tendencies
-7. Specific 2025–2027 opportunities and cautions
-
-Provide a forward-looking career and wealth report with actionable timing advice.`;
+Analyze: wealth stars (재성), career stars (관성), optimal career domains, and current 대운 timing.
+Include specific near-term opportunities and cautions. Keep it actionable.`;
 }
 
 function buildDaewoonFullPrompt(req: AddonReportRequest): string {
@@ -139,20 +124,8 @@ ${dwText}
 
 Current age: ${currentAge || 'unknown'}
 
-Provide a comprehensive 대운 report covering all 8 major luck periods:
-For each period, analyze:
-- The dominant element energy and its interaction with the natal chart
-- Life theme: career, relationships, health, spirituality
-- Key opportunities and challenges
-- Recommended focus areas
-- Elemental clashes or harmonies with natal pillars
-
-Additionally provide:
-- Overall life arc narrative (early life, mid-life, later life themes)
-- The person's peak fortune windows
-- Areas requiring consistent attention across all periods
-
-Write a detailed, inspiring report that helps the person understand their entire life journey.`;
+For each period give: dominant element interaction with natal chart, life theme, and one key opportunity or caution.
+Also provide an overall life arc (early/mid/late) and peak fortune windows.`;
 }
 
 function buildNameAnalysisPrompt(req: AddonReportRequest): string {
@@ -165,19 +138,8 @@ ${chart}
 
 Name to analyze: ${name}
 
-Analyze this name in relation to the person's saju chart:
-1. Phonetic energy of the name (sound vibration and meaning)
-2. If the name contains Chinese characters (한자), analyze each character's:
-   - Stroke count and element association
-   - Meaning and symbolic energy
-   - Compatibility with the natal day stem (일간)
-3. Element balance: does the name complement or conflict with chart deficiencies?
-4. Overall name-chart harmony assessment
-5. If adjustments are suggested, explain why and what element qualities to seek
-6. 2–3 alternative name suggestions (Korean or Chinese) with element rationale
-7. Lucky name characteristics for this person's chart
-
-Provide a thoughtful, culturally sensitive name analysis report.`;
+Analyze: phonetic energy, element association (stroke count if 한자), name-chart harmony, and 2 alternative suggestions.
+Keep the analysis culturally sensitive and focused.`;
 }
 
 // ── Public interface ──────────────────────────────────────────────────────────
@@ -192,8 +154,11 @@ const REPORT_BUILDERS: Record<
   name_analysis: buildNameAnalysisPrompt,
 };
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const base = SYSTEM_PROMPTS[frame];
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${base}`;
 }
 
 export function buildUserPrompt(req: AddonReportRequest): string {

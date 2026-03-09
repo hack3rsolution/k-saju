@@ -1,0 +1,1 @@
+v2.3.0 — Unterstützung für 15 Sprachen, verbesserte K-Culture-Integration, wöchentliche Glücksmuster & Saju-Engine-Verbesserungen.

@@ -3,20 +3,19 @@
  * Issue #17: Timing Advisor
  */
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { TimingCategory } from '../types/timing';
 
-interface Category {
+interface CategoryDef {
   key: TimingCategory;
   emoji: string;
-  label: string;
-  desc: string;
 }
 
-const CATEGORIES: Category[] = [
-  { key: 'business',   emoji: '🚀', label: '사업 / 창업',   desc: 'Start or expand a business' },
-  { key: 'investment', emoji: '💰', label: '투자 / 재테크', desc: 'Invest money or assets'       },
-  { key: 'romance',    emoji: '💞', label: '연애 / 결혼',   desc: 'Start a relationship or wed' },
-  { key: 'relocation', emoji: '🏠', label: '이사 / 여행',   desc: 'Move home or plan a trip'    },
+const CATEGORY_DEFS: CategoryDef[] = [
+  { key: 'business',   emoji: '🚀' },
+  { key: 'investment', emoji: '💰' },
+  { key: 'romance',    emoji: '💞' },
+  { key: 'relocation', emoji: '🏠' },
 ];
 
 interface Props {
@@ -26,16 +25,18 @@ interface Props {
 }
 
 export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
+  const { t } = useTranslation('fortune');
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
-          <Text style={styles.title}>⏰ 타이밍 어드바이저</Text>
-          <Text style={styles.subtitle}>어떤 결정을 분석할까요?</Text>
+          <Text style={styles.title}>⏰ {t('timingAdvisor.title')}</Text>
+          <Text style={styles.subtitle}>{t('timingAdvisor.subtitle')}</Text>
 
-          {CATEGORIES.map((c) => (
+          {CATEGORY_DEFS.map((c) => (
             <TouchableOpacity
               key={c.key}
               style={styles.categoryBtn}
@@ -43,14 +44,14 @@ export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
             >
               <Text style={styles.categoryEmoji}>{c.emoji}</Text>
               <View style={styles.categoryText}>
-                <Text style={styles.categoryLabel}>{c.label}</Text>
-                <Text style={styles.categoryDesc}>{c.desc}</Text>
+                <Text style={styles.categoryLabel}>{t(`timingAdvisor.categories.${c.key}.label`)}</Text>
+                <Text style={styles.categoryDesc}>{t(`timingAdvisor.categories.${c.key}.desc`)}</Text>
               </View>
             </TouchableOpacity>
           ))}
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>취소</Text>
+            <Text style={styles.cancelText}>{t('common:cancel', 'Cancel')}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -11,15 +11,13 @@ import {
   calculateElementBalance,
   calculateDaewoon,
   dayPillar,
-  monthPillar,
-  yearPillar,
   STEM_ELEMENT,
   type BirthData,
 } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
+import { getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
-import { useEntitlementStore } from '../store/entitlementStore';
+import { useLanguageStore } from '../store/languageStore';
 import type { TimingCategory } from '../types/timing';
 
 
@@ -47,9 +45,8 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
-  const { isPremium, addons } = useEntitlementStore();
+  const { language } = useLanguageStore();
 
-  const hasEntitlement = isPremium || addons.timingAdvisor;
 
   async function analyze(category: TimingCategory) {
     if (!session || loading) return;
@@ -94,29 +91,31 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
 
       // ── Call Edge Function ────────────────────────────────────────────────
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
+
+      const encodedBody = JSON.stringify({
+        chart: {
+          yearPillar:     activeChart.pillars.year,
+          monthPillar:    activeChart.pillars.month,
+          dayPillar:      activeChart.pillars.day,
+          hourPillar:     activeChart.pillars.hour,
+          elementBalance: activeChart.elements,
+          dayStem:        activeChart.dayStem,
+          daewoonList:    activeDaewoon ?? [],
+        },
+        frame:           activeFrame ?? 'en',
+        category,
+        refDate,
+        todaySexagenary,
+        userLanguage: language,
+      });
+
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/timing-advisor`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            chart: {
-              yearPillar:     activeChart.pillars.year,
-              monthPillar:    activeChart.pillars.month,
-              dayPillar:      activeChart.pillars.day,
-              hourPillar:     activeChart.pillars.hour,
-              elementBalance: activeChart.elements,
-              dayStem:        activeChart.dayStem,
-              daewoonList:    activeDaewoon ?? [],
-            },
-            frame:           activeFrame ?? 'en',
-            category,
-            refDate,
-            todaySexagenary,
-          }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 

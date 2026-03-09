@@ -1,6 +1,26 @@
 {
   "title": "運勢",
   "subtitle": "流年 · 大運 · 命運週期",
+  "readingsTitle": "運勢解讀",
+  "luckCycles": "流年 · 運勢週期",
+  "weeklyLabel": "週運 · 週運",
+  "weeklyTeaser": "本週木運與日柱相合 — 一扇重要的窗口即將開啟...",
+  "unlockWeekly": "✨ 解鎖全部 — $9.99/月",
+  "unlockAll": "✨ 解鎖所有運勢 — $9.99/月",
+  "periodLabel": {
+    "daily": "日運",
+    "weekly": "週運",
+    "monthly": "月運",
+    "annual": "年運",
+    "daewoon": "大運（10年）"
+  },
+  "periodDesc": {
+    "daily": "今日運勢與能量",
+    "weekly": "本週完整運勢",
+    "monthly": "本月運勢與事業",
+    "annual": "全年運勢預測",
+    "daewoon": "十年命運週期"
+  },
   "types": {
     "daily": "今日運勢",
     "weekly": "本週運勢",
@@ -20,5 +40,119 @@
   "refresh": "重新整理",
   "share": "分享",
   "premiumRequired": "高級版專屬",
-  "unlockReading": "解鎖全部運勢"
+  "unlockReading": "解鎖全部運勢",
+  "todaysFortune": "今日運勢 · 日運",
+  "annualReport": "年度報告",
+  "myChart": "我的命盤",
+  "wasHelpful": "這有幫助嗎？",
+  "feedbackThanks": "✨ 謝謝！您的回饋幫助我們改進。",
+  "askMore": "繼續提問",
+  "freeChatBadge": "今日{{count}}次免費諮詢",
+  "chatLimitTitle": "今日免費諮詢已用完",
+  "chatLimitSub": "無限暢用 — NT$299/月",
+  "weeklyReadingUsed": "本週免費占卜已用完",
+  "weeklyReadingUsedDesc": "本週免費占卜次數已用完。升級為高級版，每天無限次占卜。",
+  "weeklyFreeAvailable": "🎁 本週還有1次免費占卜",
+  "upgradeToPremium": "升級高級版 →",
+  "shareCard": "分享命盤",
+  "shareCardSubtitle": "分享你的命運藍圖",
+  "shareAsImage": "分享為圖片",
+  "elementDay": {
+    "木": "木日",
+    "火": "火日",
+    "土": "土日",
+    "金": "金日",
+    "水": "水日"
+  },
+  "timingAdvisor": {
+    "title": "時機顧問",
+    "subtitle": "要分析哪個決定？",
+    "analyzing": "分析中…",
+    "categories": {
+      "business": {
+        "label": "事業 / 創業",
+        "desc": "開始或擴展業務"
+      },
+      "investment": {
+        "label": "投資 / 財務",
+        "desc": "投資資產"
+      },
+      "romance": {
+        "label": "戀愛 / 婚姻",
+        "desc": "開始戀愛或結婚"
+      },
+      "relocation": {
+        "label": "搬家 / 旅行",
+        "desc": "搬家或規劃旅行"
+      }
+    },
+    "resultTitle": "時機分析",
+    "positiveFactors": "有利因素",
+    "cautions": "注意事項",
+    "score": {
+      "optimal": "最佳",
+      "good": "良好",
+      "fair": "一般",
+      "caution": "注意"
+    },
+    "freeUsed": "免費分析已使用",
+    "nextFree": "{{days}}天後可免費使用 — 或升級享無限次分析",
+    "nextFreeToday": "明天重置免費分析 — 或升級享無限存取",
+    "upgradeCta": "升級至高級版 →",
+    "analysisFailed": "AI分析失敗，請重試。"
+  },
+  "readingLoading": "正在解讀星象…",
+  "feedback": {
+    "titlePositive": "👍 很高興能幫到你！",
+    "titleNegative": "👎 非常抱歉",
+    "chooseReason": "選擇原因",
+    "accurate": "準確",
+    "tooVague": "太模糊",
+    "notMe": "不適合我",
+    "reasons": {
+      "accurate": "準確",
+      "want_more_depth": "想要更深入",
+      "new_perspective": "全新視角",
+      "too_generic": "太籠統",
+      "factually_wrong": "事實有誤",
+      "hard_to_understand": "難以理解",
+      "customInput": "自訂輸入",
+      "send": "傳送",
+      "customPlaceholder": "分享您的想法…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "日運",
+    "weekly": "週運",
+    "monthly": "月運",
+    "annual": "年運",
+    "daewoon": "大運週期"
+  },
+  "journal": {
+    "title": "人生日記",
+    "subtitle": "人生事件 · 命運流",
+    "addEvent": "新增人生事件",
+    "recordPlaceholder": "記錄人生中的重要時刻",
+    "noEvents": "還沒有記錄的事件",
+    "saveEvent": "儲存",
+    "savedToast": "事件已儲存",
+    "aiAnalysis": "AI模式分析",
+    "aiAnalysisDesc": "了解您的四柱周期如何影響人生事件",
+    "emptyDesc": "記錄職業變化、人際關係、健康等人生重要時刻，探索與四柱命理的關聯。",
+    "loading": "載入生命日誌中…",
+    "lockedAnalysis": "🔒 再添加 {{count}} 個事件即可解鎖AI模式分析"
+  },
+  "compatibility": {
+    "title": "合婚",
+    "subtitle": "合婚 · 五行相性",
+    "partnerBirthDate": "對方生日",
+    "checkBtn": "查看相性",
+    "generateReport": "生成完整報告",
+    "analyzeAnother": "分析其他人",
+    "fullReport": "完整AI報告",
+    "partnerHint": "輸入對方的生日以查看五行相性分數。",
+    "genderLabel": "對方性別",
+    "seeWhy": "查看原因 — 解鎖完整報告 $4.99",
+    "fullReportDesc": "5部分深度分析：五行和諧、優勢、緊張關係及關係預測。"
+  }
 }

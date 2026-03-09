@@ -2,7 +2,7 @@
   "expo": {
     "name": "K-Saju",
     "slug": "k-saju",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -18,23 +18,30 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.ksaju.global",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Used to take a photo for face analysis.",
+        "NSPhotoLibraryUsageDescription": "Used to select a photo for face analysis."
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1a0a2e"
+        "foregroundImage": "./assets/ksaju-icon-foreground.png",
+        "backgroundColor": "#1E1535"
       },
       "package": "com.ksaju.global",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [
         "NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
         "INTERNET",
-        "ACCESS_NETWORK_STATE"
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
       ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",

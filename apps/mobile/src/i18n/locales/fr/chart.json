@@ -1,0 +1,377 @@
+{
+  "title": "Mes Quatre Piliers",
+  "subtitle": "Plan Cosmique · BaZi · 四柱推命",
+  "pillars": {
+    "year": "Pilier\nAnnée",
+    "month": "Pilier\nMois",
+    "day": "Pilier\nJour",
+    "hour": "Pilier\nHeure",
+    "hourUnknown": "Heure\nInconnue"
+  },
+  "stem": "Tige Céleste",
+  "branch": "Branche Terrestre",
+  "dayStem": "Tige du Jour (Soi)",
+  "elementBalance": "Équilibre des Cinq Éléments",
+  "daewoon": "Grand Cycle de Chance",
+  "daewoonPeriod": "Âge {{age}}+",
+  "cosmicBlueprint": "Plan Cosmique",
+  "destinyMap": "Votre Carte du Destin",
+  "dayMaster": "Maître du Jour",
+  "majorLuckCycle": "Grand Cycle de Chance",
+  "ageSuffix": "ans",
+  "now": "MAINTENANT",
+  "noChart": "Terminez l'intégration pour voir votre carte cosmique.",
+  "recommendations": "Recommandé pour votre Élément",
+  "shishin": {
+    "title": "Dix Dieux",
+    "비견": "Compagnon",
+    "겁재": "Vol de Richesse",
+    "식신": "Dieu Nourricier",
+    "상관": "Officier Blessant",
+    "편재": "Richesse Indirecte",
+    "정재": "Richesse Directe",
+    "편관": "Sept Tueurs",
+    "정관": "Officier Direct",
+    "편인": "Ressource Indirecte",
+    "정인": "Ressource Directe"
+  },
+  "tabs": {
+    "music": "🎵 Musique",
+    "books": "📚 Livres",
+    "travel": "✈️ Voyages"
+  },
+  "share": "Partager",
+  "generatingRecommendations": "Génération des recommandations…",
+  "elementInfo": {
+    "Wood": {
+      "season": "Printemps",
+      "desc": "Le Bois incarne l'énergie du printemps — croissance, création et nouveaux départs. Une force progressive qui s'élève vers le haut.",
+      "strong": "Le Bois fort apporte initiative, créativité et leadership, mais peut causer de l'entêtement et des frictions.",
+      "weak": "Le Bois faible réduit la flexibilité et la capacité de planification ; les nouveaux départs peuvent sembler intimidants."
+    },
+    "Fire": {
+      "season": "Été",
+      "desc": "Le Feu incarne l'énergie de l'été — passion, expression et communication. Il illumine tout autour comme la lumière du soleil.",
+      "strong": "Le Feu fort apporte charisme et enthousiasme, mais peut mener à l'impulsivité et aux sautes d'humeur.",
+      "weak": "Le Feu faible réduit l'expressivité et la sociabilité."
+    },
+    "Earth": {
+      "season": "Intersaison",
+      "desc": "La Terre incarne l'énergie des saisons de transition — stabilité, confiance et centralité. Le sol qui soutient et nourrit tous les éléments.",
+      "strong": "La Terre forte apporte fiabilité et inclusivité, mais peut paraître conservatrice et résistante au changement.",
+      "weak": "La Terre faible rend difficile de rester ancré et peut mener à une instabilité émotionnelle."
+    },
+    "Metal": {
+      "season": "Automne",
+      "desc": "Le Métal incarne l'énergie de l'automne — décision, récolte et justice. Il coupe ce qui n'est plus nécessaire.",
+      "strong": "Le Métal fort apporte décision et précision, mais peut paraître tranchant et froid aux autres.",
+      "weak": "Le Métal faible réduit la décision et le suivi, laissant les tâches inachevées."
+    },
+    "Water": {
+      "season": "Hiver",
+      "desc": "L'Eau incarne l'énergie de l'hiver — sagesse, sensibilité et étreinte. Elle coule vers le point le plus bas, contenant tout en elle.",
+      "strong": "L'Eau forte apporte sagesse et adaptabilité, mais peut dériver sans direction et perdre le cap.",
+      "weak": "L'Eau faible réduit l'intuition et la sensibilité et peut augmenter l'entêtement."
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "Étoile Compagnon (兄弟星)",
+      "desc": "Le Compagnon partage le même élément et la même polarité que le Maître du Jour — symbolisant frères, pairs et rivaux.",
+      "fortune": "Forte indépendance et estime de soi ; préfère l'action solo. Méfiez-vous des conflits dans les partenariats."
+    },
+    "겁재": {
+      "category": "Étoile Vol de Richesse (兄弟星)",
+      "desc": "Vol de Richesse partage le même élément mais une polarité opposée — compétition féroce et énergie qui saisit la richesse.",
+      "fortune": "Fort élan mais enclin aux décisions impulsives. Méfiez-vous des pertes financières."
+    },
+    "식신": {
+      "category": "Étoile Dieu Nourricier (表現星)",
+      "desc": "Le Dieu Nourricier est produit par le Maître du Jour avec la même polarité — symbolisant talent, bénédiction alimentaire et créativité.",
+      "fortune": "Talent artistique et expressivité. La vie apporte confort, plaisir et accomplissement créatif."
+    },
+    "상관": {
+      "category": "Étoile Officier Blessant (表現星)",
+      "desc": "L'Officier Blessant est produit par le Maître du Jour avec une polarité opposée — brillance, rébellion et talent créatif.",
+      "fortune": "Esprit vif et éloquence, mais tendance à défier l'autorité. Attention aux conflits au travail."
+    },
+    "편재": {
+      "category": "Étoile Richesse Indirecte (財星)",
+      "desc": "La Richesse Indirecte est contrôlée par le Maître du Jour avec la même polarité — aubaine, spéculation et le père.",
+      "fortune": "Forte capacité à détecter les opportunités d'investissement. Les entreprises à haut risque peuvent rapporter gros."
+    },
+    "정재": {
+      "category": "Étoile Richesse Directe (財星)",
+      "desc": "La Richesse Directe est contrôlée par le Maître du Jour avec une polarité opposée — richesse stable et diligence.",
+      "fortune": "Excelle dans la gestion prudente de la richesse. Recherche des revenus stables et durables."
+    },
+    "편관": {
+      "category": "Étoile Sept Tueurs (官星)",
+      "desc": "Sept Tueurs contrôle le Maître du Jour avec la même polarité — pression, défi et autorité martiale.",
+      "fortune": "Forte volonté de surmonter l'adversité. Compétition intense, mais une grande croissance s'ensuit."
+    },
+    "정관": {
+      "category": "Étoile Officier Direct (官星)",
+      "desc": "L'Officier Direct contrôle le Maître du Jour avec une polarité opposée — honneur, règles et position officielle.",
+      "fortune": "Principes solides et haute réputation sociale. Excelle dans la fonction publique et les rôles de gestion."
+    },
+    "편인": {
+      "category": "Étoile Ressource Indirecte (印星)",
+      "desc": "La Ressource Indirecte nourrit le Maître du Jour avec la même polarité — apprentissage non conventionnel, religion et talents uniques.",
+      "fortune": "Pensée originale et compétences spécialisées. Susceptible de se sentir seul ; méfiez-vous des dépendances malsaines."
+    },
+    "정인": {
+      "category": "Étoile Ressource Directe (印星)",
+      "desc": "La Ressource Directe nourrit le Maître du Jour avec une polarité opposée — érudition, la mère, connaissance et bienveillance.",
+      "fortune": "Excellente capacité d'apprentissage et forte éthique. Susceptible de recevoir le soutien d'une figure maternelle ou d'un bienfaiteur."
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "Grand Arbre · Pouvoir du Commencement",
+      "fortune": "Énergie de nouveaux départs et de croissance. Période de renforcement du leadership.",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "Herbe & Fleur · Vitalité Flexible",
+      "fortune": "Saisissez les opportunités avec une douce adaptabilité. Des bienfaiteurs apparaissent dans les relations.",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "Soleil · Passion Rayonnante",
+      "fortune": "Énergie lumineuse et vibrante. Un moment pour l'expression et la créativité en fleur.",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "Bougie · Feu Précis",
+      "fortune": "Réflexion profonde et concentration. Excellez dans le monde académique et l'artisanat.",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "Grande Montagne · Stabilité Épaisse",
+      "fortune": "Un moment pour bâtir stabilité et confiance. Favorable pour l'immobilier et les terres.",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "Champ Cultivé · Terre Nourricière",
+      "fortune": "La gestion et la planification prudentes portent leurs fruits. Un moment pour renforcer le moi intérieur.",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "Fer · Transformation Décisive",
+      "fortune": "Décision audacieuse et exécution. Éliminez le superflu et renaissez.",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "Bijou · Sens Esthétique Aiguisé",
+      "fortune": "Précision et perfectionnisme. Obtenez des résultats dans l'art, la beauté et la finance.",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "Grand Fleuve · Sagesse Profonde",
+      "fortune": "Vaste perspective et stratégie flexible. Excellent pour l'expansion des affaires et l'activité extérieure.",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "Eau de Pluie · Sensibilité Délicate",
+      "fortune": "L'intuition et les émotions brillent. Favorable pour l'art, la croissance spirituelle et la guérison.",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 Rat",
+      "meaning": "Énergie de Minuit · Sagesse & Abondance",
+      "fortune": "Un moment pour accumuler richesse et connaissance. Préparez-vous silencieusement pour un grand saut.",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 Bœuf",
+      "meaning": "Fin d'Hiver · Endurance & Diligence",
+      "fortune": "Un effort constant portera ses fruits. Favorable pour la santé et les affaires foncières.",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 Tigre",
+      "meaning": "Début de Printemps · Bravoure & Élan",
+      "fortune": "La poursuite active mène à des résultats. Favorable pour les changements de carrière et d'affaires.",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 Lapin",
+      "meaning": "Fleurs de Printemps · Culture & Arts",
+      "fortune": "Relations riches et talents artistiques brillent. Des bienfaiteurs offrent leur aide.",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 Dragon",
+      "meaning": "Pluie de Printemps · Changement & Mystère",
+      "fortune": "Un moment de grande transformation. Une fortune inattendue arrive.",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 Serpent",
+      "meaning": "Début d'Été · Sagesse & Prudence",
+      "fortune": "Une stratégie calme mène au succès. Favorable pour les études, la recherche et la médecine.",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 Cheval",
+      "meaning": "Milieu d'Été · Passion & Dynamisme",
+      "fortune": "Socialisation et échanges actifs. Forte énergie pour les voyages et les activités sociales.",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 Chèvre",
+      "meaning": "Fin d'Été · Douceur & Art",
+      "fortune": "Sensibilité artistique et affabilité se démarquent. Obtenez des résultats grâce au travail d'équipe.",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 Singe",
+      "meaning": "Début d'Automne · Vivacité & Changement",
+      "fortune": "Jugement vif et adaptabilité. Démarquez-vous dans la technologie et l'innovation.",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 Coq",
+      "meaning": "Récolte d'Automne · Précision & Discipline",
+      "fortune": "Une exécution méticuleuse porte ses fruits. Favorable pour la finance et l'administration.",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 Chien",
+      "meaning": "Fin d'Automne · Loyauté & Intégrité",
+      "fortune": "Construisez des relations solides grâce à la confiance. Énergie favorable pour l'immobilier et la sécurité.",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 Cochon",
+      "meaning": "Début d'Hiver · Abondance & Aisance",
+      "fortune": "Énergie abondante. Un bon moment pour les études, les voyages et la croissance spirituelle.",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "Croissance|Créativité|Défi",
+    "Fire": "Passion|Expression|Connexion",
+    "Earth": "Stabilité|Confiance|Dévotion",
+    "Metal": "Décision|Récolte|Raffinement",
+    "Water": "Sagesse|Flexibilité|Profondeur"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "Favorable pour les nouveaux départs, l'entrepreneuriat, les études et les voyages.",
+      "caution": "Lâchez l'entêtement et soyez ouvert aux perspectives des autres."
+    },
+    "Fire": {
+      "favor": "Favorable pour la socialisation, les présentations, l'art et les rôles de leadership.",
+      "caution": "Évitez les décisions impulsives et gérez vos émotions."
+    },
+    "Earth": {
+      "favor": "Favorable pour l'immobilier, l'investissement, la planification à long terme et la famille.",
+      "caution": "Ne réagissez pas de manière trop conservatrice au changement."
+    },
+    "Metal": {
+      "favor": "Favorable pour la carrière, le droit, la gestion financière et le développement des compétences.",
+      "caution": "Le perfectionnisme excessif peut nuire aux relations."
+    },
+    "Water": {
+      "favor": "Favorable pour les études, la recherche, la diplomatie et l'exploration spirituelle.",
+      "caution": "Fixez-vous des objectifs clairs pour ne pas dériver sans but."
+    }
+  },
+  "modal": {
+    "none": "Aucun",
+    "strong": "Fort",
+    "weak": "Faible",
+    "seasonOf": "Énergie de {{season}}",
+    "whenStrong": "💪 Quand Fort",
+    "whenWeak": "🔍 Quand Manque",
+    "fortuneLabel": "✨ Fortune",
+    "daewoonTitle": "Cycle {{pillars}}",
+    "currentStar": "★ Actuel",
+    "inProgress": "Actuellement Actif",
+    "heavenlyStem": "Tige",
+    "earthlyBranch": "Branche",
+    "elementEnergy": "Énergie de l'Élément",
+    "sameElem": "L'énergie de {{element}} correspond à votre Maître du Jour ({{stem}}). Votre énergie centrale est fortement amplifiée pendant cette période.",
+    "periodFlow": "📖 Flux de Cette Période",
+    "favorLabel": "✅ Directions Favorables",
+    "cautionLabel": "⚠️ Points de Prudence",
+    "flowLabel": "🔄 Flux de Chance",
+    "prevLabel": "Précédent",
+    "selectedLabel": "Sélectionné",
+    "nextLabel": "Suivant"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "Tige Céleste (天干)",
+    "earthlyBranch": "Branche Terrestre (地支)",
+    "fiveElement": "Élément",
+    "polarity": "Polarité",
+    "animal": "Animal",
+    "solarTerm": "Terme Solaire",
+    "symbolLabel": "🌿 Symbole",
+    "personalityLabel": "✨ Personnalité",
+    "strengthLabel": "💪 Forces",
+    "cautionLabel": "⚠️ Attention",
+    "tendencyLabel": "✨ Tendance"
+  },
+  "pillarLabels": {
+    "year": "Pilier de l'Année",
+    "month": "Pilier du Mois",
+    "day": "Pilier du Jour",
+    "hour": "Pilier de l'Heure",
+    "default": "Pilier"
+  },
+  "frameTitles": {
+    "kr": "Mon Saju",
+    "cn": "Mon BaZi",
+    "jp": "Mes Quatre Piliers",
+    "en": "Mon Plan Cosmique",
+    "es": "Mon Destino Cósmico",
+    "in": "Ma Fusion Védique"
+  }
+}

@@ -1,4 +1,5 @@
 import type { CulturalFrame, ReadingType, SajuReadingRequest } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural Frame System Prompts ─────────────────────────────────────────────
 
@@ -98,10 +99,17 @@ function buildFeedbackNote(feedbacks: FeedbackContext[]): string {
   return note;
 }
 
-export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = []): string {
+export function buildSystemPrompt(
+  frame: CulturalFrame,
+  feedbacks: FeedbackContext[] = [],
+  userLanguage?: string,
+): string {
   const feedbackNote = buildFeedbackNote(feedbacks);
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame says "한국어로", cn frame says "中文回答" — these must be superseded)
+  const langInstruction = buildLangInstruction(userLanguage);
 
-  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}${feedbackNote}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {
@@ -114,7 +122,7 @@ IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
     "food": "<recommended food>"
   }
 }
-No markdown. No explanation outside the JSON. The luckyItems can be null if not applicable.`;
+CRITICAL: Output ONLY the raw JSON object. No markdown code fences (no \`\`\`json). No explanatory text before or after. Start your response with { and end with }. The luckyItems can be null if not applicable.`;
 }
 
 export function buildUserPrompt(req: SajuReadingRequest): string {
@@ -133,7 +141,7 @@ export function buildUserPrompt(req: SajuReadingRequest): string {
     .map(([el, n]) => `${el}:${n}`)
     .join(' ');
 
-  const activeDaewoon = chart.daewoonList.find((d) => d.index === 0);
+  const activeDaewoon = (chart.daewoonList ?? []).find((d) => d.index === 0);
   const daewoonText = activeDaewoon
     ? `Current 대운: ${activeDaewoon.pillar.stem}${activeDaewoon.pillar.branch} (starts age ${activeDaewoon.startAge})`
     : '';

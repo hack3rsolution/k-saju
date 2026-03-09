@@ -67,7 +67,7 @@ describe('useContentRecommendation — network & data shape', () => {
   });
 
   it('module exports useContentRecommendation hook', () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const mod = require('../../src/hooks/useContentRecommendation') as {
       useContentRecommendation: unknown;
     };

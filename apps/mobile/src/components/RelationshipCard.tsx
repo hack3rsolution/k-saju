@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import type { Relationship, CompatibilityStatus } from '../types/relationship';
 
 // ── Type icons ────────────────────────────────────────────────────────────────
@@ -10,14 +11,6 @@ const TYPE_ICON: Record<string, string> = {
   family:    '👨‍👩‍👧',
   colleague: '💼',
   other:     '⭐',
-};
-
-const TYPE_LABEL: Record<string, string> = {
-  romantic:  'Romantic',
-  friend:    'Friend',
-  family:    'Family',
-  colleague: 'Colleague',
-  other:     'Other',
 };
 
 // ── Status colour & emoji ─────────────────────────────────────────────────────
@@ -34,12 +27,6 @@ const STATUS_EMOJI: Record<CompatibilityStatus, string> = {
   caution: '🔴',
 };
 
-const STATUS_LABEL: Record<CompatibilityStatus, string> = {
-  good:    'Harmonious',
-  neutral: 'Balanced',
-  caution: 'Challenging',
-};
-
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface RelationshipCardProps {
@@ -51,6 +38,7 @@ interface RelationshipCardProps {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function RelationshipCard({ relationship: rel, onPress, onDelete }: RelationshipCardProps) {
+  const { t } = useTranslation('common');
   const status = rel.compatibilityStatus;
   const score  = rel.compatibilityScore;
 
@@ -65,7 +53,7 @@ export function RelationshipCard({ relationship: rel, onPress, onDelete }: Relat
       <View style={styles.info}>
         <Text style={styles.name}>{rel.name}</Text>
         <View style={styles.row}>
-          <Text style={styles.typeLabel}>{TYPE_LABEL[rel.relationshipType]}</Text>
+          <Text style={styles.typeLabel}>{t(`addRelationship.relTypes.${rel.relationshipType}`)}</Text>
           <Text style={styles.dot}> · </Text>
           <Text style={styles.birth}>
             {rel.birthYear}.{String(rel.birthMonth).padStart(2, '0')}.{String(rel.birthDay).padStart(2, '0')}
@@ -76,14 +64,14 @@ export function RelationshipCard({ relationship: rel, onPress, onDelete }: Relat
           <View style={styles.statusRow}>
             <Text style={styles.statusEmoji}>{STATUS_EMOJI[status]}</Text>
             <Text style={[styles.statusLabel, { color: STATUS_COLOR[status] }]}>
-              {STATUS_LABEL[status]}
+              {t(`addRelationship.status${status.charAt(0).toUpperCase() + status.slice(1)}`)}
             </Text>
             {score != null && (
               <Text style={styles.score}> {score}/100</Text>
             )}
           </View>
         ) : (
-          <Text style={styles.tapHint}>Tap to analyze →</Text>
+          <Text style={styles.tapHint}>{t('addRelationship.tapHint')}</Text>
         )}
       </View>
 

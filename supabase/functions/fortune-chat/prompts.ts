@@ -1,4 +1,5 @@
 import type { CulturalFrame, ChartSnapshot, TodayReading } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural-frame system prompts ─────────────────────────────────────────────
 
@@ -45,6 +46,7 @@ export function buildSystemPrompt(
   frame: CulturalFrame,
   chart: ChartSnapshot,
   reading: TodayReading,
+  userLanguage?: string,
 ): string {
   const el = chart.elementBalance;
   const dominant = Object.entries(el).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'Wood';
@@ -64,7 +66,11 @@ export function buildSystemPrompt(
     `Details: ${reading.details.join(' / ')}`,
   ].join('\n');
 
-  return `${FRAME_SYSTEM[frame]}
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame says "답변은 한국어로", cn frame says "用中文回答")
+  const langInstruction = buildLangInstruction(userLanguage);
+
+  return `${langInstruction}${FRAME_SYSTEM[frame]}
 
 USER'S SAJU CHART:
 ${chartSummary}

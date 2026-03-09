@@ -4,6 +4,7 @@ import type {
   BirthDataInput,
   RelationshipType,
 } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural system prompts ───────────────────────────────────────────────────
 
@@ -139,6 +140,9 @@ Respond ONLY with valid JSON matching this exact schema:
 }`;
 }
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const base = SYSTEM_PROMPTS[frame] ?? SYSTEM_PROMPTS.en;
+  // Language instruction goes FIRST so it overrides frame-level language directives.
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${base}`;
 }

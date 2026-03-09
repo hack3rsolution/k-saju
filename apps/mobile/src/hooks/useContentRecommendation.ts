@@ -5,9 +5,11 @@
  * dominant 오행 (Five Element) and Day Master (일간).
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -40,6 +42,7 @@ export function useContentRecommendation(): ContentRecommendationState {
 
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const fetch = useCallback(async () => {
     if (!session) { setError('Not signed in'); return; }
@@ -55,17 +58,18 @@ export function useContentRecommendation(): ContentRecommendationState {
         dayStem:        chart.dayStem,
         elementBalance: chart.elements,
         frame:          frame ?? 'en',
+        userLanguage:   language,
       };
 
+      const encodedBody = JSON.stringify(body);
+
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/content-recommendation`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 
@@ -82,11 +86,11 @@ export function useContentRecommendation(): ContentRecommendationState {
         travel:  json.travel,
       });
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Recommendation failed');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }
-  }, [session, chart, frame]);
+  }, [session, chart, frame, language]);
 
   return { loading, data, error, fetch };
 }

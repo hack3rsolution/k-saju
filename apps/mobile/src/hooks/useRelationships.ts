@@ -7,10 +7,12 @@
  * - getFortune(): call the relationship-fortune Edge Function
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useRelationshipStore } from '../store/relationshipStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 import type {
   Relationship,
   AddRelationshipInput,
@@ -43,6 +45,7 @@ function rowToRelationship(row: Record<string, unknown>): Relationship {
 export function useRelationships() {
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
   const {
     relationships,
     setRelationships,
@@ -51,9 +54,10 @@ export function useRelationships() {
     updateRelationship,
   } = useRelationshipStore();
 
-  const [loading, setLoading]         = useState(false);
+  const [loading, setLoading]               = useState(false);
   const [fortuneLoading, setFortuneLoading] = useState(false);
-  const [error, setError]             = useState<string | null>(null);
+  const [error, setError]                   = useState<string | null>(null);
+  const [fortuneError, setFortuneError]     = useState<string | null>(null);
 
   // ── List ────────────────────────────────────────────────────────────────────
 
@@ -70,7 +74,7 @@ export function useRelationships() {
       if (dbErr) throw new Error(dbErr.message);
       setRelationships((data ?? []).map(rowToRelationship));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load relationships');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }
@@ -102,7 +106,7 @@ export function useRelationships() {
       if (data) addRelationship(rowToRelationship(data as Record<string, unknown>));
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to add relationship');
+      setError(friendlyApiError(e));
       return false;
     } finally {
       setLoading(false);
@@ -123,7 +127,7 @@ export function useRelationships() {
       removeRelationship(id);
       return true;
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to delete relationship');
+      setError(friendlyApiError(e));
       return false;
     }
   }, [session, removeRelationship]);
@@ -134,47 +138,48 @@ export function useRelationships() {
     async (rel: Relationship): Promise<RelationshipFortuneData | null> => {
       if (!session || !chart) return null;
       setFortuneLoading(true);
-      setError(null);
+      setFortuneError(null);
 
       const refMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
+      const encodedBody = JSON.stringify({
+        relationshipId:  rel.id,
+        ownerChart: {
+          yearPillar:     chart.pillars.year,
+          monthPillar:    chart.pillars.month,
+          dayPillar:      chart.pillars.day,
+          hourPillar:     chart.pillars.hour,
+          elementBalance: chart.elements,
+          dayStem:        chart.dayStem,
+        },
+        partnerBirth: {
+          year:   rel.birthYear,
+          month:  rel.birthMonth,
+          day:    rel.birthDay,
+          hour:   rel.birthHour,
+          gender: rel.gender,
+        },
+        partnerName:      rel.name,
+        relationshipType: rel.relationshipType,
+        frame:            frame ?? 'en',
+        refMonth,
+        userLanguage:     language,
+      });
+
       try {
+        const accessToken = await getFreshToken();
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/relationship-fortune`,
           {
             method: 'POST',
-            headers: {
-              'Content-Type':  'application/json',
-              'Authorization': `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              relationshipId:  rel.id,
-              ownerChart: {
-                yearPillar:     chart.pillars.year,
-                monthPillar:    chart.pillars.month,
-                dayPillar:      chart.pillars.day,
-                hourPillar:     chart.pillars.hour,
-                elementBalance: chart.elements,
-                dayStem:        chart.dayStem,
-              },
-              partnerBirth: {
-                year:   rel.birthYear,
-                month:  rel.birthMonth,
-                day:    rel.birthDay,
-                hour:   rel.birthHour,
-                gender: rel.gender,
-              },
-              partnerName:      rel.name,
-              relationshipType: rel.relationshipType,
-              frame:            frame ?? 'en',
-              refMonth,
-            }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+            body: encodedBody,
           },
         );
 
         if (resp.status === 403) {
-          setError('premium_required');
+          setFortuneError('premium_required');
           return null;
         }
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -189,13 +194,13 @@ export function useRelationships() {
 
         return data;
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Failed to load fortune');
+        setFortuneError(friendlyApiError(e));
         return null;
       } finally {
         setFortuneLoading(false);
       }
     },
-    [session, chart, frame, updateRelationship],
+    [session, chart, frame, language, updateRelationship],
   );
 
   return {
@@ -203,6 +208,7 @@ export function useRelationships() {
     loading,
     fortuneLoading,
     error,
+    fortuneError,
     list,
     add,
     remove,

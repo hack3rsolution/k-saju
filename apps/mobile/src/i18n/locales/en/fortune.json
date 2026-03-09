@@ -1,6 +1,26 @@
 {
   "title": "Fortune",
   "subtitle": "Readings · Luck Cycles · Cosmic Timing",
+  "readingsTitle": "Fortune Readings",
+  "luckCycles": "流年 · Luck Cycles",
+  "weeklyLabel": "WEEKLY FORTUNE · 週運",
+  "weeklyTeaser": "This week's Wood energy aligns with your day pillar — a significant window opens for...",
+  "unlockWeekly": "✨ Unlock full access — $9.99/month",
+  "unlockAll": "✨ Unlock all fortune readings — $9.99/month",
+  "periodLabel": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "daewoon": "大運 (10yr)"
+  },
+  "periodDesc": {
+    "daily": "Today's luck & energy",
+    "weekly": "This week's full cycle",
+    "monthly": "Monthly luck & career",
+    "annual": "Full year forecast",
+    "daewoon": "10-year destiny cycle"
+  },
   "types": {
     "daily": "Daily Fortune",
     "weekly": "Weekly Fortune",
@@ -20,5 +40,119 @@
   "refresh": "Refresh",
   "share": "Share",
   "premiumRequired": "Premium Only",
-  "unlockReading": "Unlock All Readings"
+  "unlockReading": "Unlock All Readings",
+  "todaysFortune": "TODAY'S FORTUNE · 日運",
+  "annualReport": "Annual Report",
+  "myChart": "My Chart",
+  "wasHelpful": "Was this helpful?",
+  "feedbackThanks": "✨ Thanks! Your feedback helps us improve.",
+  "askMore": "Ask More",
+  "freeChatBadge": "{{count}} free chat today",
+  "chatLimitTitle": "Free chat used for today",
+  "chatLimitSub": "Unlock unlimited — $9.99/month",
+  "weeklyReadingUsed": "Weekly reading used",
+  "weeklyReadingUsedDesc": "Your free reading for this week has been used. Upgrade to Premium for unlimited daily readings.",
+  "weeklyFreeAvailable": "🎁 1 free reading available this week",
+  "upgradeToPremium": "Upgrade to Premium →",
+  "shareCard": "Share Your Card",
+  "shareCardSubtitle": "Capture & share your cosmic destiny",
+  "shareAsImage": "Share as Image",
+  "elementDay": {
+    "木": "Wood Day",
+    "火": "Fire Day",
+    "土": "Earth Day",
+    "金": "Metal Day",
+    "水": "Water Day"
+  },
+  "readingLoading": "Reading the stars…",
+  "feedback": {
+    "titlePositive": "👍 Glad it helped!",
+    "titleNegative": "👎 Sorry about that",
+    "chooseReason": "Choose a reason",
+    "accurate": "Accurate",
+    "tooVague": "Too vague",
+    "notMe": "Doesn't fit me",
+    "reasons": {
+      "accurate": "Accurate",
+      "want_more_depth": "Want more depth",
+      "new_perspective": "Fresh perspective",
+      "too_generic": "Too generic",
+      "factually_wrong": "Factually wrong",
+      "hard_to_understand": "Hard to understand",
+      "customInput": "Write your own",
+      "send": "Send",
+      "customPlaceholder": "Share your thoughts…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "DAILY FORTUNE",
+    "weekly": "WEEKLY FORTUNE",
+    "monthly": "MONTHLY FORTUNE",
+    "annual": "ANNUAL FORTUNE",
+    "daewoon": "大運 CYCLE"
+  },
+  "timingAdvisor": {
+    "title": "Timing Advisor",
+    "subtitle": "Which decision should we analyze?",
+    "analyzing": "Analyzing…",
+    "categories": {
+      "business": {
+        "label": "Business / Startup",
+        "desc": "Start or expand a business"
+      },
+      "investment": {
+        "label": "Investment / Finance",
+        "desc": "Invest money or assets"
+      },
+      "romance": {
+        "label": "Romance / Marriage",
+        "desc": "Start a relationship or wed"
+      },
+      "relocation": {
+        "label": "Moving / Travel",
+        "desc": "Move home or plan a trip"
+      }
+    },
+    "resultTitle": "TIMING ANALYSIS",
+    "positiveFactors": "POSITIVE FACTORS",
+    "cautions": "CAUTIONS",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Good",
+      "fair": "Fair",
+      "caution": "Caution"
+    },
+    "freeUsed": "Free Analysis Used",
+    "nextFree": "Next free use in {{days}} day(s) — or upgrade for unlimited timing analysis.",
+    "nextFreeToday": "Your free analysis resets tomorrow — or upgrade for unlimited access.",
+    "upgradeCta": "Upgrade to Premium →",
+    "analysisFailed": "AI analysis failed. Please try again."
+  },
+  "journal": {
+    "title": "Life Journal",
+    "subtitle": "Life Events · 命運流",
+    "addEvent": "Add Life Event",
+    "recordPlaceholder": "Record key moments in your life",
+    "noEvents": "No events recorded yet",
+    "saveEvent": "Save",
+    "savedToast": "Event saved",
+    "aiAnalysis": "AI Pattern Analysis",
+    "aiAnalysisDesc": "Discover how your saju cycles influenced life events",
+    "emptyDesc": "Record key life moments — career changes, relationships, health — and discover patterns in your cosmic chart.",
+    "loading": "Loading journal…",
+    "lockedAnalysis": "🔒 Add {{count}} more event(s) to unlock AI pattern analysis"
+  },
+  "compatibility": {
+    "title": "Compatibility",
+    "subtitle": "Compatibility · 合婚 · Elemental Harmony",
+    "partnerBirthDate": "Partner's Birth Date",
+    "checkBtn": "Check Compatibility",
+    "generateReport": "Generate Full Report",
+    "analyzeAnother": "Analyze Another Person",
+    "fullReport": "Full AI Report",
+    "partnerHint": "Enter your partner's birth date to see your elemental compatibility score.",
+    "genderLabel": "Partner's Gender",
+    "seeWhy": "See why — Unlock full report $4.99",
+    "fullReportDesc": "5-section deep-dive: elemental harmony, strengths, tensions, and relationship forecast."
+  }
 }

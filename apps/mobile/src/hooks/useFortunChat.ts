@@ -2,13 +2,14 @@
  * useFortunChat — manages the AI follow-up chat session for a given fortune.
  *
  * Streams Claude's response from the fortune-chat Edge Function.
- * Free users receive a 403 → redirect to paywall.
+ * Free users receive a 402 (free_limit_reached) → redirect to paywall.
  * Premium users limited to 20 messages/day (enforced server-side).
  */
 import { useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,7 @@ export function useFortunChat(
 
   const { session } = useAuthStore();
   const { chart, frame } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const sendMessage = useCallback(async (content: string) => {
     if (!session || !chart || !todayReading || streaming) return;
@@ -59,33 +61,34 @@ export function useFortunChat(
     try {
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
+      const encodedBody = JSON.stringify({
+        fortuneId,
+        messages: nextMessages,
+        frame: frame ?? 'en',
+        chart: {
+          yearPillar:     chart.pillars.year,
+          monthPillar:    chart.pillars.month,
+          dayPillar:      chart.pillars.day,
+          hourPillar:     chart.pillars.hour,
+          elementBalance: chart.elements,
+          dayStem:        chart.dayStem,
+        },
+        todayReading,
+        userLanguage: language,
+      });
+
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/fortune-chat`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            fortuneId,
-            messages: nextMessages,
-            frame: frame ?? 'en',
-            chart: {
-              yearPillar:     chart.pillars.year,
-              monthPillar:    chart.pillars.month,
-              dayPillar:      chart.pillars.day,
-              hourPillar:     chart.pillars.hour,
-              elementBalance: chart.elements,
-              dayStem:        chart.dayStem,
-            },
-            todayReading,
-          }),
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 
-      // Premium gate
-      if (resp.status === 403) {
+      // Premium gate — server returns 402 (free_limit_reached) or 403 (premium_required)
+      if (resp.status === 402 || resp.status === 403) {
         setPremiumRequired(true);
         setMessages(nextMessages); // remove placeholder
         return;
@@ -106,9 +109,21 @@ export function useFortunChat(
       // ── Stream reading ─────────────────────────────────────────────────────
       const reader = resp.body?.getReader();
       if (!reader) {
-        // Fallback: read as text if streaming not available
+        // Fallback: read as text if streaming not available.
+        // Parse SSE format so raw "data: {...}" lines are not shown to the user.
         const text = await resp.text();
-        setMessages([...nextMessages, { role: 'assistant', content: text }]);
+        let accumulated = '';
+        for (const line of text.split('\n')) {
+          if (line.startsWith('data: ')) {
+            const json = line.slice(6).trim();
+            if (json === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(json) as { token?: string };
+              if (parsed.token) accumulated += parsed.token;
+            } catch { /* skip malformed line */ }
+          }
+        }
+        setMessages([...nextMessages, { role: 'assistant', content: accumulated || text }]);
         return;
       }
 
@@ -116,6 +131,7 @@ export function useFortunChat(
       let accumulated = '';
       let lineBuffer = '';
 
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -148,7 +164,7 @@ export function useFortunChat(
     } finally {
       setStreaming(false);
     }
-  }, [session, chart, frame, messages, todayReading, fortuneId, streaming]);
+  }, [session, chart, frame, language, messages, todayReading, fortuneId, streaming]);
 
   const reset = useCallback(() => {
     setMessages([]);

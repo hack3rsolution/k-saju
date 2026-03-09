@@ -21,7 +21,6 @@ export default function AuthCallback() {
         router.replace('/(tabs)/home');
       })
       .catch(() => router.replace('/(auth)/login'));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   return (

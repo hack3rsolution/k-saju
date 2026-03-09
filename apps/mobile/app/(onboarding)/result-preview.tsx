@@ -13,9 +13,11 @@ import {
   type DaewoonPeriod,
   type FiveElement,
 } from '@k-saju/saju-engine';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../src/lib/supabase';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useSajuStore } from '../../src/store/sajuStore';
+import { useAuthStore } from '../../src/store/authStore';
 import {
   requestNotificationPermission,
   scheduleDailyNotification,
@@ -39,17 +41,21 @@ function PillarCard({
   title,
   pillar,
   blurred = false,
+  unknownLabel,
+  hourUnknownLabel,
 }: {
   title: string;
   pillar: { stem: string; branch: string } | null;
   blurred?: boolean;
+  unknownLabel?: string;
+  hourUnknownLabel?: string;
 }) {
   if (!pillar) {
     return (
       <View style={pStyles.card}>
         <Text style={pStyles.title}>{title}</Text>
-        <Text style={pStyles.na}>N/A</Text>
-        <Text style={pStyles.naHint}>Time unknown</Text>
+        <Text style={pStyles.na}>{unknownLabel ?? '?'}</Text>
+        <Text style={pStyles.naHint}>{hourUnknownLabel ?? ''}</Text>
       </View>
     );
   }
@@ -67,8 +73,8 @@ function PillarCard({
         <Text style={pStyles.lockHint}>🔒</Text>
       ) : (
         <>
-          <Text style={[pStyles.elLabel, { color: stemColor }]}>{ELEMENT_LABEL[stemEl]}</Text>
-          <Text style={[pStyles.elLabel, { color: branchColor }]}>{ELEMENT_LABEL[branchEl]}</Text>
+          <Text style={[pStyles.elLabel, { color: stemColor }]}>{stemEl}</Text>
+          <Text style={[pStyles.elLabel, { color: branchColor }]}>{branchEl}</Text>
         </>
       )}
     </View>
@@ -129,8 +135,10 @@ const eStyles = StyleSheet.create({
 
 // ── Main screen ──────────────────────────────────────────────────────────────
 export default function ResultPreviewScreen() {
+  const { t } = useTranslation(['common', 'onboarding']);
   const { birthYear, birthMonth, birthDay, birthHour, gender, frame } = useOnboardingStore();
   const { setChart } = useSajuStore();
+  const { setOnboardingCompleted } = useAuthStore();
 
   const [saving, setSaving] = useState(false);
 
@@ -155,7 +163,6 @@ export default function ResultPreviewScreen() {
   // Save once on mount
   useEffect(() => {
     saveToSupabase();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function saveToSupabase() {
@@ -208,21 +215,31 @@ export default function ResultPreviewScreen() {
 
   function handleExplore() {
     setChart(chart, birthData, daywoon, frame ?? 'en');
+    // Update in-memory session so auth guard sees onboarding_completed = true
+    // (critical for DEV mode where Supabase updateUser is a no-op)
+    setOnboardingCompleted(true);
     router.replace('/(tabs)/home');
   }
 
+  const frameTitle = t(`onboarding:resultPreview.frameTitles.${frame ?? 'en'}`, t('onboarding:resultPreview.frameTitles.en'));
+  const amLabel = t('common:myInfo.am');
+  const pmLabel = t('common:myInfo.pm');
+  const hourSuffix = t('common:myInfo.hourSuffix');
+  const hourStr = birthHour != null
+    ? ` · ${birthHour < 12 ? amLabel : pmLabel} ${birthHour === 0 ? 12 : birthHour > 12 ? birthHour - 12 : birthHour}${hourSuffix}`
+    : ` ${t('onboarding:resultPreview.hourUnknown')}`;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>Step 3 of 3</Text>
-      <Text style={styles.title}>Your Cosmic Blueprint</Text>
+      <Text style={styles.step}>{t('onboarding:step', { current: 3, total: 3 })}</Text>
+      <Text style={styles.title}>{frameTitle}</Text>
       <Text style={styles.subtitle}>
-        Born {birthYear}/{String(birthMonth).padStart(2,'0')}/{String(birthDay).padStart(2,'0')}
-        {birthHour != null ? ` at ${String(birthHour).padStart(2,'0')}:00` : ' (time unknown)'}
+        {birthYear}-{birthMonth}-{birthDay}{hourStr}
       </Text>
 
       {/* Pillar grid */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>四柱 — Four Pillars</Text>
+        <Text style={styles.sectionTitle}>{t('onboarding:resultPreview.pillarsSection')}</Text>
         <View style={styles.pillarsRow}>
           <PillarCard title="年" pillar={pillars.year} />
           <PillarCard title="月" pillar={pillars.month} />
@@ -231,25 +248,25 @@ export default function ResultPreviewScreen() {
             title="時"
             pillar={pillars.hour}
             blurred={pillars.hour !== null}
+            unknownLabel={t('onboarding:resultPreview.unknown')}
+            hourUnknownLabel={t('onboarding:resultPreview.hourUnknown')}
           />
         </View>
         <Text style={styles.dayStemHint}>
-          일간 (self) · {chart.dayStem} · {ELEMENT_LABEL[chart.dayElement]}
+          {t('onboarding:resultPreview.dayStemHint', { stem: chart.dayStem, element: chart.dayElement })}
         </Text>
       </View>
 
       {/* Element balance */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>五行 — Element Balance</Text>
+        <Text style={styles.sectionTitle}>{t('onboarding:resultPreview.elementSection')}</Text>
         <ElementBar balance={elements} />
       </View>
 
       {/* Paywall teaser */}
       <View style={styles.teaser}>
-        <Text style={styles.teaserTitle}>🔓 Unlock the full reading</Text>
-        <Text style={styles.teaserDesc}>
-          Daily fortune · Compatibility · Annual luck cycle · 大運 report — all with Premium.
-        </Text>
+        <Text style={styles.teaserTitle}>🔓 {t('onboarding:resultPreview.unlockTitle')}</Text>
+        <Text style={styles.teaserDesc}>{t('onboarding:resultPreview.unlockDesc')}</Text>
       </View>
 
       {/* CTAs */}
@@ -261,7 +278,7 @@ export default function ResultPreviewScreen() {
         {saving ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.btnText}>Explore free features →</Text>
+          <Text style={styles.btnText}>{t('onboarding:resultPreview.exploreFree')} →</Text>
         )}
       </TouchableOpacity>
 
@@ -269,7 +286,7 @@ export default function ResultPreviewScreen() {
         style={styles.secondaryBtn}
         onPress={() => router.push('/paywall')}
       >
-        <Text style={styles.secondaryBtnText}>View Premium plans</Text>
+        <Text style={styles.secondaryBtnText}>{t('onboarding:resultPreview.viewPremium')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

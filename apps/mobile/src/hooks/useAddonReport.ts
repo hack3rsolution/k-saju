@@ -5,11 +5,12 @@
  * The caller is responsible for entitlement checking before calling generate().
  */
 import { useState } from 'react';
-import type { SajuChart, BirthData, DaewoonPeriod } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
+import type { SajuChart, DaewoonPeriod } from '@k-saju/saju-engine';
+import { getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
-import type { CulturalFrame } from '@k-saju/saju-engine';
+import { useLanguageStore } from '../store/languageStore';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Types (mirrors Edge Function types) ──────────────────────────────────────
 
@@ -47,6 +48,68 @@ export interface AddonReportState {
   reset: () => void;
 }
 
+// ── Report parser (client-side defensive re-parsing) ─────────────────────────
+
+function extractJsonString(raw: string): string | null {
+  const clean = raw
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/gi, '')
+    .trim();
+  const match = clean.match(/\{[\s\S]*\}/);
+  return match ? match[0] : null;
+}
+
+function tryParseReport(jsonStr: string): AddonReport | null {
+  try {
+    const parsed = JSON.parse(jsonStr) as Partial<AddonReport>;
+    if (parsed && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+      return {
+        title: String(parsed.title ?? ''),
+        overview: String(parsed.overview ?? ''),
+        sections: parsed.sections.map((s: ReportSection) => ({
+          heading: String(s.heading ?? ''),
+          content: String(s.content ?? ''),
+        })),
+      };
+    }
+  } catch {
+    // fall through
+  }
+  return null;
+}
+
+function parseAddonReport(raw: AddonReport | string): AddonReport {
+  // Case 1: edge function returned a raw string (unusual but handle it)
+  if (typeof raw === 'string') {
+    const jsonStr = extractJsonString(raw);
+    if (jsonStr) {
+      const parsed = tryParseReport(jsonStr);
+      if (parsed) return parsed;
+    }
+    return { title: '', overview: raw.slice(0, 500), sections: [] };
+  }
+
+  // Case 2: already an object — check for fallback formats where JSON ended up in a field
+
+  // Old fallback: single section { heading: 'Analysis', content: <raw Claude response> }
+  if (raw.sections?.length === 1 && raw.sections[0].heading === 'Analysis') {
+    const jsonStr = extractJsonString(raw.sections[0].content ?? '');
+    if (jsonStr) {
+      const parsed = tryParseReport(jsonStr);
+      if (parsed) return parsed;
+    }
+    // Re-parse failed — return as-is (showing raw content is better than blank)
+    return raw;
+  }
+
+  // If sections is empty and overview looks like raw JSON, clear it
+  if (!raw.sections?.length && raw.overview?.trimStart().startsWith('{')) {
+    return { title: raw.title || '', overview: '', sections: [] };
+  }
+
+  return raw;
+}
+
 // ── Chart serialiser ──────────────────────────────────────────────────────────
 
 function serializeChart(chart: SajuChart, daewoon: DaewoonPeriod[]) {
@@ -70,6 +133,7 @@ export function useAddonReport(): AddonReportState {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, birthData } = useSajuStore();
+  const { language } = useLanguageStore();
 
   async function generate(params: GenerateParams) {
     if (!session) { setError('Not signed in'); return; }
@@ -87,6 +151,7 @@ export function useAddonReport(): AddonReportState {
         chart: serializeChart(chart, daewoon),
         frame: frame ?? 'en',
         birthYear: birthData?.year,
+        userLanguage: language,
       };
 
       if (params.partnerChart) {
@@ -98,15 +163,15 @@ export function useAddonReport(): AddonReportState {
         body.name = params.name;
       }
 
+      const encodedBody = JSON.stringify(body);
+
+      const accessToken = await getFreshToken();
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/addon-report`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+          body: encodedBody,
         },
       );
 
@@ -115,10 +180,11 @@ export function useAddonReport(): AddonReportState {
         throw new Error(err.error ?? `HTTP ${resp.status}`);
       }
 
-      const data = await resp.json() as { ok: boolean; report: AddonReport };
-      setReport(data.report);
+      const data = await resp.json() as { ok: boolean; report: AddonReport | string };
+      const rawReport = data.report;
+      setReport(parseAddonReport(rawReport));
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Report generation failed');
+      setError(friendlyApiError(e));
     } finally {
       setLoading(false);
     }

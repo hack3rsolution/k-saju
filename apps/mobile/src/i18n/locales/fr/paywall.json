@@ -1,0 +1,37 @@
+{
+  "title": "Déverrouillez Votre Destin Complet",
+  "subtitle": "Premium vous donne un accès illimité à toutes les lectures, rapports et insights cosmiques.",
+  "plans": {
+    "monthly": {
+      "name": "Premium Mensuel",
+      "price": "8,99 €",
+      "period": "/mois",
+      "cta": "Obtenir Mensuel"
+    },
+    "annual": {
+      "name": "Premium Annuel",
+      "price": "59,99 €",
+      "period": "/an",
+      "badge": "Meilleure Valeur · Économisez 44%",
+      "cta": "Obtenir Annuel"
+    }
+  },
+  "addons": {
+    "title": "Modules (achat unique)",
+    "deep_compatibility": "Rapport de Compatibilité Approfondie",
+    "career_wealth": "Rapport Carrière & Richesse",
+    "daewoon_report_pdf": "Rapport Complet du Cycle de Chance (PDF)",
+    "name_analysis": "Analyse du Nom"
+  },
+  "legal": "Paiement débité sur votre compte App Store/Google Play. Annulation possible à tout moment. Les prix peuvent varier selon la région.",
+  "restore": "Restaurer les Achats",
+  "features": {
+    "unlimited_daily": "Lectures quotidiennes et hebdomadaires illimitées",
+    "monthly_annual": "Fortune mensuelle et annuelle",
+    "daewoon": "Analyse du Grand Cycle de Chance (10 ans)",
+    "compatibility": "Rapports de compatibilité",
+    "all_frames": "Les 6 styles culturels",
+    "priority_ai": "Lectures IA prioritaires",
+    "early_access": "Accès anticipé aux nouvelles fonctionnalités"
+  }
+}

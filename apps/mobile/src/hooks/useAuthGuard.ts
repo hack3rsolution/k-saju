@@ -10,13 +10,18 @@ export function useAuthGuard() {
 
   // Bootstrap session and subscribe to auth state changes
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => setSession(s));
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      setSession(s);
+      // DEV: if session is null (e.g. refresh token expired), auto-sign in
+      if (!s && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true') {
+        useAuthStore.getState().setDevSession().catch(() => setSession(null));
+      }
+    });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
     });
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Redirect based on auth + onboarding state
@@ -34,8 +39,8 @@ export function useAuthGuard() {
       // Signed in but onboarding not complete → birth-input
       if (!inOnboarding) router.replace('/(onboarding)/birth-input');
     } else {
-      // Signed in + onboarded → home (skip auth/onboarding screens)
-      if (inAuth || inOnboarding) router.replace('/(tabs)/home');
+      // Signed in + onboarded → home (skip auth screens only; allow intentional onboarding nav e.g. edit from settings)
+      if (inAuth) router.replace('/(tabs)/home');
     }
   }, [session, initialized, segments, router]);
 }

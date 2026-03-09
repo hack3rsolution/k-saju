@@ -9,20 +9,56 @@
     "gender": "Gênero",
     "male": "Masculino",
     "female": "Feminino",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "lunar": "🌙 Lunar",
+    "solar": "☀️ Solar",
+    "lunarHint": "A data lunar será convertida para o calendário solar para calcular os Quatro Pilares.",
+    "year": "Ano",
+    "month": "Mês",
+    "day": "Dia",
+    "timeKnown": "Você sabe seu horário de nascimento?",
+    "hour24": "Hora (24h)",
+    "lunarErrorTitle": "Data lunar inválida",
+    "lunarErrorMsg": "A data lunar inserida não pôde ser convertida. Por favor, verifique e tente novamente."
   },
   "culturalFrame": {
     "title": "Escolha Sua Perspectiva",
     "subtitle": "Os mesmos dados cósmicos — personalizados para seu contexto cultural.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 Coreano", "desc": "Leitura tradicional dos Quatro Pilares" },
-      "cn": { "label": "BaZi", "region": "🇨🇳 Chinês", "desc": "Sistema clássico BaZi" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 Japonês", "desc": "Leitura do destino japonesa" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 Ocidental", "desc": "Foco em personalidade e caminho de vida" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 Latino", "desc": "Estilo de horóscopo" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Sul Asiático", "desc": "Perspectiva inspirada em Jyotish" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Coreano",
+        "desc": "Leitura tradicional dos Quatro Pilares"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Chinês",
+        "desc": "Sistema clássico BaZi"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Japonês",
+        "desc": "Leitura do destino japonesa"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 Ocidental",
+        "desc": "Foco em personalidade e caminho de vida"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Latino",
+        "desc": "Estilo de horóscopo"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 Sul Asiático",
+        "desc": "Perspectiva inspirada em Jyotish"
+      }
     },
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "screenTitle": "Escolha seu Quadro Cultural",
+    "screenSubtitle": "Os mesmos dados cósmicos — personalizados ao seu contexto cultural"
   },
   "resultPreview": {
     "title": "Prévia do Seu Mapa",
@@ -30,6 +66,19 @@
     "unlockTitle": "Desbloqueie Seu Destino Completo",
     "unlockDesc": "Fortuna diária, compatibilidade, ciclo de sorte anual e mais com o Premium.",
     "exploreFree": "Explorar funções gratuitas",
-    "viewPremium": "Ver planos Premium"
+    "viewPremium": "Ver planos Premium",
+    "frameTitles": {
+      "kr": "Meu Saju",
+      "cn": "Meu BaZi",
+      "jp": "Meus Quatro Pilares",
+      "en": "Meu Plano Cósmico",
+      "es": "Meu Destino Cósmico",
+      "in": "Minha Fusão Védica"
+    },
+    "unknown": "Desconhecido",
+    "hourUnknown": "(Hora desconhecida)",
+    "pillarsSection": "Quatro Pilares (四柱)",
+    "dayStemHint": "Mestre do Dia · {{stem}} · {{element}}",
+    "elementSection": "Equilíbrio dos Cinco Elementos (五行)"
   }
 }

@@ -1,6 +1,26 @@
 {
   "title": "운세",
   "subtitle": "운세 · 流年 · Luck Cycles",
+  "readingsTitle": "운세 리딩",
+  "luckCycles": "유년(流年) · 운의 흐름",
+  "weeklyLabel": "주간 운세 · 週運",
+  "weeklyTeaser": "이번 주 목(木) 기운이 일주와 맞닿아 — 특별한 흐름이 열립니다...",
+  "unlockWeekly": "✨ 전체 열람 — $9.99/월",
+  "unlockAll": "✨ 전체 운세 열람 — $9.99/월",
+  "periodLabel": {
+    "daily": "일간 운세",
+    "weekly": "주간 운세",
+    "monthly": "월간 운세",
+    "annual": "연간 운세",
+    "daewoon": "대운(大運)"
+  },
+  "periodDesc": {
+    "daily": "오늘의 운과 에너지",
+    "weekly": "이번 주 운세 흐름",
+    "monthly": "이달의 운과 커리어",
+    "annual": "1년 운세 전망",
+    "daewoon": "10년 운명 주기"
+  },
   "types": {
     "daily": "오늘의 운세",
     "weekly": "이번 주 운세",
@@ -20,5 +40,119 @@
   "refresh": "새로고침",
   "share": "공유하기",
   "premiumRequired": "프리미엄 전용",
-  "unlockReading": "전체 운세 열람"
+  "unlockReading": "전체 운세 열람",
+  "todaysFortune": "오늘의 운세 · 日運",
+  "annualReport": "연간 리포트",
+  "journal": {
+    "title": "인생 일지",
+    "subtitle": "인생 이벤트 · 命運流",
+    "addEvent": "인생 이벤트 추가",
+    "recordPlaceholder": "인생의 주요 순간을 기록하세요",
+    "noEvents": "아직 기록된 이벤트가 없습니다",
+    "saveEvent": "저장",
+    "savedToast": "이벤트가 저장되었습니다",
+    "aiAnalysis": "AI 패턴 분석",
+    "aiAnalysisDesc": "사주 사이클이 인생 이벤트에 미친 영향을 살펴보세요",
+    "emptyDesc": "커리어 변화, 인간관계, 건강 등 인생의 주요 순간을 기록하고 사주 패턴과의 연결을 찾아보세요.",
+    "loading": "인생 일지 로딩 중…",
+    "lockedAnalysis": "🔒 AI 패턴 분석을 열려면 이벤트 {{count}}개를 더 추가하세요"
+  },
+  "compatibility": {
+    "title": "궁합",
+    "subtitle": "궁합 · 合婚 · 관계 조화",
+    "partnerBirthDate": "파트너 생년월일",
+    "checkBtn": "궁합 확인하기",
+    "generateReport": "전체 리포트 생성",
+    "analyzeAnother": "다른 사람 분석하기",
+    "fullReport": "Full AI 리포트",
+    "partnerHint": "파트너의 생년월일을 입력하면 오행 궁합 점수를 확인할 수 있습니다.",
+    "genderLabel": "파트너 성별",
+    "seeWhy": "이유 보기 — 전체 리포트 잠금 해제 $4.99",
+    "fullReportDesc": "오행 조화, 강점, 긴장 관계, 관계 예측 등 5개 섹션으로 구성된 심층 분석 리포트입니다."
+  },
+  "myChart": "내 사주",
+  "wasHelpful": "도움이 됐나요?",
+  "feedbackThanks": "✨ 감사합니다! 더 나은 서비스를 위해 노력할게요.",
+  "askMore": "더 물어보기",
+  "freeChatBadge": "오늘 무료 채팅 {{count}}회",
+  "chatLimitTitle": "오늘 무료 채팅을 모두 사용했어요",
+  "chatLimitSub": "무제한 이용 — ₩12,900/월",
+  "weeklyReadingUsed": "이번 주 무료 열람 사용",
+  "weeklyReadingUsedDesc": "이번 주 무료 운세를 모두 사용했습니다. 프리미엄으로 업그레이드하면 매일 무제한 열람이 가능합니다.",
+  "weeklyFreeAvailable": "🎁 이번 주 무료 열람 1회 남음",
+  "upgradeToPremium": "프리미엄 업그레이드 →",
+  "shareCard": "카드 공유하기",
+  "shareCardSubtitle": "나의 사주 운명을 공유해보세요",
+  "shareAsImage": "이미지로 공유",
+  "elementDay": {
+    "木": "목(木)일",
+    "火": "화(火)일",
+    "土": "토(土)일",
+    "金": "금(金)일",
+    "水": "수(水)일"
+  },
+  "readingLoading": "별을 읽고 있어요…",
+  "feedback": {
+    "titlePositive": "👍 도움이 됐군요!",
+    "titleNegative": "👎 아쉽네요",
+    "chooseReason": "이유를 선택해주세요",
+    "accurate": "정확해요",
+    "tooVague": "너무 모호해요",
+    "notMe": "나와 맞지 않아요",
+    "reasons": {
+      "accurate": "정확해요",
+      "want_more_depth": "더 깊이 알고 싶어요",
+      "new_perspective": "새로운 시각이에요",
+      "too_generic": "너무 일반적이에요",
+      "factually_wrong": "사실과 달라요",
+      "hard_to_understand": "이해하기 어려워요",
+      "customInput": "직접 입력",
+      "send": "전송",
+      "customPlaceholder": "의견을 입력해주세요"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "일간 운세",
+    "weekly": "주간 운세",
+    "monthly": "월간 운세",
+    "annual": "연간 운세",
+    "daewoon": "대운 분석"
+  },
+  "timingAdvisor": {
+    "title": "타이밍 어드바이저",
+    "subtitle": "어떤 결정을 분석할까요?",
+    "analyzing": "분석 중…",
+    "categories": {
+      "business": {
+        "label": "사업 / 창업",
+        "desc": "사업을 시작하거나 확장"
+      },
+      "investment": {
+        "label": "투자 / 금전",
+        "desc": "자산을 투자"
+      },
+      "romance": {
+        "label": "연애 / 결혼",
+        "desc": "연애를 시작하거나 결혼"
+      },
+      "relocation": {
+        "label": "이사 / 여행",
+        "desc": "이사하거나 여행 계획"
+      }
+    },
+    "resultTitle": "타이밍 분석",
+    "positiveFactors": "긍정적 요소",
+    "cautions": "주의사항",
+    "score": {
+      "optimal": "최적",
+      "good": "좋음",
+      "fair": "보통",
+      "caution": "주의"
+    },
+    "freeUsed": "무료 분석 사용",
+    "nextFree": "{{days}}일 후 무료 이용 가능 — 또는 업그레이드하세요",
+    "nextFreeToday": "내일 무료 분석이 리셋됩니다 — 또는 무제한 이용하세요",
+    "upgradeCta": "프리미엄 업그레이드 →",
+    "analysisFailed": "AI 분석에 실패했습니다. 다시 시도해주세요."
+  }
 }

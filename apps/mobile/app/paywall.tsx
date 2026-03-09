@@ -2,13 +2,27 @@
  * paywall.tsx — Subscription + addon purchase modal.
  *
  * Fetches the current RevenueCat offering on mount and shows real package prices.
- * Falls back to display-only (no purchase) if RC isn't configured or offerings
- * fail to load.
+ * Falls back to display-only (no purchase) if RC isn't configured or offerings fail to load.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * FREEMIUM → PREMIUM CONVERSION FUNNEL (v2.2)
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * Users arrive here from one of these upgrade moments:
+ *   1. Weekly Fortune preview → "Unlock full access" CTA (high intent)
+ *   2. Fortune Chat limit banner → "0 free chats left today" (daily friction)
+ *   3. Journal AI Analysis → Premium badge tap (value awareness)
+ *   4. Timing Advisor limit → "Next free use in X days" (scarcity)
+ *   5. Compatibility "See why" → $4.99 addon CTA
  *
  * Entitlement gate mapping (RC dashboard):
- *   Offering "default"  → monthly + annual subscription packages
- *   Entitlement "premium" granted by both subscription products
- *   Addon entitlements: deep_compatibility, career_wealth, daewoon_pdf, name_analysis
+ *   Offering "default"         → monthly ($9.99) + annual ($59.99) packages
+ *   Entitlement "premium"      → granted by both subscription products
+ *   Addon entitlements:
+ *     deep_compatibility, career_wealth, daewoon_pdf, name_analysis, timing_advisor
+ *
+ * DEV_BYPASS: EXPO_PUBLIC_ENABLE_DEV_BYPASS=true → auto-dismiss after 1.2s
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 import { useEffect, useState } from 'react';
 import {
@@ -26,29 +40,32 @@ import type { PurchasesOffering, PurchasesPackage } from 'react-native-purchases
 import { purchasePackage, restorePurchases } from '../src/lib/purchases';
 import { useEntitlementStore } from '../src/store/entitlementStore';
 
+const DEV_BYPASS = __DEV__ && process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
+
 // ── Static plan metadata (labels, features) ───────────────────────────────────
 
 const PLAN_META = {
   monthly: {
     name: 'Premium Monthly',
-    fallbackPrice: '$8.99/mo',
+    fallbackPrice: '$9.99/mo',
     highlight: false,
     features: [
-      'Unlimited daily fortune readings',
-      'Monthly & annual luck cycles',
-      '대운 (10-year cycle) analysis',
-      'Compatibility reports',
-      'All cultural frame styles',
+      'Unlimited daily + weekly + monthly fortune',
+      'Fortune Chat — unlimited (vs 1 free/day)',
+      'Timing Advisor — unlimited (vs 1 free/month)',
+      'AI Journal Pattern Analysis',
+      '大運 (10-year cycle) readings',
+      'All 6 cultural frame styles',
     ],
   },
   annual: {
     name: 'Premium Annual',
     fallbackPrice: '$59.99/yr',
     highlight: true,
-    badge: 'Best Value · Save 44%',
+    badge: 'Best Value · Save 50%',
     features: [
       'Everything in Monthly',
-      '2 add-on reports per year',
+      '2 add-on reports per year (save $9.98)',
       'Priority AI readings',
       'Early access to new features',
     ],
@@ -56,11 +73,11 @@ const PLAN_META = {
 };
 
 const ADDON_META: { key: string; name: string; fallbackPrice: string }[] = [
-  { key: 'k_saju_timing',        name: 'Timing Advisor (타이밍 어드바이저)', fallbackPrice: '$2.99' },
+  { key: 'k_saju_timing',        name: 'Timing Advisor',                    fallbackPrice: '$2.99' },
   { key: 'k_saju_compatibility', name: 'Deep Compatibility Report',          fallbackPrice: '$4.99' },
   { key: 'k_saju_career',        name: 'Career & Wealth Report',             fallbackPrice: '$4.99' },
-  { key: 'k_saju_daewoon_pdf',   name: 'Full 대운 Report (PDF)',             fallbackPrice: '$6.99' },
-  { key: 'k_saju_name_analysis', name: 'Name Analysis (작명)',               fallbackPrice: '$9.99' },
+  { key: 'k_saju_daewoon_pdf',   name: 'Full 大運 Report (PDF)',             fallbackPrice: '$6.99' },
+  { key: 'k_saju_name_analysis', name: 'Name Analysis',                     fallbackPrice: '$9.99' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -79,8 +96,17 @@ export default function PaywallScreen() {
 
   const isPremium = useEntitlementStore((s) => s.isPremium);
 
+  // DEV_BYPASS: immediately redirect with unlocked banner
+  useEffect(() => {
+    if (DEV_BYPASS) {
+      const timer = setTimeout(() => router.back(), 1200);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   // Fetch current offering on mount
   useEffect(() => {
+    if (DEV_BYPASS) { setOfferingLoading(false); return; }
     async function fetchOfferings() {
       try {
         const offerings = await Purchases.getOfferings();
@@ -208,6 +234,18 @@ export default function PaywallScreen() {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
+  if (DEV_BYPASS) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <View style={devStyles.card}>
+          <Text style={devStyles.icon}>🔓</Text>
+          <Text style={devStyles.label}>Dev: Unlocked ✓</Text>
+          <Text style={devStyles.sub}>All entitlements bypassed. Returning…</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <TouchableOpacity style={styles.close} onPress={() => router.back()}>
@@ -216,7 +254,8 @@ export default function PaywallScreen() {
 
       <Text style={styles.title}>Unlock Your Full Destiny</Text>
       <Text style={styles.subtitle}>
-        Premium gives you unlimited access to every reading, report, and cosmic insight.
+        You've seen the preview — unlock unlimited readings, Fortune Chat, Timing Advisor,
+        and AI Journal analysis.
       </Text>
 
       {offeringLoading ? (
@@ -350,4 +389,19 @@ const styles = StyleSheet.create({
     marginTop: 12,
     lineHeight: 18,
   },
+});
+
+const devStyles = StyleSheet.create({
+  card: {
+    backgroundColor: '#16a34a22',
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#16a34a',
+    margin: 24,
+  },
+  icon: { fontSize: 48, marginBottom: 16 },
+  label: { color: '#4ade80', fontSize: 22, fontWeight: '800', marginBottom: 8 },
+  sub: { color: '#9d8fbe', fontSize: 14 },
 });
