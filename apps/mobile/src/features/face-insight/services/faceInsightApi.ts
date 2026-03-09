@@ -1,4 +1,4 @@
-import { supabase } from '../../../lib/supabase';
+import { supabase, getFreshToken } from '../../../lib/supabase';
 import { friendlyApiError } from '../../../lib/apiError';
 import type { TraditionalResult, StateResult } from '../types';
 
@@ -42,6 +42,7 @@ export interface AnalyzeRequest {
   locale: string;
   culturalFrame: string;
   userId: string;
+  userLanguage?: string;
 }
 
 export interface AnalyzeResponse {
@@ -51,9 +52,13 @@ export interface AnalyzeResponse {
 }
 
 export async function analyzeFace(req: AnalyzeRequest): Promise<AnalyzeResponse> {
+  const accessToken = await getFreshToken();
   const { data, error } = await supabase.functions.invoke<AnalyzeResponse>(
     'face-insight-analyze',
-    { body: req }
+    {
+      body: req,
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
   );
 
   if (error) {
