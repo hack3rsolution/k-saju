@@ -68,6 +68,7 @@
     "fortune": "Vận may",
     "relations": "Quan hệ",
     "journal": "Nhật ký",
+    "face": "Face",
     "settings": "Cài đặt"
   },
   "settings": "Cài đặt",
@@ -177,6 +178,30 @@
   "nothingToRestoreMsg": "Không tìm thấy giao dịch mua trước đó cho tài khoản này.",
   "restoreFailed": "Khôi phục thất bại",
   "frameSaveError": "Không thể lưu khung văn hóa. Vui lòng thử lại.",
+  "face": {
+    "title": "Thấu Hiểu",
+    "subtitle": "Xem khuôn mặt của bạn qua hai góc nhìn khác nhau",
+    "uploading": "Đang tải ảnh lên…",
+    "analyzing": "Đang phân tích khuôn mặt của bạn…",
+    "stateCheck": {
+      "title": "Kiểm Tra Trạng Thái Hiện Tại",
+      "description": "Phát hiện các tín hiệu tâm trạng, căng thẳng và mệt mỏi từ khuôn mặt",
+      "cta": "Kiểm Tra Ngay",
+      "disclaimer": "Chỉ để nâng cao nhận thức sức khỏe. Không phải chẩn đoán y tế."
+    },
+    "traditional": {
+      "title": "Đọc Tướng Mặt Truyền Thống",
+      "description": "Diễn giải văn hóa thú vị lấy cảm hứng từ khái niệm đọc tướng mặt truyền thống",
+      "cta": "Bắt Đầu Đọc",
+      "disclaimer": "Chỉ mang tính chất văn hóa và giải trí."
+    },
+    "input": {
+      "title": "Thêm Ảnh",
+      "subtitle": "Chọn cách cung cấp ảnh của bạn",
+      "camera": "Chụp Ảnh",
+      "library": "Chọn từ Thư Viện"
+    }
+  },
   "addRelationship": {
     "title": "Thêm mối quan hệ",
     "nameLabel": "Tên",

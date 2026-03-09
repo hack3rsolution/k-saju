@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS public.report_cache (
 ALTER TABLE public.report_cache ENABLE ROW LEVEL SECURITY;
 
 -- Users can read their own cached reports
+DROP POLICY IF EXISTS "report_cache_select" ON public.report_cache;
 CREATE POLICY "report_cache_select"
   ON public.report_cache FOR SELECT
   USING (auth.uid() = user_id);

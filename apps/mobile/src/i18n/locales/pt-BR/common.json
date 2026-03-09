@@ -68,6 +68,7 @@
     "fortune": "Fortuna",
     "relations": "Relações",
     "journal": "Diário",
+    "face": "Face",
     "settings": "Config."
   },
   "settings": "Configurações",
@@ -177,6 +178,30 @@
   "nothingToRestoreMsg": "Nenhuma compra anterior encontrada para esta conta.",
   "restoreFailed": "Falha na restauração",
   "frameSaveError": "Não foi possível salvar a estrutura cultural. Tente novamente.",
+  "face": {
+    "title": "Percepção",
+    "subtitle": "Veja seu rosto por duas perspectivas diferentes",
+    "uploading": "Enviando foto…",
+    "analyzing": "Analisando seu rosto…",
+    "stateCheck": {
+      "title": "Verificação do Estado Atual",
+      "description": "Detecte possíveis sinais de humor, estresse e fadiga no seu rosto",
+      "cta": "Verificar Agora",
+      "disclaimer": "Apenas para conscientização do bem-estar. Não é diagnóstico médico."
+    },
+    "traditional": {
+      "title": "Leitura Facial Tradicional",
+      "description": "Interpretação cultural divertida inspirada em conceitos tradicionais de leitura facial",
+      "cta": "Iniciar Leitura",
+      "disclaimer": "Apenas interpretação cultural e de entretenimento."
+    },
+    "input": {
+      "title": "Adicionar Foto",
+      "subtitle": "Escolha como fornecer sua foto",
+      "camera": "Tirar Foto",
+      "library": "Escolher da Galeria"
+    }
+  },
   "addRelationship": {
     "title": "Adicionar conexão",
     "nameLabel": "Nome",

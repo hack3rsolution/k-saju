@@ -13,14 +13,15 @@ import {
 import Constants from 'expo-constants';
 import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../src/i18n';
-import { useLanguageStore } from '../../src/store/languageStore';
-import { useAuthStore } from '../../src/store/authStore';
-import { useEntitlementStore } from '../../src/store/entitlementStore';
-import { useSajuStore } from '../../src/store/sajuStore';
-import { restorePurchases } from '../../src/lib/purchases';
-import { supabase } from '../../src/lib/supabase';
+import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../src/i18n';
+import { useLanguageStore } from '../src/store/languageStore';
+import { useAuthStore } from '../src/store/authStore';
+import { useEntitlementStore } from '../src/store/entitlementStore';
+import { useSajuStore } from '../src/store/sajuStore';
+import { restorePurchases } from '../src/lib/purchases';
+import { supabase } from '../src/lib/supabase';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 import {
   isDailyNotificationScheduled,
@@ -28,7 +29,7 @@ import {
   scheduleDailyNotification,
   cancelDailyNotification,
   setTokensEnabled,
-} from '../../src/lib/notifications';
+} from '../src/lib/notifications';
 
 // ── Cultural frame config ────────────────────────────────────────────────────
 
@@ -194,7 +195,12 @@ export default function SettingsScreen() {
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('settings')}</Text>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="#a78bfa" />
+          </TouchableOpacity>
+          <Text style={styles.title}>{t('settings')}</Text>
+        </View>
 
         <View style={styles.section}>
           <Text style={[styles.sectionLabel, { marginBottom: 8 }]}>{t('account')}</Text>
@@ -390,8 +396,10 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1a0a2e' },
-  content: { padding: 24, paddingTop: 60 },
-  title: { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 32 },
+  content: { padding: 24, paddingTop: 60, paddingBottom: 40 },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 32, gap: 8 },
+  backBtn: { padding: 4 },
+  title: { fontSize: 26, fontWeight: '700', color: '#fff' },
   section: { marginBottom: 24 },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   sectionLabel: { fontSize: 12, color: '#7c3aed', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1 },

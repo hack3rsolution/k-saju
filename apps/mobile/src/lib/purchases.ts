@@ -28,8 +28,12 @@ export function initializePurchases(userId?: string): void {
   const apiKey = Platform.OS === 'ios' ? RC_API_KEY_IOS : RC_API_KEY_ANDROID;
   if (!apiKey) return; // skip when no API key is configured (e.g. development)
 
-  Purchases.setLogLevel(LOG_LEVEL.ERROR);
-  Purchases.configure({ apiKey, appUserID: userId ?? null });
+  try {
+    Purchases.setLogLevel(LOG_LEVEL.ERROR);
+    Purchases.configure({ apiKey, appUserID: userId ?? null });
+  } catch (e) {
+    console.warn('RevenueCat not available (Expo Go or unsupported environment)', e);
+  }
 }
 
 // ── Entitlement parsing ───────────────────────────────────────────────────────
@@ -62,7 +66,8 @@ export async function syncEntitlements(): Promise<void> {
     const { isPremium, addons } = parseCustomerInfo(info);
     setEntitlements(isPremium, addons);
   } catch {
-    // Best-effort; leave loading=false so gates fall through to free tier
+    // Best-effort (Expo Go / native module unavailable): fall through to free tier
+    console.warn('RevenueCat getCustomerInfo unavailable — defaulting to free tier');
     setLoading(false);
   }
 }
@@ -71,20 +76,30 @@ export async function syncEntitlements(): Promise<void> {
 
 /** Purchase a package and update entitlements. Throws on user cancellation or error. */
 export async function purchasePackage(pkg: PurchasesPackage): Promise<CustomerInfo> {
-  const { customerInfo } = await Purchases.purchasePackage(pkg);
-  const { isPremium, addons } = parseCustomerInfo(customerInfo);
-  useEntitlementStore.getState().setEntitlements(isPremium, addons);
-  return customerInfo;
+  try {
+    const { customerInfo } = await Purchases.purchasePackage(pkg);
+    const { isPremium, addons } = parseCustomerInfo(customerInfo);
+    useEntitlementStore.getState().setEntitlements(isPremium, addons);
+    return customerInfo;
+  } catch (e) {
+    console.warn('RevenueCat purchasePackage unavailable', e);
+    throw e;
+  }
 }
 
 // ── Restore ───────────────────────────────────────────────────────────────────
 
 /** Restore previous purchases and update entitlements. */
 export async function restorePurchases(): Promise<CustomerInfo> {
-  const customerInfo = await Purchases.restorePurchases();
-  const { isPremium, addons } = parseCustomerInfo(customerInfo);
-  useEntitlementStore.getState().setEntitlements(isPremium, addons);
-  return customerInfo;
+  try {
+    const customerInfo = await Purchases.restorePurchases();
+    const { isPremium, addons } = parseCustomerInfo(customerInfo);
+    useEntitlementStore.getState().setEntitlements(isPremium, addons);
+    return customerInfo;
+  } catch (e) {
+    console.warn('RevenueCat restorePurchases unavailable', e);
+    throw e;
+  }
 }
 
 export type { PurchasesPackage };

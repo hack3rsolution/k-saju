@@ -49,6 +49,7 @@
     "fortune": "Fortune",
     "relations": "Relations",
     "journal": "Journal",
+    "face": "Face",
     "settings": "Settings"
   },
   "settings": "Settings",
@@ -177,6 +178,30 @@
   "nothingToRestoreMsg": "No previous purchases found for this account.",
   "restoreFailed": "Restore Failed",
   "frameSaveError": "Could not save cultural frame. Please try again.",
+  "face": {
+    "title": "Insight",
+    "subtitle": "See your face through two different lenses",
+    "uploading": "Uploading photo…",
+    "analyzing": "Analyzing your face…",
+    "stateCheck": {
+      "title": "Current State Check",
+      "description": "Check possible mood, stress, and fatigue signals from your face",
+      "cta": "Check Now",
+      "disclaimer": "For wellness awareness only. Not a medical diagnosis."
+    },
+    "traditional": {
+      "title": "Traditional Face Reading",
+      "description": "Fun cultural interpretation inspired by traditional face reading concepts",
+      "cta": "Start Reading",
+      "disclaimer": "Cultural & entertainment interpretation only."
+    },
+    "input": {
+      "title": "Add Photo",
+      "subtitle": "Choose how to provide your photo",
+      "camera": "Take Photo",
+      "library": "Choose from Library"
+    }
+  },
   "addRelationship": {
     "title": "Add Connection",
     "nameLabel": "Name",

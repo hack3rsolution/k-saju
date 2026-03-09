@@ -18,7 +18,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.ksaju.global",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Used to take a photo for face analysis.",
+        "NSPhotoLibraryUsageDescription": "Used to select a photo for face analysis."
       }
     },
     "android": {
@@ -33,7 +35,9 @@
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
         "INTERNET",
-        "ACCESS_NETWORK_STATE"
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
       ]
     },
     "web": {

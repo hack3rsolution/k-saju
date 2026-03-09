@@ -247,6 +247,9 @@ export default function HomeScreen() {
                 color={reading || chart ? T.primary.light : T.text.caption}
               />
             </TouchableOpacity>
+            <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('/settings')}>
+              <Ionicons name="settings-outline" size={20} color={T.primary.light} />
+            </TouchableOpacity>
           </View>
         </View>
 

@@ -60,11 +60,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="face"
         options={{
-          title: t('tabs.settings'),
+          title: t('face.title'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle" size={size} color={color} />
+            <Ionicons name="scan-outline" size={size} color={color} />
           ),
         }}
       />

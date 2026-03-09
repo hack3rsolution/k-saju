@@ -80,6 +80,7 @@ export default function RootLayout() {
         <Stack.Screen name="compatibility" />
         <Stack.Screen name="fortune-chat/[fortuneId]" />
         <Stack.Screen name="reports" />
+        <Stack.Screen name="settings" />
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
       </Stack>
       <StatusBar style="auto" />

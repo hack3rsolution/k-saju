@@ -68,6 +68,7 @@
     "fortune": "運勢",
     "relations": "緣分",
     "journal": "日誌",
+    "face": "Face",
     "settings": "設定"
   },
   "settings": "設定",
@@ -177,6 +178,30 @@
   "nothingToRestoreMsg": "未找到此帳戶的歷史購買記錄。",
   "restoreFailed": "恢復失敗",
   "frameSaveError": "無法儲存文化視角，請重試。",
+  "face": {
+    "title": "洞察",
+    "subtitle": "從兩種不同視角解讀您的面部",
+    "uploading": "上傳照片中…",
+    "analyzing": "正在分析您的面部…",
+    "stateCheck": {
+      "title": "當前狀態檢測",
+      "description": "從面部檢測可能的情緒、壓力和疲勞訊號",
+      "cta": "立即檢測",
+      "disclaimer": "僅供健康意識參考，非醫療診斷。"
+    },
+    "traditional": {
+      "title": "傳統面相解讀",
+      "description": "受傳統面相學啟發的文化趣味解讀",
+      "cta": "開始解讀",
+      "disclaimer": "僅供文化娛樂參考。"
+    },
+    "input": {
+      "title": "新增照片",
+      "subtitle": "選擇提供照片的方式",
+      "camera": "拍攝照片",
+      "library": "從相簿選擇"
+    }
+  },
   "addRelationship": {
     "title": "添加緣分",
     "nameLabel": "姓名",
