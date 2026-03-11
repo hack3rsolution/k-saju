@@ -7,7 +7,7 @@
  * 공유 흐름: captureRef → expo-sharing.shareAsync (PNG)
  */
 import { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Share } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type { KPersonalityFree } from '../../types/kPersonality';
@@ -18,10 +18,11 @@ import { T } from '../../theme/tokens';
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface KPersonalityResultCardProps {
-  result:     KPersonalityFree;
-  mode:       'screen' | 'share-image';
-  onShare?:   () => void;
-  onUnlock?:  () => void;
+  result:      KPersonalityFree;
+  mode:        'screen' | 'share-image';
+  shareUserId?: string;   // 딥링크 fallback용 userId
+  onShare?:    () => void;
+  onUnlock?:   () => void;
 }
 
 // ── KPersonalityResultCard ────────────────────────────────────────────────────
@@ -29,6 +30,7 @@ interface KPersonalityResultCardProps {
 export function KPersonalityResultCard({
   result,
   mode,
+  shareUserId,
   onShare,
   onUnlock,
 }: KPersonalityResultCardProps) {
@@ -36,6 +38,18 @@ export function KPersonalityResultCard({
   const [sharing, setSharing] = useState(false);
 
   const isShareImage = mode === 'share-image';
+
+  // 딥링크 텍스트 fallback (expo-clipboard 미설치 → Share.share()로 대체)
+  async function shareLinkFallback() {
+    if (shareUserId) {
+      const link = `ksaju://k-type/compare?share=${shareUserId}`;
+      await Share.share({
+        message: `✨ My K-Type: ${result.typeName} (${result.typeNameKo})\n${link}`,
+        title:   'Share K-Saju K-Type',
+      }).catch(() => {});
+    }
+    onShare?.();
+  }
 
   async function handleShare() {
     if (sharing) return;
@@ -54,12 +68,16 @@ export function KPersonalityResultCard({
             dialogTitle: `My K-Type: ${result.typeName}`,
             UTI:         'public.png',
           });
+        } else {
+          // expo-sharing 불가 시 딥링크 공유로 fallback
+          await shareLinkFallback();
         }
       } else {
-        onShare?.();
+        await shareLinkFallback();
       }
     } catch {
-      onShare?.();
+      // 이미지 캡처 실패 시 딥링크 공유로 fallback
+      await shareLinkFallback();
     } finally {
       setSharing(false);
     }
