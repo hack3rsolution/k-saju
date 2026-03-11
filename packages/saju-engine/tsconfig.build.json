@@ -6,7 +6,10 @@
     "declaration": true,
     "declarationMap": true,
     "incremental": false,
-    "lib": ["ES2020"]
+    "noEmit": false,
+    "skipLibCheck": true,
+    "lib": ["ES2020"],
+    "types": []
   },
   "include": ["src/**/*"]
 }

@@ -1,0 +1,158 @@
+{
+  "title": "Glücksvorhersage",
+  "subtitle": "Lesungen · Glückszyklen · Kosmisches Timing",
+  "readingsTitle": "Glückslesungen",
+  "luckCycles": "流年 · Glückszyklen",
+  "weeklyLabel": "WOCHENGLÜCK · 週運",
+  "weeklyTeaser": "Die Holzenergie dieser Woche harmoniert mit Ihrem Tagespfeiler — ein bedeutendes Fenster öffnet sich...",
+  "unlockWeekly": "✨ Vollzugang freischalten — 9,99 $/Monat",
+  "unlockAll": "✨ Alle Glückslesungen freischalten — 9,99 $/Monat",
+  "periodLabel": {
+    "daily": "Täglich",
+    "weekly": "Wöchentlich",
+    "monthly": "Monatlich",
+    "annual": "Jährlich",
+    "daewoon": "大運 (10 Jahre)"
+  },
+  "periodDesc": {
+    "daily": "Heutiges Glück & Energie",
+    "weekly": "Vollständiger Zyklus dieser Woche",
+    "monthly": "Monatliches Glück & Karriere",
+    "annual": "Prognose für das ganze Jahr",
+    "daewoon": "10-jähriger Schicksalszyklus"
+  },
+  "types": {
+    "daily": "Tagesglück",
+    "weekly": "Wochenglück",
+    "monthly": "Monatsglück",
+    "annual": "Jahresglück",
+    "daewoon": "Großer Glückszyklus"
+  },
+  "freeLimit": "{{remaining}} kostenlose Lesung(en) diese Woche übrig",
+  "freeLimitExhausted": "Keine kostenlosen Lesungen mehr diese Woche",
+  "luckyItems": {
+    "title": "Glücksbringer",
+    "color": "Glücksfarbe",
+    "number": "Glückszahl",
+    "direction": "Glücksrichtung",
+    "food": "Empfohlenes Essen"
+  },
+  "refresh": "Aktualisieren",
+  "share": "Teilen",
+  "premiumRequired": "Nur Premium",
+  "unlockReading": "Alle Lesungen freischalten",
+  "todaysFortune": "HEUTIGES GLÜCK · 日運",
+  "annualReport": "Jahresbericht",
+  "myChart": "Mein Horoskop",
+  "wasHelpful": "War das hilfreich?",
+  "feedbackThanks": "✨ Danke! Ihr Feedback hilft uns, uns zu verbessern.",
+  "askMore": "Mehr fragen",
+  "freeChatBadge": "{{count}} gratis Chat heute",
+  "chatLimitTitle": "Gratis-Chat heute aufgebraucht",
+  "chatLimitSub": "Unbegrenzt freischalten — 9,99 €/Monat",
+  "weeklyReadingUsed": "Wöchentliche Lesung verwendet",
+  "weeklyReadingUsedDesc": "Ihre kostenlose Lesung für diese Woche wurde verwendet. Upgrade auf Premium für unbegrenzte tägliche Lesungen.",
+  "weeklyFreeAvailable": "🎁 1 kostenlose Lesung diese Woche verfügbar",
+  "upgradeToPremium": "Auf Premium upgraden →",
+  "shareCard": "Karte teilen",
+  "shareCardSubtitle": "Erfasse & teile dein kosmisches Schicksal",
+  "shareAsImage": "Als Bild teilen",
+  "elementDay": {
+    "木": "Holz-Tag",
+    "火": "Feuer-Tag",
+    "土": "Erde-Tag",
+    "金": "Metall-Tag",
+    "水": "Wasser-Tag"
+  },
+  "timingAdvisor": {
+    "title": "Timing-Berater",
+    "subtitle": "Welche Entscheidung sollen wir analysieren?",
+    "analyzing": "Analysiere…",
+    "categories": {
+      "business": {
+        "label": "Geschäft / Startup",
+        "desc": "Ein Unternehmen gründen oder erweitern"
+      },
+      "investment": {
+        "label": "Investition / Finanzen",
+        "desc": "Geld oder Vermögen investieren"
+      },
+      "romance": {
+        "label": "Romantik / Hochzeit",
+        "desc": "Eine Beziehung beginnen oder heiraten"
+      },
+      "relocation": {
+        "label": "Umzug / Reise",
+        "desc": "Umziehen oder eine Reise planen"
+      }
+    },
+    "resultTitle": "TIMING-ANALYSE",
+    "positiveFactors": "POSITIVE FAKTOREN",
+    "cautions": "VORSICHT",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Gut",
+      "fair": "Angemessen",
+      "caution": "Vorsicht"
+    },
+    "freeUsed": "Kostenlose Analyse Verwendet",
+    "nextFree": "Nächste kostenlose Nutzung in {{days}} Tag(en) — oder upgraden Sie für unbegrenzte Analysen.",
+    "nextFreeToday": "Ihre kostenlose Analyse wird morgen zurückgesetzt — oder upgraden Sie für unbegrenzten Zugang.",
+    "upgradeCta": "Auf Premium upgraden →",
+    "analysisFailed": "KI-Analyse fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "readingLoading": "Sterne werden gelesen…",
+  "feedback": {
+    "titlePositive": "👍 Schön, dass es geholfen hat!",
+    "titleNegative": "👎 Es tut uns leid",
+    "chooseReason": "Grund auswählen",
+    "accurate": "Genau",
+    "tooVague": "Zu vage",
+    "notMe": "Trifft nicht auf mich zu",
+    "reasons": {
+      "accurate": "Zutreffend",
+      "want_more_depth": "Mehr Tiefe gewünscht",
+      "new_perspective": "Neue Perspektive",
+      "too_generic": "Zu allgemein",
+      "factually_wrong": "Sachlich falsch",
+      "hard_to_understand": "Schwer verständlich",
+      "customInput": "Eigenes eingeben",
+      "send": "Senden",
+      "customPlaceholder": "Teile deine Gedanken…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "TAGESGLÜCK",
+    "weekly": "WOCHENGLÜCK",
+    "monthly": "MONATSGLÜCK",
+    "annual": "JAHRESGLÜCK",
+    "daewoon": "大運-ZYKLUS"
+  },
+  "journal": {
+    "title": "Lebenstagebuch",
+    "subtitle": "Lebensereignisse · 命運流",
+    "addEvent": "Lebensereignis hinzufügen",
+    "recordPlaceholder": "Wichtige Lebensmomente aufzeichnen",
+    "noEvents": "Noch keine Ereignisse aufgezeichnet",
+    "saveEvent": "Speichern",
+    "savedToast": "Ereignis gespeichert",
+    "aiAnalysis": "KI-Musteranalyse",
+    "aiAnalysisDesc": "Entdecke, wie deine Saju-Zyklen die Lebensereignisse beeinflusst haben",
+    "emptyDesc": "Zeichne wichtige Lebensmomente auf — Karriereveränderungen, Beziehungen, Gesundheit — und entdecke Muster in deinem kosmischen Diagramm.",
+    "loading": "Tagebuch wird geladen…",
+    "lockedAnalysis": "🔒 Füge {{count}} weiteres Ereignis hinzu, um die KI-Musteranalyse freizuschalten"
+  },
+  "compatibility": {
+    "title": "Kompatibilität",
+    "subtitle": "Kompatibilität · 合婚 · Elementare Harmonie",
+    "partnerBirthDate": "Geburtsdatum des Partners",
+    "checkBtn": "Kompatibilität prüfen",
+    "generateReport": "Vollständigen Bericht erstellen",
+    "analyzeAnother": "Andere Person analysieren",
+    "fullReport": "Vollständiger KI-Bericht",
+    "partnerHint": "Gib das Geburtsdatum deines Partners ein, um deinen elementaren Kompatibilitätsscore zu sehen.",
+    "genderLabel": "Geschlecht des Partners",
+    "seeWhy": "Warum sehen — Vollständigen Bericht freischalten $4.99",
+    "fullReportDesc": "5-Abschnitt-Tiefenanalyse: elementare Harmonie, Stärken, Spannungen und Beziehungsprognose."
+  }
+}

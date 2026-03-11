@@ -1,6 +1,26 @@
 {
   "title": "Keberuntungan",
   "subtitle": "Pembacaan · Siklus Keberuntungan · Waktu Kosmik",
+  "readingsTitle": "Pembacaan Nasib",
+  "luckCycles": "流年 · Siklus Keberuntungan",
+  "weeklyLabel": "NASIB MINGGUAN · 週運",
+  "weeklyTeaser": "Energi Kayu minggu ini selaras dengan pilar hari Anda — sebuah jendela penting terbuka...",
+  "unlockWeekly": "✨ Buka akses penuh — $9.99/bulan",
+  "unlockAll": "✨ Buka semua pembacaan nasib — $9.99/bulan",
+  "periodLabel": {
+    "daily": "Harian",
+    "weekly": "Mingguan",
+    "monthly": "Bulanan",
+    "annual": "Tahunan",
+    "daewoon": "大運 (10 thn)"
+  },
+  "periodDesc": {
+    "daily": "Keberuntungan & energi hari ini",
+    "weekly": "Siklus penuh minggu ini",
+    "monthly": "Keberuntungan bulanan & karir",
+    "annual": "Prakiraan setahun penuh",
+    "daewoon": "Siklus nasib 10 tahun"
+  },
   "types": {
     "daily": "Keberuntungan Harian",
     "weekly": "Keberuntungan Mingguan",
@@ -20,5 +40,119 @@
   "refresh": "Segarkan",
   "share": "Bagikan",
   "premiumRequired": "Khusus Premium",
-  "unlockReading": "Buka Semua Pembacaan"
+  "unlockReading": "Buka Semua Pembacaan",
+  "todaysFortune": "KEBERUNTUNGAN HARI INI · 日運",
+  "annualReport": "Laporan Tahunan",
+  "myChart": "Peta Takdirku",
+  "wasHelpful": "Apakah ini membantu?",
+  "feedbackThanks": "✨ Terima kasih! Masukan Anda membantu kami berkembang.",
+  "askMore": "Tanya lebih",
+  "freeChatBadge": "{{count}} chat gratis hari ini",
+  "chatLimitTitle": "Chat gratis hari ini sudah habis",
+  "chatLimitSub": "Buka unlimited — $9.99/bulan",
+  "weeklyReadingUsed": "Bacaan mingguan telah digunakan",
+  "weeklyReadingUsedDesc": "Bacaan gratis Anda minggu ini telah digunakan. Upgrade ke Premium untuk bacaan harian tak terbatas.",
+  "weeklyFreeAvailable": "🎁 1 bacaan gratis tersedia minggu ini",
+  "upgradeToPremium": "Upgrade ke Premium →",
+  "shareCard": "Bagikan Kartu Anda",
+  "shareCardSubtitle": "Tangkap & bagikan takdir kosmik Anda",
+  "shareAsImage": "Bagikan sebagai gambar",
+  "elementDay": {
+    "木": "Hari Kayu",
+    "火": "Hari Api",
+    "土": "Hari Tanah",
+    "金": "Hari Logam",
+    "水": "Hari Air"
+  },
+  "timingAdvisor": {
+    "title": "Penasihat Timing",
+    "subtitle": "Keputusan apa yang akan kita analisis?",
+    "analyzing": "Menganalisis…",
+    "categories": {
+      "business": {
+        "label": "Bisnis / Startup",
+        "desc": "Memulai atau mengembangkan bisnis"
+      },
+      "investment": {
+        "label": "Investasi / Keuangan",
+        "desc": "Menginvestasikan uang atau aset"
+      },
+      "romance": {
+        "label": "Romansa / Pernikahan",
+        "desc": "Memulai hubungan atau menikah"
+      },
+      "relocation": {
+        "label": "Pindah / Perjalanan",
+        "desc": "Pindah rumah atau merencanakan perjalanan"
+      }
+    },
+    "resultTitle": "ANALISIS TIMING",
+    "positiveFactors": "FAKTOR POSITIF",
+    "cautions": "PERHATIAN",
+    "score": {
+      "optimal": "Optimal",
+      "good": "Bagus",
+      "fair": "Cukup",
+      "caution": "Perhatian"
+    },
+    "freeUsed": "Analisis Gratis Telah Digunakan",
+    "nextFree": "Penggunaan gratis berikutnya dalam {{days}} hari — atau upgrade untuk analisis tak terbatas.",
+    "nextFreeToday": "Analisis gratis Anda direset besok — atau upgrade untuk akses tak terbatas.",
+    "upgradeCta": "Upgrade ke Premium →",
+    "analysisFailed": "Analisis AI gagal. Silakan coba lagi."
+  },
+  "readingLoading": "Membaca bintang…",
+  "feedback": {
+    "titlePositive": "👍 Senang bisa membantu!",
+    "titleNegative": "👎 Mohon maaf",
+    "chooseReason": "Pilih alasan",
+    "accurate": "Akurat",
+    "tooVague": "Terlalu samar",
+    "notMe": "Tidak cocok untuk saya",
+    "reasons": {
+      "accurate": "Akurat",
+      "want_more_depth": "Ingin lebih dalam",
+      "new_perspective": "Perspektif baru",
+      "too_generic": "Terlalu umum",
+      "factually_wrong": "Salah fakta",
+      "hard_to_understand": "Sulit dipahami",
+      "customInput": "Tulis sendiri",
+      "send": "Kirim",
+      "customPlaceholder": "Bagikan pendapatmu…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "KEBERUNTUNGAN HARIAN",
+    "weekly": "KEBERUNTUNGAN MINGGUAN",
+    "monthly": "KEBERUNTUNGAN BULANAN",
+    "annual": "KEBERUNTUNGAN TAHUNAN",
+    "daewoon": "SIKLUS 大運"
+  },
+  "journal": {
+    "title": "Jurnal Kehidupan",
+    "subtitle": "Peristiwa Hidup · 命運流",
+    "addEvent": "Tambah Peristiwa",
+    "recordPlaceholder": "Catat momen penting dalam hidupmu",
+    "noEvents": "Belum ada peristiwa yang dicatat",
+    "saveEvent": "Simpan",
+    "savedToast": "Peristiwa tersimpan",
+    "aiAnalysis": "Analisis Pola AI",
+    "aiAnalysisDesc": "Temukan bagaimana siklus saju kamu memengaruhi peristiwa hidupmu",
+    "emptyDesc": "Catat momen penting dalam hidup — perubahan karir, hubungan, kesehatan — dan temukan pola dalam chart kosmik kamu.",
+    "loading": "Memuat jurnal…",
+    "lockedAnalysis": "🔒 Tambah {{count}} event lagi untuk membuka analisis pola AI"
+  },
+  "compatibility": {
+    "title": "Kecocokan",
+    "subtitle": "Kecocokan · 合婚 · Harmoni Elemen",
+    "partnerBirthDate": "Tanggal Lahir Pasangan",
+    "checkBtn": "Cek Kecocokan",
+    "generateReport": "Buat Laporan Lengkap",
+    "analyzeAnother": "Analisis Orang Lain",
+    "fullReport": "Laporan AI Lengkap",
+    "partnerHint": "Masukkan tanggal lahir pasanganmu untuk melihat skor kecocokan elemen.",
+    "genderLabel": "Jenis Kelamin Pasangan",
+    "seeWhy": "Lihat alasannya — Buka laporan lengkap $4.99",
+    "fullReportDesc": "Analisis mendalam 5 bagian: harmoni elemen, kekuatan, ketegangan, dan prakiraan hubungan."
+  }
 }

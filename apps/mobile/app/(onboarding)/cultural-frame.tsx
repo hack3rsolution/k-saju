@@ -1,62 +1,22 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { T } from '../../src/theme/tokens';
 
-const FRAMES: {
-  id: CulturalFrame;
-  label: string;
-  region: string;
-  desc: string;
-  kanji: string;
-}[] = [
-  {
-    id: 'kr',
-    label: '사주팔자',
-    region: '🇰🇷 Korean',
-    desc: 'Traditional classical: destiny, family line, karma',
-    kanji: '命',
-  },
-  {
-    id: 'cn',
-    label: '四柱推命 / BaZi',
-    region: '🇨🇳 Chinese',
-    desc: 'Precision forecasting, business timing',
-    kanji: '八',
-  },
-  {
-    id: 'jp',
-    label: '四柱推命',
-    region: '🇯🇵 Japanese',
-    desc: 'Harmony, workplace fit, subtle personality',
-    kanji: '運',
-  },
-  {
-    id: 'en',
-    label: 'Cosmic Blueprint',
-    region: '🌏 Western',
-    desc: 'Personality-first, psychology overlay (like MBTI)',
-    kanji: '✦',
-  },
-  {
-    id: 'es',
-    label: 'Destino Cósmico',
-    region: '🌎 Latin',
-    desc: 'Horoscope-adjacent, relationship & passion focus',
-    kanji: '★',
-  },
-  {
-    id: 'in',
-    label: 'Vedic Fusion',
-    region: '🇮🇳 South Asian',
-    desc: 'Jyotish vocabulary, karma & dharma framing',
-    kanji: 'ॐ',
-  },
+const FRAME_IDS: { id: CulturalFrame; kanji: string }[] = [
+  { id: 'kr', kanji: '命' },
+  { id: 'cn', kanji: '八' },
+  { id: 'jp', kanji: '運' },
+  { id: 'en', kanji: '✦' },
+  { id: 'es', kanji: '★' },
+  { id: 'in', kanji: 'ॐ' },
 ];
 
 export default function CulturalFrameScreen() {
+  const { t } = useTranslation(['common', 'onboarding']);
   const { setFrame } = useOnboardingStore();
   const [selected, setSelected] = useState<CulturalFrame | null>(null);
 
@@ -77,8 +37,8 @@ export default function CulturalFrameScreen() {
           />
         ))}
       </View>
-      <Text style={styles.step}>Step 2 of 3</Text>
-      <Text style={styles.title}>Choose Your Lens</Text>
+      <Text style={styles.step}>{t('onboarding:step', { current: 2, total: 3 })}</Text>
+      <Text style={styles.title}>{t('onboarding:culturalFrame.title')}</Text>
 
       {/* ── Decorative line ── */}
       <View style={styles.titleDivider}>
@@ -87,11 +47,9 @@ export default function CulturalFrameScreen() {
         <View style={styles.titleDividerLine} />
       </View>
 
-      <Text style={styles.subtitle}>
-        Same cosmic data — personalized to your cultural context.
-      </Text>
+      <Text style={styles.subtitle}>{t('onboarding:culturalFrame.subtitle')}</Text>
 
-      {FRAMES.map((f) => {
+      {FRAME_IDS.map((f) => {
         const accent = T.frameAccent[f.id];
         const isSelected = selected === f.id;
         return (
@@ -114,7 +72,7 @@ export default function CulturalFrameScreen() {
 
             <View style={styles.cardInner}>
               <View style={styles.cardHeader}>
-                <Text style={styles.region}>{f.region}</Text>
+                <Text style={styles.region}>{t(`onboarding:culturalFrame.frames.${f.id}.region`)}</Text>
                 {isSelected && (
                   <View style={[styles.checkBadge, { backgroundColor: accent }]}>
                     <Text style={styles.checkText}>✓</Text>
@@ -122,9 +80,9 @@ export default function CulturalFrameScreen() {
                 )}
               </View>
               <Text style={[styles.label, isSelected && { color: accent === T.frameAccent.en ? T.primary.light : '#fff' }]}>
-                {f.label}
+                {t(`onboarding:culturalFrame.frames.${f.id}.label`)}
               </Text>
-              <Text style={styles.desc}>{f.desc}</Text>
+              <Text style={styles.desc}>{t(`onboarding:culturalFrame.frames.${f.id}.desc`)}</Text>
             </View>
           </TouchableOpacity>
         );
@@ -135,7 +93,7 @@ export default function CulturalFrameScreen() {
         onPress={handleContinue}
         disabled={!selected}
       >
-        <Text style={styles.buttonText}>Continue →</Text>
+        <Text style={styles.buttonText}>{t('onboarding:culturalFrame.continue')} →</Text>
       </TouchableOpacity>
     </ScrollView>
   );

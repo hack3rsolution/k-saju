@@ -1,0 +1,1 @@
+v2.3.0 — Hỗ trợ 15 ngôn ngữ, tích hợp K-Culture nâng cao, mẫu vận may hàng tuần & cải tiến động cơ saju.

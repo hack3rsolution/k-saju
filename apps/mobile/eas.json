@@ -7,23 +7,21 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": {
-        "APP_ENV": "development"
-      },
-      "channel": "development"
+      "env": { "APP_ENV": "development" },
+      "channel": "development",
+      "android": { "buildType": "apk" },
+      "ios": { "simulator": true }
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "env": {
-        "APP_ENV": "preview"
-      }
+      "env": { "APP_ENV": "preview", "EXPO_PUBLIC_ENABLE_DEV_BYPASS": "true", "EXPO_PUBLIC_DEV_EMAIL": "dev-android@k-saju.com" },
+      "android": { "buildType": "apk" },
     },
     "production": {
       "channel": "production",
-      "env": {
-        "APP_ENV": "production"
-      }
+      "env": { "APP_ENV": "production" },
+      "android": { "buildType": "app-bundle" }
     }
   },
   "submit": {
@@ -33,9 +31,7 @@
         "ascAppId": "$ASC_APP_ID",
         "appleTeamId": "$APPLE_TEAM_ID"
       },
-      "android": {
-        "track": "internal"
-      }
+      "android": { "track": "internal" }
     }
   }
 }

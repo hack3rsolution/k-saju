@@ -1,0 +1,189 @@
+default_platform :ios
+
+# ── Helpers ────────────────────────────────────────────────────────────────
+
+METADATA_ROOT = File.expand_path("metadata", __dir__)
+
+IOS_LOCALES = %w[
+  en-US ko ja zh-Hans zh-Hant es-ES fr-FR de-DE pt-BR th id ar-SA hi vi it
+].freeze
+
+ANDROID_LOCALES = %w[
+  en-US ko-KR ja-JP zh-CN zh-TW es-ES fr-FR de-DE pt-BR th id ar hi-IN vi it-IT
+].freeze
+
+CHAR_LIMITS = {
+  # iOS
+  "name"             => 30,
+  "subtitle"         => 30,
+  "promotional_text" => 170,
+  "keywords"         => 100,
+  "description"      => 4000,
+  "release_notes"    => 4000,
+  # Android
+  "title"            => 30,
+  "short_description" => 80,
+  "full_description" => 4000,
+}.freeze
+
+# ── iOS lanes ──────────────────────────────────────────────────────────────
+
+platform :ios do
+  desc "Upload iOS metadata + screenshots (no binary)"
+  lane :metadata do
+    deliver(
+      skip_binary_upload:     true,
+      force:                  true,
+      submit_for_review:      false,
+      metadata_path:          "#{METADATA_ROOT}/ios",
+      screenshots_path:       "#{METADATA_ROOT}/ios",
+      primary_category:       "LIFESTYLE",
+      secondary_category:     "ENTERTAINMENT",
+      app_review_information: {
+        first_name:        "Donghyun",
+        last_name:         "Lee",
+        phone_number:      ENV["REVIEW_PHONE"],
+        email_address:     ENV["REVIEW_EMAIL"],
+        demo_user:         "",
+        demo_password:     "",
+        notes:             "",
+      },
+      submission_information: {
+        add_id_info_uses_idfa:                   false,
+        export_compliance_uses_encryption:        false,
+        export_compliance_is_exempt:              false,
+        export_compliance_contains_third_party_cryptography: false,
+        export_compliance_contains_proprietary_cryptography: false,
+      },
+    )
+  end
+
+  desc "Submit latest iOS build for App Store review"
+  lane :submit_review do
+    deliver(
+      skip_binary_upload:        true,
+      skip_metadata:             true,
+      skip_screenshots:          true,
+      submit_for_review:         true,
+      automatic_release:         false,
+      force:                     true,
+      submission_information: {
+        add_id_info_uses_idfa:                   false,
+        export_compliance_uses_encryption:        false,
+        export_compliance_is_exempt:              false,
+        export_compliance_contains_third_party_cryptography: false,
+        export_compliance_contains_proprietary_cryptography: false,
+      },
+    )
+  end
+end
+
+# ── Android lanes ──────────────────────────────────────────────────────────
+
+platform :android do
+  desc "Upload Android metadata (no APK/AAB)"
+  lane :metadata do
+    supply(
+      metadata_path:  "#{METADATA_ROOT}/android",
+      track:          "internal",
+      release_status: "draft",
+      skip_upload_apk:         true,
+      skip_upload_aab:         true,
+      skip_upload_metadata:    false,
+      skip_upload_changelogs:  false,
+      skip_upload_images:      true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc "Promote a release between tracks. Options: from:, to:, rollout: (default 1.0)"
+  lane :promote do |options|
+    from_track = options[:from] || UI.user_error!("Specify 'from:' track")
+    to_track   = options[:to]   || UI.user_error!("Specify 'to:' track")
+    rollout    = options[:rollout] || (to_track == "production" ? "0.1" : "1.0")
+
+    supply(
+      track:              from_track,
+      track_promote_to:   to_track,
+      rollout:            rollout.to_s,
+      skip_upload_apk:         true,
+      skip_upload_aab:         true,
+      skip_upload_metadata:    true,
+      skip_upload_changelogs:  true,
+      skip_upload_images:      true,
+      skip_upload_screenshots: true,
+    )
+
+    UI.success "Promoted #{from_track} → #{to_track} (rollout #{(rollout.to_f * 100).to_i}%)"
+  end
+end
+
+# ── Cross-platform lanes ───────────────────────────────────────────────────
+
+desc "Upload metadata to both App Store and Google Play"
+lane :deploy_metadata do
+  Fastlane::LaneManager.cruise_lane("ios",     "metadata")
+  Fastlane::LaneManager.cruise_lane("android", "metadata")
+end
+
+desc "Validate all metadata character limits for iOS and Android"
+lane :validate do
+  violations = []
+
+  # ── iOS ──────────────────────────────────────
+  IOS_LOCALES.each do |locale|
+    dir = "#{METADATA_ROOT}/ios/#{locale}"
+    next unless Dir.exist?(dir)
+
+    CHAR_LIMITS.each do |file, limit|
+      path = "#{dir}/#{file}.txt"
+      next unless File.exist?(path)
+
+      text = File.read(path, encoding: "utf-8").strip
+      len  = text.length
+      if len > limit
+        violations << "iOS  [#{locale}] #{file}.txt — #{len}/#{limit} chars (over by #{len - limit})"
+      end
+    end
+  end
+
+  # ── Android ──────────────────────────────────
+  ANDROID_LOCALES.each do |locale|
+    dir = "#{METADATA_ROOT}/android/#{locale}"
+    next unless Dir.exist?(dir)
+
+    {
+      "title"             => CHAR_LIMITS["title"],
+      "short_description" => CHAR_LIMITS["short_description"],
+      "full_description"  => CHAR_LIMITS["full_description"],
+    }.each do |file, limit|
+      path = "#{dir}/#{file}.txt"
+      next unless File.exist?(path)
+
+      text = File.read(path, encoding: "utf-8").strip
+      len  = text.length
+      if len > limit
+        violations << "Android [#{locale}] #{file}.txt — #{len}/#{limit} chars (over by #{len - limit})"
+      end
+    end
+
+    # changelogs/default.txt (≤500 chars on Play Store)
+    chg_path = "#{dir}/changelogs/default.txt"
+    if File.exist?(chg_path)
+      text = File.read(chg_path, encoding: "utf-8").strip
+      len  = text.length
+      if len > 500
+        violations << "Android [#{locale}] changelogs/default.txt — #{len}/500 chars (over by #{len - 500})"
+      end
+    end
+  end
+
+  # ── Result ───────────────────────────────────
+  if violations.empty?
+    UI.success "All metadata passed character-limit validation ✓"
+  else
+    UI.error "Character-limit violations found:"
+    violations.each { |v| UI.error "  • #{v}" }
+    UI.user_error! "Fix the violations above before uploading metadata."
+  end
+end

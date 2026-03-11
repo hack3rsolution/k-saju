@@ -39,7 +39,7 @@ function setCached(key: string, data: JournalAnalysisResponse): void {
 
 // ── Claude call ───────────────────────────────────────────────────────────────
 
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 800;
 
 async function callClaude(
@@ -121,8 +121,9 @@ Deno.serve(async (req: Request) => {
     return errorResponse((e as Error).message);
   }
 
-  // ── Cache check (keyed by userId + eventCount for invalidation) ───────────
-  const cacheKey = `${user.id}:${request.events.length}`;
+  // ── Cache check (keyed by userId + eventCount + language for invalidation) ─
+  const userLanguage = (request as { userLanguage?: string }).userLanguage;
+  const cacheKey = `${user.id}:${request.events.length}:${userLanguage ?? 'ko'}`;
   const cached = getCached(cacheKey);
   if (cached) return jsonResponse(cached);
 
@@ -130,7 +131,7 @@ Deno.serve(async (req: Request) => {
   let claudeResult: { summary: string; patterns: PatternInsight[]; dominantElement: string };
   try {
     claudeResult = await callClaude(
-      buildSystemPrompt(request.frame),
+      buildSystemPrompt(request.frame, (request as { userLanguage?: string }).userLanguage),
       buildUserPrompt(request.events, request.chart),
       ANTHROPIC_API_KEY,
     );

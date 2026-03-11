@@ -17,6 +17,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useRelationships } from '../../src/hooks/useRelationships';
 import { RelationshipCard } from '../../src/components/RelationshipCard';
@@ -26,6 +27,7 @@ import { useEntitlementStore } from '../../src/store/entitlementStore';
 import type { Relationship, RelationshipFortuneData } from '../../src/types/relationship';
 
 export default function RelationshipsScreen() {
+  const { t } = useTranslation('common');
   const { isPremium, addons } = useEntitlementStore();
   const hasAccess = isPremium || addons.deepCompatibility;
 
@@ -34,6 +36,7 @@ export default function RelationshipsScreen() {
     loading,
     fortuneLoading,
     error,
+    fortuneError,
     list,
     add,
     remove,
@@ -45,7 +48,6 @@ export default function RelationshipsScreen() {
   const [detailVisible, setDetailVisible] = useState(false);
   const [selected,      setSelected]      = useState<Relationship | null>(null);
   const [fortune,       setFortune]       = useState<RelationshipFortuneData | null>(null);
-  const [fortuneError,  setFortuneError]  = useState<string | null>(null);
 
   // ── Load on mount ────────────────────────────────────────────────────────────
   useEffect(() => { list(); }, [list]);
@@ -63,20 +65,14 @@ export default function RelationshipsScreen() {
   const handleCardPress = useCallback((rel: Relationship) => {
     setSelected(rel);
     setFortune(null);
-    setFortuneError(null);
     setDetailVisible(true);
   }, []);
 
   const handleLoadFortune = useCallback(async () => {
     if (!selected) return;
-    setFortuneError(null);
     const data = await getFortune(selected);
-    if (!data) {
-      setFortuneError(error ?? 'Failed to load');
-    } else {
-      setFortune(data);
-    }
-  }, [selected, getFortune, error]);
+    if (data) setFortune(data);
+  }, [selected, getFortune]);
 
   const handleDelete = useCallback(async (id: string) => {
     await remove(id);
@@ -88,16 +84,14 @@ export default function RelationshipsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Relationship Map</Text>
-          <Text style={styles.subtitle}>관계 지도 · 人脈運</Text>
+          <Text style={styles.title}>{t('relationships.title')}</Text>
+          <Text style={styles.subtitle}>{t('relationships.subtitle')}</Text>
           <View style={styles.lockedCard}>
             <Text style={styles.lockedIcon}>💞</Text>
-            <Text style={styles.lockedTitle}>Premium Feature</Text>
-            <Text style={styles.lockedDesc}>
-              See compatibility scores, monthly energy flows, and five-element synergy for everyone in your life.
-            </Text>
+            <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
+            <Text style={styles.lockedDesc}>{t('relationships.premiumDesc')}</Text>
             <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
-              <Text style={styles.upgradeBtnText}>Unlock Relationship Map →</Text>
+              <Text style={styles.upgradeBtnText}>{t('relationships.unlockBtn')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -115,8 +109,8 @@ export default function RelationshipsScreen() {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
         {/* Header */}
-        <Text style={styles.title}>Relationship Map</Text>
-        <Text style={styles.subtitle}>관계 지도 · {new Date().toLocaleString('en', { month: 'long', year: 'numeric' })}</Text>
+        <Text style={styles.title}>{t('relationships.title')}</Text>
+        <Text style={styles.subtitle}>{t('relationships.subtitle')} · {new Date().toLocaleString(undefined, { month: 'long', year: 'numeric' })}</Text>
 
         {/* Error banner */}
         {error && error !== 'premium_required' && (
@@ -129,10 +123,8 @@ export default function RelationshipsScreen() {
         {!loading && relationships.length === 0 && (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyIcon}>💞</Text>
-            <Text style={styles.emptyTitle}>No relationships yet</Text>
-            <Text style={styles.emptyDesc}>
-              Tap the + button to add a partner, friend, or family member and see your cosmic compatibility.
-            </Text>
+            <Text style={styles.emptyTitle}>{t('relationships.noRelationships')}</Text>
+            <Text style={styles.emptyDesc}>{t('relationships.emptyDesc')}</Text>
           </View>
         )}
 
@@ -150,7 +142,7 @@ export default function RelationshipsScreen() {
         {loading && relationships.length === 0 && (
           <View style={styles.loadingBox}>
             <ActivityIndicator color="#a78bfa" size="large" />
-            <Text style={styles.loadingText}>Loading relationships…</Text>
+            <Text style={styles.loadingText}>{t('relationships.loading')}</Text>
           </View>
         )}
       </ScrollView>

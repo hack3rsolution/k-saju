@@ -56,29 +56,6 @@ jest.mock('../../src/lib/supabase', () => ({
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Build a mock ReadableStream that emits the given SSE tokens then [DONE]. */
-function makeStreamBody(tokens: string[]): ReadableStream<Uint8Array> {
-  const encoder = new TextEncoder();
-  const events = [
-    ...tokens.map((t) => `data: ${JSON.stringify({ token: t })}\n\n`),
-    'data: [DONE]\n\n',
-  ];
-  return new ReadableStream<Uint8Array>({
-    start(controller) {
-      for (const e of events) controller.enqueue(encoder.encode(e));
-      controller.close();
-    },
-  });
-}
-
-function mockFetchStream(tokens: string[]) {
-  (globalThis.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
-    ok: true, status: 200,
-    body: makeStreamBody(tokens),
-    json: async () => ({}),
-  });
-}
-
 function mockFetchError(status: number, body: unknown) {
   (globalThis.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce({
     ok: false, status,
@@ -96,7 +73,7 @@ describe('useFortunChat — module exports', () => {
   });
 
   it('exports useFortunChat hook', () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const mod = require('../../src/hooks/useFortunChat') as {
       useFortunChat: unknown;
       loadChatHistory: unknown;
@@ -105,7 +82,7 @@ describe('useFortunChat — module exports', () => {
   });
 
   it('exports loadChatHistory helper', () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const mod = require('../../src/hooks/useFortunChat') as {
       loadChatHistory: unknown;
     };
@@ -193,7 +170,18 @@ describe('useFortunChat — gate logic', () => {
     jest.clearAllMocks();
   });
 
-  it('returns 403 for free users (premium_required)', async () => {
+  it('returns 402 for free users who exceeded daily limit (free_limit_reached)', async () => {
+    mockFetchError(402, { ok: false, error: 'free_limit_reached' });
+    const resp = await (globalThis.fetch as jest.Mock)(
+      'https://test.supabase.co/functions/v1/fortune-chat',
+      { method: 'POST' },
+    );
+    expect(resp.status).toBe(402);
+    const body = await resp.json() as { error: string };
+    expect(body.error).toBe('free_limit_reached');
+  });
+
+  it('returns 403 for non-premium users (premium_required)', async () => {
     mockFetchError(403, { ok: false, error: 'premium_required' });
     const resp = await (globalThis.fetch as jest.Mock)(
       'https://test.supabase.co/functions/v1/fortune-chat',
@@ -220,7 +208,7 @@ describe('loadChatHistory', () => {
   });
 
   it('returns empty array when no history exists', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const { loadChatHistory } = require('../../src/hooks/useFortunChat') as {
       loadChatHistory: (id: string) => Promise<{ role: string; content: string }[]>;
     };

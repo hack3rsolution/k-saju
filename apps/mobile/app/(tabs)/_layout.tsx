@@ -1,7 +1,10 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function TabsLayout() {
+  const { t } = useTranslation('common');
+
   return (
     <Tabs
       screenOptions={{
@@ -14,7 +17,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Today',
+          title: t('tabs.today'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="sunny" size={size} color={color} />
           ),
@@ -23,7 +26,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="chart"
         options={{
-          title: 'My Chart',
+          title: t('tabs.myChart'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="grid" size={size} color={color} />
           ),
@@ -32,16 +35,25 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="fortune"
         options={{
-          title: 'Fortune',
+          title: t('tabs.fortune'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="star" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
+        name="k-type"
+        options={{
+          title: t('tabs.kType'),
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="leaf-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="relationships"
         options={{
-          title: 'Relations',
+          title: t('tabs.relations'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="people" size={size} color={color} />
           ),
@@ -50,18 +62,18 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="journal"
         options={{
-          title: 'Journal',
+          title: t('tabs.journal'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="face"
         options={{
-          title: 'Settings',
+          title: t('face.title'),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle" size={size} color={color} />
+            <Ionicons name="scan-outline" size={size} color={color} />
           ),
         }}
       />

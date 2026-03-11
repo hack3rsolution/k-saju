@@ -98,7 +98,7 @@ describe('notifications', () => {
         expect.objectContaining({
           identifier: expect.any(String),
           content: expect.objectContaining({
-            title: expect.stringContaining('운세'),
+            title: expect.stringContaining('Fortune'),
           }),
           trigger: expect.objectContaining({ hour: 8, minute: 0, repeats: true }),
         }),

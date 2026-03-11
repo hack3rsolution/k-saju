@@ -5,6 +5,7 @@ import type {
   RecommendationItem,
   ClaudeRecommendationOutput,
 } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Dominant element resolver ─────────────────────────────────────────────────
 
@@ -146,8 +147,11 @@ Return JSON only. Descriptions in English with Sanskrit/Hindi terms where natura
 
 // ── User prompt builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  // (e.g. kr frame ends with "설명은 한국어로", cn frame says "描述使用简体中文")
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}`;
 }
 
 export function buildUserPrompt(req: ContentRecommendationRequest): string {

@@ -5,6 +5,8 @@
  * If the chart isn't in sajuStore (cold start), it's reconstructed from user_metadata.
  */
 import { useEffect, useRef, useState } from 'react';
+import dayjs from '../lib/dayjs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   calculateFourPillars,
   calculateElementBalance,
@@ -16,9 +18,12 @@ import {
   type BirthData,
   type FiveElement,
 } from '@k-saju/saju-engine';
-import { supabase } from '../lib/supabase';
+import { supabase, getFreshToken } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
+import { useEntitlementStore } from '../store/entitlementStore';
+import { friendlyApiError } from '../lib/apiError';
 
 // ── Response types (mirrors supabase/functions/saju-reading/types.ts) ────────
 
@@ -35,14 +40,70 @@ interface ReadingData {
   luckyItems: LuckyItems | null;
 }
 
-// ── ISO week helper ───────────────────────────────────────────────────────────
+// ── Client-side cache (AsyncStorage) ─────────────────────────────────────────
 
-function isoWeek(date: Date): string {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+interface CachedFortuneEntry {
+  reading: ReadingData;
+  readingId: string | null;
+}
+
+function fortuneCacheKey(
+  userId: string,
+  date: string,
+  type: ReadingType,
+  frame: string,
+  lang: string,
+): string {
+  return `fortune_${userId}_${date}_${type}_${frame}_${lang}`;
+}
+
+async function loadFortuneCache(key: string): Promise<CachedFortuneEntry | null> {
+  try {
+    const raw = await AsyncStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw) as CachedFortuneEntry;
+  } catch {
+    return null;
+  }
+}
+
+async function saveFortuneCache(key: string, entry: CachedFortuneEntry): Promise<void> {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(entry));
+  } catch { /* ignore storage errors */ }
+}
+
+// ── refDate normalisation ─────────────────────────────────────────────────────
+// Cache key must be stable for the entire period the reading covers:
+//   daily   → today's UTC date          (YYYY-MM-DD)
+//   weekly  → Monday of the UTC week    (YYYY-MM-DD)
+//   monthly → first day of UTC month    (YYYY-MM-01)
+//   annual  → first day of UTC year     (YYYY-01-01)
+//   daewoon → first day of UTC year     (YYYY-01-01)
+//
+// Using UTC throughout so iOS and Android produce identical strings regardless
+// of device timezone.
+
+function normalizeRefDate(date: Date, readingType: ReadingType): string {
+  const y = date.getUTCFullYear();
+  const m = date.getUTCMonth(); // 0-indexed
+  const d = date.getUTCDate();
+
+  if (readingType === 'weekly') {
+    // Rewind to Monday (getUTCDay: 0=Sun … 6=Sat)
+    const dow = date.getUTCDay(); // 0=Sun
+    const daysToMonday = dow === 0 ? 6 : dow - 1;
+    const monday = new Date(Date.UTC(y, m, d - daysToMonday));
+    return monday.toISOString().split('T')[0];
+  }
+  if (readingType === 'monthly') {
+    return `${y}-${String(m + 1).padStart(2, '0')}-01`;
+  }
+  if (readingType === 'annual' || readingType === 'daewoon') {
+    return `${y}-01-01`;
+  }
+  // daily
+  return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
 // ── Today's sexagenary date ───────────────────────────────────────────────────
@@ -61,6 +122,10 @@ function todayGanji() {
     dayElement: STEM_ELEMENT[dp.stem] as FiveElement,
   };
 }
+
+// ── Reading type ──────────────────────────────────────────────────────────────
+
+export type ReadingType = 'daily' | 'weekly' | 'monthly' | 'annual' | 'daewoon';
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
@@ -81,31 +146,78 @@ export interface FortuneState {
   refresh: () => void;
 }
 
-export function useFortune(): FortuneState {
+export function useFortune(type: ReadingType = 'daily'): FortuneState {
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<ReadingData | null>(null);
   const [readingId, setReadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [weeklyLimitReached, setWeeklyLimitReached] = useState(false);
   const [tick, setTick] = useState(0);
+  // Keep last successful reading so it's shown even when the next fetch fails
+  const lastReadingRef = useRef<ReadingData | null>(null);
+  // Set to true by refresh() so the next effect run bypasses the cache
+  const skipCacheRef = useRef(false);
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
+  const { language } = useLanguageStore();
+  const { isPremium: entitlementPremium } = useEntitlementStore();
 
   const ganji = todayGanji();
   // Stable ref so the effect below doesn't re-fire when ganji object changes identity
   const ganjiRef = useRef(ganji);
   ganjiRef.current = ganji;
+  // Track previous language to detect changes and bust stale cache
+  const prevLanguageRef = useRef<string>(language);
 
   useEffect(() => {
     if (!session) return;
     let cancelled = false;
 
     async function fetch() {
-      setLoading(true);
       setError(null);
+      const now = new Date();
+      const refDate = normalizeRefDate(now, type);
+      const userId = session!.user.id;
+
+      // ── 0. Client-side cache check — no loading spinner on hit ────────────
+      const earlyFrame = frame ?? (session!.user.user_metadata?.cultural_frame as string ?? 'en');
+      const ck = fortuneCacheKey(userId, refDate, type, earlyFrame, language);
+
+      // If language changed since last render, wipe the stale cache entry for the
+      // new language (it may contain content generated with the old prompt before
+      // the language-instruction fix). This forces a fresh server round-trip.
+      if (prevLanguageRef.current !== language) {
+        prevLanguageRef.current = language;
+        await AsyncStorage.removeItem(ck);
+        if (!cancelled) setReading(null);
+      }
+
+      // If refresh() was called, clear ALL fortune cache keys for this user so the
+      // server is always queried fresh (mirrors the Supabase DB cache invalidation).
+      if (skipCacheRef.current) {
+        skipCacheRef.current = false;
+        try {
+          const allKeys = await AsyncStorage.getAllKeys();
+          const fortuneKeys = allKeys.filter((k) => k.startsWith(`fortune_${userId}_`));
+          if (fortuneKeys.length > 0) await AsyncStorage.multiRemove(fortuneKeys);
+        } catch { /* ignore */ }
+        if (!cancelled) setReading(null);
+      }
+
+      const clientCached = await loadFortuneCache(ck);
+      if (clientCached) {
+        if (!cancelled) {
+          lastReadingRef.current = clientCached.reading;
+          setReading(clientCached.reading);
+          setReadingId(clientCached.readingId);
+        }
+        return; // No API call needed
+      }
+
+      // ── Cache miss — show loading and proceed ─────────────────────────────
+      setLoading(true);
       try {
-        const now = new Date();
 
         // ── 1. Ensure chart is available ───────────────────────────────────
         let activeChart = chart;
@@ -139,11 +251,25 @@ export function useFortune(): FortuneState {
           setChart(activeChart, birthData, dw, activeFrame!);
         }
 
-        // ── 2. Check free weekly limit ─────────────────────────────────────
+        // ── 1b. Fallback: reconstruct daewoon if missing from store ────────
         const meta = session!.user.user_metadata;
-        const currentWeek = isoWeek(now);
-        const isPremium = meta?.is_premium === true;
-        const usedThisWeek = !isPremium && meta?.last_free_reading_week === currentWeek;
+        if (!activeDaewoon && meta?.birth_year) {
+          const bd: BirthData = {
+            year: meta.birth_year,
+            month: meta.birth_month,
+            day: meta.birth_day,
+            hour: meta.birth_hour ?? undefined,
+            gender: (meta.gender as 'M' | 'F') ?? 'M',
+          };
+          activeDaewoon = calculateDaewoon(bd);
+        }
+
+        // ── 2. Check free weekly limit (weekly only — daily is unlimited) ───
+        const currentWeek = dayjs(now).isoWeek();
+        const isPremium = meta?.is_premium === true || entitlementPremium;
+        // Daily fortune is free and unlimited per MEMORY.md freemium strategy.
+        // Weekly limit only applies to the 'weekly' reading type for free users.
+        const usedThisWeek = type === 'weekly' && !isPremium && meta?.last_free_reading_week === currentWeek;
 
         if (usedThisWeek) {
           setWeeklyLimitReached(true);
@@ -155,32 +281,34 @@ export function useFortune(): FortuneState {
 
         // ── 3. Call Edge Function ──────────────────────────────────────────
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-        const refDate = now.toISOString().split('T')[0];
         const { dayStr: todayDay } = ganjiRef.current;
+        const yp = yearPillar(now.getFullYear());
 
+        const requestBody = JSON.stringify({
+          chart: {
+            yearPillar: activeChart.pillars.year,
+            monthPillar: activeChart.pillars.month,
+            dayPillar: activeChart.pillars.day,
+            hourPillar: activeChart.pillars.hour,
+            elementBalance: activeChart.elements,
+            dayStem: activeChart.dayStem,
+            daewoonList: activeDaewoon,
+          },
+          frame: activeFrame ?? 'en',
+          type,
+          refDate,
+          todaySexagenary: todayDay,
+          currentYearPillar: yp,
+          userLanguage: language,
+        });
+
+        const accessToken = await getFreshToken();
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/saju-reading`,
           {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session!.access_token}`,
-            },
-            body: JSON.stringify({
-              chart: {
-                yearPillar: activeChart.pillars.year,
-                monthPillar: activeChart.pillars.month,
-                dayPillar: activeChart.pillars.day,
-                hourPillar: activeChart.pillars.hour,
-                elementBalance: activeChart.elements,
-                dayStem: activeChart.dayStem,
-                daewoonList: activeDaewoon,
-              },
-              frame: activeFrame ?? 'en',
-              type: 'daily',
-              refDate,
-              todaySexagenary: todayDay,
-            }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+            body: requestBody,
           },
         );
 
@@ -190,12 +318,33 @@ export function useFortune(): FortuneState {
         }
 
         const data = await resp.json() as { ok: boolean; readingId?: string | null; reading: ReadingData };
+
+        // Safety: Edge Function may store the whole JSON in the summary field on
+        // parse-fallback. Unwrap transparently so the UI receives clean fields.
+        let parsedReading = data.reading;
+        if (typeof parsedReading.summary === 'string' && parsedReading.summary.trim().startsWith('{')) {
+          try {
+            const inner = JSON.parse(parsedReading.summary) as Partial<ReadingData>;
+            if (inner.summary) {
+              parsedReading = {
+                summary:    inner.summary,
+                details:    Array.isArray(inner.details) ? inner.details : parsedReading.details,
+                luckyItems: inner.luckyItems !== undefined ? inner.luckyItems : parsedReading.luckyItems,
+              };
+            }
+          } catch { /* keep original */ }
+        }
+
         if (!cancelled) {
-          setReading(data.reading);
+          lastReadingRef.current = parsedReading;
+          setReading(parsedReading);
           setReadingId(data.readingId ?? null);
         }
 
-        // ── 4. Mark weekly usage for free tier ────────────────────────────
+        // ── 4. Save to client-side cache ───────────────────────────────────
+        await saveFortuneCache(ck, { reading: parsedReading, readingId: data.readingId ?? null });
+
+        // ── 5. Mark weekly usage for free tier ────────────────────────────
         if (!isPremium) {
           supabase.auth
             .updateUser({ data: { last_free_reading_week: currentWeek } })
@@ -203,7 +352,11 @@ export function useFortune(): FortuneState {
         }
       } catch (e: unknown) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : 'Failed to load reading');
+          setError(friendlyApiError(e));
+          // Restore last successful reading if available so the UI stays populated
+          if (lastReadingRef.current && reading === null) {
+            setReading(lastReadingRef.current);
+          }
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -212,8 +365,7 @@ export function useFortune(): FortuneState {
 
     fetch();
     return () => { cancelled = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, tick]);
+  }, [session, tick, language, type, entitlementPremium]);
 
   return {
     loading,
@@ -224,6 +376,6 @@ export function useFortune(): FortuneState {
     todayDay: ganji.dayStr,
     todayElement: ganji.dayElement,
     weeklyLimitReached,
-    refresh: () => setTick((t) => t + 1),
+    refresh: () => { skipCacheRef.current = true; setTick((t) => t + 1); },
   };
 }

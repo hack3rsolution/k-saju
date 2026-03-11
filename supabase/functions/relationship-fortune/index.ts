@@ -93,7 +93,7 @@ function scoreToStatus(score: number): CompatibilityStatus {
 
 // ── Claude call ───────────────────────────────────────────────────────────────
 
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 500;
 
 async function callClaude(
@@ -187,7 +187,8 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Cache check ────────────────────────────────────────────────────────────
-  const cacheKey = `${user.id}:${request.relationshipId}:${request.refMonth}`;
+  const userLanguage = (request as unknown as Record<string, unknown>).userLanguage as string | undefined;
+  const cacheKey = `${user.id}:${request.relationshipId}:${request.refMonth}:${userLanguage ?? 'ko'}`;
   const cached = getCached(cacheKey);
   if (cached) return jsonResponse(cached);
 
@@ -208,7 +209,7 @@ Deno.serve(async (req: Request) => {
   // ── Call Claude ────────────────────────────────────────────────────────────
   let claudeResult: { summary: string; monthlyFlow: string; strengths: string[]; cautions: string[] };
   try {
-    const systemPrompt = buildSystemPrompt(request.frame);
+    const systemPrompt = buildSystemPrompt(request.frame, userLanguage);
     const userPrompt = buildUserPrompt(
       request.ownerChart,
       request.partnerBirth,

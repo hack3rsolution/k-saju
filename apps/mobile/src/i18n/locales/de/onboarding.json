@@ -1,0 +1,84 @@
+{
+  "step": "Schritt {{current}} von {{total}}",
+  "birthInput": {
+    "title": "Ihre Geburtsdaten",
+    "subtitle": "Wir verwenden Ihr Geburtsdatum und Ihre Geburtszeit, um Ihre Vier Säulen (Saju) zu berechnen.",
+    "birthDate": "Geburtsdatum",
+    "birthTime": "Geburtszeit",
+    "birthTimeUnknown": "Ich kenne meine Geburtszeit nicht",
+    "gender": "Geschlecht",
+    "male": "Männlich",
+    "female": "Weiblich",
+    "continue": "Weiter",
+    "lunar": "🌙 Mondkalender",
+    "solar": "☀️ Sonnenkalender",
+    "lunarHint": "Das Monddatum wird für die Vier-Säulen-Berechnung in das Solardatum umgewandelt.",
+    "year": "Jahr",
+    "month": "Monat",
+    "day": "Tag",
+    "timeKnown": "Kennen Sie Ihre Geburtszeit?",
+    "hour24": "Stunde (24h)",
+    "lunarErrorTitle": "Ungültiges Monddatum",
+    "lunarErrorMsg": "Das eingegebene Monddatum konnte nicht konvertiert werden. Bitte überprüfen Sie es und versuchen Sie es erneut."
+  },
+  "culturalFrame": {
+    "title": "Wählen Sie Ihre Perspektive",
+    "subtitle": "Gleiche kosmische Daten — personalisiert für Ihren kulturellen Kontext.",
+    "frames": {
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Koreanisch",
+        "desc": "Traditionelle Vier-Säulen-Lesung"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Chinesisch",
+        "desc": "Klassisches BaZi-System"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Japanisch",
+        "desc": "Japanische Schicksalslesung"
+      },
+      "en": {
+        "label": "Kosmischer Plan",
+        "region": "🌏 Westlich",
+        "desc": "Persönlichkeit & Lebensweg"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Lateinisch",
+        "desc": "Horoskop-Stil"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 Südasiatisch",
+        "desc": "Jyotish-inspirierte Perspektive"
+      }
+    },
+    "continue": "Weiter",
+    "screenTitle": "Kulturellen Rahmen wählen",
+    "screenSubtitle": "Dieselben kosmischen Daten — angepasst an deinen kulturellen Kontext"
+  },
+  "resultPreview": {
+    "title": "Ihr Chart-Vorschau",
+    "subtitle": "Hier ist ein Einblick in Ihren kosmischen Plan.",
+    "unlockTitle": "Entdecken Sie Ihr volles Schicksal",
+    "unlockDesc": "Tägliche Glücksvorhersage, Kompatibilität, Jahreszyklus und mehr mit Premium.",
+    "exploreFree": "Kostenlose Funktionen erkunden",
+    "viewPremium": "Premium-Pläne anzeigen",
+    "frameTitles": {
+      "kr": "Mein Saju",
+      "cn": "Mein BaZi",
+      "jp": "Meine Vier Pfeiler",
+      "en": "Mein Kosmischer Plan",
+      "es": "Mein Destino Cósmico",
+      "in": "Meine Vedische Fusion"
+    },
+    "unknown": "Unbekannt",
+    "hourUnknown": "(Stunde unbekannt)",
+    "pillarsSection": "Vier Pfeiler (四柱)",
+    "dayStemHint": "Tagesmeister · {{stem}} · {{element}}",
+    "elementSection": "Gleichgewicht der Fünf Elemente (五行)"
+  }
+}

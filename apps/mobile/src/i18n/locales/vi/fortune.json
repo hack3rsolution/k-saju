@@ -1,6 +1,26 @@
 {
   "title": "Vận Số",
   "subtitle": "Luận Giải · Đại Vận · Thời Điểm Vũ Trụ",
+  "readingsTitle": "Luận Giải Vận Số",
+  "luckCycles": "流年 · Chu Kỳ Vận May",
+  "weeklyLabel": "VẬN TUẦN · 週運",
+  "weeklyTeaser": "Năng lượng Mộc tuần này kết hợp với trụ ngày của bạn — một cánh cửa quan trọng đang mở ra...",
+  "unlockWeekly": "✨ Mở khóa toàn bộ — $9.99/tháng",
+  "unlockAll": "✨ Mở khóa tất cả vận số — $9.99/tháng",
+  "periodLabel": {
+    "daily": "Vận Ngày",
+    "weekly": "Vận Tuần",
+    "monthly": "Vận Tháng",
+    "annual": "Vận Năm",
+    "daewoon": "Đại Vận (10 năm)"
+  },
+  "periodDesc": {
+    "daily": "Vận may và năng lượng hôm nay",
+    "weekly": "Chu kỳ đầy đủ tuần này",
+    "monthly": "Vận may tháng và sự nghiệp",
+    "annual": "Dự báo cả năm",
+    "daewoon": "Chu kỳ vận mệnh 10 năm"
+  },
   "types": {
     "daily": "Vận Hàng Ngày",
     "weekly": "Vận Hàng Tuần",
@@ -20,5 +40,119 @@
   "refresh": "Làm Mới",
   "share": "Chia Sẻ",
   "premiumRequired": "Chỉ Dành Cho Premium",
-  "unlockReading": "Mở Khóa Tất Cả Luận Giải"
+  "unlockReading": "Mở Khóa Tất Cả Luận Giải",
+  "todaysFortune": "VẬN HÔM NAY · 日運",
+  "annualReport": "Báo cáo Năm",
+  "myChart": "Tử vi của tôi",
+  "wasHelpful": "Điều này có hữu ích không?",
+  "feedbackThanks": "✨ Cảm ơn! Phản hồi của bạn giúp chúng tôi cải thiện.",
+  "askMore": "Hỏi thêm",
+  "freeChatBadge": "{{count}} chat miễn phí hôm nay",
+  "chatLimitTitle": "Đã dùng hết chat miễn phí hôm nay",
+  "chatLimitSub": "Mở khóa không giới hạn — $9.99/tháng",
+  "weeklyReadingUsed": "Đã dùng hết đọc vận tuần này",
+  "weeklyReadingUsedDesc": "Lượt đọc vận miễn phí tuần này đã dùng hết. Nâng cấp Premium để đọc vận mỗi ngày.",
+  "weeklyFreeAvailable": "🎁 Còn 1 lượt đọc vận miễn phí tuần này",
+  "upgradeToPremium": "Nâng cấp Premium →",
+  "shareCard": "Chia sẻ thẻ của bạn",
+  "shareCardSubtitle": "Chụp và chia sẻ vận mệnh vũ trụ",
+  "shareAsImage": "Chia sẻ dạng ảnh",
+  "elementDay": {
+    "木": "Ngày Mộc",
+    "火": "Ngày Hỏa",
+    "土": "Ngày Thổ",
+    "金": "Ngày Kim",
+    "水": "Ngày Thủy"
+  },
+  "timingAdvisor": {
+    "title": "Cố Vấn Thời Điểm",
+    "subtitle": "Chúng ta phân tích quyết định nào?",
+    "analyzing": "Đang phân tích…",
+    "categories": {
+      "business": {
+        "label": "Kinh Doanh / Khởi Nghiệp",
+        "desc": "Bắt đầu hoặc mở rộng kinh doanh"
+      },
+      "investment": {
+        "label": "Đầu Tư / Tài Chính",
+        "desc": "Đầu tư tiền hoặc tài sản"
+      },
+      "romance": {
+        "label": "Tình Yêu / Hôn Nhân",
+        "desc": "Bắt đầu mối quan hệ hoặc kết hôn"
+      },
+      "relocation": {
+        "label": "Chuyển Nhà / Du Lịch",
+        "desc": "Chuyển nhà hoặc lên kế hoạch du lịch"
+      }
+    },
+    "resultTitle": "PHÂN TÍCH THỜI ĐIỂM",
+    "positiveFactors": "YẾU TỐ TÍCH CỰC",
+    "cautions": "LƯU Ý",
+    "score": {
+      "optimal": "Tối Ưu",
+      "good": "Tốt",
+      "fair": "Bình Thường",
+      "caution": "Chú Ý"
+    },
+    "freeUsed": "Đã Dùng Phân Tích Miễn Phí",
+    "nextFree": "Dùng miễn phí sau {{days}} ngày — hoặc nâng cấp để phân tích không giới hạn.",
+    "nextFreeToday": "Phân tích miễn phí của bạn sẽ đặt lại vào ngày mai — hoặc nâng cấp để truy cập không giới hạn.",
+    "upgradeCta": "Nâng Cấp Lên Premium →",
+    "analysisFailed": "Phân tích AI thất bại. Vui lòng thử lại."
+  },
+  "readingLoading": "Đọc các vì sao…",
+  "feedback": {
+    "titlePositive": "👍 Vui vì đã giúp được!",
+    "titleNegative": "👎 Rất tiếc",
+    "chooseReason": "Chọn lý do",
+    "accurate": "Chính xác",
+    "tooVague": "Quá mơ hồ",
+    "notMe": "Không phù hợp với tôi",
+    "reasons": {
+      "accurate": "Chính xác",
+      "want_more_depth": "Muốn sâu hơn",
+      "new_perspective": "Góc nhìn mới",
+      "too_generic": "Quá chung chung",
+      "factually_wrong": "Sai thực tế",
+      "hard_to_understand": "Khó hiểu",
+      "customInput": "Tự nhập",
+      "send": "Gửi",
+      "customPlaceholder": "Chia sẻ suy nghĩ của bạn…"
+    }
+  },
+  "typeLabelCard": {
+    "daily": "VẬN MAY NGÀY",
+    "weekly": "VẬN MAY TUẦN",
+    "monthly": "VẬN MAY THÁNG",
+    "annual": "VẬN MAY NĂM",
+    "daewoon": "CHU KỲ 大運"
+  },
+  "journal": {
+    "title": "Nhật Ký Cuộc Đời",
+    "subtitle": "Sự Kiện Cuộc Đời · 命運流",
+    "addEvent": "Thêm Sự Kiện",
+    "recordPlaceholder": "Ghi lại những khoảnh khắc quan trọng",
+    "noEvents": "Chưa có sự kiện nào được ghi lại",
+    "saveEvent": "Lưu",
+    "savedToast": "Sự kiện đã được lưu",
+    "aiAnalysis": "Phân Tích Mẫu AI",
+    "aiAnalysisDesc": "Khám phá cách các chu kỳ saju của bạn ảnh hưởng đến các sự kiện cuộc đời",
+    "emptyDesc": "Ghi lại những khoảnh khắc quan trọng — thay đổi sự nghiệp, các mối quan hệ, sức khỏe — và khám phá các quy luật trong biểu đồ vũ trụ của bạn.",
+    "loading": "Đang tải nhật ký…",
+    "lockedAnalysis": "🔒 Thêm {{count}} sự kiện nữa để mở khóa phân tích mẫu AI"
+  },
+  "compatibility": {
+    "title": "Tương Hợp",
+    "subtitle": "Tương Hợp · 合婚 · Ngũ Hành Hòa Hợp",
+    "partnerBirthDate": "Ngày Sinh Của Đối Tác",
+    "checkBtn": "Kiểm Tra Tương Hợp",
+    "generateReport": "Tạo Báo Cáo Đầy Đủ",
+    "analyzeAnother": "Phân Tích Người Khác",
+    "fullReport": "Báo Cáo AI Đầy Đủ",
+    "partnerHint": "Nhập ngày sinh của đối tác để xem điểm tương hợp ngũ hành.",
+    "genderLabel": "Giới Tính Đối Tác",
+    "seeWhy": "Xem lý do — Mở khóa báo cáo đầy đủ $4.99",
+    "fullReportDesc": "Phân tích sâu 5 phần: hòa hợp ngũ hành, điểm mạnh, căng thẳng và dự báo quan hệ."
+  }
 }

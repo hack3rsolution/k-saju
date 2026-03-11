@@ -54,23 +54,41 @@ Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') return errorResponse('Method not allowed', 405);
 
   // ── Env ───────────────────────────────────────────────────────────────────
-  const SUPABASE_URL      = Deno.env.get('SUPABASE_URL') ?? '';
-  const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
-  const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
+  const SUPABASE_URL           = Deno.env.get('SUPABASE_URL') ?? '';
+  const SUPABASE_ANON_KEY      = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+  const SUPABASE_SERVICE_KEY   = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  const ANTHROPIC_API_KEY      = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
 
   if (!ANTHROPIC_API_KEY) return errorResponse('ANTHROPIC_API_KEY not set', 500);
 
   // ── Auth — extract user from JWT ──────────────────────────────────────────
   const authHeader = req.headers.get('Authorization') ?? '';
+  // User-scoped client — used only for auth.getUser() (JWT validation)
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { Authorization: authHeader } },
   });
+  // Admin client — bypasses RLS for server-side cache reads/writes.
+  // This is safe because we always filter by the validated userId below.
+  const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return errorResponse('Unauthorized', 401);
+
+  // Allow dev/anonymous access: if JWT is invalid but token matches the anon key,
+  // treat the caller as a fixed guest user (anon key is public, so no extra exposure).
+  let userId: string;
+  if (authError || !user) {
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    if (token && token === SUPABASE_ANON_KEY) {
+      userId = '00000000-0000-4000-8000-000000000000';
+    } else {
+      return errorResponse('Unauthorized', 401);
+    }
+  } else {
+    userId = user.id;
+  }
 
   // ── Rate limit ────────────────────────────────────────────────────────────
-  if (!checkRateLimit(user.id)) {
+  if (!checkRateLimit(userId)) {
     return errorResponse('Rate limit exceeded. Try again in a minute.', 429);
   }
 
@@ -85,14 +103,16 @@ Deno.serve(async (req: Request) => {
 
   // ── Cache lookup ──────────────────────────────────────────────────────────
   const cached = await getCachedReading(
-    supabase,
-    user.id,
+    supabaseAdmin,
+    userId,
     request.type,
     request.refDate,
     request.frame,
+    request.userLanguage ?? 'ko',
   );
 
   if (cached) {
+    console.log(`[saju-reading] cache hit — userId=${userId} type=${request.type} refDate=${request.refDate} frame=${request.frame} lang=${request.userLanguage ?? 'ko'}`);
     const response: SajuReadingResponse = {
       ok: true,
       cached: true,
@@ -106,11 +126,13 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(response);
   }
 
+  console.log(`[saju-reading] cache miss — userId=${userId} type=${request.type} refDate=${request.refDate} frame=${request.frame} lang=${request.userLanguage ?? 'ko'} → calling Claude API`);
+
   // ── Fetch recent user feedback for prompt personalization ─────────────────
-  const recentFeedback = await getRecentFeedback(supabase, user.id, 5).catch(() => []);
+  const recentFeedback = await getRecentFeedback(supabaseAdmin, userId, 5).catch(() => []);
 
   // ── Build prompts ─────────────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback);
+  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback, request.userLanguage);
   const userPrompt   = buildUserPrompt(request);
 
   // ── Claude API call ───────────────────────────────────────────────────────
@@ -126,13 +148,14 @@ Deno.serve(async (req: Request) => {
   let readingId: string | null = null;
   try {
     readingId = await storeReading(
-      supabase,
-      user.id,
+      supabaseAdmin,
+      userId,
       request.type,
       request.refDate,
       request.frame,
       output,
       output.rawContent,
+      request.userLanguage ?? 'ko',
     );
   } catch (e) {
     console.error('[saju-reading] store error:', e);

@@ -9,20 +9,56 @@
     "gender": "Jenis Kelamin",
     "male": "Laki-laki",
     "female": "Perempuan",
-    "continue": "Lanjutkan"
+    "continue": "Lanjutkan",
+    "lunar": "🌙 Lunar",
+    "solar": "☀️ Solar",
+    "lunarHint": "Tanggal lunar akan dikonversi ke solar untuk perhitungan Empat Pilar.",
+    "year": "Tahun",
+    "month": "Bulan",
+    "day": "Hari",
+    "timeKnown": "Apakah kamu tahu waktu kelahiranmu?",
+    "hour24": "Jam (24h)",
+    "lunarErrorTitle": "Tanggal lunar tidak valid",
+    "lunarErrorMsg": "Tanggal lunar yang dimasukkan tidak dapat dikonversi. Silakan periksa dan coba lagi."
   },
   "culturalFrame": {
     "title": "Pilih Perspektif Anda",
     "subtitle": "Data kosmik yang sama — disesuaikan dengan konteks budaya Anda.",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 Korea", "desc": "Pembacaan Empat Pilar tradisional" },
-      "cn": { "label": "BaZi", "region": "🇨🇳 Tiongkok", "desc": "Sistem BaZi klasik" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 Jepang", "desc": "Pembacaan takdir Jepang" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 Barat", "desc": "Fokus pada kepribadian & jalur hidup" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 Latin", "desc": "Gaya horoskop" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 Asia Selatan", "desc": "Perspektif terinspirasi Jyotish" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 Korea",
+        "desc": "Pembacaan Empat Pilar tradisional"
+      },
+      "cn": {
+        "label": "BaZi",
+        "region": "🇨🇳 Tiongkok",
+        "desc": "Sistem BaZi klasik"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 Jepang",
+        "desc": "Pembacaan takdir Jepang"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 Barat",
+        "desc": "Fokus pada kepribadian & jalur hidup"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 Latin",
+        "desc": "Gaya horoskop"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 Asia Selatan",
+        "desc": "Perspektif terinspirasi Jyotish"
+      }
     },
-    "continue": "Lanjutkan"
+    "continue": "Lanjutkan",
+    "screenTitle": "Pilih Kerangka Budaya",
+    "screenSubtitle": "Data kosmik yang sama — dipersonalisasi sesuai konteks budaya Anda"
   },
   "resultPreview": {
     "title": "Pratinjau Peta Anda",
@@ -30,6 +66,19 @@
     "unlockTitle": "Buka Takdir Penuh Anda",
     "unlockDesc": "Keberuntungan harian, kecocokan, siklus keberuntungan tahunan, dan lainnya dengan Premium.",
     "exploreFree": "Jelajahi fitur gratis",
-    "viewPremium": "Lihat paket Premium"
+    "viewPremium": "Lihat paket Premium",
+    "frameTitles": {
+      "kr": "Saju Saya",
+      "cn": "BaZi Saya",
+      "jp": "Empat Pilar Saya",
+      "en": "Blueprint Kosmik Saya",
+      "es": "Destino Cósmico Saya",
+      "in": "Vedic Fusion Saya"
+    },
+    "unknown": "Tidak diketahui",
+    "hourUnknown": "(Jam tidak diketahui)",
+    "pillarsSection": "Empat Pilar (四柱)",
+    "dayStemHint": "Tuan Hari · {{stem}} · {{element}}",
+    "elementSection": "Keseimbangan Lima Elemen (五行)"
   }
 }

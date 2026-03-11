@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { TimingAdvice } from '../hooks/useTimingAdvisor';
 
 // ── Score color ───────────────────────────────────────────────────────────────
@@ -25,16 +26,9 @@ function scoreColor(score: number): string {
   return '#ef4444';
 }
 
-function scoreLabel(score: number): string {
-  if (score >= 8) return '최적';
-  if (score >= 6) return '양호';
-  if (score >= 4) return '보통';
-  return '비추';
-}
-
 // ── Score gauge ───────────────────────────────────────────────────────────────
 
-function ScoreGauge({ score }: { score: number }) {
+function ScoreGauge({ score, label }: { score: number; label: string }) {
   const color = scoreColor(score);
   return (
     <View style={gaugeStyles.container}>
@@ -45,7 +39,7 @@ function ScoreGauge({ score }: { score: number }) {
         <Text style={[gaugeStyles.score, { color }]}>{score}</Text>
         <Text style={gaugeStyles.outOf}>/10</Text>
         <Text style={[gaugeStyles.badge, { backgroundColor: color + '22', color }]}>
-          {scoreLabel(score)}
+          {label}
         </Text>
       </View>
     </View>
@@ -84,9 +78,27 @@ interface Props {
   limitReached: boolean;
   error: string | null;
   onClose: () => void;
+  onRetry?: () => void;
+  /** Days until free timing analysis resets. If not provided, computed from end of month. */
+  timingDaysUntilFree?: number;
 }
 
-export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose }: Props) {
+function daysUntilMonthEnd(): number {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
+}
+
+export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose, onRetry, timingDaysUntilFree }: Props) {
+  const { t } = useTranslation('fortune');
+  const daysLeft = timingDaysUntilFree ?? daysUntilMonthEnd();
+
+  function scoreLabel(score: number): string {
+    if (score >= 8) return t('timingAdvisor.score.optimal');
+    if (score >= 6) return t('timingAdvisor.score.good');
+    if (score >= 4) return t('timingAdvisor.score.fair');
+    return t('timingAdvisor.score.caution');
+  }
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -96,36 +108,46 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           {loading ? (
             <View style={styles.centerBox}>
               <ActivityIndicator color="#a78bfa" size="large" />
-              <Text style={styles.loadingText}>사주 분석 중…</Text>
+              <Text style={styles.loadingText}>{t('timingAdvisor.analyzing')}</Text>
             </View>
           ) : limitReached ? (
             <View style={styles.centerBox}>
               <Text style={styles.limitIcon}>🔒</Text>
-              <Text style={styles.limitTitle}>이번 달 무료 분석 완료</Text>
+              <Text style={styles.limitTitle}>{t('timingAdvisor.freeUsed')}</Text>
               <Text style={styles.limitDesc}>
-                Premium으로 업그레이드하면 매일 무제한 타이밍 분석이 가능합니다.
+                {daysLeft > 0
+                  ? t('timingAdvisor.nextFree', { days: daysLeft })
+                  : t('timingAdvisor.nextFreeToday')}
               </Text>
               <TouchableOpacity
                 style={styles.upgradeBtn}
                 onPress={() => { onClose(); router.push('/paywall'); }}
               >
-                <Text style={styles.upgradeBtnText}>Premium 업그레이드 →</Text>
+                <Text style={styles.upgradeBtnText}>{t('timingAdvisor.upgradeCta')}</Text>
               </TouchableOpacity>
             </View>
           ) : error ? (
             <View style={styles.centerBox}>
-              <Text style={styles.errorText}>{error}</Text>
+              <Text style={styles.errorText}>{t('timingAdvisor.analysisFailed')}</Text>
+              {__DEV__ && (
+                <Text style={styles.errorDetail}>{error}</Text>
+              )}
+              {onRetry && (
+                <TouchableOpacity style={styles.retryBtn} onPress={onRetry}>
+                  <Text style={styles.retryBtnText}>{t('timingAdvisor.retry', '다시 시도')}</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : advice ? (
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-              <Text style={styles.title}>⏰ 타이밍 분석 결과</Text>
+              <Text style={styles.title}>⏰ {t('timingAdvisor.resultTitle')}</Text>
 
-              <ScoreGauge score={advice.score} />
+              <ScoreGauge score={advice.score} label={scoreLabel(advice.score)} />
 
               <Text style={styles.headline}>{advice.headline}</Text>
 
               {/* Reasons */}
-              <Text style={styles.sectionLabel}>✅ 긍정 요인</Text>
+              <Text style={styles.sectionLabel}>✅ {t('timingAdvisor.positiveFactors')}</Text>
               {advice.reasons.map((r, i) => (
                 <View key={i} style={styles.reasonRow}>
                   <Text style={styles.bullet}>·</Text>
@@ -134,7 +156,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
               ))}
 
               {/* Cautions */}
-              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ 주의 사항</Text>
+              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ {t('timingAdvisor.cautions')}</Text>
               {advice.cautions.map((c, i) => (
                 <View key={i} style={styles.cautionRow}>
                   <Text style={styles.cautionBullet}>·</Text>
@@ -145,7 +167,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           ) : null}
 
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>닫기</Text>
+            <Text style={styles.closeBtnText}>{t('common:close', 'Close')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -188,7 +210,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   upgradeBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
-  errorText: { color: '#f87171', fontSize: 14, textAlign: 'center' },
+  errorText: { color: '#f87171', fontSize: 14, textAlign: 'center', marginBottom: 8 },
+  errorDetail: { color: '#f87171', fontSize: 11, textAlign: 'center', opacity: 0.7, marginTop: 4, paddingHorizontal: 16 },
+  retryBtn: { marginTop: 16, backgroundColor: '#3d2471', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 24 },
+  retryBtnText: { color: '#a78bfa', fontWeight: '700', fontSize: 14 },
   title: { color: '#a78bfa', fontSize: 12, fontWeight: '700', letterSpacing: 0.8, marginBottom: 16 },
   headline: {
     color: '#fff',

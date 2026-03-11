@@ -1,0 +1,1 @@
+v2.3.0 — Mendukung 15 bahasa, integrasi K-Culture ditingkatkan, pola ramalan mingguan & peningkatan mesin saju.

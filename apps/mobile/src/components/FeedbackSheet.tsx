@@ -5,20 +5,10 @@
  * Step 1: User taps 👍 or 👎 (passed in as `initialRating`)
  * Step 2: Sheet shows reason chips → submit
  */
-import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, TextInput } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { FeedbackRating, FeedbackType } from '../hooks/useFeedback';
-
-interface Reason {
-  key: FeedbackType;
-  emoji: string;
-  label: string;
-}
-
-const REASONS: Reason[] = [
-  { key: 'accurate',  emoji: '✨', label: '정확해요' },
-  { key: 'too_vague', emoji: '🌫️', label: '너무 모호해요' },
-  { key: 'not_me',    emoji: '🤔', label: '나랑 안 맞아요' },
-];
 
 interface Props {
   visible: boolean;
@@ -28,41 +18,109 @@ interface Props {
   onClose: () => void;
 }
 
+const POSITIVE_REASON_KEYS: { key: string; emoji: string }[] = [
+  { key: 'accurate',        emoji: '✨' },
+  { key: 'want_more_depth', emoji: '🔮' },
+  { key: 'new_perspective', emoji: '💡' },
+];
+
+const NEGATIVE_REASON_KEYS: { key: string; emoji: string }[] = [
+  { key: 'too_generic',        emoji: '🌫️' },
+  { key: 'factually_wrong',    emoji: '❌' },
+  { key: 'hard_to_understand', emoji: '🤔' },
+];
+
 export function FeedbackSheet({ visible, initialRating, submitting, onSelect, onClose }: Props) {
+  const { t } = useTranslation('fortune');
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customText, setCustomText] = useState('');
+
+  const reasonKeys = initialRating === 1 ? POSITIVE_REASON_KEYS : NEGATIVE_REASON_KEYS;
+  const reasons = reasonKeys.map((r) => ({ ...r, label: t(`feedback.reasons.${r.key}`) }));
+
+  function handleClose() {
+    setShowCustomInput(false);
+    setCustomText('');
+    onClose();
+  }
+
+  function handleSelect(key: string) {
+    setShowCustomInput(false);
+    setCustomText('');
+    onSelect(key);
+  }
+
+  function handleCustomSend() {
+    if (!customText.trim()) return;
+    onSelect(customText.trim());
+    setShowCustomInput(false);
+    setCustomText('');
+  }
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
           <Text style={styles.title}>
-            {initialRating === 1 ? '👍 도움이 됐군요!' : '👎 아쉬웠군요'}
+            {initialRating === 1 ? t('feedback.titlePositive') : t('feedback.titleNegative')}
           </Text>
-          <Text style={styles.subtitle}>이유를 선택해 주세요</Text>
+          <Text style={styles.subtitle}>{t('feedback.chooseReason')}</Text>
 
           {submitting ? (
             <ActivityIndicator color="#a78bfa" style={styles.spinner} />
-          ) : (
-            REASONS.map((r) => (
+          ) : showCustomInput ? (
+            <>
+              <TextInput
+                style={styles.customInput}
+                value={customText}
+                onChangeText={setCustomText}
+                placeholder={t('feedback.reasons.customPlaceholder')}
+                placeholderTextColor="#5b4d7e"
+                multiline
+                autoFocus
+              />
               <TouchableOpacity
-                key={r.key}
-                style={styles.reasonBtn}
-                onPress={() => onSelect(r.key)}
+                style={[styles.sendBtn, !customText.trim() && styles.sendBtnDisabled]}
+                onPress={handleCustomSend}
+                disabled={!customText.trim()}
               >
-                <Text style={styles.reasonEmoji}>{r.emoji}</Text>
-                <Text style={styles.reasonLabel}>{r.label}</Text>
+                <Text style={styles.sendBtnText}>{t('feedback.reasons.send')}</Text>
               </TouchableOpacity>
-            ))
+              <TouchableOpacity style={styles.cancelBtn} onPress={() => setShowCustomInput(false)}>
+                <Text style={styles.cancelText}>{t('common:cancel')}</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              {reasons.map((r) => (
+                <TouchableOpacity
+                  key={r.key}
+                  style={styles.reasonBtn}
+                  onPress={() => handleSelect(r.key)}
+                >
+                  <Text style={styles.reasonEmoji}>{r.emoji}</Text>
+                  <Text style={styles.reasonLabel}>{r.label}</Text>
+                </TouchableOpacity>
+              ))}
+              <TouchableOpacity
+                style={styles.reasonBtn}
+                onPress={() => setShowCustomInput(true)}
+              >
+                <Text style={styles.reasonEmoji}>✏️</Text>
+                <Text style={styles.reasonLabel}>{t('feedback.reasons.customInput')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
+                <Text style={styles.cancelText}>{t('common:cancel')}</Text>
+              </TouchableOpacity>
+            </>
           )}
-
-          <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>취소</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -137,5 +195,35 @@ const styles = StyleSheet.create({
     color: '#9d8fbe',
     fontWeight: '600',
     fontSize: 15,
+  },
+  customInput: {
+    width: '100%',
+    backgroundColor: '#2d1854',
+    borderRadius: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    color: '#e9d5ff',
+    fontSize: 15,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#5b4d7e',
+  },
+  sendBtn: {
+    width: '100%',
+    backgroundColor: '#7c3aed',
+    borderRadius: 14,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  sendBtnDisabled: {
+    opacity: 0.4,
+  },
+  sendBtnText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
   },
 });

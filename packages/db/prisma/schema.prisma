@@ -161,6 +161,8 @@ model Reading {
   culturalFrame CulturalFrame
   refDate       DateTime      @db.Date // date this reading is for
 
+  language      String        @default("ko") // BCP-47 code sent by client
+
   // Content from Claude API
   summary       String
   details       Json          // string[]
@@ -171,7 +173,7 @@ model Reading {
 
   feedbacks     FortuneFeedback[]
 
-  @@unique([userId, type, refDate, culturalFrame])
+  @@unique([userId, type, refDate, culturalFrame, language])
   @@index([userId, type, refDate])
   @@schema("public")
 }

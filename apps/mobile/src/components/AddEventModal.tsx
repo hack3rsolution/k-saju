@@ -14,26 +14,8 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { EventCategory, EventSentiment, AddEventInput } from '../types/journal';
-
-// ── Category options ──────────────────────────────────────────────────────────
-
-const CATEGORIES: { id: EventCategory; label: string; icon: string }[] = [
-  { id: 'career',    label: 'Career',    icon: '💼' },
-  { id: 'love',      label: 'Love',      icon: '💞' },
-  { id: 'health',    label: 'Health',    icon: '🌿' },
-  { id: 'family',    label: 'Family',    icon: '🏡' },
-  { id: 'travel',    label: 'Travel',    icon: '✈️' },
-  { id: 'finance',   label: 'Finance',   icon: '💰' },
-  { id: 'education', label: 'Study',     icon: '📚' },
-  { id: 'other',     label: 'Other',     icon: '⭐' },
-];
-
-const SENTIMENTS: { id: EventSentiment; label: string; color: string }[] = [
-  { id: 'positive', label: '😊 Positive', color: '#22c55e' },
-  { id: 'neutral',  label: '😐 Neutral',  color: '#9ca3af' },
-  { id: 'negative', label: '😔 Negative', color: '#ef4444' },
-];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
 
@@ -53,11 +35,30 @@ function todayISO(): string {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
+  const { t } = useTranslation('common');
+
   const [title,     setTitle]     = useState('');
   const [category,  setCategory]  = useState<EventCategory>('career');
   const [eventDate, setEventDate] = useState(todayISO());
   const [note,      setNote]      = useState('');
   const [sentiment, setSentiment] = useState<EventSentiment>('positive');
+
+  const CATEGORIES: { id: EventCategory; label: string }[] = [
+    { id: 'career',    label: t('addEvent.categories.career') },
+    { id: 'love',      label: t('addEvent.categories.love') },
+    { id: 'health',    label: t('addEvent.categories.health') },
+    { id: 'family',    label: t('addEvent.categories.family') },
+    { id: 'travel',    label: t('addEvent.categories.travel') },
+    { id: 'finance',   label: t('addEvent.categories.finance') },
+    { id: 'education', label: t('addEvent.categories.education') },
+    { id: 'other',     label: t('addEvent.categories.other') },
+  ];
+
+  const SENTIMENTS: { id: EventSentiment; label: string; color: string }[] = [
+    { id: 'positive', label: t('addEvent.sentiments.positive'), color: '#22c55e' },
+    { id: 'neutral',  label: t('addEvent.sentiments.neutral'),  color: '#9ca3af' },
+    { id: 'negative', label: t('addEvent.sentiments.negative'), color: '#ef4444' },
+  ];
 
   function handleSubmit() {
     if (!title.trim()) return;
@@ -86,12 +87,12 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
           {/* Handle */}
           <View style={styles.handle} />
 
-          <Text style={styles.heading}>Add Life Event</Text>
-          <Text style={styles.subheading}>인생 이벤트 기록</Text>
+          <Text style={styles.heading}>{t('addEvent.title')}</Text>
+          <Text style={styles.subheading}>{t('addEvent.subtitle')}</Text>
 
           <ScrollView showsVerticalScrollIndicator={false}>
             {/* Title */}
-            <Text style={styles.label}>Title *</Text>
+            <Text style={styles.label}>{t('addEvent.fieldTitle')}</Text>
             <TextInput
               style={styles.input}
               placeholder="e.g. Got promoted, Started therapy…"
@@ -102,7 +103,7 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
             />
 
             {/* Date */}
-            <Text style={styles.label}>Date (YYYY-MM-DD) *</Text>
+            <Text style={styles.label}>{t('addEvent.fieldDate')}</Text>
             <TextInput
               style={styles.input}
               placeholder="2025-03-15"
@@ -114,7 +115,7 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
             />
 
             {/* Category */}
-            <Text style={styles.label}>Category</Text>
+            <Text style={styles.label}>{t('addEvent.fieldCategory')}</Text>
             <View style={styles.chipGrid}>
               {CATEGORIES.map((c) => (
                 <TouchableOpacity
@@ -122,13 +123,13 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
                   style={[styles.chip, category === c.id && styles.chipActive]}
                   onPress={() => setCategory(c.id)}
                 >
-                  <Text style={styles.chipText}>{c.icon} {c.label}</Text>
+                  <Text style={styles.chipText}>{c.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
 
             {/* Sentiment */}
-            <Text style={styles.label}>Sentiment</Text>
+            <Text style={styles.label}>{t('addEvent.fieldSentiment')}</Text>
             <View style={styles.sentimentRow}>
               {SENTIMENTS.map((s) => (
                 <TouchableOpacity
@@ -145,10 +146,10 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
             </View>
 
             {/* Note */}
-            <Text style={styles.label}>Note (optional)</Text>
+            <Text style={styles.label}>{t('addEvent.fieldNote')}</Text>
             <TextInput
               style={[styles.input, styles.noteInput]}
-              placeholder="What happened? How did it feel?"
+              placeholder={t('addEvent.notePlaceholder')}
               placeholderTextColor="#5b4d7e"
               value={note}
               onChangeText={setNote}
@@ -160,7 +161,7 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
           {/* Actions */}
           <View style={styles.actions}>
             <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
+              <Text style={styles.cancelText}>{t('cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.submitBtn, (!title.trim() || loading) && styles.submitDisabled]}
@@ -169,7 +170,7 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
             >
               {loading
                 ? <ActivityIndicator color="#fff" size="small" />
-                : <Text style={styles.submitText}>Save Event</Text>
+                : <Text style={styles.submitText}>{t('addEvent.saveEvent')}</Text>
               }
             </TouchableOpacity>
           </View>

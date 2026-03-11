@@ -40,7 +40,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <Text style={styles.heading}>AI Pattern Analysis</Text>
-          <Text style={styles.subheading}>사주 흐름 × 인생 이벤트</Text>
+          <Text style={styles.subheading}>命運 × Life Events</Text>
 
           <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
             {/* Not loaded yet */}

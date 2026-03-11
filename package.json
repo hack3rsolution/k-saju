@@ -11,6 +11,7 @@
   },
   "packageManager": "pnpm@8.15.0",
   "scripts": {
+    "expo": "expo",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "dev:web": "pnpm --filter web dev",
@@ -24,15 +25,18 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "mobile:dev": "pnpm --filter mobile dev",
     "web:dev": "pnpm --filter web dev",
-    "api:dev": "pnpm --filter api dev"
+    "api:dev": "pnpm --filter api dev",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.4.3",
     "@turbo/gen": "^1.12.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.57.0",
+    "expo": "~51.0.0",
     "prettier": "^3.2.5",
+    "tsup": "^8.5.1",
     "turbo": "^1.12.0",
     "typescript": "^5.3.3"
   },
@@ -41,8 +45,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "@capacitor/android": "^7.4.3",
-    "@capacitor/core": "^7.4.3",
-    "@capacitor/ios": "^7.4.3"
+    "expo": "~51.0.28",
+    "react": "18.2.0",
+    "react-native": "0.74.5"
   }
 }

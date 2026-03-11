@@ -1,0 +1,11 @@
+# iOS
+app_identifier "com.pienest.ksaju"
+apple_id        ENV["APPLE_ID"]
+itc_team_id     ENV["ITC_TEAM_ID"]
+team_id         ENV["TEAM_ID"]
+
+# Android
+for_platform :android do
+  json_key_file ENV["GOOGLE_PLAY_JSON_KEY"] || "./google-play-key.json"
+  package_name  "com.pienest.ksaju"
+end

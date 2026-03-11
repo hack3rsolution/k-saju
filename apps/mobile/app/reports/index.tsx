@@ -4,8 +4,14 @@
  * Career, 대운 Full (+ PDF export), Name Analysis generated inline.
  * Compatibility links to /compatibility screen.
  * Each report is gated behind its addon entitlement.
+ *
+ * Reports are permanently cached server-side (DB) by period:
+ *   - Career: annual (expires Jan 1 next year)
+ *   - 대운 Full: per 대운 period (expires on period end)
+ *   - Compatibility / Name Analysis: monthly (expires on next month 1st)
+ * Once generated, reports are auto-loaded on every visit — no regeneration button.
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,12 +22,13 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { useEntitlementStore } from '../../src/store/entitlementStore';
 import { useAddonReport } from '../../src/hooks/useAddonReport';
 import { useSajuStore } from '../../src/store/sajuStore';
-import type { AddonReportType, AddonReport, ReportSection } from '../../src/hooks/useAddonReport';
+import type { AddonReport, ReportSection } from '../../src/hooks/useAddonReport';
 
 // ── Section card ──────────────────────────────────────────────────────────────
 
@@ -50,14 +57,14 @@ const sStyles = StyleSheet.create({
 
 function ReportResult({
   report,
-  onReset,
   showPdfExport,
 }: {
   report: AddonReport;
-  onReset: () => void;
   showPdfExport?: boolean;
 }) {
+  const { t } = useTranslation('common');
   const [exporting, setExporting] = useState(false);
+  console.log('[RENDER_DEBUG] parsed:', JSON.stringify(report).slice(0, 300));
 
   async function handleExportPdf() {
     setExporting(true);
@@ -114,8 +121,8 @@ function ReportResult({
         <SectionCard key={i} section={s} index={i} />
       ))}
 
-      <View style={rStyles.actions}>
-        {showPdfExport && (
+      {showPdfExport && (
+        <View style={rStyles.actions}>
           <TouchableOpacity
             style={[rStyles.pdfBtn, exporting && rStyles.btnDisabled]}
             onPress={handleExportPdf}
@@ -124,14 +131,11 @@ function ReportResult({
             {exporting ? (
               <ActivityIndicator color="#fff" size="small" />
             ) : (
-              <Text style={rStyles.pdfBtnText}>📄 Export PDF</Text>
+              <Text style={rStyles.pdfBtnText}>{t('reports.exportPdf')}</Text>
             )}
           </TouchableOpacity>
-        )}
-        <TouchableOpacity style={rStyles.resetBtn} onPress={onReset}>
-          <Text style={rStyles.resetText}>Generate New Report →</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      )}
     </>
   );
 }
@@ -140,7 +144,7 @@ const rStyles = StyleSheet.create({
   header: { marginBottom: 16 },
   title: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 8 },
   overview: { fontSize: 14, color: '#b8a9d9', lineHeight: 22 },
-  actions: { marginTop: 8, gap: 12 },
+  actions: { marginTop: 8 },
   pdfBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -151,8 +155,6 @@ const rStyles = StyleSheet.create({
   },
   pdfBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
   btnDisabled: { opacity: 0.6 },
-  resetBtn: { alignItems: 'center', paddingVertical: 12 },
-  resetText: { color: '#7c3aed', fontWeight: '600', fontSize: 13 },
 });
 
 // ── Report card wrapper ───────────────────────────────────────────────────────
@@ -174,6 +176,7 @@ function ReportCard({
   isUnlocked: boolean;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation('common');
   return (
     <View style={cardStyles.card}>
       <View style={cardStyles.header}>
@@ -187,7 +190,7 @@ function ReportCard({
       <Text style={cardStyles.desc}>{desc}</Text>
       {isUnlocked ? children : (
         <TouchableOpacity style={cardStyles.unlockBtn} onPress={() => router.push('/paywall')}>
-          <Text style={cardStyles.unlockText}>Unlock — {unlockPrice}</Text>
+          <Text style={cardStyles.unlockText}>{t('reports.unlock')}{unlockPrice}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -211,9 +214,39 @@ const cardStyles = StyleSheet.create({
   unlockText: { color: '#d8b4fe', fontWeight: '700', fontSize: 14 },
 });
 
-// ── Generate button ───────────────────────────────────────────────────────────
+// ── Inline loading / error states ─────────────────────────────────────────────
 
-function GenerateButton({ onPress, loading }: { onPress: () => void; loading: boolean }) {
+function ReportLoading() {
+  return (
+    <View style={inlineStyles.center}>
+      <ActivityIndicator color="#a78bfa" />
+    </View>
+  );
+}
+
+function ReportError({ error, onRetry }: { error: string; onRetry: () => void }) {
+  const { t } = useTranslation('common');
+  return (
+    <View style={inlineStyles.center}>
+      <Text style={inlineStyles.errorText}>{error}</Text>
+      <TouchableOpacity style={inlineStyles.retryBtn} onPress={onRetry}>
+        <Text style={inlineStyles.retryText}>{t('retry')}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const inlineStyles = StyleSheet.create({
+  center: { alignItems: 'center', paddingVertical: 16 },
+  errorText: { color: '#f87171', fontSize: 13, marginBottom: 10, textAlign: 'center' },
+  retryBtn: { paddingHorizontal: 20, paddingVertical: 8, backgroundColor: '#4c1d95', borderRadius: 8 },
+  retryText: { color: '#d8b4fe', fontWeight: '600', fontSize: 13 },
+});
+
+// ── Name analysis generate button (first-time only, needs name input) ─────────
+
+function NameGenerateButton({ onPress, loading }: { onPress: () => void; loading: boolean }) {
+  const { t } = useTranslation('common');
   return (
     <TouchableOpacity
       style={[genStyles.btn, loading && genStyles.btnDisabled]}
@@ -223,7 +256,7 @@ function GenerateButton({ onPress, loading }: { onPress: () => void; loading: bo
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={genStyles.btnText}>Generate Report</Text>
+        <Text style={genStyles.btnText}>{t('reports.generateReport')}</Text>
       )}
     </TouchableOpacity>
   );
@@ -238,37 +271,52 @@ const genStyles = StyleSheet.create({
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function ReportsScreen() {
+  const { t } = useTranslation('common');
   const { addons } = useEntitlementStore();
   const { chart } = useSajuStore();
 
-  // Each report type gets its own hook instance via a wrapper
   const career      = useAddonReport();
   const daewoonFull = useAddonReport();
   const nameReport  = useAddonReport();
 
   const [nameInput, setNameInput] = useState('');
 
+  // Auto-generate career + daewoon reports on mount (server returns cache if available)
+  useEffect(() => {
+    if (!chart) return;
+    if (addons.careerWealth && !career.report && !career.loading) {
+      career.generate({ reportType: 'career' });
+    }
+  }, [chart, addons.careerWealth]);
+
+  useEffect(() => {
+    if (!chart) return;
+    if (addons.daewoonPdf && !daewoonFull.report && !daewoonFull.loading) {
+      daewoonFull.generate({ reportType: 'daewoon_full' });
+    }
+  }, [chart, addons.daewoonPdf]);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Back</Text>
+        <Text style={styles.backText}>← {t('back')}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Reports</Text>
-      <Text style={styles.subtitle}>In-depth AI analysis of your destiny chart</Text>
+      <Text style={styles.title}>{t('reports.title')}</Text>
+      <Text style={styles.subtitle}>{t('reports.subtitle')}</Text>
 
       {!chart && (
         <View style={styles.noChart}>
-          <Text style={styles.noChartText}>Complete onboarding to access reports.</Text>
+          <Text style={styles.noChartText}>{t('reports.noChart')}</Text>
         </View>
       )}
 
       {/* ── 1. Compatibility ──────────────────────────────────────────────── */}
       <ReportCard
         icon="💞"
-        title="Deep Compatibility"
-        subtitle="궁합 · 합충형파 분석"
-        desc="Compare two saju charts for element harmony, clash cycles, and long-term relationship forecast."
+        title={t('reports.deepCompat')}
+        subtitle={t('reports.deepCompatSub')}
+        desc={t('reports.deepCompatDesc')}
         unlockPrice="$4.99"
         isUnlocked={addons.deepCompatibility}
       >
@@ -276,92 +324,85 @@ export default function ReportsScreen() {
           style={cardStyles.unlockBtn}
           onPress={() => router.push('/compatibility')}
         >
-          <Text style={[cardStyles.unlockText, { color: '#a78bfa' }]}>Open Compatibility →</Text>
+          <Text style={[cardStyles.unlockText, { color: '#a78bfa' }]}>{t('reports.deepCompatOpen')}</Text>
         </TouchableOpacity>
       </ReportCard>
 
       {/* ── 2. Career & Wealth ────────────────────────────────────────────── */}
       <ReportCard
         icon="💼"
-        title="Career & Wealth"
-        subtitle="재물운 · 관운"
-        desc="Analyse 재성/관성 stars, optimal career domains, wealth accumulation patterns, and timing windows."
+        title={t('reports.career')}
+        subtitle={t('reports.careerSub')}
+        desc={t('reports.careerDesc')}
         unlockPrice="$4.99"
         isUnlocked={addons.careerWealth}
       >
-        {career.report ? (
-          <ReportResult
-            report={career.report}
-            onReset={career.reset}
+        {career.loading && <ReportLoading />}
+        {!career.loading && career.error && (
+          <ReportError
+            error={career.error}
+            onRetry={() => career.generate({ reportType: 'career' })}
           />
-        ) : (
-          <>
-            {career.error && (
-              <Text style={styles.errorText}>{career.error}</Text>
-            )}
-            <GenerateButton
-              onPress={() => career.generate({ reportType: 'career' })}
-              loading={career.loading}
-            />
-          </>
+        )}
+        {!career.loading && career.report && (
+          <ReportResult report={career.report} />
         )}
       </ReportCard>
 
       {/* ── 3. Full 대운 Report ───────────────────────────────────────────── */}
       <ReportCard
         icon="🌊"
-        title="Full 대운 Report"
-        subtitle="大運 · 10-Year Luck Cycle PDF"
-        desc="Comprehensive analysis of all 8 major luck periods covering your full life arc, with PDF export."
+        title={t('reports.daewoon')}
+        subtitle={t('reports.daewoonSub')}
+        desc={t('reports.daewoonDesc')}
         unlockPrice="$6.99"
         isUnlocked={addons.daewoonPdf}
       >
-        {daewoonFull.report ? (
-          <ReportResult
-            report={daewoonFull.report}
-            onReset={daewoonFull.reset}
-            showPdfExport
+        {daewoonFull.loading && <ReportLoading />}
+        {!daewoonFull.loading && daewoonFull.error && (
+          <ReportError
+            error={daewoonFull.error}
+            onRetry={() => daewoonFull.generate({ reportType: 'daewoon_full' })}
           />
-        ) : (
-          <>
-            {daewoonFull.error && (
-              <Text style={styles.errorText}>{daewoonFull.error}</Text>
-            )}
-            <GenerateButton
-              onPress={() => daewoonFull.generate({ reportType: 'daewoon_full' })}
-              loading={daewoonFull.loading}
-            />
-          </>
+        )}
+        {!daewoonFull.loading && daewoonFull.report && (
+          <ReportResult report={daewoonFull.report} showPdfExport />
         )}
       </ReportCard>
 
       {/* ── 4. Name Analysis ─────────────────────────────────────────────── */}
       <ReportCard
         icon="📝"
-        title="Name Analysis"
-        subtitle="작명 · 이름 한자 오행"
-        desc="Analyse your name's hanja strokes and elemental energy against your natal chart. Get rename recommendations."
+        title={t('reports.nameAnalysis')}
+        subtitle={t('reports.nameAnalysisSub')}
+        desc={t('reports.nameAnalysisDesc')}
         unlockPrice="$9.99"
         isUnlocked={addons.nameAnalysis}
       >
-        {nameReport.report ? (
-          <ReportResult
-            report={nameReport.report}
-            onReset={() => { nameReport.reset(); setNameInput(''); }}
+        {nameReport.loading && <ReportLoading />}
+        {!nameReport.loading && nameReport.error && (
+          <ReportError
+            error={nameReport.error}
+            onRetry={() => {
+              if (nameInput.trim()) {
+                nameReport.generate({ reportType: 'name_analysis', name: nameInput.trim() });
+              }
+            }}
           />
-        ) : (
+        )}
+        {!nameReport.loading && nameReport.report && (
+          <ReportResult report={nameReport.report} />
+        )}
+        {!nameReport.loading && !nameReport.report && !nameReport.error && (
           <>
             <TextInput
               style={styles.nameInput}
               value={nameInput}
               onChangeText={setNameInput}
-              placeholder="Enter name (e.g. 김민준 or 金敏俊)"
+              placeholder={t('reports.namePlaceholder')}
               placeholderTextColor="#5b4d7e"
             />
-            {nameReport.error && (
-              <Text style={styles.errorText}>{nameReport.error}</Text>
-            )}
-            <GenerateButton
+            <NameGenerateButton
               onPress={() => {
                 if (!nameInput.trim()) return;
                 nameReport.generate({ reportType: 'name_analysis', name: nameInput.trim() });
@@ -386,7 +427,6 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, color: '#9d8fbe', marginBottom: 28 },
   noChart: { backgroundColor: '#2d1854', borderRadius: 12, padding: 20, marginBottom: 20 },
   noChartText: { color: '#9d8fbe', textAlign: 'center', fontSize: 14 },
-  errorText: { color: '#f87171', fontSize: 13, marginBottom: 10, textAlign: 'center' },
   nameInput: {
     backgroundColor: '#1a0a2e',
     borderRadius: 10,

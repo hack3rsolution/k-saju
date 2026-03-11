@@ -14,6 +14,14 @@
   "elementBalance": "पंचतत्व संतुलन",
   "daewoon": "मुख्य भाग्य चक्र",
   "daewoonPeriod": "आयु {{age}}+",
+  "cosmicBlueprint": "ब्रह्मांडीय ब्लूप्रिंट",
+  "destinyMap": "आपका भाग्य मानचित्र",
+  "dayMaster": "दिन स्वामी",
+  "majorLuckCycle": "मुख्य भाग्य चक्र",
+  "ageSuffix": "वर्ष",
+  "now": "अभी",
+  "noChart": "अपनी कुंडली देखने के लिए ऑनबोर्डिंग पूरी करें।",
+  "recommendations": "आपके तत्व के लिए अनुशंसित",
   "shishin": {
     "title": "दस देवता",
     "비견": "साथी",
@@ -26,5 +34,344 @@
     "정관": "प्रत्यक्ष अधिकारी",
     "편인": "अप्रत्यक्ष संसाधन",
     "정인": "प्रत्यक्ष संसाधन"
+  },
+  "tabs": {
+    "music": "🎵 संगीत",
+    "books": "📚 किताबें",
+    "travel": "✈️ यात्रा"
+  },
+  "share": "साझा करें",
+  "generatingRecommendations": "सिफ़ारिशें तैयार हो रही हैं…",
+  "elementInfo": {
+    "Wood": {
+      "season": "वसंत",
+      "desc": "काष्ठ (木) वसंत ऋतु की ऊर्जा है — विकास, सृजन और नई शुरुआत का प्रतीक। ऊपर उठने की प्रगतिशील शक्ति।",
+      "strong": "प्रबल काष्ठ पहल, रचनात्मकता और नेतृत्व लाता है, पर हठ और टकराव भी बढ़ सकता है।",
+      "weak": "कमज़ोर काष्ठ से लचीलापन और योजना-क्षमता घटती है; नई शुरुआत कठिन लग सकती है।"
+    },
+    "Fire": {
+      "season": "ग्रीष्म",
+      "desc": "अग्नि (火) ग्रीष्म ऋतु की ऊर्जा है — जुनून, अभिव्यक्ति और संवाद का प्रतीक। सूर्य की तरह चारों ओर रोशनी बिखेरती है।",
+      "strong": "प्रबल अग्नि करिश्मा और उत्साह लाती है, पर आवेग और भावनात्मक उतार-चढ़ाव भी हो सकते हैं।",
+      "weak": "कमज़ोर अग्नि से अभिव्यक्ति और सामाजिकता कम हो सकती है।"
+    },
+    "Earth": {
+      "season": "ऋतु-परिवर्तन",
+      "desc": "पृथ्वी (土) ऋतु-संक्रमण की ऊर्जा है — स्थिरता, विश्वास और केंद्रियता का प्रतीक। समस्त तत्वों को धारण करने वाली धरती।",
+      "strong": "प्रबल पृथ्वी विश्वसनीयता और समावेशिता देती है, पर बदलाव के प्रति रूढ़िवादी दिख सकती है।",
+      "weak": "कमज़ोर पृथ्वी से संतुलन बनाए रखना कठिन होता है और भावनात्मक अस्थिरता आ सकती है।"
+    },
+    "Metal": {
+      "season": "शरद",
+      "desc": "धातु (金) शरद ऋतु की ऊर्जा है — निर्णय, कटाई और न्याय का प्रतीक। जो ज़रूरी नहीं, उसे काट देने की शक्ति।",
+      "strong": "प्रबल धातु निर्णायकता और सटीकता लाती है, पर तीखी और ठंडी भी लग सकती है।",
+      "weak": "कमज़ोर धातु से निर्णय-क्षमता और अनुसरण कम होता है; काम अधूरे रह सकते हैं।"
+    },
+    "Water": {
+      "season": "शीत",
+      "desc": "जल (水) शीत ऋतु की ऊर्जा है — ज्ञान, संवेदनशीलता और आलिंगन का प्रतीक। नीचे की ओर बहकर सब कुछ समेटती है।",
+      "strong": "प्रबल जल ज्ञान और अनुकूलनशीलता देता है, पर दिशाहीन हो सकता है और फ़ोकस खो सकता है।",
+      "weak": "कमज़ोर जल से अंतर्ज्ञान और संवेदनशीलता घटती है और हठ बढ़ सकता है।"
+    }
+  },
+  "shishinInfo": {
+    "비견": {
+      "category": "साथी तारा (兄弟星)",
+      "desc": "साथी, दिन-स्वामी के समान तत्व और ध्रुवता साझा करता है — भाई-बहन, समकक्ष और प्रतिस्पर्धियों का प्रतीक।",
+      "fortune": "प्रबल स्वतंत्रता और आत्म-सम्मान; अकेले काम करना पसंद। साझेदारी में टकराव से सावधान।"
+    },
+    "겁재": {
+      "category": "धन-चुराने वाला तारा (兄弟星)",
+      "desc": "धन-चुराने वाला समान तत्व पर विपरीत ध्रुवता — तीव्र प्रतिस्पर्धा और धन छीनने की ऊर्जा।",
+      "fortune": "प्रबल आग्रह पर आवेगशील निर्णयों से सावधान। वित्तीय हानि का जोखिम।"
+    },
+    "식신": {
+      "category": "भोजन-देव तारा (表現星)",
+      "desc": "भोजन-देव, दिन-स्वामी द्वारा उत्पन्न समान ध्रुवता — प्रतिभा, भोजन-सौभाग्य और रचनात्मकता का प्रतीक।",
+      "fortune": "कलात्मक प्रतिभा और अभिव्यक्ति। जीवन में आराम, आनंद और रचनात्मक पूर्णता।"
+    },
+    "상관": {
+      "category": "हानिकारक अधिकारी तारा (表現星)",
+      "desc": "हानिकारक अधिकारी, दिन-स्वामी द्वारा उत्पन्न विपरीत ध्रुवता — प्रतिभा, विद्रोह और रचनात्मक क्षमता।",
+      "fortune": "चतुराई और वाक्-चातुर्य, पर अधिकार को चुनौती देने की प्रवृत्ति। कार्यस्थल में टकराव से सावधान।"
+    },
+    "편재": {
+      "category": "अप्रत्यक्ष धन तारा (財星)",
+      "desc": "अप्रत्यक्ष धन, दिन-स्वामी द्वारा नियंत्रित समान ध्रुवता — अप्रत्याशित धन, सट्टा और पिता का प्रतीक।",
+      "fortune": "निवेश के अवसर पकड़ने में माहिर। उच्च-जोखिम में बड़ा लाभ संभव।"
+    },
+    "정재": {
+      "category": "प्रत्यक्ष धन तारा (財星)",
+      "desc": "प्रत्यक्ष धन, दिन-स्वामी द्वारा नियंत्रित विपरीत ध्रुवता — स्थिर धन और परिश्रम का प्रतीक।",
+      "fortune": "सावधानीपूर्वक धन-प्रबंधन में श्रेष्ठ। स्थिर, निरंतर आय की तलाश।"
+    },
+    "편관": {
+      "category": "सप्त-हत्यारा तारा (官星)",
+      "desc": "सप्त-हत्यारा, दिन-स्वामी को नियंत्रित करता है समान ध्रुवता — दबाव, चुनौती और सैन्य प्राधिकार।",
+      "fortune": "विपरीत परिस्थितियों में प्रबल इच्छाशक्ति। कड़ी प्रतिस्पर्धा, पर महान विकास।"
+    },
+    "정관": {
+      "category": "प्रत्यक्ष अधिकारी तारा (官星)",
+      "desc": "प्रत्यक्ष अधिकारी, दिन-स्वामी को नियंत्रित करता है विपरीत ध्रुवता — सम्मान, नियम और आधिकारिक पद।",
+      "fortune": "दृढ़ सिद्धांत और उच्च सामाजिक प्रतिष्ठा। सार्वजनिक सेवा और प्रबंधन में श्रेष्ठ।"
+    },
+    "편인": {
+      "category": "अप्रत्यक्ष संसाधन तारा (印星)",
+      "desc": "अप्रत्यक्ष संसाधन, दिन-स्वामी को पोषित करता है समान ध्रुवता — अपरंपरागत शिक्षा, धर्म और अद्वितीय प्रतिभा।",
+      "fortune": "मौलिक सोच और विशेष कौशल। एकाकीपन की प्रवृत्ति; अस्वस्थ निर्भरता से सावधान।"
+    },
+    "정인": {
+      "category": "प्रत्यक्ष संसाधन तारा (印星)",
+      "desc": "प्रत्यक्ष संसाधन, दिन-स्वामी को पोषित करता है विपरीत ध्रुवता — विद्वता, माँ, ज्ञान और दया।",
+      "fortune": "उत्कृष्ट अध्ययन-क्षमता और नैतिकता। माँ या हितैषी का समर्थन मिलने की संभावना।"
+    }
+  },
+  "stemDesc": {
+    "甲": {
+      "meaning": "महा-वृक्ष · आरंभ की शक्ति",
+      "fortune": "नई शुरुआत और विकास की ऊर्जा। नेतृत्व मज़बूत होने का समय।",
+      "image": "Great tree · pillar · spring sprout",
+      "personality": "Driven and strong-willed. Holds unwavering convictions and unstoppable initiative; never afraid to start something new.",
+      "strength": "Pioneering spirit, creativity, strong willpower",
+      "caution": "Can be stubborn and struggle to compromise."
+    },
+    "乙": {
+      "meaning": "घास और फूल · लचीली जीवनशक्ति",
+      "fortune": "कोमल अनुकूलनशीलता से अवसर पकड़ें। रिश्तों में हितैषी मिलते हैं।",
+      "image": "Grass · vine · flower",
+      "personality": "Flexible and highly adaptable. Achieves goals through gentle persistence, valuing cooperation and harmony.",
+      "strength": "Social grace, affinity, excellent adaptability",
+      "caution": "May appear indecisive; prone to developing dependency."
+    },
+    "丙": {
+      "meaning": "सूर्य · दीप्तिमान जुनून",
+      "fortune": "चमकदार और जीवंत ऊर्जा। अभिव्यक्ति और रचनात्मकता के फलने का समय।",
+      "image": "Sun · bonfire",
+      "personality": "Bright, dynamic, and charismatic. Radiates warm energy and is naturally optimistic.",
+      "strength": "Passion, expressiveness, leadership",
+      "caution": "Needs to watch out for impulsiveness and mood swings."
+    },
+    "丁": {
+      "meaning": "मोमबत्ती · सटीक अग्नि",
+      "fortune": "गहन चिंतन और एकाग्रता। शिक्षा और शिल्प में उत्कृष्टता।",
+      "image": "Candlelight · starlight · furnace",
+      "personality": "Delicate, warm, and highly intuitive. Rich artistic sense and exceptional empathy.",
+      "strength": "Sensitivity, insight, artistic sensibility",
+      "caution": "May be easily hurt due to emotional sensitivity."
+    },
+    "戊": {
+      "meaning": "महापर्वत · ठोस स्थिरता",
+      "fortune": "स्थिरता और विश्वास बनाने का समय। अचल संपत्ति के लिए अनुकूल।",
+      "image": "High mountain · earth · fortress wall",
+      "personality": "Stable and broadly inclusive. Radiates quiet trustworthiness and remains centred in any situation.",
+      "strength": "Trustworthiness, perseverance, inclusiveness",
+      "caution": "Can be conservative toward change and inflexible."
+    },
+    "己": {
+      "meaning": "कृषि-भूमि · पोषक धरती",
+      "fortune": "सावधानीपूर्वक प्रबंधन और योजना से फल मिलता है। आंतरिक विकास का समय।",
+      "image": "Rice field · sand · yellow earth",
+      "personality": "Meticulous and deeply caring. Handles practical matters diligently and looks after those around them.",
+      "strength": "Attention to detail, practical sense, thoughtfulness",
+      "caution": "Excessive worry and timidity may cause missed opportunities."
+    },
+    "庚": {
+      "meaning": "लोहा · निर्णायक परिवर्तन",
+      "fortune": "साहसिक निर्णय और क्रियान्वयन। अनावश्यक को हटाकर नवजन्म।",
+      "image": "Rock · sword · axe",
+      "personality": "Upright and principled. Strong sense of justice and resolves matters with decisiveness.",
+      "strength": "Decisiveness, sense of justice, drive",
+      "caution": "May appear rigid and sharp, causing friction in relationships."
+    },
+    "辛": {
+      "meaning": "रत्न · तीक्ष्ण सौंदर्यबोध",
+      "fortune": "सटीकता और परिपूर्णतावाद। कला, सौंदर्य और वित्त में सफलता।",
+      "image": "Gem · gold & silver · small blade",
+      "personality": "Sharp and perfectionistic. Maintains a refined aesthetic sense and high standards.",
+      "strength": "Precision, aesthetic sense, intellect",
+      "caution": "Watch out for stress from perfectionism and a demanding nature."
+    },
+    "壬": {
+      "meaning": "महानदी · गहरी प्रज्ञा",
+      "fortune": "विस्तृत दृष्टि और लचीली रणनीति। व्यापार-विस्तार के लिए उत्तम।",
+      "image": "Great river · ocean · lake",
+      "personality": "Wise, free-spirited, and ambitious. Reads situations fluidly and views the world with a broad perspective.",
+      "strength": "Wisdom, inclusiveness, adaptability",
+      "caution": "May drift without direction and lose sight of goals."
+    },
+    "癸": {
+      "meaning": "वर्षाजल · सूक्ष्म संवेदनशीलता",
+      "fortune": "अंतर्ज्ञान और भाव चमकते हैं। कला, आध्यात्मिक विकास और उपचार के लिए अनुकूल।",
+      "image": "Rainwater · clouds · mist",
+      "personality": "Highly intuitive and emotionally sensitive. Has the ability to perceive the unseen and a rich imagination.",
+      "strength": "Intuition, sensitivity, creativity",
+      "caution": "May lack practical grounding; prone to secretiveness."
+    }
+  },
+  "branchDesc": {
+    "子": {
+      "animal": "🐭 चूहा",
+      "meaning": "मध्यरात्रि ऊर्जा · ज्ञान और समृद्धि",
+      "fortune": "धन और ज्ञान संचय का समय। चुपचाप तैयारी करें तो छलांग आएगी।",
+      "month": "November",
+      "personality": "Clever and highly adaptable. Quick-witted and able to seize opportunities."
+    },
+    "丑": {
+      "animal": "🐮 बैल",
+      "meaning": "शीत अंत · धैर्य और परिश्रम",
+      "fortune": "अथक प्रयास से अवश्य फल मिलेगा। स्वास्थ्य और भूमि के लिए अनुकूल।",
+      "month": "December",
+      "personality": "Patient and hardworking. Walks their own path steadily and without complaint."
+    },
+    "寅": {
+      "animal": "🐯 बाघ",
+      "meaning": "आरंभिक वसंत · साहस और प्रेरणा",
+      "fortune": "सक्रिय प्रयास परिणाम देते हैं। करियर और व्यापार बदलाव के लिए अनुकूल।",
+      "month": "January",
+      "personality": "Brave and decisive. Strong leadership and fierce independence."
+    },
+    "卯": {
+      "animal": "🐰 खरगोश",
+      "meaning": "वसंत पुष्प · संस्कृति और कला",
+      "fortune": "समृद्ध रिश्ते और कलात्मक प्रतिभा चमकती है। हितैषियों की सहायता मिलती है।",
+      "month": "February",
+      "personality": "Nimble and perceptive. Excellent artistic sensibility and a love of peace."
+    },
+    "辰": {
+      "animal": "🐉 अजगर",
+      "meaning": "वसंत वर्षा · परिवर्तन और रहस्य",
+      "fortune": "महा-परिवर्तन और छलांग का समय। अप्रत्याशित सौभाग्य आता है।",
+      "month": "March",
+      "personality": "Powerful and charismatic. Holds high ideals and a strong drive to achieve."
+    },
+    "巳": {
+      "animal": "🐍 सर्प",
+      "meaning": "आरंभिक ग्रीष्म · ज्ञान और विवेक",
+      "fortune": "शांत रणनीति सफलता दिलाती है। अध्ययन, शोध और चिकित्सा के लिए अनुकूल।",
+      "month": "April",
+      "personality": "Wise and intuitive. Observes situations carefully and thinks deeply."
+    },
+    "午": {
+      "animal": "🐴 घोड़ा",
+      "meaning": "मध्य-ग्रीष्म · जुनून और गतिशीलता",
+      "fortune": "सक्रिय मेलजोल और आदान-प्रदान। यात्रा और सामाजिक गतिविधियों में प्रबल ऊर्जा।",
+      "month": "May",
+      "personality": "Active and passionate. Loves freedom and is naturally sociable."
+    },
+    "未": {
+      "animal": "🐑 भेड़",
+      "meaning": "ग्रीष्म अंत · कोमलता और कला",
+      "fortune": "कलात्मक संवेदनशीलता और मित्रता उभरती है। टीमवर्क से परिणाम मिलते हैं।",
+      "month": "June",
+      "personality": "Gentle and artistic. Rich in emotion, caring and considerate of others."
+    },
+    "申": {
+      "animal": "🐒 बंदर",
+      "meaning": "आरंभिक शरद · चतुराई और परिवर्तन",
+      "fortune": "तीक्ष्ण निर्णय और अनुकूलनशीलता। तकनीक और नवाचार में उत्कृष्टता।",
+      "month": "July",
+      "personality": "Clever and witty. Versatile and adept at handling change."
+    },
+    "酉": {
+      "animal": "🐓 मुर्गा",
+      "meaning": "शरद कटाई · सटीकता और अनुशासन",
+      "fortune": "सूक्ष्म क्रियान्वयन से फल। वित्त और प्रशासन के लिए अनुकूल।",
+      "month": "August",
+      "personality": "Precise and perfectionistic. Thorough and systematic in all tasks."
+    },
+    "戌": {
+      "animal": "🐕 कुत्ता",
+      "meaning": "देर-शरद · निष्ठा और ईमानदारी",
+      "fortune": "विश्वास से मज़बूत रिश्ते बनते हैं। अचल संपत्ति के लिए अनुकूल ऊर्जा।",
+      "month": "September",
+      "personality": "Loyal and just. A trustworthy friend and reliable companion."
+    },
+    "亥": {
+      "animal": "🐷 सूअर",
+      "meaning": "आरंभिक शीत · समृद्धि और सहजता",
+      "fortune": "प्रचुर ऊर्जा। अध्ययन, यात्रा और आध्यात्मिक विकास का उत्तम समय।",
+      "month": "October",
+      "personality": "Blessed and inclusive. Sincere, generous, and carries abundant nurturing energy."
+    }
+  },
+  "dwKeywords": {
+    "Wood": "विकास|रचनात्मकता|चुनौती",
+    "Fire": "जुनून|अभिव्यक्ति|संपर्क",
+    "Earth": "स्थिरता|विश्वास|समर्पण",
+    "Metal": "निर्णय|कटाई|परिष्करण",
+    "Water": "ज्ञान|लचीलापन|गहराई"
+  },
+  "dwAdvice": {
+    "Wood": {
+      "favor": "नई शुरुआत, उद्यमिता, अध्ययन और यात्रा के लिए अनुकूल।",
+      "caution": "हठ छोड़ें और दूसरों के दृष्टिकोण के प्रति खुले रहें।"
+    },
+    "Fire": {
+      "favor": "सामाजिकता, प्रस्तुति, कला और नेतृत्व के लिए अनुकूल।",
+      "caution": "आवेगशील निर्णयों से बचें और भावनाओं को संभालें।"
+    },
+    "Earth": {
+      "favor": "अचल संपत्ति, निवेश, दीर्घकालिक योजना और परिवार के लिए अनुकूल।",
+      "caution": "बदलाव के प्रति अत्यधिक रूढ़िवादी न हों।"
+    },
+    "Metal": {
+      "favor": "करियर, कानून, वित्त प्रबंधन और कौशल विकास के लिए अनुकूल।",
+      "caution": "अत्यधिक परिपूर्णतावाद रिश्तों को नुकसान पहुंचा सकता है।"
+    },
+    "Water": {
+      "favor": "अध्ययन, शोध, कूटनीति और आध्यात्मिक खोज के लिए अनुकूल।",
+      "caution": "स्पष्ट लक्ष्य निर्धारित करें ताकि बहकें नहीं।"
+    }
+  },
+  "modal": {
+    "none": "कोई नहीं",
+    "strong": "प्रबल",
+    "weak": "कमज़ोर",
+    "seasonOf": "{{season}} की ऊर्जा",
+    "whenStrong": "💪 प्रबल होने पर",
+    "whenWeak": "🔍 कमज़ोर होने पर",
+    "fortuneLabel": "✨ भाग्य",
+    "daewoonTitle": "{{pillars}} भाग्य-चक्र",
+    "currentStar": "★ वर्तमान",
+    "inProgress": "वर्तमान में सक्रिय",
+    "heavenlyStem": "स्वर्गीय तना",
+    "earthlyBranch": "भूमि शाखा",
+    "elementEnergy": "तत्व ऊर्जा",
+    "sameElem": "{{element}} ऊर्जा आपके दिन-स्वामी ({{stem}}) से मेल खाती है। इस अवधि में आपकी मूल ऊर्जा बहुत प्रवर्धित है।",
+    "periodFlow": "📖 इस अवधि का प्रवाह",
+    "favorLabel": "✅ अनुकूल दिशाएँ",
+    "cautionLabel": "⚠️ सावधानी के बिंदु",
+    "flowLabel": "🔄 भाग्य-प्रवाह",
+    "prevLabel": "पिछला",
+    "selectedLabel": "चयनित",
+    "nextLabel": "अगला"
+  },
+  "pillarDetail": {
+    "heavenlyStem": "स्वर्गीय तना (天干)",
+    "earthlyBranch": "पार्थिव शाखा (地支)",
+    "fiveElement": "तत्व",
+    "polarity": "ध्रुवता",
+    "animal": "पशु",
+    "solarTerm": "सौर पद",
+    "symbolLabel": "🌿 प्रतीक",
+    "personalityLabel": "✨ व्यक्तित्व",
+    "strengthLabel": "💪 ताकत",
+    "cautionLabel": "⚠️ सावधानी",
+    "tendencyLabel": "✨ प्रवृत्ति"
+  },
+  "pillarLabels": {
+    "year": "वर्ष स्तंभ",
+    "month": "माह स्तंभ",
+    "day": "दिन स्तंभ",
+    "hour": "घंटे का स्तंभ",
+    "default": "स्तंभ"
+  },
+  "frameTitles": {
+    "kr": "मेरा साजू",
+    "cn": "मेरा BaZi",
+    "jp": "मेरे चार स्तंभ",
+    "en": "मेरा कॉस्मिक ब्लूप्रिंट",
+    "es": "मेरा देस्तीनो कॉस्मिको",
+    "in": "मेरा वैदिक फ्यूजन"
   }
 }

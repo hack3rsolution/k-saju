@@ -4,6 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '../lib/supabase';
+import { useEntitlementStore } from './entitlementStore';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -17,6 +18,10 @@ interface AuthState {
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** DEV only: sign in as dev@k-saju.com (real Supabase session) */
+  setDevSession: () => Promise<void>;
+  /** Update onboarding_completed in the in-memory session (works for real & dev sessions) */
+  setOnboardingCompleted: (value: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -62,7 +67,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signInWithApple: async () => {
     if (Platform.OS !== 'ios') throw new Error('Apple Sign-In is iOS only');
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
     const AppleAuth = require('expo-apple-authentication');
     const credential = await AppleAuth.signInAsync({
       requestedScopes: [
@@ -81,5 +86,60 @@ export const useAuthStore = create<AuthState>((set) => ({
   signOut: async () => {
     await supabase.auth.signOut();
     set({ user: null, session: null });
+  },
+
+  setOnboardingCompleted: (value) =>
+    set((state) => {
+      if (!state.user || !state.session) return {};
+      const meta = { ...state.user.user_metadata, onboarding_completed: value };
+      const user = { ...state.user, user_metadata: meta };
+      const session = { ...state.session, user };
+      return { user, session };
+    }),
+
+  setDevSession: async () => {
+    if (process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS !== 'true') return;
+    const DEV_EMAIL = process.env.EXPO_PUBLIC_DEV_EMAIL ?? 'dev@k-saju.com';
+    const DEV_PASSWORD = process.env.EXPO_PUBLIC_DEV_PASSWORD ?? 'devpassword123';
+    const DEV_META = {
+      onboarding_completed: true,
+      birth_year: 1990,
+      birth_month: 6,
+      birth_day: 15,
+      birth_hour: 12,
+      gender: 'M',
+      cultural_frame: 'en',
+      is_premium: true,
+      has_timing_advisor: true,
+    };
+
+    const result = await supabase.auth.signInWithPassword({
+      email: DEV_EMAIL,
+      password: DEV_PASSWORD,
+    });
+
+    if (result.error) throw result.error;
+
+    // Ensure user_metadata has the dev birth data and premium flags
+    let finalUser = result.data.session?.user ?? null;
+    if (!finalUser?.user_metadata?.birth_year || !finalUser?.user_metadata?.is_premium) {
+      const { data: updateData } = await supabase.auth.updateUser({ data: DEV_META });
+      if (updateData?.user) finalUser = updateData.user;
+    }
+
+    set({
+      session: result.data.session ? { ...result.data.session, user: finalUser! } : null,
+      user: finalUser,
+      initialized: true,
+    });
+
+    // Force all entitlements on for dev session
+    useEntitlementStore.getState().setEntitlements(true, {
+      deepCompatibility: true,
+      careerWealth: true,
+      daewoonPdf: true,
+      nameAnalysis: true,
+      timingAdvisor: true,
+    });
   },
 }));

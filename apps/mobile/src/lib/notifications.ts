@@ -113,7 +113,7 @@ export async function scheduleDailyNotification(): Promise<void> {
   await Notifications.scheduleNotificationAsync({
     identifier: DAILY_NOTIFICATION_ID_KEY,
     content: {
-      title: '🌙 오늘의 운세',
+      title: "🌙 Today's Fortune",
       body: 'Your daily fortune reading is ready — check your cosmic energy.',
       data: { screen: '/(tabs)/home' },
       ...(Platform.OS === 'android' ? { channelId: 'daily-fortune' } : {}),

@@ -3,6 +3,9 @@
  * Runs before every test file (setupFiles in jest.config.js).
  */
 
+// Register dayjs plugins so tests using isoWeek/weekOfYear behave identically to the app
+import './src/lib/dayjs';
+
 // ── Supabase — mock at package level so src/lib/supabase resolves cleanly ─────
 
 jest.mock('@supabase/supabase-js', () => ({

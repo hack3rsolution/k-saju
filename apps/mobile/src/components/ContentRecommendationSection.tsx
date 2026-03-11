@@ -14,11 +14,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   StyleSheet,
-  Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type { CulturalFrame } from '@k-saju/saju-engine';
@@ -38,57 +37,6 @@ const ELEM_COLOR: Record<string, string> = {
   Water: '#3b82f6',
 };
 
-// ── Tab labels per cultural frame ─────────────────────────────────────────────
-
-interface TabLabels {
-  sectionTitle: string;
-  music: string;
-  books: string;
-  travel: string;
-  share: string;
-  loading: string;
-  errorRetry: string;
-  noChart: string;
-}
-
-const FRAME_TAB_LABELS: Record<CulturalFrame, TabLabels> = {
-  kr: {
-    sectionTitle: '당신의 오행에 맞는 추천',
-    music: '🎵 음악', books: '📚 책', travel: '✈️ 여행',
-    share: '공유하기', loading: '추천 생성 중…', errorRetry: '다시 시도',
-    noChart: '온보딩을 완료하면 추천을 받을 수 있습니다.',
-  },
-  cn: {
-    sectionTitle: '五行推荐',
-    music: '🎵 音乐', books: '📚 书籍', travel: '✈️ 旅行',
-    share: '分享', loading: '生成推荐中…', errorRetry: '重试',
-    noChart: '完成引导后即可查看推荐。',
-  },
-  jp: {
-    sectionTitle: '五行おすすめ',
-    music: '🎵 音楽', books: '📚 本', travel: '✈️ 旅行',
-    share: 'シェア', loading: 'おすすめを生成中…', errorRetry: '再試行',
-    noChart: 'オンボーディングを完了するとおすすめが表示されます。',
-  },
-  en: {
-    sectionTitle: 'Recommended for Your Element',
-    music: '🎵 Music', books: '📚 Books', travel: '✈️ Travel',
-    share: 'Share', loading: 'Generating recommendations…', errorRetry: 'Retry',
-    noChart: 'Complete onboarding to get recommendations.',
-  },
-  es: {
-    sectionTitle: 'Recomendaciones para Tu Elemento',
-    music: '🎵 Música', books: '📚 Libros', travel: '✈️ Viajes',
-    share: 'Compartir', loading: 'Generando recomendaciones…', errorRetry: 'Reintentar',
-    noChart: 'Completa el onboarding para obtener recomendaciones.',
-  },
-  in: {
-    sectionTitle: 'Recommended for Your Element',
-    music: '🎵 Music', books: '📚 Books', travel: '✈️ Travel',
-    share: 'Share', loading: 'Generating recommendations…', errorRetry: 'Retry',
-    noChart: 'Complete onboarding to receive your recommendations.',
-  },
-};
 
 // ── Card (share-capturable) ────────────────────────────────────────────────────
 
@@ -122,15 +70,21 @@ interface Props {
 }
 
 export function ContentRecommendationSection({ frame }: Props) {
-  const labels = FRAME_TAB_LABELS[frame];
+  const { t } = useTranslation(['chart']);
+  const tabLabels = {
+    music: t('chart:tabs.music'),
+    books: t('chart:tabs.books'),
+    travel: t('chart:tabs.travel'),
+    share: t('chart:share'),
+  };
   const [activeTab, setActiveTab] = useState<TabKey>('music');
   const [sharing, setSharing]     = useState(false);
   const shareRef = useRef<View>(null);
 
   const { loading, data, error, fetch } = useContentRecommendation();
 
-  // Auto-fetch on mount
-  useEffect(() => { fetch(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Auto-fetch on mount and whenever language changes
+  useEffect(() => { fetch(); }, [fetch]);
 
   const elemColor = data ? (ELEM_COLOR[data.element] ?? '#a78bfa') : '#a78bfa';
 
@@ -158,7 +112,7 @@ export function ContentRecommendationSection({ frame }: Props) {
       if (canShare) {
         await Sharing.shareAsync(uri, {
           mimeType: 'image/png',
-          dialogTitle: labels.sectionTitle,
+          dialogTitle: t('chart:recommendations'),
           UTI: 'public.png',
         });
       }
@@ -176,7 +130,7 @@ export function ContentRecommendationSection({ frame }: Props) {
       {/* Section header */}
       <View style={styles.header}>
         <Text style={[styles.sectionTitle, { color: elemColor }]}>
-          {labels.sectionTitle}
+          {t('chart:recommendations')}
         </Text>
         {data && (
           <TouchableOpacity
@@ -186,7 +140,7 @@ export function ContentRecommendationSection({ frame }: Props) {
             activeOpacity={0.7}
           >
             <Text style={[styles.shareBtnText, { color: elemColor }]}>
-              {sharing ? '…' : labels.share}
+              {sharing ? '…' : tabLabels.share}
             </Text>
           </TouchableOpacity>
         )}
@@ -196,7 +150,7 @@ export function ContentRecommendationSection({ frame }: Props) {
       {loading && (
         <View style={styles.center}>
           <ActivityIndicator color={elemColor} />
-          <Text style={styles.loadingText}>{labels.loading}</Text>
+          <Text style={styles.loadingText}>{t('chart:generatingRecommendations')}</Text>
         </View>
       )}
 
@@ -205,7 +159,7 @@ export function ContentRecommendationSection({ frame }: Props) {
         <View style={styles.center}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={fetch}>
-            <Text style={[styles.retryText, { color: elemColor }]}>{labels.errorRetry}</Text>
+            <Text style={[styles.retryText, { color: elemColor }]}>{t('common:retry')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -216,9 +170,9 @@ export function ContentRecommendationSection({ frame }: Props) {
           <View style={styles.tabs}>
             {(['music', 'books', 'travel'] as TabKey[]).map((tab) => {
               const label =
-                tab === 'music' ? labels.music :
-                tab === 'books' ? labels.books :
-                labels.travel;
+                tab === 'music' ? tabLabels.music :
+                tab === 'books' ? tabLabels.books :
+                tabLabels.travel;
               const isActive = activeTab === tab;
               return (
                 <TouchableOpacity
@@ -242,11 +196,10 @@ export function ContentRecommendationSection({ frame }: Props) {
           <View ref={shareRef} collapsable={false} style={styles.shareCapture}>
             <View style={[styles.shareCaptureHeader, { backgroundColor: elemColor + '18' }]}>
               <Text style={[styles.shareCaptureTitle, { color: elemColor }]}>
-                {activeTab === 'music' ? labels.music :
-                 activeTab === 'books' ? labels.books :
-                 labels.travel}
+                {activeTab === 'music' ? tabLabels.music :
+                 activeTab === 'books' ? tabLabels.books :
+                 tabLabels.travel}
               </Text>
-              <Text style={styles.shareCaptureWatermark}>k-saju.app</Text>
             </View>
             {items.map((item, i) => (
               <RecommendCard key={i} item={item} elemColor={elemColor} index={i} />

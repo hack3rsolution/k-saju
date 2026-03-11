@@ -7,143 +7,52 @@
  *  - 십신 (Ten Gods) table
  *  - 대운 (Major Luck Cycle) horizontal timeline — current period highlighted
  */
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
 import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
+import { PillarDetailModal } from '../../src/components/PillarDetailModal';
 import { T } from '../../src/theme/tokens';
 import type {
-  CulturalFrame,
   FiveElement,
   Stem,
   Branch,
   ShiShin,
+  DaewoonPeriod,
 } from '@k-saju/saju-engine';
 
 // ── Element colours & labels ───────────────────────────────────────────────────
 
 const ELEM_COLOR: Record<FiveElement, string> = T.element;
 
-const ELEM_EN: Record<FiveElement, string> = {
+// Maps FiveElement kanji → common:elements key
+const ELEM_KEY: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
 };
 
-// ── Cultural frame label sets ─────────────────────────────────────────────────
-
-interface FrameLabels {
-  title: string;
-  subtitle: string;
-  yearPillar: string;
-  monthPillar: string;
-  dayPillar: string;
-  hourPillar: string;
-  dayMaster: string;
-  tenGods: string;
-  luckCycle: string;
-  elementBalance: string;
-  ageSuffix: string;
-  stemLabel: string;
-  branchLabel: string;
-  noChart: string;
+// Normalize element: old engine dist returned English ('Wood') instead of kanji ('木')
+const ENGLISH_TO_KANJI: Record<string, FiveElement> = {
+  Wood: '木', Fire: '火', Earth: '土', Metal: '金', Water: '水',
+};
+function normElement(el: string | undefined): FiveElement | undefined {
+  if (!el) return undefined;
+  if (el in ELEM_KEY) return el as FiveElement;
+  return ENGLISH_TO_KANJI[el];
 }
 
-const FRAME_LABELS: Record<CulturalFrame, FrameLabels> = {
-  kr: {
-    title: '사주팔자',
-    subtitle: '나의 운명의 지도',
-    yearPillar: '연주',
-    monthPillar: '월주',
-    dayPillar: '일주',
-    hourPillar: '시주',
-    dayMaster: '일간',
-    tenGods: '십신 (十神)',
-    luckCycle: '대운 (大運)',
-    elementBalance: '오행 균형',
-    ageSuffix: '세',
-    stemLabel: '천간',
-    branchLabel: '지지',
-    noChart: '온보딩을 완료하면 사주팔자를 볼 수 있습니다.',
-  },
-  cn: {
-    title: '四柱八字 · BaZi',
-    subtitle: '命運地圖',
-    yearPillar: '年柱',
-    monthPillar: '月柱',
-    dayPillar: '日柱',
-    hourPillar: '時柱',
-    dayMaster: '日主',
-    tenGods: '十神',
-    luckCycle: '大運',
-    elementBalance: '五行平衡',
-    ageSuffix: '歲',
-    stemLabel: '天干',
-    branchLabel: '地支',
-    noChart: 'Complete onboarding to view your BaZi chart.',
-  },
-  jp: {
-    title: '四柱推命',
-    subtitle: '命の地図',
-    yearPillar: '年柱',
-    monthPillar: '月柱',
-    dayPillar: '日柱',
-    hourPillar: '時柱',
-    dayMaster: '日干',
-    tenGods: '十神',
-    luckCycle: '大運',
-    elementBalance: '五行バランス',
-    ageSuffix: '歳',
-    stemLabel: '天干',
-    branchLabel: '地支',
-    noChart: 'オンボーディングを完了してチャートを表示してください。',
-  },
-  en: {
-    title: 'Cosmic Blueprint',
-    subtitle: 'Your Destiny Map',
-    yearPillar: 'Year',
-    monthPillar: 'Month',
-    dayPillar: 'Day',
-    hourPillar: 'Hour',
-    dayMaster: 'Day Master',
-    tenGods: 'Ten Gods',
-    luckCycle: 'Major Luck Cycle',
-    elementBalance: 'Element Balance',
-    ageSuffix: 'yrs',
-    stemLabel: 'Stem',
-    branchLabel: 'Branch',
-    noChart: 'Complete onboarding to view your Cosmic Blueprint.',
-  },
-  es: {
-    title: 'Destino Cósmico',
-    subtitle: 'Tu Mapa del Destino',
-    yearPillar: 'Año',
-    monthPillar: 'Mes',
-    dayPillar: 'Día',
-    hourPillar: 'Hora',
-    dayMaster: 'Maestro del Día',
-    tenGods: 'Diez Dioses',
-    luckCycle: 'Ciclo de Suerte Mayor',
-    elementBalance: 'Balance Elemental',
-    ageSuffix: 'años',
-    stemLabel: 'Tallo',
-    branchLabel: 'Rama',
-    noChart: 'Completa el onboarding para ver tu carta.',
-  },
-  in: {
-    title: 'Vedic Fusion',
-    subtitle: 'Your Cosmic Map',
-    yearPillar: 'Year',
-    monthPillar: 'Month',
-    dayPillar: 'Day',
-    hourPillar: 'Hour',
-    dayMaster: 'Day Master',
-    tenGods: 'Ten Deities',
-    luckCycle: 'Mahadasha Cycle',
-    elementBalance: 'Panchabhoota Balance',
-    ageSuffix: 'yrs',
-    stemLabel: 'Stem',
-    branchLabel: 'Branch',
-    noChart: 'Complete onboarding to view your Vedic chart.',
-  },
+// ── Element symbols (emoji — language-agnostic) ──────────────────────────────
+
+const ELEMENT_SYMBOL: Record<FiveElement, string> = {
+  木: '🌳', 火: '🔥', 土: '⛰️', 金: '⚔️', 水: '🌊',
+};
+
+// ── Stem pinyin (Latin — universal) ──────────────────────────────────────────
+
+const STEM_PINYIN: Record<Stem, string> = {
+  甲: 'jiǎ', 乙: 'yǐ', 丙: 'bǐng', 丁: 'dīng', 戊: 'wù',
+  己: 'jǐ', 庚: 'gēng', 辛: 'xīn', 壬: 'rén', 癸: 'guǐ',
 };
 
 // ── Pillar row data ───────────────────────────────────────────────────────────
@@ -160,14 +69,33 @@ interface PillarInfo {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ChartScreen() {
+  const { t } = useTranslation(['chart', 'common']);
   const { chart, daewoon, frame, birthData } = useSajuStore();
-  const labels = FRAME_LABELS[frame ?? 'en'];
+
+  // ── Pillar detail modal state ────────────────────────────────────────────
+  const [modalPillarKey, setModalPillarKey] = useState<'year' | 'month' | 'day' | 'hour' | null>(null);
+  const [modalStem, setModalStem]   = useState<Stem | null>(null);
+  const [modalBranch, setModalBranch] = useState<Branch | null>(null);
+
+  function openPillarDetail(key: 'year' | 'month' | 'day' | 'hour', stem: Stem, branch: Branch) {
+    setModalPillarKey(key);
+    setModalStem(stem);
+    setModalBranch(branch);
+  }
+  function closeModal() { setModalPillarKey(null); setModalStem(null); setModalBranch(null); }
+
+  // ── Info modal state (오행 / 십신 / 대운) ─────────────────────────────────
+  type InfoModal =
+    | { kind: 'element'; element: FiveElement; score: number }
+    | { kind: 'shishin'; shishin: ShiShin; pillarLabel: string }
+    | { kind: 'daewoon'; dw: DaewoonPeriod; isCurrent: boolean };
+  const [infoModal, setInfoModal] = useState<InfoModal | null>(null);
 
   if (!chart) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyIcon}>命</Text>
-        <Text style={styles.emptyText}>{labels.noChart}</Text>
+        <Text style={styles.emptyText}>{t('chart:noChart')}</Text>
       </View>
     );
   }
@@ -176,8 +104,18 @@ export default function ChartScreen() {
   const dayStemEl = STEM_ELEMENT[dayStem];
   const dayStemColor = ELEM_COLOR[dayStemEl];
 
-  // ── Current 대운 index ────────────────────────────────────────────────────
-  const currentAge = birthData ? new Date().getFullYear() - birthData.year : -1;
+  // ── Current 대운 index (만 나이 기준) ────────────────────────────────────────
+  function calcManAge(): number {
+    if (!birthData) return -1;
+    const now = new Date();
+    const bMonth = birthData.month ?? 1;
+    const bDay   = birthData.day   ?? 1;
+    const hadBirthday =
+      now.getMonth() + 1 > bMonth ||
+      (now.getMonth() + 1 === bMonth && now.getDate() >= bDay);
+    return now.getFullYear() - birthData.year - (hadBirthday ? 0 : 1);
+  }
+  const currentAge = calcManAge();
   let currentDwIdx = -1;
   for (let i = daewoon.length - 1; i >= 0; i--) {
     if (daewoon[i].startAge <= currentAge) { currentDwIdx = i; break; }
@@ -187,7 +125,7 @@ export default function ChartScreen() {
   const pillarList: PillarInfo[] = [
     {
       key: 'year',
-      label: labels.yearPillar,
+      label: t('chart:pillars.year'),
       stem: pillars.year.stem,
       branch: pillars.year.branch,
       shiShin: getShiShin(dayStem, pillars.year.stem),
@@ -195,7 +133,7 @@ export default function ChartScreen() {
     },
     {
       key: 'month',
-      label: labels.monthPillar,
+      label: t('chart:pillars.month'),
       stem: pillars.month.stem,
       branch: pillars.month.branch,
       shiShin: getShiShin(dayStem, pillars.month.stem),
@@ -203,7 +141,7 @@ export default function ChartScreen() {
     },
     {
       key: 'day',
-      label: labels.dayPillar,
+      label: t('chart:pillars.day'),
       stem: pillars.day.stem,
       branch: pillars.day.branch,
       shiShin: null,
@@ -214,7 +152,7 @@ export default function ChartScreen() {
   if (pillars.hour) {
     pillarList.push({
       key: 'hour',
-      label: labels.hourPillar,
+      label: t('chart:pillars.hour'),
       stem: pillars.hour.stem,
       branch: pillars.hour.branch,
       shiShin: getShiShin(dayStem, pillars.hour.stem),
@@ -234,22 +172,23 @@ export default function ChartScreen() {
   const maxScore = Math.max(...elementRows.map((r) => r.score), 1);
 
   return (
+    <>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
       {/* ── Header ── */}
-      <Text style={styles.title}>{labels.title}</Text>
-      <Text style={styles.subtitle}>{labels.subtitle}</Text>
+      <Text style={styles.title}>{t('chart:cosmicBlueprint')}</Text>
+      <Text style={styles.subtitle}>{t('chart:destinyMap')}</Text>
 
       {/* ── Day Master pill ── */}
       <View style={styles.dayMasterRow}>
-        <Text style={styles.dayMasterLabel}>{labels.dayMaster}</Text>
+        <Text style={styles.dayMasterLabel}>{t('chart:dayMaster')}</Text>
         <View style={[
           styles.dayMasterPill,
           { backgroundColor: dayStemColor + '22', borderColor: dayStemColor },
         ]}>
           <Text style={[styles.dayMasterChar, { color: dayStemColor }]}>{dayStem}</Text>
           <Text style={[styles.dayMasterElem, { color: dayStemColor }]}>
-            {' '}{ELEM_EN[dayStemEl]}
+            {' '}{t(`common:elements.${ELEM_KEY[dayStemEl]}`)}
           </Text>
         </View>
       </View>
@@ -269,7 +208,12 @@ export default function ChartScreen() {
             const sc = ELEM_COLOR[stemEl];
             const bc = ELEM_COLOR[branchEl];
             return (
-              <View key={p.key} style={styles.pillar}>
+              <TouchableOpacity
+                key={p.key}
+                style={styles.pillar}
+                onPress={() => openPillarDetail(p.key as 'year' | 'month' | 'day' | 'hour', p.stem, p.branch)}
+                activeOpacity={0.7}
+              >
                 <Text style={styles.pillarLabel}>{p.label}</Text>
 
                 {/* 십신 badge */}
@@ -280,7 +224,7 @@ export default function ChartScreen() {
                     : { backgroundColor: T.bg.base, borderColor: T.border.default },
                 ]}>
                   <Text style={[styles.shiShinText, p.isDay && { color: T.semantic.gold }]}>
-                    {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
+                    {p.isDay ? t('chart:dayMaster') : (p.shiShin ? t(`chart:shishin.${p.shiShin}`) : '')}
                   </Text>
                 </View>
 
@@ -306,8 +250,10 @@ export default function ChartScreen() {
                   <Text style={[styles.branchChar, { color: bc }]}>{p.branch}</Text>
                 </View>
 
-                <Text style={[styles.branchElem, { color: bc + 'aa' }]}>{branchEl}</Text>
-              </View>
+                <Text style={[styles.branchElem, { color: bc + 'aa' }]}>
+                  {t(`common:elements.${ELEM_KEY[branchEl]}`)}
+                </Text>
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -315,17 +261,21 @@ export default function ChartScreen() {
 
       {/* ── Element Balance ── */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{labels.elementBalance}</Text>
-        <Text style={styles.sectionDeco}>오행</Text>
+        <Text style={styles.sectionTitle}>{t('chart:elementBalance')}</Text>
+        <Text style={styles.sectionDeco}>五行</Text>
       </View>
       <View style={styles.elementSection}>
         {elementRows.map((r) => {
           const pct = r.score / maxScore;
           return (
-            <View key={r.key} style={styles.elementRow}>
+            <TouchableOpacity
+              key={r.key}
+              style={styles.elementRow}
+              onPress={() => setInfoModal({ kind: 'element', element: r.key, score: r.score })}
+              activeOpacity={0.7}
+            >
               <View style={styles.elementLabelCol}>
                 <Text style={[styles.elementKanji, { color: ELEM_COLOR[r.key] }]}>{r.key}</Text>
-                <Text style={[styles.elementName, { color: ELEM_COLOR[r.key] }]}>{ELEM_EN[r.key]}</Text>
               </View>
               <View style={styles.barBg}>
                 {/* Segmented bar */}
@@ -340,31 +290,42 @@ export default function ChartScreen() {
                 <View style={{ flex: Math.max(totalScore - r.score, 0) }} />
               </View>
               <Text style={[styles.elementScore, { color: ELEM_COLOR[r.key] }]}>{r.score}</Text>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
 
       {/* ── 십신 Table ── */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{labels.tenGods}</Text>
+        <Text style={styles.sectionTitle}>{t('chart:shishin.title')}</Text>
         <Text style={styles.sectionDeco}>十神</Text>
       </View>
       <View style={styles.table}>
         <View style={[styles.tableRow, styles.tableHeader]}>
           <Text style={[styles.cell, styles.cellHeader]}>柱</Text>
-          <Text style={[styles.cell, styles.cellHeader]}>{labels.stemLabel}</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>{t('chart:stem')}</Text>
           <Text style={[styles.cell, styles.cellHeader, styles.cellWide]}>
-            {labels.tenGods.split(' ')[0]}
+            {t('chart:shishin.title')}
           </Text>
-          <Text style={[styles.cell, styles.cellHeader]}>{labels.branchLabel}</Text>
-          <Text style={[styles.cell, styles.cellHeader]}>오행</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>{t('chart:branch')}</Text>
+          <Text style={[styles.cell, styles.cellHeader]}>五行</Text>
         </View>
         {pillarList.map((p) => {
           const stemEl = STEM_ELEMENT[p.stem];
           const branchEl = BRANCH_ELEMENT[p.branch];
           return (
-            <View key={p.key} style={[styles.tableRow, p.isDay && styles.tableRowDay]}>
+            <TouchableOpacity
+              key={p.key}
+              style={[styles.tableRow, p.isDay && styles.tableRowDay]}
+              onPress={() => {
+                if (p.isDay) {
+                  openPillarDetail('day', p.stem, p.branch);
+                } else if (p.shiShin) {
+                  setInfoModal({ kind: 'shishin', shishin: p.shiShin, pillarLabel: p.label });
+                }
+              }}
+              activeOpacity={p.isDay || p.shiShin ? 0.7 : 1}
+            >
               <Text style={[styles.cell, styles.cellText, p.isDay && { color: T.semantic.gold }]}>
                 {p.label}
               </Text>
@@ -372,15 +333,15 @@ export default function ChartScreen() {
                 {p.stem}
               </Text>
               <Text style={[styles.cell, styles.cellWide, styles.cellText, p.isDay && { color: T.semantic.gold, fontWeight: '700' }]}>
-                {p.isDay ? labels.dayMaster : (p.shiShin ?? '')}
+                {p.isDay ? t('chart:dayMaster') : (p.shiShin ? t(`chart:shishin.${p.shiShin}`) : '')}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: 20, fontWeight: '700', textAlign: 'center' }]}>
                 {p.branch}
               </Text>
               <Text style={[styles.cell, { color: ELEM_COLOR[branchEl], fontSize: T.fontSize.xs, textAlign: 'center' }]}>
-                {ELEM_EN[branchEl]}
+                {t(`common:elements.${ELEM_KEY[branchEl]}`)}
               </Text>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -389,7 +350,7 @@ export default function ChartScreen() {
       {daewoon.length > 0 && (
         <>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{labels.luckCycle}</Text>
+            <Text style={styles.sectionTitle}>{t('chart:daewoon')}</Text>
             <Text style={styles.sectionDeco}>大運</Text>
           </View>
           <ScrollView
@@ -401,29 +362,32 @@ export default function ChartScreen() {
               const isCurrent = i === currentDwIdx;
               const dwStemEl = STEM_ELEMENT[dw.pillar.stem];
               const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
-              const dwColor = ELEM_COLOR[dw.element];
+              const dwElem = normElement(dw.element) ?? dwBranchEl;
+              const dwColor = ELEM_COLOR[dwElem];
               return (
-                <View
+                <TouchableOpacity
                   key={i}
                   style={[
                     styles.daewoonCard,
                     { borderColor: isCurrent ? T.semantic.gold : T.border.default },
                     isCurrent && { backgroundColor: T.semantic.gold + '0d' },
                   ]}
+                  onPress={() => { try { setInfoModal({ kind: 'daewoon', dw, isCurrent }); } catch (e) { console.warn('[Daewoon] onPress error:', e); } }}
+                  activeOpacity={0.75}
                 >
                   {/* Element accent top bar */}
                   <View style={[styles.dwAccentBar, { backgroundColor: dwColor }]} />
 
                   {isCurrent && (
                     <View style={styles.nowBadge}>
-                      <Text style={styles.nowBadgeText}>NOW</Text>
+                      <Text style={styles.nowBadgeText}>{t('chart:now')}</Text>
                     </View>
                   )}
                   <Text style={[styles.dwAge, isCurrent && { color: T.semantic.gold }]}>
                     {dw.startAge}–{dw.startAge + 9}
                   </Text>
                   <Text style={[styles.dwAgeSuffix, isCurrent && { color: T.semantic.gold + '88' }]}>
-                    {labels.ageSuffix}
+                    {t('chart:ageSuffix')}
                   </Text>
                   <Text style={[styles.dwStem, { color: ELEM_COLOR[dwStemEl] }]}>
                     {dw.pillar.stem}
@@ -432,7 +396,7 @@ export default function ChartScreen() {
                     {dw.pillar.branch}
                   </Text>
                   <View style={[styles.dwDot, { backgroundColor: dwColor }]} />
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -444,6 +408,186 @@ export default function ChartScreen() {
 
       <View style={{ height: 48 }} />
     </ScrollView>
+
+    {/* ── Info Modal (오행 / 십신 / 대운) ── */}
+    <Modal
+      visible={infoModal !== null}
+      animationType="slide"
+      transparent
+      onRequestClose={() => setInfoModal(null)}
+    >
+      <TouchableOpacity style={styles.infoBackdrop} activeOpacity={1} onPress={() => setInfoModal(null)} />
+      <View style={styles.infoSheet}>
+        <View style={styles.infoHandle} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {infoModal?.kind === 'element' && (() => {
+            const elemKey = ELEM_KEY[infoModal.element];
+            const symbol = ELEMENT_SYMBOL[infoModal.element];
+            const color = ELEM_COLOR[infoModal.element];
+            const total = elementRows.reduce((s, r) => s + r.score, 0) || 1;
+            const pct = Math.round((infoModal.score / total) * 100);
+            const level = infoModal.score === 0 ? t('chart:modal.none') : infoModal.score >= Math.ceil(total / 3) ? t('chart:modal.strong') : t('chart:modal.weak');
+            return (
+              <>
+                <Text style={[styles.infoTitle, { color }]}>{symbol} {infoModal.element}</Text>
+                <Text style={styles.infoSubtitle}>{t('chart:modal.seasonOf', { season: t(`chart:elementInfo.${elemKey}.season`) })} · {pct}% ({level})</Text>
+                <Text style={styles.infoDesc}>{t(`chart:elementInfo.${elemKey}.desc`)}</Text>
+                <View style={[styles.infoHighlight, { borderLeftColor: color }]}>
+                  <Text style={styles.infoHighlightLabel}>{infoModal.score > 0 ? t('chart:modal.whenStrong') : t('chart:modal.whenWeak')}</Text>
+                  <Text style={styles.infoHighlightText}>{infoModal.score > 0 ? t(`chart:elementInfo.${elemKey}.strong`) : t(`chart:elementInfo.${elemKey}.weak`)}</Text>
+                </View>
+              </>
+            );
+          })()}
+
+          {infoModal?.kind === 'shishin' && (() => {
+            const ssKey = infoModal.shishin;
+            return (
+              <>
+                <Text style={styles.infoTitle}>{t(`chart:shishin.${ssKey}`)}</Text>
+                <Text style={styles.infoSubtitle}>{infoModal.pillarLabel} · {t(`chart:shishinInfo.${ssKey}.category`)}</Text>
+                <Text style={styles.infoDesc}>{t(`chart:shishinInfo.${ssKey}.desc`)}</Text>
+                <View style={[styles.infoHighlight, { borderLeftColor: T.primary.DEFAULT }]}>
+                  <Text style={styles.infoHighlightLabel}>{t('chart:modal.fortuneLabel')}</Text>
+                  <Text style={styles.infoHighlightText}>{t(`chart:shishinInfo.${ssKey}.fortune`)}</Text>
+                </View>
+              </>
+            );
+          })()}
+
+          {infoModal?.kind === 'daewoon' && (() => {
+            const { dw, isCurrent } = infoModal;
+            const dwStemEl = STEM_ELEMENT[dw.pillar.stem];
+            const dwBranchEl = BRANCH_ELEMENT[dw.pillar.branch];
+            const dwElem = normElement(dw.element) ?? dwBranchEl;
+            const dwColor = ELEM_COLOR[dwElem];
+            const dwElemKey = ELEM_KEY[dwElem];
+            const dwIdx = daewoon.findIndex((d) => d.startAge === dw.startAge);
+            const prevDw = dwIdx > 0 ? daewoon[dwIdx - 1] : null;
+            const nextDw = dwIdx >= 0 && dwIdx < daewoon.length - 1 ? daewoon[dwIdx + 1] : null;
+            const stemPinyin = STEM_PINYIN[dw.pillar.stem] ?? '';
+            const keywords = t(`chart:dwKeywords.${dwElemKey}`).split('|');
+            const dwElemSymbol = ELEMENT_SYMBOL[dwElem];
+            return (
+              <>
+                {/* Title */}
+                <Text style={[styles.infoTitle, { color: isCurrent ? T.semantic.gold : T.text.primary }]}>
+                  {t('chart:modal.daewoonTitle', { pillars: `${dw.pillar.stem}${dw.pillar.branch}` })}{isCurrent ? `  ${t('chart:modal.currentStar')}` : ''}
+                </Text>
+                <Text style={styles.infoSubtitle}>
+                  {dw.startAge}–{dw.startAge + 9}{t('chart:ageSuffix')}{isCurrent ? ` · ${t('chart:modal.inProgress')}` : ''}
+                </Text>
+
+                {/* Stem / Branch boxes with meanings */}
+                <View style={styles.infoDwRow}>
+                  <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwStemEl] }]}>
+                    <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwStemEl] }]}>{dw.pillar.stem}</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwStemEl] }]}>{t('chart:modal.heavenlyStem')} · {stemPinyin}</Text>
+                    <Text style={styles.infoDwMeaning}>{t(`chart:stemDesc.${dw.pillar.stem}.meaning`)}</Text>
+                  </View>
+                  <View style={[styles.infoDwBox, { borderColor: ELEM_COLOR[dwBranchEl] }]}>
+                    <Text style={[styles.infoDwChar, { color: ELEM_COLOR[dwBranchEl] }]}>{dw.pillar.branch}</Text>
+                    <Text style={[styles.infoDwLabel, { color: ELEM_COLOR[dwBranchEl] }]}>{t('chart:modal.earthlyBranch')} · {t(`chart:branchDesc.${dw.pillar.branch}.animal`)}</Text>
+                    <Text style={styles.infoDwMeaning}>{t(`chart:branchDesc.${dw.pillar.branch}.meaning`)}</Text>
+                  </View>
+                </View>
+
+                {/* Element energy */}
+                <View style={[styles.infoHighlight, { borderLeftColor: dwColor }]}>
+                  <Text style={styles.infoHighlightLabel}>{dwElemSymbol} {t('chart:modal.elementEnergy')} · {t(`common:elements.${dwElemKey}`)}</Text>
+                  <Text style={styles.infoHighlightText}>
+                    {dwElem === dayStemEl
+                      ? t('chart:modal.sameElem', { element: t(`common:elements.${dwElemKey}`), stem: dayStem })
+                      : t(`chart:elementInfo.${dwElemKey}.desc`)}
+                  </Text>
+                </View>
+
+                {/* Period summary */}
+                <View style={[styles.infoHighlight, { borderLeftColor: T.primary.DEFAULT }]}>
+                  <Text style={styles.infoHighlightLabel}>{t('chart:modal.periodFlow')}</Text>
+                  <Text style={styles.infoHighlightText}>
+                    {t(`chart:stemDesc.${dw.pillar.stem}.fortune`)}{'\n'}{t(`chart:branchDesc.${dw.pillar.branch}.fortune`)}
+                  </Text>
+                </View>
+
+                {/* Keywords */}
+                {keywords.length > 0 && (
+                  <View style={styles.infoDwKeywordRow}>
+                    {keywords.map((kw) => (
+                      <View key={kw} style={[styles.infoDwKeywordPill, { backgroundColor: dwColor + '22', borderColor: dwColor + '66' }]}>
+                        <Text style={[styles.infoDwKeywordText, { color: dwColor }]}>{kw}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+
+                {/* Advice */}
+                <>
+                  <View style={[styles.infoHighlight, { borderLeftColor: '#22c55e' }]}>
+                    <Text style={styles.infoHighlightLabel}>{t('chart:modal.favorLabel')}</Text>
+                    <Text style={styles.infoHighlightText}>{t(`chart:dwAdvice.${dwElemKey}.favor`)}</Text>
+                  </View>
+                  <View style={[styles.infoHighlight, { borderLeftColor: '#eab308' }]}>
+                    <Text style={styles.infoHighlightLabel}>{t('chart:modal.cautionLabel')}</Text>
+                    <Text style={styles.infoHighlightText}>{t(`chart:dwAdvice.${dwElemKey}.caution`)}</Text>
+                  </View>
+                </>
+
+                {/* Previous / Current / Next flow */}
+                {(prevDw || nextDw) && (
+                  <View style={[styles.infoHighlight, { borderLeftColor: T.border.default }]}>
+                    <Text style={styles.infoHighlightLabel}>{t('chart:modal.flowLabel')}</Text>
+                    <View style={styles.infoDwFlow}>
+                      {prevDw && (
+                        <View style={styles.infoDwFlowItem}>
+                          <Text style={[styles.infoDwFlowChar, { color: ELEM_COLOR[normElement(prevDw.element) ?? BRANCH_ELEMENT[prevDw.pillar.branch]] + 'aa' }]}>
+                            {prevDw.pillar.stem}{prevDw.pillar.branch}
+                          </Text>
+                          <Text style={styles.infoDwFlowAge}>{prevDw.startAge}–{prevDw.startAge + 9}{t('chart:ageSuffix')}</Text>
+                          <Text style={styles.infoDwFlowLabel}>{t('chart:modal.prevLabel')}</Text>
+                        </View>
+                      )}
+                      <View style={[styles.infoDwFlowItem, styles.infoDwFlowCurrent]}>
+                        <Text style={[styles.infoDwFlowChar, { color: isCurrent ? T.semantic.gold : dwColor }]}>
+                          {dw.pillar.stem}{dw.pillar.branch}
+                        </Text>
+                        <Text style={[styles.infoDwFlowAge, isCurrent && { color: T.semantic.gold }]}>
+                          {dw.startAge}–{dw.startAge + 9}{t('chart:ageSuffix')}
+                        </Text>
+                        <Text style={[styles.infoDwFlowLabel, isCurrent && { color: T.semantic.gold }]}>
+                          {isCurrent ? t('chart:modal.currentStar') : t('chart:modal.selectedLabel')}
+                        </Text>
+                      </View>
+                      {nextDw && (
+                        <View style={styles.infoDwFlowItem}>
+                          <Text style={[styles.infoDwFlowChar, { color: ELEM_COLOR[normElement(nextDw.element) ?? BRANCH_ELEMENT[nextDw.pillar.branch]] + 'aa' }]}>
+                            {nextDw.pillar.stem}{nextDw.pillar.branch}
+                          </Text>
+                          <Text style={styles.infoDwFlowAge}>{nextDw.startAge}–{nextDw.startAge + 9}{t('chart:ageSuffix')}</Text>
+                          <Text style={styles.infoDwFlowLabel}>{t('chart:modal.nextLabel')}</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
+              </>
+            );
+          })()}
+
+          <View style={{ height: 48 }} />
+        </ScrollView>
+      </View>
+    </Modal>
+
+    {/* ── Pillar Detail Modal ── */}
+    <PillarDetailModal
+      visible={modalPillarKey !== null}
+      pillarKey={modalPillarKey}
+      stem={modalStem}
+      branch={modalBranch}
+      onClose={closeModal}
+    />
+    </>
   );
 }
 
@@ -592,6 +736,67 @@ const styles = StyleSheet.create({
   cellWide: { flex: 1.4 },
   cellHeader: { fontSize: T.fontSize.xs, fontWeight: '700', color: T.text.disabled },
   cellText: { fontSize: T.fontSize.sm, color: T.primary.lighter, textAlign: 'center' },
+
+  // Info modal
+  infoBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)' },
+  infoSheet: {
+    backgroundColor: T.bg.elevated,
+    borderTopLeftRadius: T.radius['2xl'],
+    borderTopRightRadius: T.radius['2xl'],
+    paddingHorizontal: T.spacing[6],
+    paddingBottom: T.spacing[4],
+    maxHeight: '72%',
+  },
+  infoHandle: {
+    width: 40, height: 4, backgroundColor: T.border.default,
+    borderRadius: 2, alignSelf: 'center',
+    marginTop: T.spacing[3], marginBottom: T.spacing[4],
+  },
+  infoTitle: {
+    fontSize: T.fontSize['2xl'], fontWeight: '800', color: T.text.primary,
+    marginBottom: T.spacing[1],
+  },
+  infoSubtitle: {
+    fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[4], fontWeight: '600',
+  },
+  infoDesc: {
+    fontSize: T.fontSize.base, color: T.text.secondary, lineHeight: 22,
+    marginBottom: T.spacing[4],
+  },
+  infoHighlight: {
+    borderLeftWidth: 3, paddingLeft: T.spacing[4],
+    backgroundColor: T.bg.card, borderRadius: T.radius.md,
+    padding: T.spacing[4], marginBottom: T.spacing[4],
+  },
+  infoHighlightLabel: {
+    fontSize: T.fontSize.xs, color: T.text.faint, fontWeight: '700', marginBottom: T.spacing[2],
+  },
+  infoHighlightText: { fontSize: T.fontSize.sm, color: T.text.secondary, lineHeight: 20 },
+  infoDwRow: { flexDirection: 'row', gap: T.spacing[4], marginBottom: T.spacing[4] },
+  infoDwBox: {
+    flex: 1, alignItems: 'center', paddingVertical: T.spacing[4],
+    borderRadius: T.radius.md, borderWidth: 1.5,
+    backgroundColor: T.bg.card,
+  },
+  infoDwChar: { fontSize: 48, fontWeight: '800', lineHeight: 56 },
+  infoDwLabel: { fontSize: T.fontSize.xs, fontWeight: '700', marginTop: 4 },
+  infoDwMeaning: { fontSize: 9, color: T.text.faint, marginTop: 3, textAlign: 'center', paddingHorizontal: 4 },
+  infoDwKeywordRow: { flexDirection: 'row', gap: T.spacing[2], marginBottom: T.spacing[4], flexWrap: 'wrap' },
+  infoDwKeywordPill: {
+    borderRadius: T.radius.lg, borderWidth: 1,
+    paddingHorizontal: T.spacing[3], paddingVertical: T.spacing[1] + 1,
+  },
+  infoDwKeywordText: { fontSize: T.fontSize.sm, fontWeight: '700' },
+  infoDwFlow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: T.spacing[2] },
+  infoDwFlowItem: { alignItems: 'center', flex: 1 },
+  infoDwFlowCurrent: {
+    borderWidth: 1, borderColor: T.border.default,
+    borderRadius: T.radius.md, paddingVertical: T.spacing[2],
+    backgroundColor: T.bg.card,
+  },
+  infoDwFlowChar: { fontSize: 20, fontWeight: '800' },
+  infoDwFlowAge: { fontSize: 9, color: T.text.faint, marginTop: 2 },
+  infoDwFlowLabel: { fontSize: 9, color: T.text.disabled, marginTop: 2, fontWeight: '600' },
 
   // 대운 timeline
   daewoonScroll: { paddingBottom: T.spacing[2], paddingRight: T.spacing[5], marginBottom: T.spacing[8] },

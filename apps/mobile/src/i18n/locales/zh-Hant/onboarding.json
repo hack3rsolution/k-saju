@@ -9,20 +9,56 @@
     "gender": "性別",
     "male": "男",
     "female": "女",
-    "continue": "繼續"
+    "continue": "繼續",
+    "lunar": "🌙 農曆",
+    "solar": "☀️ 陽曆",
+    "lunarHint": "農曆日期將轉換為陽曆以計算四柱。",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "timeKnown": "知道出生時間嗎？",
+    "hour24": "時（24h）",
+    "lunarErrorTitle": "農曆日期無效",
+    "lunarErrorMsg": "您輸入的農曆日期無法轉換。請確認後重試。"
   },
   "culturalFrame": {
     "title": "選擇您的視角",
     "subtitle": "相同的命理數據，不同的文化詮釋。",
     "frames": {
-      "kr": { "label": "사주팔자", "region": "🇰🇷 韓國", "desc": "韓國傳統四柱命理" },
-      "cn": { "label": "四柱推命", "region": "🇨🇳 中國", "desc": "BaZi 經典體系" },
-      "jp": { "label": "四柱推命", "region": "🇯🇵 日本", "desc": "日本命運解讀" },
-      "en": { "label": "Cosmic Blueprint", "region": "🌏 西方", "desc": "性格與人生道路" },
-      "es": { "label": "Destino Cósmico", "region": "🌎 拉丁", "desc": "星座風格解讀" },
-      "in": { "label": "Vedic Fusion", "region": "🇮🇳 南亞", "desc": "吠陀啟發視角" }
+      "kr": {
+        "label": "사주팔자",
+        "region": "🇰🇷 韓國",
+        "desc": "韓國傳統四柱命理"
+      },
+      "cn": {
+        "label": "四柱推命",
+        "region": "🇨🇳 中國",
+        "desc": "BaZi 經典體系"
+      },
+      "jp": {
+        "label": "四柱推命",
+        "region": "🇯🇵 日本",
+        "desc": "日本命運解讀"
+      },
+      "en": {
+        "label": "Cosmic Blueprint",
+        "region": "🌏 西方",
+        "desc": "性格與人生道路"
+      },
+      "es": {
+        "label": "Destino Cósmico",
+        "region": "🌎 拉丁",
+        "desc": "星座風格解讀"
+      },
+      "in": {
+        "label": "Vedic Fusion",
+        "region": "🇮🇳 南亞",
+        "desc": "吠陀啟發視角"
+      }
     },
-    "continue": "選擇完成"
+    "continue": "選擇完成",
+    "screenTitle": "選擇我的文化框架",
+    "screenSubtitle": "相同的四柱數據 — 以您的文化背景呈現"
   },
   "resultPreview": {
     "title": "命盤預覽",
@@ -30,6 +66,19 @@
     "unlockTitle": "解鎖完整分析",
     "unlockDesc": "透過高級版查看日運、合婚、年運和大運分析。",
     "exploreFree": "探索免費功能",
-    "viewPremium": "查看高級方案"
+    "viewPremium": "查看高級方案",
+    "frameTitles": {
+      "kr": "我的四柱八字",
+      "cn": "我的四柱推命",
+      "jp": "我的四柱推命",
+      "en": "我的宇宙藍圖",
+      "es": "我的命運藍圖",
+      "in": "我的吠陀融合"
+    },
+    "unknown": "未知",
+    "hourUnknown": "（時辰未知）",
+    "pillarsSection": "四柱",
+    "dayStemHint": "日干 · {{stem}} · {{element}}",
+    "elementSection": "五行平衡"
   }
 }

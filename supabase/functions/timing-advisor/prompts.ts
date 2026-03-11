@@ -1,4 +1,5 @@
 import type { CulturalFrame, TimingCategory, TimingRequest } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Category labels per frame ─────────────────────────────────────────────────
 
@@ -52,8 +53,11 @@ Assess the current cosmic cycle for a major life decision using Four Pillars com
 
 // ── System prompt builder ─────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return `${BASE_PROMPTS[frame]}
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  // Language instruction goes FIRST so it overrides frame-level language directives
+  const langInstruction = buildLangInstruction(userLanguage);
+
+  return `${langInstruction}${BASE_PROMPTS[frame]}
 
 IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
 {
@@ -84,7 +88,7 @@ export function buildUserPrompt(req: TimingRequest): string {
     .map(([el, n]) => `${el}:${n}`)
     .join(' ');
 
-  const activeDaewoon = chart.daewoonList.find((d) => d.index === 0);
+  const activeDaewoon = (chart.daewoonList ?? []).find((d) => d.index === 0);
   const daewoonText = activeDaewoon
     ? `Current 대운: ${activeDaewoon.pillar.stem}${activeDaewoon.pillar.branch} (starts age ${activeDaewoon.startAge})`
     : '';

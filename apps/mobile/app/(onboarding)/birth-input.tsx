@@ -6,10 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { WheelPicker } from '../../src/components/WheelPicker';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
+import { useLanguageStore } from '../../src/store/languageStore';
+import { lunarToSolar, LUNAR_LANGUAGES } from '../../src/lib/lunar';
 
 const YEARS = Array.from({ length: 81 }, (_, i) => String(1930 + i));
 const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
@@ -21,6 +25,8 @@ function daysInMonth(year: number, month: number) {
 
 export default function BirthInputScreen() {
   const { setBirthData } = useOnboardingStore();
+  const { language } = useLanguageStore();
+  const { t } = useTranslation('onboarding');
 
   const [yearIdx, setYearIdx] = useState(60);   // 1990
   const [monthIdx, setMonthIdx] = useState(0);
@@ -28,6 +34,7 @@ export default function BirthInputScreen() {
   const [hourIdx, setHourIdx] = useState(12);
   const [timeKnown, setTimeKnown] = useState(false);
   const [gender, setGender] = useState<'M' | 'F' | null>(null);
+  const [isLunar, setIsLunar] = useState(LUNAR_LANGUAGES.has(language));
 
   const year = 1930 + yearIdx;
   const month = monthIdx + 1;
@@ -41,10 +48,28 @@ export default function BirthInputScreen() {
   const clampedDayIdx = Math.min(dayIdx, days.length - 1);
 
   function handleContinue() {
+    let solarYear = year;
+    let solarMonth = month;
+    let solarDay = clampedDayIdx + 1;
+
+    if (isLunar) {
+      const converted = lunarToSolar(year, month, clampedDayIdx + 1);
+      if (!converted) {
+        Alert.alert(
+          t('birthInput.lunarErrorTitle', 'Invalid Lunar Date'),
+          t('birthInput.lunarErrorMsg', 'The lunar date you entered could not be converted. Please check and try again.'),
+        );
+        return;
+      }
+      solarYear = converted.year;
+      solarMonth = converted.month;
+      solarDay = converted.day;
+    }
+
     setBirthData({
-      birthYear: year,
-      birthMonth: month,
-      birthDay: clampedDayIdx + 1,
+      birthYear: solarYear,
+      birthMonth: solarMonth,
+      birthDay: solarDay,
       birthHour: timeKnown ? hourIdx : null,
       gender,
     });
@@ -53,25 +78,48 @@ export default function BirthInputScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>Step 1 of 3</Text>
-      <Text style={styles.title}>Your Birth Info</Text>
-      <Text style={styles.subtitle}>
-        We use your birth date and time to calculate your Four Pillars (四柱).
-      </Text>
+      <Text style={styles.step}>{t('step', { current: 1, total: 3 })}</Text>
+      <Text style={styles.title}>{t('birthInput.title')}</Text>
+      <Text style={styles.subtitle}>{t('birthInput.subtitle')}</Text>
+
+      {/* Lunar / Solar toggle */}
+      <View style={styles.calendarToggle}>
+        <TouchableOpacity
+          style={[styles.calToggleBtn, isLunar && styles.calToggleBtnActive]}
+          onPress={() => setIsLunar(true)}
+        >
+          <Text style={[styles.calToggleText, isLunar && styles.calToggleTextActive]}>
+            {t('birthInput.lunar')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.calToggleBtn, !isLunar && styles.calToggleBtnActive]}
+          onPress={() => setIsLunar(false)}
+        >
+          <Text style={[styles.calToggleText, !isLunar && styles.calToggleTextActive]}>
+            {t('birthInput.solar')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {isLunar && (
+        <Text style={styles.lunarHint}>
+          {t('birthInput.lunarHint')}
+        </Text>
+      )}
 
       {/* Date pickers */}
       <View style={styles.pickerCard}>
         <View style={styles.pickerRow}>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Year</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.year')}</Text>
             <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Month</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.month')}</Text>
             <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Day</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.day')}</Text>
             <WheelPicker
               data={days}
               selectedIndex={clampedDayIdx}
@@ -85,7 +133,7 @@ export default function BirthInputScreen() {
       {/* Time */}
       <View style={styles.card}>
         <View style={styles.switchRow}>
-          <Text style={styles.cardLabel}>Birth time known?</Text>
+          <Text style={styles.cardLabel}>{t('birthInput.timeKnown')}</Text>
           <Switch
             value={timeKnown}
             onValueChange={setTimeKnown}
@@ -95,7 +143,7 @@ export default function BirthInputScreen() {
         </View>
         {timeKnown && (
           <View style={styles.hourPicker}>
-            <Text style={styles.pickerLabel}>Hour (24h)</Text>
+            <Text style={styles.pickerLabel}>{t('birthInput.hour24')}</Text>
             <WheelPicker data={HOURS} selectedIndex={hourIdx} onIndexChange={setHourIdx} width={72} />
           </View>
         )}
@@ -103,19 +151,19 @@ export default function BirthInputScreen() {
 
       {/* Gender */}
       <View style={styles.card}>
-        <Text style={styles.cardLabel}>Gender</Text>
+        <Text style={styles.cardLabel}>{t('birthInput.gender')}</Text>
         <View style={styles.genderRow}>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
             onPress={() => setGender('M')}
           >
-            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>Male</Text>
+            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>{t('birthInput.male')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
             onPress={() => setGender('F')}
           >
-            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>Female</Text>
+            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{t('birthInput.female')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -125,7 +173,7 @@ export default function BirthInputScreen() {
         onPress={handleContinue}
         disabled={!gender}
       >
-        <Text style={styles.buttonText}>Continue →</Text>
+        <Text style={styles.buttonText}>{t('birthInput.continue')} →</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -136,7 +184,32 @@ const styles = StyleSheet.create({
   content: { padding: 28, paddingTop: 72, paddingBottom: 40 },
   step: { color: '#7c3aed', fontWeight: '600', marginBottom: 6 },
   title: { fontSize: 28, fontWeight: '700', color: '#fff', marginBottom: 10 },
-  subtitle: { fontSize: 15, color: '#b8a9d9', marginBottom: 28, lineHeight: 22 },
+  subtitle: { fontSize: 15, color: '#b8a9d9', marginBottom: 20, lineHeight: 22 },
+
+  calendarToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#2d1854',
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 8,
+  },
+  calToggleBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 9,
+    alignItems: 'center',
+  },
+  calToggleBtnActive: { backgroundColor: '#7c3aed' },
+  calToggleText: { color: '#9d8fbe', fontWeight: '600', fontSize: 14 },
+  calToggleTextActive: { color: '#fff' },
+  lunarHint: {
+    color: '#9d8fbe',
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+
   pickerCard: {
     backgroundColor: '#2d1854',
     borderRadius: 16,

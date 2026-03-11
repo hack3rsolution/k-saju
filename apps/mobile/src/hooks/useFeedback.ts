@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 
 export type FeedbackRating = 1 | -1;
-export type FeedbackType = 'accurate' | 'too_vague' | 'not_me';
+export type FeedbackType = string;
 
 export interface UseFeedbackResult {
   submitting: boolean;

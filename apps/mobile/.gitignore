@@ -8,3 +8,9 @@ expo-env.d.ts
 # Native build outputs (EAS Build manages these on server)
 ios/
 android/
+
+# Allow fastlane metadata subdirs despite ios/ and android/ rules above
+!fastlane/metadata/ios/
+!fastlane/metadata/ios/**
+!fastlane/metadata/android/
+!fastlane/metadata/android/**
