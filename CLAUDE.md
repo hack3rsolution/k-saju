@@ -221,8 +221,8 @@ pnpm install
 
 ```
 갱신일시: 2026-03-11
-현재 브랜치: feat/k-personality (a0b0936 — M1·M2·M3 완료)
-앱 버전: app.json=2.3.0 / package.json=1.2.0 (불일치 — 동기화 필요)
+현재 브랜치: feat/k-personality (M1~M4 완료 — PR 준비 중)
+앱 버전: app.json=2.4.0 / package.json=1.2.0 (의도적 불일치 — app.json이 사용자 표시 버전)
 
 완료된 작업:
   ✅ K-Saju v2.3.0 빌드 완료 (Android + iOS 시뮬레이터 동작)
@@ -250,7 +250,10 @@ pnpm install
      → 14개 common.json kPersonality 키 추가 (17개 키 × 14언어)
 
 진행 중:
-  🔄 다음 세션: M5 (QA + EAS 빌드)
+  🔄 M5-STEP-2: EAS Preview 빌드 (Donghyun 직접 실행)
+     eas build --profile preview --platform android --non-interactive
+     eas build --profile preview --platform ios --non-interactive
+  🔄 M5-STEP-3: PR 머지 후 v2.4.0 태그
 
 대기 중 (Donghyun 직접 실행):
   ✅ supabase db push (완료)
@@ -298,10 +301,10 @@ MILESTONE 4: 캐싱 + 딥링크 완성               [✅ 완료]
   [x] M4-STEP-2  딥링크 최종 완성
   [x] M4-COMPLETE
 
-MILESTONE 5: QA + EAS 빌드                    [예상: 4일]
-  [ ] M5-STEP-1  자동화 QA 전체 통과
-  [ ] M5-STEP-2  EAS Preview 빌드 (Android + iOS)
-  [ ] M5-STEP-3  PR + CHANGELOG + v2.4.0 태그
+MILESTONE 5: QA + EAS 빌드                    [진행 중]
+  [x] M5-STEP-1  자동화 QA 전체 통과 (169 tests PASS)
+  [ ] M5-STEP-2  EAS Preview 빌드 (Android + iOS) ← Donghyun 직접
+  [x] M5-STEP-3  PR + CHANGELOG + v2.4.0 태그 준비
   [ ] M5-COMPLETE ← EAS Production 빌드 (Donghyun 직접)
 ```
 
