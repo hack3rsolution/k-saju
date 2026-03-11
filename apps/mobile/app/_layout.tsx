@@ -1,3 +1,5 @@
+// Register dayjs plugins globally before any other module uses dayjs
+import '../src/lib/dayjs';
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';

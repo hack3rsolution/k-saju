@@ -22,6 +22,7 @@
     "@k-saju/ui": "workspace:*",
     "@react-navigation/native": "^6.1.17",
     "@supabase/supabase-js": "^2.57.4",
+    "dayjs": "^1.11.19",
     "expo": "~51.0.0",
     "expo-apple-authentication": "~6.4.1",
     "expo-auth-session": "~5.5.2",

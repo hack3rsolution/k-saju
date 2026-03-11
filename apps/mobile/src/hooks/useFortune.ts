@@ -5,6 +5,7 @@
  * If the chart isn't in sajuStore (cold start), it's reconstructed from user_metadata.
  */
 import { useEffect, useRef, useState } from 'react';
+import dayjs from '../lib/dayjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   calculateFourPillars,
@@ -72,14 +73,37 @@ async function saveFortuneCache(key: string, entry: CachedFortuneEntry): Promise
   } catch { /* ignore storage errors */ }
 }
 
-// ── ISO week helper ───────────────────────────────────────────────────────────
+// ── refDate normalisation ─────────────────────────────────────────────────────
+// Cache key must be stable for the entire period the reading covers:
+//   daily   → today's UTC date          (YYYY-MM-DD)
+//   weekly  → Monday of the UTC week    (YYYY-MM-DD)
+//   monthly → first day of UTC month    (YYYY-MM-01)
+//   annual  → first day of UTC year     (YYYY-01-01)
+//   daewoon → first day of UTC year     (YYYY-01-01)
+//
+// Using UTC throughout so iOS and Android produce identical strings regardless
+// of device timezone.
 
-function isoWeek(date: Date): string {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
-  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+function normalizeRefDate(date: Date, readingType: ReadingType): string {
+  const y = date.getUTCFullYear();
+  const m = date.getUTCMonth(); // 0-indexed
+  const d = date.getUTCDate();
+
+  if (readingType === 'weekly') {
+    // Rewind to Monday (getUTCDay: 0=Sun … 6=Sat)
+    const dow = date.getUTCDay(); // 0=Sun
+    const daysToMonday = dow === 0 ? 6 : dow - 1;
+    const monday = new Date(Date.UTC(y, m, d - daysToMonday));
+    return monday.toISOString().split('T')[0];
+  }
+  if (readingType === 'monthly') {
+    return `${y}-${String(m + 1).padStart(2, '0')}-01`;
+  }
+  if (readingType === 'annual' || readingType === 'daewoon') {
+    return `${y}-01-01`;
+  }
+  // daily
+  return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
 // ── Today's sexagenary date ───────────────────────────────────────────────────
@@ -131,6 +155,8 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
   const [tick, setTick] = useState(0);
   // Keep last successful reading so it's shown even when the next fetch fails
   const lastReadingRef = useRef<ReadingData | null>(null);
+  // Set to true by refresh() so the next effect run bypasses the cache
+  const skipCacheRef = useRef(false);
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
@@ -151,7 +177,7 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
     async function fetch() {
       setError(null);
       const now = new Date();
-      const refDate = now.toISOString().split('T')[0];
+      const refDate = normalizeRefDate(now, type);
       const userId = session!.user.id;
 
       // ── 0. Client-side cache check — no loading spinner on hit ────────────
@@ -166,6 +192,19 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
         await AsyncStorage.removeItem(ck);
         if (!cancelled) setReading(null);
       }
+
+      // If refresh() was called, clear ALL fortune cache keys for this user so the
+      // server is always queried fresh (mirrors the Supabase DB cache invalidation).
+      if (skipCacheRef.current) {
+        skipCacheRef.current = false;
+        try {
+          const allKeys = await AsyncStorage.getAllKeys();
+          const fortuneKeys = allKeys.filter((k) => k.startsWith(`fortune_${userId}_`));
+          if (fortuneKeys.length > 0) await AsyncStorage.multiRemove(fortuneKeys);
+        } catch { /* ignore */ }
+        if (!cancelled) setReading(null);
+      }
+
       const clientCached = await loadFortuneCache(ck);
       if (clientCached) {
         if (!cancelled) {
@@ -226,7 +265,7 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
         }
 
         // ── 2. Check free weekly limit (weekly only — daily is unlimited) ───
-        const currentWeek = isoWeek(now);
+        const currentWeek = dayjs(now).isoWeek();
         const isPremium = meta?.is_premium === true || entitlementPremium;
         // Daily fortune is free and unlimited per MEMORY.md freemium strategy.
         // Weekly limit only applies to the 'weekly' reading type for free users.
@@ -337,6 +376,6 @@ export function useFortune(type: ReadingType = 'daily'): FortuneState {
     todayDay: ganji.dayStr,
     todayElement: ganji.dayElement,
     weeklyLimitReached,
-    refresh: () => setTick((t) => t + 1),
+    refresh: () => { skipCacheRef.current = true; setTick((t) => t + 1); },
   };
 }

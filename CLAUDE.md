@@ -1,239 +1,344 @@
-# K-Saju Global — Claude Context
-
-## Project Overview
-
-**K-Saju Global** is a cross-platform mobile app (iOS + Android) that delivers
-personalized Korean Four Pillars (사주팔자) destiny readings to a global audience.
-The same underlying saju calculation is surfaced through 6 culturally-localized
-"lenses" to maximize resonance by region.
+# CLAUDE.md — K-Saju Global
+# Pie Nest Inc. | Donghyun Lee
+# 마지막 갱신: 2026-03-11
 
 ---
 
-## Monorepo Structure
+## ⚡ 세션 시작 프로토콜 (매 세션 첫 번째 실행)
 
 ```
-k-saju/
+세션을 시작합니다.
+아래 순서대로 프로젝트 상태를 확인하고 CLAUDE.md의 [현재 상태] 섹션을 갱신해줘.
+파일 수정 외에 다른 작업은 하지 않음.
+
+1. git log --oneline -10
+2. git status --short
+3. cat CLAUDE.md | grep -A 5 "현재 상태"
+4. 위 결과를 바탕으로 CLAUDE.md의 [현재 상태] 섹션만 업데이트
+```
+
+---
+
+## 🏗️ 프로젝트 구조
+
+```
+~/Projects/k-saju/
 ├── apps/
-│   └── mobile/              # Expo SDK 51 + Expo Router v3
-│       ├── app/
+│   └── mobile/                        # React Native / Expo (메인 앱)
+│       ├── app/                       # Expo Router 화면 (src/ 아님) # 수정됨
 │       │   ├── _layout.tsx
-│       │   ├── index.tsx    # → (auth)/login
-│       │   ├── (auth)/      # login, callback
-│       │   ├── (onboarding)/# birth-input, cultural-frame, result-preview
-│       │   ├── (tabs)/      # home, chart, fortune, settings
+│       │   ├── index.tsx
+│       │   ├── paywall.tsx
+│       │   ├── settings.tsx
+│       │   ├── face-result.tsx        # Face Insight 결과 # 수정됨
+│       │   ├── (auth)/                # login, callback
+│       │   ├── (onboarding)/          # birth-input, cultural-frame, result-preview
+│       │   ├── (tabs)/                # home, chart, fortune, journal, relationships, face
 │       │   ├── compatibility/
-│       │   ├── reports/
-│       │   └── paywall.tsx  # modal
-│       └── src/
-│           ├── components/
-│           ├── hooks/
-│           ├── lib/
-│           └── store/
-├── packages/
-│   ├── saju-engine/         # Pure TS saju calculation (no RN deps)
-│   │   └── src/
-│   │       ├── constants.ts # Stems, branches, elements, 60갑자
-│   │       ├── types.ts     # FourPillars, ElementBalance, etc.
-│   │       ├── pillars.ts   # Year/Month/Day/Hour pillar calc
-│   │       ├── elements.ts  # Five-element balance
-│   │       └── daewoon.ts   # 10-year luck cycle
-│   └── ui/                  # Shared React Native UI components
-└── CLAUDE.md
+│       │   ├── fortune/[type].tsx
+│       │   ├── fortune-chat/[fortuneId].tsx
+│       │   └── reports/
+│       ├── src/                       # 비-라우터 소스 코드 # 수정됨
+│       │   ├── components/            # 공유 UI 컴포넌트
+│       │   ├── features/              # 피처 모듈 (face-insight 등) # 수정됨
+│       │   ├── hooks/                 # React Query 훅
+│       │   ├── i18n/                  # i18n 설정 + locales/ # 수정됨
+│       │   ├── lib/                   # 유틸 (supabase.ts, dayjs.ts 등) # 수정됨
+│       │   ├── store/                 # Zustand 스토어 # 수정됨
+│       │   ├── theme/                 # 디자인 토큰 (tokens.ts)
+│       │   └── types/                 # TypeScript 타입
+│       ├── app.json                   # Expo 설정 (app.config.ts 아님) # 수정됨
+│       ├── index.js                   # 로컬 엔트리 (pnpm 모노레포용)
+│       └── metro.config.js
+├── supabase/
+│   ├── functions/                     # Edge Functions (Deno)
+│   │   ├── _shared/                   # 공유 유틸 (claude.ts, lang 등) # 수정됨
+│   │   ├── saju-reading/
+│   │   ├── fortune-chat/
+│   │   ├── timing-advisor/
+│   │   ├── journal-analysis/
+│   │   ├── relationship-fortune/
+│   │   ├── addon-report/
+│   │   ├── content-recommendation/
+│   │   ├── face-insight-analyze/
+│   │   └── daily-fortune-push/
+│   └── migrations/                    # SQL 마이그레이션 (005~ 번호 형식) # 수정됨
+└── packages/
+    ├── saju-engine/                   # 순수 TS 사주 계산 엔진 (RN 의존성 없음)
+    │   └── src/                       # constants, types, pillars, elements, daewoon 등
+    ├── db/                            # Prisma 스키마 + migrations (001~005) # 수정됨
+    └── ui/                            # 공유 RN 컴포넌트
 ```
 
 ---
 
-## Tech Stack
+## 🛠️ 기술 스택
 
-| Layer | Technology |
-|---|---|
-| Mobile framework | Expo SDK 51 + Expo Router v3 |
-| Language | TypeScript (strict) |
-| State management | Zustand |
-| Backend / Auth | Supabase (magic-link + PKCE) |
-| API layer | tRPC (future) |
-| In-app purchases | RevenueCat |
-| AI readings | Claude API (claude-sonnet-4-6) |
-| Package manager | pnpm + Turborepo |
-| UI | Custom (packages/ui) + @expo/vector-icons |
-
----
-
-## 사주 Domain Knowledge
-
-### 10 Heavenly Stems (천간, 天干)
-
-| # | Stem | Element | Polarity |
-|---|------|---------|---------|
-| 1 | 甲 (갑) | 木 Wood | Yang |
-| 2 | 乙 (을) | 木 Wood | Yin |
-| 3 | 丙 (병) | 火 Fire | Yang |
-| 4 | 丁 (정) | 火 Fire | Yin |
-| 5 | 戊 (무) | 土 Earth | Yang |
-| 6 | 己 (기) | 土 Earth | Yin |
-| 7 | 庚 (경) | 金 Metal | Yang |
-| 8 | 辛 (신) | 金 Metal | Yin |
-| 9 | 壬 (임) | 水 Water | Yang |
-| 10 | 癸 (계) | 水 Water | Yin |
-
-### 12 Earthly Branches (지지, 地支)
-
-| # | Branch | Animal | Element | Month (approx) |
-|---|--------|--------|---------|---------------|
-| 1 | 子 (자) | Rat | 水 Water | Nov |
-| 2 | 丑 (축) | Ox | 土 Earth | Dec |
-| 3 | 寅 (인) | Tiger | 木 Wood | Jan |
-| 4 | 卯 (묘) | Rabbit | 木 Wood | Feb |
-| 5 | 辰 (진) | Dragon | 土 Earth | Mar |
-| 6 | 巳 (사) | Snake | 火 Fire | Apr |
-| 7 | 午 (오) | Horse | 火 Fire | May |
-| 8 | 未 (미) | Goat | 土 Earth | Jun |
-| 9 | 申 (신) | Monkey | 金 Metal | Jul |
-| 10 | 酉 (유) | Rooster | 金 Metal | Aug |
-| 11 | 戌 (술) | Dog | 土 Earth | Sep |
-| 12 | 亥 (해) | Pig | 水 Water | Oct |
-
-### 오행 (Five Elements) Generating/Controlling Cycle
-
-**Generating (상생):** Wood → Fire → Earth → Metal → Water → Wood
-**Controlling (상극):** Wood → Earth → Water → Fire → Metal → Wood
-
-### Four Pillars (사주팔자)
-
-Each person has 4 pillars × 2 characters = **8 characters (팔자)**:
-
-```
- 연주(年柱)  월주(月柱)  일주(日柱)  시주(時柱)
-   天干        天干        天干        天干
-   地支        地支        地支        地支
-```
-
-- **일간 (Day Stem)** = the "self" — most important character
-- Month pillar boundary is determined by **절기 (solar terms)**, not the calendar month
-- Hour pillar uses 2-hour intervals (자시 子時 = 23:00–01:00)
-
-### 60 Sexagenary Cycle (육십갑자)
-
-Formed by pairing 10 stems × 12 branches (LCM = 60).
-Reference: **1984 = 甲子**, **2024 = 甲辰**, **2025 = 乙巳**, **2026 = 丙午**
-
-### 대운 (大運) — 10-Year Major Luck Cycle
-
-- Derived from the **월주 (Month Pillar)**, counting forward or backward
-- Direction: Yang year + Male / Yin year + Female → **forward (순행)**
-- Start age: calculated from days to next/previous solar term ÷ 3
-- Each period = 10 years; typically 8 periods shown (age 8–88)
-
-### 세운 (歲運) — Annual Luck
-
-- Each calendar year's stem+branch overlaid on the natal chart
-- Clash (충), Harmony (합), and Penalty (형) relationships drive fortune reading
+| 영역 | 기술 |
+|------|------|
+| 앱 프레임워크 | React Native + Expo SDK 51 + Expo Router v3 |
+| 언어 | TypeScript |
+| DB / Auth | Supabase (PostgreSQL + RLS) |
+| AI | Claude API (claude-sonnet-4-20250514) |
+| 결제 | RevenueCat |
+| 상태관리 | Zustand (전역 상태) + React Query (서버 상태) # 수정됨 |
+| i18n | react-i18next (14개 언어, 5개 네임스페이스) # 수정됨 |
+| 날짜 | dayjs + isoWeek |
+| 빌드 | EAS (Expo Application Services) |
+| 패키지 매니저 | pnpm (pnpm-lock.yaml 확정 — yarn.lock 없음) # 수정됨 |
+| 테스트 러너 | jest (apps/mobile/jest.config.js) |
 
 ---
 
-## 6 Cultural Frame Strategies
-
-| Frame ID | Market | Label | Framing Style |
-|---|---|---|---|
-| `kr` | Korea | 사주팔자 | Traditional classical: destiny, family line, karma |
-| `cn` | China/Taiwan | 四柱推命 / BaZi | Precision forecasting, business timing |
-| `jp` | Japan | 四柱推命 | Harmony, workplace fit, subtle personality |
-| `en` | US/UK/AU | Cosmic Blueprint | Personality-first, psychology overlay (like MBTI) |
-| `es` | LATAM/Spain | Destino Cósmico | Horoscope-adjacent, relationship & passion focus |
-| `in` | South Asia | Vedic Fusion | Jyotish vocabulary, karma & dharma framing |
-
-**Same calculation, different narrative layer.** The Claude API prompt
-should be prefixed with the cultural frame system prompt to localize output tone.
-
----
-
-## Pricing Model
-
-### Subscription (via RevenueCat)
-
-| Plan | Price | Billing | Key Features |
-|---|---|---|---|
-| **Free** | $0 | — | 1 reading/week, full onboarding, chart view |
-| **Premium Monthly** | $8.99 | Monthly | Unlimited daily + weekly + monthly + annual readings, 대운 |
-| **Premium Annual** | $59.99 | Yearly (~44% off) | Everything Monthly + 2 add-on reports/yr |
-
-### Add-ons (one-time IAP)
-
-| Add-on | Price |
-|---|---|
-| Deep Compatibility Report | $4.99 |
-| Career & Wealth Report | $4.99 |
-| Full 대운 Report (PDF export) | $6.99 |
-| Name Analysis (작명) | $9.99 |
-
-### Entitlement Gate Logic
+## 🚨 절대 건드리지 말 것 (NEVER TOUCH)
 
 ```
-FREE:    daily_fortune_count <= 1/week, chart_view, onboarding
-PREMIUM: all_readings, daewoon, compatibility_basic, annual_report
-ADDON:   deep_compatibility, career_wealth, daewoon_pdf, name_analysis
+# 1. 기존 Saju 엔진 핵심 로직 # 수정됨
+packages/saju-engine/src/
+  → pillars.ts, elements.ts, daewoon.ts, constants.ts 수정 금지
+supabase/functions/saju-reading/
+
+# 2. Magic Link 딥링크 처리 # 수정됨
+apps/mobile/app/_layout.tsx 내 딥링크 분기 (Linking 처리 로직)
+  → +native-intent.tsx 는 이 프로젝트에 존재하지 않음
+  → Magic Link / token_hash / email 관련 분기는 수정 금지
+  → 새 딥링크 추가 시 elif 분기만 추가
+
+# 3. 기존 마이그레이션 파일
+supabase/migrations/ 내 기존 .sql 파일
+packages/db/migrations/ 내 기존 .sql 파일
+→ 신규 파일 추가만 허용, 기존 파일 수정 금지
+
+# 4. RevenueCat entitlement 핵심 로직
+apps/mobile/src/store/entitlementStore.ts
+→ 수정 전 반드시 확인 요청
 ```
 
 ---
 
-## Key Design Decisions
+## 📐 코드 작성 원칙
 
-1. **saju-engine is a pure TS package** — no React Native imports. Can be used in
-   server-side tRPC procedures and tested with plain Node.js.
+```
+[원칙 1] PRE-CHECK
+  모든 작업 전 실제 파일 경로·타입명·패턴을 bash로 확인 후 시작
+  추측으로 import 경로 작성 금지
 
-2. **Cultural frame is selected at onboarding** and stored in Zustand + Supabase user profile.
-   It affects Claude API system prompts only — not the calculation.
+[원칙 2] REUSE
+  기존 패턴(훅, 컴포넌트, Edge Function 구조)을 그대로 재활용
+  신규 패키지 설치 전 기존 패키지로 해결 가능한지 확인
 
-3. **Month pillar** requires solar-term (절기) table for full accuracy. The current
-   `pillars.ts` uses a simplified approximation. Replace with a lookup table for production.
+[원칙 3] ISOLATION
+  각 작업은 지정된 파일만 수정
+  작업 범위 외 파일 변경 발생 시 즉시 보고
 
-4. **Paywall** is a modal screen (`/paywall`) accessible from any locked feature.
-   RevenueCat handles entitlement validation; Zustand caches the entitlement locally.
-
-5. **Auth** uses Supabase magic link (PKCE). Deep-link scheme: `ksaju://auth/callback?code=...`.
-
-6. **AI readings** call Claude API from a Supabase Edge Function (server-side) to keep
-   the API key off the device. The edge function receives the saju chart JSON + cultural
-   frame and returns a structured reading.
+[원칙 4] VERIFY
+  작업 완료 후 반드시 실행:
+  - npx tsc --noEmit
+  - eslint 해당 파일 --max-warnings 0
+  - 관련 테스트 실행
+  - git diff로 변경 범위 확인
+  에러 있으면 수정 후 재실행 (PASS될 때까지 반복)
+```
 
 ---
 
-## Development Commands
+## 🌍 i18n 규칙
+
+- 지원 언어: 14개 # 수정됨
+  `ko, en, ja, zh-Hans, zh-Hant, es, fr, de, pt-BR, ar, vi, th, id, hi`
+  ※ ms(말레이어), ru(러시아어) 미지원 — 디렉토리 없음 # 수정됨
+  ※ zh는 zh-Hans / zh-Hant 분리, pt는 pt-BR # 수정됨
+- 로케일 파일 위치: `apps/mobile/src/i18n/locales/{lang}/` # 수정됨
+- 네임스페이스: common, chart, fortune, onboarding, paywall (5개 × 14언어 = 70파일) # 수정됨
+- 신규 i18n 키 추가 시 14개 파일 모두 업데이트 필수 # 수정됨
+- JSON 수정 후 유효성 검증:
+  ```bash
+  for f in $(find apps/mobile/src/i18n -name "*.json"); do  # 수정됨
+    python3 -m json.tool "$f" > /dev/null && echo "✅ $f" || echo "❌ $f"
+  done
+  ```
+- 한국 문화 용어(사상체질 명칭 등)는 음차 유지: Taeyang, Soyang, Taeeum, Soeum
+- 아랍어(ar) 추가 시 RTL 레이아웃 확인 필수
+
+---
+
+## 💳 RevenueCat / 결제 규칙
+
+- entitlement 체크는 기존 패턴 그대로 재사용 (`src/store/entitlementStore.ts`)
+- Paywall 신규 생성 시 기존 Paywall 컴포넌트 구조 먼저 확인 (`app/paywall.tsx`)
+- Sandbox 테스트 필수 (실 결제 테스트 금지)
+
+---
+
+## 🗄️ Supabase 규칙
+
+- 마이그레이션: `supabase/migrations/[NNN]_[description].sql` 또는 `[timestamp]_[description].sql` # 수정됨
+  기존 파일 번호 형식: `005_`, `006_`, `007_` + 타임스탬프 형식 혼재 — 기존 형식 맞출 것
+- 신규 테이블 생성 시 RLS 정책 필수 포함
+- `supabase db push`는 Donghyun이 직접 실행 (Claude Code 자동 실행 금지)
+- Edge Function 배포도 Donghyun이 직접: # 수정됨
+  `supabase functions deploy [function-name] --no-verify-jwt`
+  ※ `--no-verify-jwt` 필수 — 게이트웨이 ES256 JWT 검증 미지원 (함수 내부에서 자체 인증 처리)
+
+---
+
+## 🔨 자주 쓰는 명령어
 
 ```bash
-# Install all deps
+# 타입 에러 확인
+cd apps/mobile && npx tsc --noEmit  # 수정됨
+
+# 린트
+npx eslint [파일경로] --ext .ts,.tsx --max-warnings 0
+
+# 테스트 (apps/mobile에 test 스크립트 없음 → npx jest 직접 사용) # 수정됨
+cd apps/mobile && npx jest --testPathPattern="[패턴]"
+
+# 전체 테스트
+cd apps/mobile && npx jest
+
+# i18n JSON 유효성 # 수정됨
+for f in $(find apps/mobile/src/i18n -name "*.json"); do
+  python3 -m json.tool "$f" > /dev/null && echo "✅ $f" || echo "❌ $f"
+done
+
+# 변경 파일 확인
+git diff --name-only main
+
+# EAS Preview 빌드 (Android)
+cd apps/mobile && eas build --profile preview --platform android --non-interactive
+
+# Supabase 마이그레이션 dry-run
+supabase db diff --schema public
+
+# pnpm 의존성 설치 (yarn 아님) # 수정됨
 pnpm install
-
-# Run mobile (Expo Go)
-pnpm --filter mobile start
-
-# Build saju-engine
-pnpm --filter @k-saju/saju-engine build
-
-# Type-check all
-pnpm -r type-check
 ```
 
 ---
 
-## File Naming Conventions
+## 📋 현재 상태 (세션 시작 시 자동 갱신)
 
-- Expo Router screens: lowercase, kebab-case (`birth-input.tsx`, `cultural-frame.tsx`)
-- Components: PascalCase (`PillarGrid.tsx`, `ElementBar.tsx`)
-- Hooks: `use` prefix (`useAuth.ts`, `useSajuChart.ts`)
-- Store slices: `store/` directory, Zustand (`authStore.ts`, `sajuStore.ts`)
-- Constants/utils: camelCase (`constants.ts`, `formatPillar.ts`)
+```
+갱신일시: 2026-03-11
+현재 브랜치: feat/k-personality (a0b0936 — M1·M2·M3 완료)
+앱 버전: app.json=2.3.0 / package.json=1.2.0 (불일치 — 동기화 필요)
+
+완료된 작업:
+  ✅ K-Saju v2.3.0 빌드 완료 (Android + iOS 시뮬레이터 동작)
+  ✅ JWT 에러 해결 (--no-verify-jwt + getFreshToken 버그 수정)
+  ✅ CLAUDE.md 전면 재작성 — 잘못된 경로·명령어 수정 + 누락 컨텍스트 보완
+  ✅ K-Personality M1 완료 (aa63c93)
+     → types, engine/elementMapping, engine/calculator
+     → hooks/useKPersonality (fetch + share)
+     → supabase/functions/k-personality-analysis (Claude Haiku, 7일 캐싱)
+     → supabase/migrations/20260311000000_add_k_personality.sql
+     → 49 tests PASS
+  ✅ K-Personality M2 완료 (fa43fe5 + 29e6a85)
+     → ElementBarChart, KTypeBadge, KPersonalityResultCard (ViewShot 공유)
+     → app/k-type/compare.tsx (오행 궁합), app/k-type/index.tsx (딥링크 핸들러)
+  ✅ K-Personality M3 완료 (a0b0936)
+     → app/(tabs)/k-type.tsx (탭 메인 화면, 무료/프리미엄 3상태)
+     → app/(tabs)/_layout.tsx (K-Type 탭 추가 — leaf-outline)
+     → KPersonalityPaywall (RC 구독 모달)
+     → home.tsx KPersonalityTeaser 임베드
+     → 14개 common.json kPersonality 키 추가 (17개 키 × 14언어)
+
+진행 중:
+  🔄 다음 세션: M4 (캐싱 + 딥링크 완성)
+
+대기 중 (Donghyun 직접 실행):
+  ✅ supabase db push (완료)
+  ✅ supabase functions deploy k-personality-analysis --no-verify-jwt (완료)
+  ⏳ Google Play Console 신원확인 완료
+  ⏳ Apple Developer 승인
+  ⏳ iOS TestFlight 빌드
+
+알려진 이슈:
+  ⚠️ app.json(2.3.0) vs package.json(1.2.0) 버전 불일치
+  ⚠️ feat/design-system 브랜치 미커밋 파일 존재 (_layout.tsx, useFortune.ts, saju-reading 등)
+     → feat/k-personality에서 별도 트래킹 중
+```
 
 ---
 
-## TODO (Next Implementation Steps)
+## 🗺️ K-Personality 로드맵 진행 현황
 
-- [ ] Supabase client setup (`src/lib/supabase.ts`) + deep-link callback
-- [ ] Zustand store: `authStore`, `sajuStore`, `entitlementStore`
-- [ ] Birth-date / time picker UI components
-- [ ] Wire `calculateFourPillars` from saju-engine into chart screen
-- [ ] Solar-term (절기) lookup table for precise month pillar
-- [ ] RevenueCat SDK integration + paywall purchase flow
-- [ ] Supabase Edge Function: `saju-reading` (Claude API call)
-- [ ] Push notifications (daily fortune via Expo Notifications)
-- [ ] i18n setup (ko, zh-Hans, zh-Hant, ja, en, es, hi)
+```
+MILESTONE 1: 오행 계산 엔진 + Edge Function   [✅ 완료 — aa63c93]
+  [x] M1-STEP-1  브랜치 생성 + 타입 정의
+  [x] M1-STEP-2  천간/지지 오행 매핑 데이터
+  [x] M1-STEP-3  오행 비율 계산 함수
+  [x] M1-STEP-4  Supabase Edge Function
+  [x] M1-STEP-5  Supabase 마이그레이션
+  [x] M1-STEP-6  useKPersonality 훅
+  [ ] M1-COMPLETE ← supabase db push + functions deploy --no-verify-jwt (Donghyun 직접)
+
+MILESTONE 2: UI 컴포넌트                       [예상: 1주]
+  [ ] M2-STEP-1  ElementBarChart
+  [ ] M2-STEP-2  KTypeBadge
+  [ ] M2-STEP-3  KPersonalityResultCard + 공유
+  [ ] M2-STEP-4  친구 비교 딥링크 + compare 화면
+  [ ] M2-COMPLETE
+
+MILESTONE 3: 탭 화면 + RevenueCat             [예상: 1주]
+  [ ] M3-STEP-1  K-Type 탭 메인 화면
+  [ ] M3-STEP-2  탭 네비게이션 + i18n 14개 언어  # 수정됨
+  [ ] M3-STEP-3  KPersonalityPaywall
+  [ ] M3-STEP-4  사주 결과 화면 티저 임베드
+  [ ] M3-COMPLETE
+
+MILESTONE 4: 캐싱 + 딥링크 완성               [예상: 3일]
+  [ ] M4-STEP-1  캐시 저장/동기화
+  [ ] M4-STEP-2  딥링크 최종 완성
+  [ ] M4-COMPLETE
+
+MILESTONE 5: QA + EAS 빌드                    [예상: 4일]
+  [ ] M5-STEP-1  자동화 QA 전체 통과
+  [ ] M5-STEP-2  EAS Preview 빌드 (Android + iOS)
+  [ ] M5-STEP-3  PR + CHANGELOG + v2.4.0 태그
+  [ ] M5-COMPLETE ← EAS Production 빌드 (Donghyun 직접)
+```
+
+---
+
+## 🔄 세션 종료 프로토콜
+
+```
+세션을 종료합니다.
+아래를 실행하고 CLAUDE.md의 [현재 상태]와 [로드맵 진행 현황]을 갱신해줘.
+
+1. git log --oneline -5
+2. git status --short
+3. 완료된 스텝에 [x] 표시
+4. "진행 중" 항목을 다음 작업으로 업데이트
+5. 새로 발견된 이슈가 있으면 "알려진 이슈"에 추가
+6. "갱신일시" 업데이트
+
+→ CLAUDE.md 수정만 수행. 코드 변경 없음.
+```
+
+---
+
+## 📝 히스토리 요약
+
+```
+2026-03 현재
+  - K-Saju v2.3.0 완성 (Android + iOS 시뮬레이터 동작 확인)
+  - Apple Developer 등록 완료 (승인 대기 중)
+  - Google Play Console 신원확인 진행 중
+  - K-Personality 기능 PRD + 로드맵 v2 완성
+  - 스위스 Lausanne IDC 프로젝트 병행 중 (Zero Trust 아키텍처)
+
+2025 하반기
+  - K-Saju 모노레포 구조 확립 (k-saju/)
+  - 15개 언어 로컬라이제이션 완료 (이후 14개로 확정 — ms/ru 미포함)
+  - RevenueCat Paywall + Magic Link 인증 구현
+  - 음력/양력 전환 + Cultural Frame 구현
+  - Supabase Edge Functions (사주 분석) 배포
+  - EAS CI/CD 파이프라인 구축
+
+2025 상반기
+  - K-Saju 초기 아키텍처 설계
+  - Dalnara (한국어 교육 앱) 병행 개발 시작
+```

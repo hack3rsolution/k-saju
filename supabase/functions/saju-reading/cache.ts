@@ -7,6 +7,7 @@ interface SupabaseClient {
 interface SupabaseQueryBuilder {
   select: (cols?: string) => SupabaseQueryBuilder;
   insert: (data: unknown) => SupabaseQueryBuilder;
+  upsert: (data: unknown, opts?: { onConflict?: string; ignoreDuplicates?: boolean }) => SupabaseQueryBuilder;
   eq: (col: string, val: string) => SupabaseQueryBuilder;
   order: (col: string, opts?: { ascending?: boolean }) => SupabaseQueryBuilder;
   limit: (n: number) => SupabaseQueryBuilder;
@@ -103,24 +104,42 @@ export async function storeReading(
   rawContent: string,
   language = 'ko',
 ): Promise<string | null> {
+  // INSERT ... ON CONFLICT DO NOTHING — first writer wins on concurrent requests.
+  // When ignoreDuplicates fires, PostgREST returns 0 rows, so .single() would error.
+  // In that case we fall back to a SELECT to retrieve the existing row's id.
   const { data, error } = await supabase
     .from('Reading')
-    .insert({
-      userId,
-      type,
-      refDate,
-      culturalFrame: frame,
-      language,
-      summary: output.summary,
-      details: output.details,
-      luckyItems: output.luckyItems,
-      rawContent,
-    })
+    .upsert(
+      {
+        userId,
+        type,
+        refDate,
+        culturalFrame: frame,
+        language,
+        summary: output.summary,
+        details: output.details,
+        luckyItems: output.luckyItems,
+        rawContent,
+      },
+      { onConflict: 'userId,type,refDate,culturalFrame,language', ignoreDuplicates: true },
+    )
     .select('id')
     .single();
 
-  if (error || !data) return null;
-  return (data as { id: string }).id;
+  if (!error && data) return (data as { id: string }).id;
+
+  // ignoreDuplicates fired (or transient error) — fetch the existing row's id
+  const { data: existing } = await supabase
+    .from('Reading')
+    .select('id')
+    .eq('userId', userId)
+    .eq('type', type)
+    .eq('refDate', refDate)
+    .eq('culturalFrame', frame)
+    .eq('language', language)
+    .single();
+
+  return existing ? (existing as { id: string }).id : null;
 }
 
 /**
