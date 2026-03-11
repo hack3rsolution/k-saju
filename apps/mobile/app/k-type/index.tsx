@@ -27,8 +27,8 @@ export default function KTypeIndex() {
         router.replace({ pathname: '/k-type/compare', params: { share } });
       }
     } else {
-      // share 파라미터 없음: k-type 탭으로 이동 (M3에서 생성)
-      router.replace('/(tabs)/home');
+      // share 파라미터 없음: k-type 탭으로 이동
+      router.replace('/(tabs)/k-type');
     }
   }, [share, session]);
 

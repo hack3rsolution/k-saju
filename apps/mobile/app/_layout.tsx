@@ -79,6 +79,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="k-type" />
         <Stack.Screen name="compatibility" />
         <Stack.Screen name="fortune-chat/[fortuneId]" />
         <Stack.Screen name="reports" />

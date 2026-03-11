@@ -237,6 +237,11 @@ pnpm install
   ✅ K-Personality M2 완료 (fa43fe5 + 29e6a85)
      → ElementBarChart, KTypeBadge, KPersonalityResultCard (ViewShot 공유)
      → app/k-type/compare.tsx (오행 궁합), app/k-type/index.tsx (딥링크 핸들러)
+  ✅ K-Personality M4 완료 (feat/k-personality)
+     → useKPersonality: AsyncStorage 캐시 7일 TTL (캐시 히트 시 로딩 스피너 없음)
+     → useShareKPersonality: share_enabled=true DB 업데이트 + deeplink에 userId 포함
+     → _layout.tsx: k-type Stack.Screen 등록
+     → k-type/index.tsx: share=undefined → (tabs)/k-type 리다이렉트 수정
   ✅ K-Personality M3 완료 (a0b0936)
      → app/(tabs)/k-type.tsx (탭 메인 화면, 무료/프리미엄 3상태)
      → app/(tabs)/_layout.tsx (K-Type 탭 추가 — leaf-outline)
@@ -245,7 +250,7 @@ pnpm install
      → 14개 common.json kPersonality 키 추가 (17개 키 × 14언어)
 
 진행 중:
-  🔄 다음 세션: M4 (캐싱 + 딥링크 완성)
+  🔄 다음 세션: M5 (QA + EAS 빌드)
 
 대기 중 (Donghyun 직접 실행):
   ✅ supabase db push (완료)
@@ -288,10 +293,10 @@ MILESTONE 3: 탭 화면 + RevenueCat             [예상: 1주]
   [ ] M3-STEP-4  사주 결과 화면 티저 임베드
   [ ] M3-COMPLETE
 
-MILESTONE 4: 캐싱 + 딥링크 완성               [예상: 3일]
-  [ ] M4-STEP-1  캐시 저장/동기화
-  [ ] M4-STEP-2  딥링크 최종 완성
-  [ ] M4-COMPLETE
+MILESTONE 4: 캐싱 + 딥링크 완성               [✅ 완료]
+  [x] M4-STEP-1  캐시 저장/동기화
+  [x] M4-STEP-2  딥링크 최종 완성
+  [x] M4-COMPLETE
 
 MILESTONE 5: QA + EAS 빌드                    [예상: 4일]
   [ ] M5-STEP-1  자동화 QA 전체 통과
