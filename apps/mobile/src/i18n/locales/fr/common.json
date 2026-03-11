@@ -69,7 +69,8 @@
     "relations": "Relations",
     "journal": "Journal",
     "face": "Face",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "kType": "Type K"
   },
   "settings": "Paramètres",
   "account": "Compte",
@@ -225,6 +226,36 @@
       "family": "Famille",
       "colleague": "Collègue",
       "other": "Autre"
+    }
+  },
+  "kPersonality": {
+    "title": "Type K",
+    "subtitle": "Personnalité des Cinq Éléments",
+    "analyzing": "Analyse de l'énergie...",
+    "yourType": "Vos Éléments",
+    "keywords": "Mots-clés",
+    "shareCard": "Partager mon Type K",
+    "unlockReport": "Rapport complet",
+    "unlockDesc": "Analyse approfondie : forces, carrière, flux d'énergie mensuel et types compatibles.",
+    "strengths": "Forces",
+    "growthAreas": "Axes de développement",
+    "careerFit": "Métiers adaptés",
+    "compatibility": "Types compatibles",
+    "monthlyFlow": "Énergie mensuelle",
+    "compareWithFriend": "Comparer avec un ami",
+    "noChart": "Complétez votre profil pour voir votre Type K.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "Bois",
+      "fire": "Feu",
+      "earth": "Terre",
+      "metal": "Métal",
+      "water": "Eau"
     }
   }
 }

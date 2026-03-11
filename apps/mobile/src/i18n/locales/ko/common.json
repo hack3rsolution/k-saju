@@ -50,7 +50,8 @@
     "relations": "인연",
     "journal": "일지",
     "face": "Face",
-    "settings": "설정"
+    "settings": "설정",
+    "kType": "K유형"
   },
   "settings": "설정",
   "account": "계정",
@@ -225,6 +226,36 @@
       "family": "가족",
       "colleague": "동료",
       "other": "기타"
+    }
+  },
+  "kPersonality": {
+    "title": "K유형",
+    "subtitle": "오행 성격 유형",
+    "analyzing": "오행 에너지 분석 중...",
+    "yourType": "나의 오행",
+    "keywords": "키워드",
+    "shareCard": "내 K유형 공유",
+    "unlockReport": "전체 성격 리포트",
+    "unlockDesc": "심층 분석: 강점, 직업 적합도, 이달의 에너지 흐름 & 궁합 유형",
+    "strengths": "강점",
+    "growthAreas": "성장 영역",
+    "careerFit": "직업 적합도",
+    "compatibility": "궁합 유형",
+    "monthlyFlow": "이달의 에너지",
+    "compareWithFriend": "친구와 비교하기",
+    "noChart": "사주 정보를 입력하면 K유형을 볼 수 있어요.",
+    "sasangTypes": {
+      "taeyang": "태양인",
+      "soyang": "소양인",
+      "taeeum": "태음인",
+      "soeum": "소음인"
+    },
+    "elements": {
+      "wood": "목(木)",
+      "fire": "화(火)",
+      "earth": "토(土)",
+      "metal": "금(金)",
+      "water": "수(水)"
     }
   }
 }

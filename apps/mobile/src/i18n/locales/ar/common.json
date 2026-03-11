@@ -69,7 +69,8 @@
     "relations": "العلاقات",
     "journal": "المفكرة",
     "face": "Face",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "kType": "نوع K"
   },
   "settings": "الإعدادات",
   "account": "الحساب",
@@ -225,6 +226,36 @@
       "family": "عائلة",
       "colleague": "زميل",
       "other": "أخرى"
+    }
+  },
+  "kPersonality": {
+    "title": "نوع K",
+    "subtitle": "شخصية العناصر الخمسة",
+    "analyzing": "جارٍ تحليل الطاقة...",
+    "yourType": "عناصرك",
+    "keywords": "الكلمات المفتاحية",
+    "shareCard": "مشاركة نوع K",
+    "unlockReport": "التقرير الكامل",
+    "unlockDesc": "تحليل عميق: نقاط القوة، المهن، تدفق الطاقة الشهري والأنواع المتوافقة.",
+    "strengths": "نقاط القوة",
+    "growthAreas": "مجالات النمو",
+    "careerFit": "المهن المناسبة",
+    "compatibility": "الأنواع المتوافقة",
+    "monthlyFlow": "الطاقة الشهرية",
+    "compareWithFriend": "المقارنة مع صديق",
+    "noChart": "أكمل الملف الشخصي لرؤية نوع K الخاص بك.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "الخشب",
+      "fire": "النار",
+      "earth": "الأرض",
+      "metal": "المعدن",
+      "water": "الماء"
     }
   }
 }

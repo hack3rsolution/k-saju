@@ -69,7 +69,8 @@
     "relations": "Quan hệ",
     "journal": "Nhật ký",
     "face": "Face",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "kType": "Loại K"
   },
   "settings": "Cài đặt",
   "account": "Tài khoản",
@@ -225,6 +226,36 @@
       "family": "Gia đình",
       "colleague": "Đồng nghiệp",
       "other": "Khác"
+    }
+  },
+  "kPersonality": {
+    "title": "Loại K",
+    "subtitle": "Tính cách Ngũ Hành",
+    "analyzing": "Đang phân tích năng lượng...",
+    "yourType": "Ngũ Hành của bạn",
+    "keywords": "Từ khóa",
+    "shareCard": "Chia sẻ Loại K của tôi",
+    "unlockReport": "Báo cáo đầy đủ",
+    "unlockDesc": "Phân tích sâu: điểm mạnh, nghề nghiệp, năng lượng tháng & loại tương hợp.",
+    "strengths": "Điểm mạnh",
+    "growthAreas": "Lĩnh vực phát triển",
+    "careerFit": "Nghề nghiệp phù hợp",
+    "compatibility": "Loại tương hợp",
+    "monthlyFlow": "Năng lượng tháng",
+    "compareWithFriend": "So sánh với bạn bè",
+    "noChart": "Hoàn tất hồ sơ để xem Loại K.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "Mộc",
+      "fire": "Hỏa",
+      "earth": "Thổ",
+      "metal": "Kim",
+      "water": "Thủy"
     }
   }
 }

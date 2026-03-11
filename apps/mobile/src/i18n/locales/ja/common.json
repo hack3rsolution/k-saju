@@ -69,7 +69,8 @@
     "relations": "縁",
     "journal": "日記",
     "face": "Face",
-    "settings": "設定"
+    "settings": "設定",
+    "kType": "Kタイプ"
   },
   "settings": "設定",
   "account": "アカウント",
@@ -225,6 +226,36 @@
       "family": "家族",
       "colleague": "同僚",
       "other": "その他"
+    }
+  },
+  "kPersonality": {
+    "title": "Kタイプ",
+    "subtitle": "五行性格タイプ",
+    "analyzing": "エネルギー分析中...",
+    "yourType": "あなたの五行",
+    "keywords": "キーワード",
+    "shareCard": "Kタイプをシェア",
+    "unlockReport": "詳細性格レポート",
+    "unlockDesc": "深層分析：強み、職業適性、今月のエネルギーと相性タイプ",
+    "strengths": "強み",
+    "growthAreas": "成長エリア",
+    "careerFit": "職業適性",
+    "compatibility": "相性タイプ",
+    "monthlyFlow": "今月のエネルギー",
+    "compareWithFriend": "友達と比べる",
+    "noChart": "オンボーディングを完了するとKタイプが表示されます。",
+    "sasangTypes": {
+      "taeyang": "太陽人",
+      "soyang": "少陽人",
+      "taeeum": "太陰人",
+      "soeum": "少陰人"
+    },
+    "elements": {
+      "wood": "木",
+      "fire": "火",
+      "earth": "土",
+      "metal": "金",
+      "water": "水"
     }
   }
 }

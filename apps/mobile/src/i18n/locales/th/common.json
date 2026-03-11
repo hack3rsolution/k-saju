@@ -69,7 +69,8 @@
     "relations": "ความสัมพันธ์",
     "journal": "บันทึก",
     "face": "Face",
-    "settings": "ตั้งค่า"
+    "settings": "ตั้งค่า",
+    "kType": "K-ไทป์"
   },
   "settings": "ตั้งค่า",
   "account": "บัญชี",
@@ -225,6 +226,36 @@
       "family": "ครอบครัว",
       "colleague": "เพื่อนร่วมงาน",
       "other": "อื่นๆ"
+    }
+  },
+  "kPersonality": {
+    "title": "K-ไทป์",
+    "subtitle": "บุคลิกภาพธาตุทั้งห้า",
+    "analyzing": "กำลังวิเคราะห์พลังงาน...",
+    "yourType": "ธาตุของคุณ",
+    "keywords": "คำสำคัญ",
+    "shareCard": "แชร์ K-ไทป์ของฉัน",
+    "unlockReport": "รายงานฉบับเต็ม",
+    "unlockDesc": "วิเคราะห์เชิงลึก: จุดแข็ง อาชีพ พลังงานรายเดือน และประเภทที่เข้ากันได้",
+    "strengths": "จุดแข็ง",
+    "growthAreas": "พื้นที่การเติบโต",
+    "careerFit": "อาชีพที่เหมาะสม",
+    "compatibility": "ประเภทที่เข้ากันได้",
+    "monthlyFlow": "พลังงานรายเดือน",
+    "compareWithFriend": "เปรียบเทียบกับเพื่อน",
+    "noChart": "กรอกข้อมูลให้ครบเพื่อดู K-ไทป์ของคุณ",
+    "sasangTypes": {
+      "taeyang": "แทยัง",
+      "soyang": "โซยัง",
+      "taeeum": "แทอึม",
+      "soeum": "โซอึม"
+    },
+    "elements": {
+      "wood": "ไม้",
+      "fire": "ไฟ",
+      "earth": "ดิน",
+      "metal": "โลหะ",
+      "water": "น้ำ"
     }
   }
 }

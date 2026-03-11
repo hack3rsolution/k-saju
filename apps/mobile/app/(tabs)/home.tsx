@@ -31,6 +31,9 @@ import { TimingResultSheet } from '../../src/components/TimingResultSheet';
 import { useTimingAdvisor } from '../../src/hooks/useTimingAdvisor';
 import type { TimingCategory } from '../../src/types/timing';
 import { T } from '../../src/theme/tokens';
+import { useKPersonality } from '../../src/hooks/useKPersonality';
+import { KTypeBadge } from '../../src/components/kPersonality/KTypeBadge';
+import { ElementBarChart } from '../../src/components/kPersonality/ElementBarChart';
 
 // ── Element palette ───────────────────────────────────────────────────────────
 
@@ -104,6 +107,50 @@ const lStyles = StyleSheet.create({
   textWrap: { flex: 1 },
   label: { color: T.text.faint, fontSize: T.fontSize.xs, fontWeight: '600', letterSpacing: 0.5 },
   value: { color: T.text.primary, fontSize: T.fontSize.xs, fontWeight: '700', lineHeight: 18 },
+});
+
+// ── KPersonalityTeaser ────────────────────────────────────────────────────────
+
+function KPersonalityTeaser() {
+  const { data } = useKPersonality();
+  if (!data) return null;
+
+  return (
+    <TouchableOpacity
+      style={teaserStyles.card}
+      onPress={() => router.push('/(tabs)/k-type' as never)}
+      activeOpacity={0.8}
+    >
+      <KTypeBadge
+        sasangType={data.sasangType}
+        typeName={data.typeName}
+        typeNameKo={data.typeNameKo}
+        size="small"
+      />
+      <View style={teaserStyles.chartWrap}>
+        <ElementBarChart ratio={data.elementRatio} size="small" animated={false} />
+      </View>
+      <Text style={teaserStyles.cta}>K-Type 전체 분석 보기 →</Text>
+    </TouchableOpacity>
+  );
+}
+
+const teaserStyles = StyleSheet.create({
+  card: {
+    backgroundColor: T.bg.card,
+    borderRadius:    T.radius.lg,
+    borderWidth:     1,
+    borderColor:     T.primary.subtle,
+    padding:         T.spacing[4],
+    gap:             T.spacing[3],
+    alignItems:      'center',
+  },
+  chartWrap: { width: '100%' },
+  cta: {
+    color:      T.primary.light,
+    fontSize:   T.fontSize.sm,
+    fontWeight: '700',
+  },
 });
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -427,6 +474,9 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         ))}
+
+        {/* ── K-Type 티저 ── */}
+        <KPersonalityTeaser />
 
         {/* ── Quick actions grid ── */}
         <Text style={styles.sectionTitle}>{t('common:explore')}</Text>

@@ -69,7 +69,8 @@
     "relations": "緣分",
     "journal": "日誌",
     "face": "Face",
-    "settings": "設定"
+    "settings": "設定",
+    "kType": "K型"
   },
   "settings": "設定",
   "account": "帳戶",
@@ -225,6 +226,36 @@
       "family": "家人",
       "colleague": "同事",
       "other": "其他"
+    }
+  },
+  "kPersonality": {
+    "title": "K型",
+    "subtitle": "五行性格類型",
+    "analyzing": "分析能量中...",
+    "yourType": "你的五行",
+    "keywords": "關鍵詞",
+    "shareCard": "分享我的K型",
+    "unlockReport": "完整性格報告",
+    "unlockDesc": "深度分析：優勢、職業適配、本月能量流向與相合類型",
+    "strengths": "優勢",
+    "growthAreas": "成長領域",
+    "careerFit": "職業適配",
+    "compatibility": "相合類型",
+    "monthlyFlow": "本月能量",
+    "compareWithFriend": "與朋友對比",
+    "noChart": "完成引導流程即可查看K型。",
+    "sasangTypes": {
+      "taeyang": "太陽人",
+      "soyang": "少陽人",
+      "taeeum": "太陰人",
+      "soeum": "少陰人"
+    },
+    "elements": {
+      "wood": "木",
+      "fire": "火",
+      "earth": "土",
+      "metal": "金",
+      "water": "水"
     }
   }
 }

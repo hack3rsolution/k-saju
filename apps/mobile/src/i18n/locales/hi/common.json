@@ -69,7 +69,8 @@
     "relations": "संबंध",
     "journal": "डायरी",
     "face": "Face",
-    "settings": "सेटिंग्स"
+    "settings": "सेटिंग्स",
+    "kType": "K-टाइप"
   },
   "settings": "सेटिंग्स",
   "account": "खाता",
@@ -225,6 +226,36 @@
       "family": "परिवार",
       "colleague": "सहकर्मी",
       "other": "अन्य"
+    }
+  },
+  "kPersonality": {
+    "title": "K-टाइप",
+    "subtitle": "पंच तत्व व्यक्तित्व",
+    "analyzing": "ऊर्जा विश्लेषण हो रहा है...",
+    "yourType": "आपके तत्व",
+    "keywords": "कीवर्ड",
+    "shareCard": "मेरा K-टाइप शेयर करें",
+    "unlockReport": "पूर्ण रिपोर्ट",
+    "unlockDesc": "गहन विश्लेषण: शक्तियाँ, करियर, मासिक ऊर्जा और अनुकूल प्रकार।",
+    "strengths": "शक्तियाँ",
+    "growthAreas": "विकास क्षेत्र",
+    "careerFit": "करियर उपयुक्तता",
+    "compatibility": "अनुकूल प्रकार",
+    "monthlyFlow": "मासिक ऊर्जा",
+    "compareWithFriend": "मित्र से तुलना करें",
+    "noChart": "K-टाइप देखने के लिए प्रोफ़ाइल पूरी करें।",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "काष्ठ",
+      "fire": "अग्नि",
+      "earth": "पृथ्वी",
+      "metal": "धातु",
+      "water": "जल"
     }
   }
 }

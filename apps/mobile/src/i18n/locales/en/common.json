@@ -50,7 +50,8 @@
     "relations": "Relations",
     "journal": "Journal",
     "face": "Face",
-    "settings": "Settings"
+    "settings": "Settings",
+    "kType": "K-Type"
   },
   "settings": "Settings",
   "account": "Account",
@@ -225,6 +226,36 @@
       "family": "Family",
       "colleague": "Colleague",
       "other": "Other"
+    }
+  },
+  "kPersonality": {
+    "title": "K-Type",
+    "subtitle": "Five Elements Personality",
+    "analyzing": "Analyzing energy...",
+    "yourType": "Your Elements",
+    "keywords": "Keywords",
+    "shareCard": "Share My K-Type",
+    "unlockReport": "Full Personality Report",
+    "unlockDesc": "Get deep insights: strengths, career fit, monthly energy flow & compatible types.",
+    "strengths": "Strengths",
+    "growthAreas": "Growth Areas",
+    "careerFit": "Career Fit",
+    "compatibility": "Compatible Types",
+    "monthlyFlow": "Monthly Energy Flow",
+    "compareWithFriend": "Compare with a Friend",
+    "noChart": "Complete onboarding to see your K-Type.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "Wood",
+      "fire": "Fire",
+      "earth": "Earth",
+      "metal": "Metal",
+      "water": "Water"
     }
   }
 }

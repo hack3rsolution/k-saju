@@ -69,7 +69,8 @@
     "relations": "Beziehungen",
     "journal": "Tagebuch",
     "face": "Face",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "kType": "K-Typ"
   },
   "settings": "Einstellungen",
   "account": "Konto",
@@ -225,6 +226,36 @@
       "family": "Familie",
       "colleague": "Kollege",
       "other": "Sonstiges"
+    }
+  },
+  "kPersonality": {
+    "title": "K-Typ",
+    "subtitle": "Persönlichkeit der Fünf Elemente",
+    "analyzing": "Energie wird analysiert...",
+    "yourType": "Deine Elemente",
+    "keywords": "Schlüsselwörter",
+    "shareCard": "Meinen K-Typ teilen",
+    "unlockReport": "Vollständiger Bericht",
+    "unlockDesc": "Tiefenanalyse: Stärken, Karriere, monatlicher Energiefluss & kompatible Typen.",
+    "strengths": "Stärken",
+    "growthAreas": "Wachstumsbereiche",
+    "careerFit": "Passende Berufe",
+    "compatibility": "Kompatible Typen",
+    "monthlyFlow": "Monatliche Energie",
+    "compareWithFriend": "Mit Freund vergleichen",
+    "noChart": "Schließe das Profil ab, um deinen K-Typ zu sehen.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "Holz",
+      "fire": "Feuer",
+      "earth": "Erde",
+      "metal": "Metall",
+      "water": "Wasser"
     }
   }
 }

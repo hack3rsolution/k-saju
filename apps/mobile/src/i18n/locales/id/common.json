@@ -69,7 +69,8 @@
     "relations": "Relasi",
     "journal": "Jurnal",
     "face": "Face",
-    "settings": "Pengaturan"
+    "settings": "Pengaturan",
+    "kType": "Tipe K"
   },
   "settings": "Pengaturan",
   "account": "Akun",
@@ -225,6 +226,36 @@
       "family": "Keluarga",
       "colleague": "Rekan",
       "other": "Lainnya"
+    }
+  },
+  "kPersonality": {
+    "title": "Tipe K",
+    "subtitle": "Kepribadian Lima Elemen",
+    "analyzing": "Menganalisis energi...",
+    "yourType": "Elemen Anda",
+    "keywords": "Kata kunci",
+    "shareCard": "Bagikan Tipe K Saya",
+    "unlockReport": "Laporan Lengkap",
+    "unlockDesc": "Analisis mendalam: kekuatan, karier, aliran energi bulanan & tipe cocok.",
+    "strengths": "Kekuatan",
+    "growthAreas": "Area Pengembangan",
+    "careerFit": "Karier yang Cocok",
+    "compatibility": "Tipe Cocok",
+    "monthlyFlow": "Energi Bulanan",
+    "compareWithFriend": "Bandingkan dengan Teman",
+    "noChart": "Lengkapi profil untuk melihat Tipe K Anda.",
+    "sasangTypes": {
+      "taeyang": "Taeyang",
+      "soyang": "Soyang",
+      "taeeum": "Taeeum",
+      "soeum": "Soeum"
+    },
+    "elements": {
+      "wood": "Kayu",
+      "fire": "Api",
+      "earth": "Tanah",
+      "metal": "Logam",
+      "water": "Air"
     }
   }
 }
