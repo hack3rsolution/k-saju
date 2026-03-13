@@ -45,7 +45,7 @@
     "tryAgain": "Tentar Novamente",
     "weeklyUsedTitle": "Leitura semanal usada",
     "weeklyUsedDesc": "Você usou sua leitura gratuita desta semana. Assine Premium para leituras diárias ilimitadas.",
-    "freeReadingAvailable": "🎁 1 leitura gratuita restante esta semana",
+    "freeReadingAvailable": "1 leitura gratuita restante esta semana",
     "weeklyReadingUsed": "Leitura semanal gratuita usada · ",
     "upgradeToPremium": "Assinar Premium →",
     "upgradeShort": "Assinar →",
@@ -57,11 +57,18 @@
       "annualReport": "Relatório Anual",
       "myChart": "Meu Mapa",
       "fortune": "Fortuna",
-      "timing": "Análise de Timing"
+      "timing": "O Momento Certo"
     },
-    "aiTools": "Ferramentas IA",
+    "aiTools": "Ferramentas do Destino",
     "timingDesc": "A IA analisa o melhor momento para seu próximo passo",
-    "elementDaySuffix": "Dia"
+    "elementDaySuffix": "Dia",
+    "timingSheetTitle": "O Momento Certo",
+    "timingSheetSubtitle": "Qual decisão analisamos?",
+    "timingLoading": "Consultando os céus...",
+    "timingResultTitle": "O Momento Certo",
+    "timingPositive": "Fatores Positivos",
+    "timingCaution": "Precauções",
+    "timingError": "Análise falhou. Por favor, tente novamente."
   },
   "fortune": {
     "title": "Leituras de Fortuna",
@@ -102,7 +109,7 @@
     "subtitle": "Eventos de vida · Fluxo Saju",
     "analysisTitle": "Análise de padrões IA",
     "analysisDesc": "Veja como seus ciclos saju moldaram seus eventos de vida",
-    "lockedAnalysis": "🔒 Registre mais {{count}} evento(s) para desbloquear a Análise de Padrões IA",
+    "lockedAnalysis": "Registre mais {{count}} evento(s) para desbloquear a Análise de Padrões IA",
     "emptyTitle": "Sem eventos ainda",
     "emptyDesc": "Registre seus principais eventos de vida e deixe a IA encontrar os padrões saju.",
     "loading": "Carregando diário…",
@@ -139,7 +146,11 @@
       "positive": "😊 Positivo",
       "neutral": "😐 Neutro",
       "negative": "😔 Negativo"
-    }
+    },
+    "deleteTitle": "Excluir entrada",
+    "deleteMessage": "Tem certeza que deseja excluir esta entrada? Esta ação não pode ser desfeita.",
+    "cancel": "Cancelar",
+    "delete": "Excluir"
   },
   "relationships": {
     "title": "Mapa de relacionamentos",

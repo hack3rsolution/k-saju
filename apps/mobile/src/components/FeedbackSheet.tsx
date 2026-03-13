@@ -7,6 +7,7 @@
  */
 import { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { ThumbUpIcon, ThumbDownIcon } from './icons';
 import type { FeedbackRating, FeedbackType } from '../hooks/useFeedback';
 
 interface Reason {
@@ -67,9 +68,14 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
-          <Text style={styles.title}>
-            {initialRating === 1 ? '👍 도움이 됐군요!' : '👎 아쉬웠군요'}
-          </Text>
+          <View style={styles.titleRow}>
+            {initialRating === 1
+              ? <ThumbUpIcon color="#C9A84C" size={22} />
+              : <ThumbDownIcon color="#C9A84C" size={22} />}
+            <Text style={styles.title}>
+              {initialRating === 1 ? '도움이 됐군요!' : '아쉬웠군요'}
+            </Text>
+          </View>
           <Text style={styles.subtitle}>이유를 선택해 주세요</Text>
 
           {submitting ? (
@@ -150,11 +156,16 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginBottom: 20,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+  },
   title: {
     color: '#fff',
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 6,
   },
   subtitle: {
     color: '#9d8fbe',

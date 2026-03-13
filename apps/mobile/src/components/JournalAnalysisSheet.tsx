@@ -2,6 +2,7 @@
  * JournalAnalysisSheet — AI pattern analysis bottom sheet.
  * Shown when user has >= 5 events.
  */
+import { type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -13,16 +14,17 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { JournalAnalysisData, EventCategory } from '../types/journal';
+import { CareerIcon, LoveIcon, HealthIcon, FamilyIcon, TravelIcon, FinanceIcon, BookIcon, EtcIcon, FortuneIcon } from './icons';
 
-const CATEGORY_ICON: Record<EventCategory, string> = {
-  career:    '💼',
-  love:      '💞',
-  health:    '🌿',
-  family:    '🏡',
-  travel:    '✈️',
-  finance:   '💰',
-  education: '📚',
-  other:     '⭐',
+const CATEGORY_ICON: Record<EventCategory, ReactNode> = {
+  career:    <CareerIcon  color="#a78bfa" size={20} />,
+  love:      <LoveIcon    color="#a78bfa" size={20} />,
+  health:    <HealthIcon  color="#a78bfa" size={20} />,
+  family:    <FamilyIcon  color="#a78bfa" size={20} />,
+  travel:    <TravelIcon  color="#a78bfa" size={20} />,
+  finance:   <FinanceIcon color="#a78bfa" size={20} />,
+  education: <BookIcon    color="#a78bfa" size={20} />,
+  other:     <EtcIcon     color="#a78bfa" size={20} />,
 };
 
 interface Props {
@@ -48,7 +50,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
             {/* Not loaded yet */}
             {!analysis && !loading && !error && (
               <View style={styles.centerBox}>
-                <Text style={styles.promptIcon}>🔮</Text>
+                <View style={styles.promptIcon}><FortuneIcon color="#a78bfa" size={48} /></View>
                 <Text style={styles.promptText}>{t('journal.analyzePrompt')}</Text>
                 <TouchableOpacity style={styles.loadBtn} onPress={onLoad}>
                   <Text style={styles.loadBtnText}>{t('journal.analyzePatterns')}</Text>
@@ -91,7 +93,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
                 {analysis.patterns.map((p, i) => (
                   <View key={i} style={styles.patternCard}>
                     <View style={styles.patternHeader}>
-                      <Text style={styles.patternIcon}>{CATEGORY_ICON[p.category]}</Text>
+                      <View style={styles.patternIconWrap}>{CATEGORY_ICON[p.category]}</View>
                       <Text style={styles.patternCategory}>{p.category.toUpperCase()}</Text>
                     </View>
                     <Text style={styles.patternDesc}>{p.description}</Text>
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   scroll:     { marginBottom: 16 },
 
   centerBox: { alignItems: 'center', paddingVertical: 32 },
-  promptIcon: { fontSize: 48, marginBottom: 12 },
+  promptIcon: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   promptText: {
     color: '#9d8fbe', fontSize: 14, textAlign: 'center',
     lineHeight: 22, maxWidth: 280, marginBottom: 20,
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2d1854', borderRadius: 16, padding: 16, marginBottom: 10,
   },
   patternHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
-  patternIcon:   { fontSize: 20 },
+  patternIconWrap: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
   patternCategory: { color: '#a78bfa', fontSize: 11, fontWeight: '700', letterSpacing: 1 },
   patternDesc:   { color: '#e2d9f3', fontSize: 14, lineHeight: 20, marginBottom: 10 },
   periodRow:  { flexDirection: 'row', gap: 8 },

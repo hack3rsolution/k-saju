@@ -45,7 +45,7 @@
     "tryAgain": "Coba Lagi",
     "weeklyUsedTitle": "Pembacaan mingguan terpakai",
     "weeklyUsedDesc": "Pembacaan gratis minggu ini sudah digunakan. Upgrade ke Premium untuk pembacaan harian tak terbatas.",
-    "freeReadingAvailable": "🎁 Sisa 1 pembacaan gratis minggu ini",
+    "freeReadingAvailable": "Sisa 1 pembacaan gratis minggu ini",
     "weeklyReadingUsed": "Pembacaan gratis mingguan terpakai · ",
     "upgradeToPremium": "Upgrade ke Premium →",
     "upgradeShort": "Upgrade →",
@@ -57,11 +57,18 @@
       "annualReport": "Laporan Tahunan",
       "myChart": "Peta Saju Saya",
       "fortune": "Nasib",
-      "timing": "Analisis Timing"
+      "timing": "Waktu yang Tepat"
     },
-    "aiTools": "Alat AI",
+    "aiTools": "Alat Takdir",
     "timingDesc": "AI menganalisis waktu terbaik untuk langkah Anda berikutnya",
-    "elementDaySuffix": "Hari"
+    "elementDaySuffix": "Hari",
+    "timingSheetTitle": "Waktu yang Tepat",
+    "timingSheetSubtitle": "Keputusan apa yang dianalisis?",
+    "timingLoading": "Membaca kehendak langit...",
+    "timingResultTitle": "Waktu yang Tepat",
+    "timingPositive": "Faktor Positif",
+    "timingCaution": "Perhatian",
+    "timingError": "Analisis gagal. Silakan coba lagi."
   },
   "fortune": {
     "title": "Pembacaan Nasib",
@@ -102,7 +109,7 @@
     "subtitle": "Catatan Peristiwa · Aliran Saju",
     "analysisTitle": "Analisis Pola AI",
     "analysisDesc": "Lihat bagaimana siklus saju Anda membentuk peristiwa kehidupan",
-    "lockedAnalysis": "🔒 Tambah {{count}} peristiwa lagi untuk membuka Analisis Pola AI",
+    "lockedAnalysis": "Tambah {{count}} peristiwa lagi untuk membuka Analisis Pola AI",
     "emptyTitle": "Belum ada peristiwa",
     "emptyDesc": "Catat peristiwa besar dalam hidupmu dan biarkan AI menemukan pola saju di baliknya.",
     "loading": "Memuat jurnal…",
@@ -139,7 +146,11 @@
       "positive": "😊 Positif",
       "neutral": "😐 Netral",
       "negative": "😔 Negatif"
-    }
+    },
+    "deleteTitle": "Hapus catatan",
+    "deleteMessage": "Yakin ingin menghapus catatan ini? Tindakan ini tidak dapat dibatalkan.",
+    "cancel": "Batal",
+    "delete": "Hapus"
   },
   "relationships": {
     "title": "Peta Hubungan",

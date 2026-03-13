@@ -6,7 +6,7 @@
  * Premium: 전체 표시
  * 공유: captureRef → expo-sharing (PNG)
  */
-import { useState, useRef } from 'react';
+import { useState, useRef, type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import { router } from 'expo-router';
 import { T } from '../../theme/tokens';
 import { RoutineShareCard } from './RoutineShareCard';
 import type { DailyRoutineData, RoutineElement, FoodItem, ColorItem, ActivityItem } from '../../hooks/useDailyRoutine';
+import { FoodIcon, ColorIcon, HealthIcon, LockIcon } from '../icons';
 
 // ── Element theme (스타일만, 텍스트는 i18n) ──────────────────────────────────
 
@@ -37,10 +38,10 @@ const ELEMENT_THEME: Record<RoutineElement, { accent: string; tint: string; emoj
 
 type Tab = 'nourish' | 'wear' | 'move';
 
-const TAB_ICONS: Record<Tab, string> = {
-  nourish: '🍽️',
-  wear:    '🎨',
-  move:    '🏃',
+const TAB_ICON_FN: Record<Tab, (color: string) => ReactNode> = {
+  nourish: (color) => <FoodIcon   color={color} size={16} />,
+  wear:    (color) => <ColorIcon  color={color} size={16} />,
+  move:    (color) => <HealthIcon color={color} size={16} />,
 };
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
@@ -78,7 +79,7 @@ function NourishView({ foods, locked }: { foods: FoodItem[]; locked: boolean }) 
   if (locked) {
     return (
       <View style={s.lockedWrap}>
-        <Text style={s.lockedEmoji}>🔒</Text>
+        <View style={s.lockedIconWrap}><LockIcon color={T.text.muted} size={28} /></View>
         <Text style={s.lockedText}>{t('dailyRoutine.unlockFull')}</Text>
         <TouchableOpacity style={s.lockedBtn} onPress={() => router.push('/paywall')}>
           <Text style={s.lockedBtnText}>{t('dailyRoutine.goPremium')}</Text>
@@ -122,7 +123,7 @@ function MoveView({ activities, locked }: { activities: ActivityItem[]; locked: 
   if (locked) {
     return (
       <View style={s.lockedWrap}>
-        <Text style={s.lockedEmoji}>🔒</Text>
+        <View style={s.lockedIconWrap}><LockIcon color={T.text.muted} size={28} /></View>
         <Text style={s.lockedText}>{t('dailyRoutine.unlockActivities')}</Text>
         <TouchableOpacity style={s.lockedBtn} onPress={() => router.push('/paywall')}>
           <Text style={s.lockedBtnText}>{t('dailyRoutine.upgradeLink')}</Text>
@@ -157,10 +158,10 @@ export function ElementRoutineCard({ data, isLoading, isPremium, onShare }: Elem
   const shareRef                  = useRef<View>(null);
 
   // 탭 목록 (번역 적용)
-  const TABS: { key: Tab; icon: string; label: string }[] = [
-    { key: 'nourish', icon: TAB_ICONS.nourish, label: t('dailyRoutine.tabNourish') },
-    { key: 'wear',    icon: TAB_ICONS.wear,    label: t('dailyRoutine.tabWear')    },
-    { key: 'move',    icon: TAB_ICONS.move,    label: t('dailyRoutine.tabMove')    },
+  const TABS: { key: Tab; label: string }[] = [
+    { key: 'nourish', label: t('dailyRoutine.tabNourish') },
+    { key: 'wear',    label: t('dailyRoutine.tabWear')    },
+    { key: 'move',    label: t('dailyRoutine.tabMove')    },
   ];
 
   // ── 로딩 스켈레톤 ─────────────────────────────────────────────────────────
@@ -244,7 +245,9 @@ export function ElementRoutineCard({ data, isLoading, isPremium, onShare }: Elem
                 ]}
                 onPress={() => setActiveTab(tab.key)}
               >
-                <Text style={s.tabIcon}>{tab.icon}</Text>
+                <View style={s.tabIcon}>
+                  {TAB_ICON_FN[tab.key](activeTab === tab.key ? theme.accent : T.text.muted)}
+                </View>
                 <Text style={[s.tabLabel, activeTab === tab.key && { color: theme.accent }]}>
                   {tab.label}
                 </Text>
@@ -335,7 +338,7 @@ const s = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
-  tabIcon:  { fontSize: 16 },
+  tabIcon:  { width: 16, height: 16, alignItems: 'center', justifyContent: 'center' },
   tabLabel: { fontSize: T.fontSize.xs, color: T.text.muted, fontWeight: '600' },
 
   // List items
@@ -359,7 +362,7 @@ const s = StyleSheet.create({
     gap:             T.spacing[2],
     paddingVertical: T.spacing[4],
   },
-  lockedEmoji:   { fontSize: 28 },
+  lockedIconWrap: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center' },
   lockedText:    { color: T.text.muted, fontSize: T.fontSize.sm, fontWeight: '600' },
   lockedBtn:     {
     backgroundColor:  T.primary.DEFAULT,

@@ -11,11 +11,15 @@
 
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFreshToken } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
 import { useLanguageStore } from '../store/languageStore';
-import { friendlyApiError } from '../lib/apiError';
+
+function friendlyApiError(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  return '요청 처리 중 오류가 발생했습니다.';
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -108,7 +112,8 @@ export function useDailyRoutine(): DailyRoutineState {
 
       try {
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-        const token       = await getFreshToken();
+        const { data: { session: fresh } } = await supabase.auth.getSession();
+        const token       = fresh?.access_token ?? session!.access_token;
         const pillars     = chart!.pillars;
 
         const resp = await globalThis.fetch(

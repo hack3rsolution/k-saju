@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Relationship, RelationshipFortuneData, CompatibilityStatus } from '../types/relationship';
+import { LockIcon } from './icons';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -18,11 +19,6 @@ const STATUS_COLOR: Record<CompatibilityStatus, string> = {
   caution: '#ef4444',
 };
 
-const STATUS_EMOJI: Record<CompatibilityStatus, string> = {
-  good:    '🟢',
-  neutral: '🟡',
-  caution: '🔴',
-};
 
 // STATUS_LABEL is now resolved via t() inside ScoreRing
 
@@ -30,9 +26,6 @@ const ELEMENT_COLOR: Record<string, string> = {
   Wood: '#22c55e', Fire: '#ef4444', Earth: '#eab308', Metal: '#94a3b8', Water: '#3b82f6',
 };
 
-const ELEMENT_EMOJI: Record<string, string> = {
-  Wood: '🌱', Fire: '🔥', Earth: '⛰️', Metal: '✦', Water: '🌊',
-};
 
 // ── Compatibility Score Arc ───────────────────────────────────────────────────
 
@@ -53,7 +46,7 @@ function ScoreRing({ score, status }: { score: number; status: CompatibilityStat
         </View>
       </View>
       <View style={ring.statusRow}>
-        <Text style={ring.statusEmoji}>{STATUS_EMOJI[status]}</Text>
+        <View style={[ring.statusDot, { backgroundColor: color }]} />
         <Text style={[ring.statusLabel, { color }]}>{statusLabel[status]}</Text>
       </View>
     </View>
@@ -67,7 +60,7 @@ const ring = StyleSheet.create({
   scoreText:  { fontSize: 32, fontWeight: '800' },
   outOf:      { color: '#9d8fbe', fontSize: 11 },
   statusRow:  { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 10 },
-  statusEmoji:{ fontSize: 14 },
+  statusDot:  { width: 8, height: 8, borderRadius: 4 },
   statusLabel:{ fontWeight: '700', fontSize: 14 },
 });
 
@@ -81,7 +74,7 @@ function ElementSynergyChart({ data }: { data: Record<string, number> }) {
       <Text style={synergy.title}>{t('relationships.elementSynergy')}</Text>
       {Object.entries(data).map(([elem, count]) => (
         <View key={elem} style={synergy.row}>
-          <Text style={synergy.emoji}>{ELEMENT_EMOJI[elem] ?? '·'}</Text>
+          <View style={[synergy.emoji, { backgroundColor: ELEMENT_COLOR[elem] ?? '#7c3aed', borderRadius: 5 }]} />
           <Text style={synergy.elemLabel}>{elem}</Text>
           <View style={synergy.barBg}>
             <View
@@ -102,7 +95,7 @@ const synergy = StyleSheet.create({
   container: { marginTop: 16 },
   title:     { color: '#9d8fbe', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: 10 },
   row:       { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
-  emoji:     { fontSize: 14, width: 20 },
+  emoji:     { width: 10, height: 10, marginRight: 5 },
   elemLabel: { color: '#d8b4fe', fontSize: 12, width: 42, fontWeight: '600' },
   barBg:     { flex: 1, height: 8, backgroundColor: '#1a0a2e', borderRadius: 4, overflow: 'hidden' },
   bar:       { height: 8, borderRadius: 4 },
@@ -153,7 +146,7 @@ export function RelationshipDetailSheet({
               </View>
             ) : error === 'premium_required' ? (
               <View style={styles.lockedBox}>
-                <Text style={styles.lockedIcon}>🔒</Text>
+                <View style={styles.lockedIcon}><LockIcon color="#a78bfa" size={36} /></View>
                 <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
                 <Text style={styles.lockedDesc}>{t('relationships.premiumRequired')}</Text>
               </View>
@@ -246,7 +239,7 @@ const styles = StyleSheet.create({
   loadingBox: { alignItems: 'center', paddingVertical: 40, gap: 12 },
   loadingText: { color: '#9d8fbe', fontSize: 14 },
   lockedBox: { alignItems: 'center', paddingVertical: 32, gap: 8 },
-  lockedIcon: { fontSize: 36 },
+  lockedIcon: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
   lockedTitle: { color: '#fff', fontWeight: '700', fontSize: 18 },
   lockedDesc: { color: '#9d8fbe', fontSize: 14, textAlign: 'center', lineHeight: 20 },
   errorBox: { alignItems: 'center', paddingVertical: 24, gap: 12 },

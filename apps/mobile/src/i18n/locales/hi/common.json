@@ -45,7 +45,7 @@
     "tryAgain": "पुनः प्रयास करें",
     "weeklyUsedTitle": "साप्ताहिक पठन उपयोग किया",
     "weeklyUsedDesc": "आपने इस सप्ताह का निःशुल्क पठन उपयोग कर लिया है। असीमित दैनिक पठन के लिए Premium अपग्रेड करें।",
-    "freeReadingAvailable": "🎁 इस सप्ताह 1 निःशुल्क पठन शेष",
+    "freeReadingAvailable": "इस सप्ताह 1 निःशुल्क पठन शेष",
     "weeklyReadingUsed": "साप्ताहिक निःशुल्क पठन उपयोग किया · ",
     "upgradeToPremium": "Premium अपग्रेड करें →",
     "upgradeShort": "अपग्रेड →",
@@ -57,11 +57,18 @@
       "annualReport": "वार्षिक रिपोर्ट",
       "myChart": "मेरी कुंडली",
       "fortune": "भाग्य",
-      "timing": "टाइमिंग विश्लेषण"
+      "timing": "सही समय"
     },
-    "aiTools": "AI टूल्स",
+    "aiTools": "भाग्य उपकरण",
     "timingDesc": "AI अभी आपके अगले कदम के लिए सर्वोत्तम समय का विश्लेषण करता है",
-    "elementDaySuffix": "दिन"
+    "elementDaySuffix": "दिन",
+    "timingSheetTitle": "सही समय",
+    "timingSheetSubtitle": "कौन सा निर्णय विश्लेषण करें?",
+    "timingLoading": "आकाश की इच्छा पढ़ रहा है...",
+    "timingResultTitle": "सही समय",
+    "timingPositive": "सकारात्मक कारक",
+    "timingCaution": "सावधानियाँ",
+    "timingError": "विश्लेषण विफल। कृपया पुनः प्रयास करें।"
   },
   "fortune": {
     "title": "भाग्य पठन",
@@ -102,7 +109,7 @@
     "subtitle": "जीवन घटनाएं · साजु प्रवाह",
     "analysisTitle": "AI पैटर्न विश्लेषण",
     "analysisDesc": "देखें कि आपके साजु चक्रों ने जीवन घटनाओं को कैसे आकार दिया",
-    "lockedAnalysis": "🔒 AI पैटर्न विश्लेषण अनलॉक करने के लिए {{count}} और घटनाएं जोड़ें",
+    "lockedAnalysis": "AI पैटर्न विश्लेषण अनलॉक करने के लिए {{count}} और घटनाएं जोड़ें",
     "emptyTitle": "अभी कोई घटना नहीं",
     "emptyDesc": "अपनी प्रमुख जीवन घटनाओं को रिकॉर्ड करें और AI को साजु पैटर्न खोजने दें।",
     "loading": "डायरी लोड हो रही है…",
@@ -139,7 +146,11 @@
       "positive": "😊 सकारात्मक",
       "neutral": "😐 तटस्थ",
       "negative": "😔 नकारात्मक"
-    }
+    },
+    "deleteTitle": "प्रविष्टि हटाएं",
+    "deleteMessage": "क्या आप इस प्रविष्टि को हटाना चाहते हैं? इसे वापस नहीं लाया जा सकता।",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं"
   },
   "relationships": {
     "title": "संबंध मानचित्र",

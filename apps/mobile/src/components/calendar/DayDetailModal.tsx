@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, type ReactNode } from 'react'
 import {
   View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, Alert,
 } from 'react-native'
 import { nativeCalendarService } from '../../services/nativeCalendarService'
 import type { AuspiciousDay, EventType } from '../../types/calendar'
+import { ColorIcon, HourglassIcon, ContractIcon, FortuneIcon, LockIcon } from '../icons'
 
 const STATUS_LABEL: Record<string, string> = {
-  lucky: '길일 🌟', neutral: '보통', unlucky: '흉일 ⚠️',
+  lucky: '길일', neutral: '보통', unlucky: '흉일',
 }
 const STATUS_COLOR: Record<string, string> = {
   lucky: '#4CAF50', neutral: '#9CA3AF', unlucky: '#E53935',
@@ -94,10 +95,10 @@ export function DayDetailModal({ day, eventType, onClose, isPremium = false, onU
             day.interpretation ? (
               <View style={styles.interpretSection}>
                 <Text style={styles.summary}>{day.interpretation.summary}</Text>
-                <InterpRow icon="📋" label="이유"  value={day.interpretation.reason} />
-                <InterpRow icon="💡" label="조언"  value={day.interpretation.advice} />
-                <InterpRow icon="🎨" label="행운색" value={day.interpretation.luckyColor} />
-                <InterpRow icon="⏰" label="추천시간" value={day.interpretation.luckyTime} />
+                <InterpRow icon={<ContractIcon  color="#7C3AED" size={18} />} label="이유"  value={day.interpretation.reason} />
+                <InterpRow icon={<FortuneIcon   color="#7C3AED" size={18} />} label="조언"  value={day.interpretation.advice} />
+                <InterpRow icon={<ColorIcon     color="#7C3AED" size={18} />} label="행운색" value={day.interpretation.luckyColor} />
+                <InterpRow icon={<HourglassIcon color="#7C3AED" size={18} />} label="추천시간" value={day.interpretation.luckyTime} />
               </View>
             ) : (
               <View style={styles.loadingSection}>
@@ -106,7 +107,7 @@ export function DayDetailModal({ day, eventType, onClose, isPremium = false, onU
             )
           ) : (
             <TouchableOpacity style={styles.blurSection} onPress={onUpgradePress} activeOpacity={0.8}>
-              <Text style={styles.blurEmoji}>🔒</Text>
+              <View style={styles.blurIconWrap}><LockIcon color="#7C3AED" size={32} /></View>
               <Text style={styles.blurTitle}>Premium에서 AI 해석 보기</Text>
               <Text style={styles.blurSub}>길흉 이유, 조언, 행운색, 추천 시간대</Text>
               <View style={styles.upgradeBtn}>
@@ -160,10 +161,10 @@ export function DayDetailModal({ day, eventType, onClose, isPremium = false, onU
   )
 }
 
-function InterpRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+function InterpRow({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return (
     <View style={interpStyles.row}>
-      <Text style={interpStyles.icon}>{icon}</Text>
+      <View style={interpStyles.iconWrap}>{icon}</View>
       <View style={{ flex: 1 }}>
         <Text style={interpStyles.label}>{label}</Text>
         <Text style={interpStyles.value}>{value}</Text>
@@ -173,10 +174,10 @@ function InterpRow({ icon, label, value }: { icon: string; label: string; value:
 }
 
 const interpStyles = StyleSheet.create({
-  row:   { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12, gap: 8 },
-  icon:  { fontSize: 18, marginTop: 2 },
-  label: { fontSize: 11, color: '#9CA3AF', marginBottom: 2 },
-  value: { fontSize: 14, color: '#1F2937', lineHeight: 20 },
+  row:     { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12, gap: 8 },
+  iconWrap:{ width: 18, height: 18, alignItems: 'center', justifyContent: 'center', marginTop: 2 },
+  label:   { fontSize: 11, color: '#9CA3AF', marginBottom: 2 },
+  value:   { fontSize: 14, color: '#1F2937', lineHeight: 20 },
 })
 
 const styles = StyleSheet.create({
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   loadingSection:   { alignItems: 'center', padding: 24 },
   loadingText:      { color: '#9CA3AF', fontSize: 14 },
   blurSection:      { alignItems: 'center', padding: 24, backgroundColor: '#F3F4F6', borderRadius: 12, marginBottom: 16 },
-  blurEmoji:        { fontSize: 32, marginBottom: 8 },
+  blurIconWrap:     { marginBottom: 8 },
   blurTitle:        { fontSize: 16, fontWeight: '700', color: '#1F2937', marginBottom: 4 },
   blurSub:          { fontSize: 13, color: '#6B7280', textAlign: 'center', marginBottom: 16 },
   upgradeBtn:       { backgroundColor: '#7C3AED', paddingHorizontal: 24, paddingVertical: 10, borderRadius: 20 },

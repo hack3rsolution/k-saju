@@ -45,7 +45,7 @@
     "tryAgain": "再試行",
     "weeklyUsedTitle": "週間鑑定使用済み",
     "weeklyUsedDesc": "今週の無料鑑定を使用しました。プレミアムにアップグレードすると毎日鑑定が受けられます。",
-    "freeReadingAvailable": "🎁 今週の無料鑑定が1回残っています",
+    "freeReadingAvailable": "今週の無料鑑定が1回残っています",
     "weeklyReadingUsed": "今週の無料鑑定使用済み · ",
     "upgradeToPremium": "プレミアムへアップグレード →",
     "upgradeShort": "アップグレード →",
@@ -57,11 +57,18 @@
       "annualReport": "年間レポート",
       "myChart": "マイ命式",
       "fortune": "運勢",
-      "timing": "タイミング分析"
+      "timing": "決断の時"
     },
-    "aiTools": "AIツール",
+    "aiTools": "運命探求",
     "timingDesc": "AIが今すぐ最適なタイミングを分析します",
-    "elementDaySuffix": "日"
+    "elementDaySuffix": "日",
+    "timingSheetTitle": "決断の時",
+    "timingSheetSubtitle": "どの決断を分析しますか？",
+    "timingLoading": "天の意志を読んでいます...",
+    "timingResultTitle": "決断の時",
+    "timingPositive": "ポジティブ要因",
+    "timingCaution": "注意事項",
+    "timingError": "分析に失敗しました。もう一度お試しください。"
   },
   "fortune": {
     "title": "運勢鑑定",
@@ -102,7 +109,7 @@
     "subtitle": "人生イベント記録 · 四柱の流れ",
     "analysisTitle": "AIパターン分析",
     "analysisDesc": "四柱のサイクルが人生イベントに与えた影響を確認",
-    "lockedAnalysis": "🔒 AIパターン分析を解除するには{{count}}件以上記録してください",
+    "lockedAnalysis": "AIパターン分析を解除するには{{count}}件以上記録してください",
     "emptyTitle": "まだイベントがありません",
     "emptyDesc": "人生の主要なイベントを記録してAIに四柱パターンを分析してもらいましょう。",
     "loading": "日誌を読み込み中…",
@@ -139,7 +146,11 @@
       "positive": "😊 ポジティブ",
       "neutral": "😐 ふつう",
       "negative": "😔 ネガティブ"
-    }
+    },
+    "deleteTitle": "日誌を削除",
+    "deleteMessage": "この日誌を削除しますか？削除した内容は復元できません。",
+    "cancel": "キャンセル",
+    "delete": "削除"
   },
   "relationships": {
     "title": "関係マップ",

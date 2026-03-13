@@ -2,21 +2,24 @@
  * TimingCategorySheet — bottom sheet for selecting a timing-advisor category.
  * Issue #17: Timing Advisor
  */
+import { type ReactNode } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { TimingCategory } from '../types/timing';
+import { HourglassIcon, CareerIcon, FinanceIcon, LoveIcon, FamilyIcon } from './icons';
 
 interface Category {
   key: TimingCategory;
-  emoji: string;
+  icon: ReactNode;
   label: string;
   desc: string;
 }
 
 const CATEGORIES: Category[] = [
-  { key: 'business',   emoji: '🚀', label: '사업 / 창업',   desc: 'Start or expand a business' },
-  { key: 'investment', emoji: '💰', label: '투자 / 재테크', desc: 'Invest money or assets'       },
-  { key: 'romance',    emoji: '💞', label: '연애 / 결혼',   desc: 'Start a relationship or wed' },
-  { key: 'relocation', emoji: '🏠', label: '이사 / 여행',   desc: 'Move home or plan a trip'    },
+  { key: 'business',   icon: <CareerIcon  color="#e9d5ff" size={26} />, label: '사업 / 창업',   desc: 'Start or expand a business' },
+  { key: 'investment', icon: <FinanceIcon color="#e9d5ff" size={26} />, label: '투자 / 재테크', desc: 'Invest money or assets'       },
+  { key: 'romance',    icon: <LoveIcon    color="#e9d5ff" size={26} />, label: '연애 / 결혼',   desc: 'Start a relationship or wed' },
+  { key: 'relocation', icon: <FamilyIcon  color="#e9d5ff" size={26} />, label: '이사 / 여행',   desc: 'Move home or plan a trip'    },
 ];
 
 interface Props {
@@ -26,14 +29,18 @@ interface Props {
 }
 
 export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
+  const { t } = useTranslation('common');
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
-          <Text style={styles.title}>⏰ 타이밍 어드바이저</Text>
-          <Text style={styles.subtitle}>어떤 결정을 분석할까요?</Text>
+          <View style={styles.titleRow}>
+            <HourglassIcon color="#C9A84C" size={20} />
+            <Text style={styles.title}>{t('home.timingSheetTitle')}</Text>
+          </View>
+          <Text style={styles.subtitle}>{t('home.timingSheetSubtitle')}</Text>
 
           {CATEGORIES.map((c) => (
             <TouchableOpacity
@@ -41,7 +48,7 @@ export function TimingCategorySheet({ visible, onSelect, onClose }: Props) {
               style={styles.categoryBtn}
               onPress={() => onSelect(c.key)}
             >
-              <Text style={styles.categoryEmoji}>{c.emoji}</Text>
+              <View style={styles.categoryEmoji}>{c.icon}</View>
               <View style={styles.categoryText}>
                 <Text style={styles.categoryLabel}>{c.label}</Text>
                 <Text style={styles.categoryDesc}>{c.desc}</Text>
@@ -79,11 +86,16 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginBottom: 20,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
   title: {
     color: '#fff',
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 4,
   },
   subtitle: {
     color: '#9d8fbe',
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginBottom: 10,
   },
-  categoryEmoji: { fontSize: 26 },
+  categoryEmoji: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center' },
   categoryText: { flex: 1 },
   categoryLabel: {
     color: '#e9d5ff',

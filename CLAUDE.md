@@ -559,6 +559,14 @@ npx supabase functions deploy saju-reading --no-verify-jwt --project-ref omypurq
 - **캐시 키**: `report-{reportType}-{dayStem}-{dayBranch}-{language}` — 변경 시 기존 캐시 무효화됨
 - **'새 리포트 생성' 버튼 없음**: 재물운·대운은 캐시 만료 전까지 재생성 불가 (의도된 UX)
 
+### 삭제 액션 UX 규칙
+
+- **삭제 버튼 탭 시 반드시 `Alert.alert()` 확인 다이얼로그 표시 후 실행** — 즉시 삭제 금지
+- Alert 버튼 구성: `{ style: 'cancel' }` 취소 + `{ style: 'destructive' }` 삭제 (iOS 빨간색 자동)
+- Alert 텍스트는 i18n 키 사용 필수 (`journal.deleteTitle` / `journal.deleteMessage` / `journal.cancel` / `journal.delete` 패턴)
+- 삭제 실행은 `onPress: () => remove(id)` — async/await 불필요 (Alert 콜백은 동기)
+- 이 패턴을 따르지 않으면 코드 리뷰에서 반드시 지적할 것
+
 ### 차트 카드 데이터 구조 규칙 (재발 방지)
 - **`DaewoonPeriod.element`는 반드시 kanji FiveElement** (`木`/`火`/`土`/`金`/`水`) — `daewoon.ts`에서 English string(`'Wood'`)으로 바꾸면 `ELEM_COLOR`/`ELEM_DETAIL` lookup 실패 → 크래시
   - 현재 fix: `element: BRANCH_ELEMENT[branch]` (직접 반환) — English 매핑 삽입 금지

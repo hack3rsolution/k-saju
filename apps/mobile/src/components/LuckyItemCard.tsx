@@ -12,12 +12,12 @@
  * Always use this component wherever luckyItems are rendered.
  * See CLAUDE.md §UI/디자인 수정 시 추가 규칙.
  */
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { T } from '../theme/tokens';
 
 interface Props {
-  icon: string;
+  icon: ReactNode;
   label: string;
   value: string | number;
 }
@@ -36,7 +36,7 @@ export function LuckyItemCard({ icon, label, value }: Props) {
         accessibilityLabel={`${label}: ${strValue}`}
         accessibilityHint="탭하여 전체 내용 보기"
       >
-        <Text style={styles.icon}>{icon}</Text>
+        <View style={styles.iconWrap}>{icon}</View>
         <View style={styles.textContainer}>
           <Text style={styles.label} numberOfLines={1}>
             {label}
@@ -64,7 +64,7 @@ export function LuckyItemCard({ icon, label, value }: Props) {
             activeOpacity={1}
             onPress={() => {}}
           >
-            <Text style={styles.sheetIcon}>{icon}</Text>
+            <View style={styles.sheetIconWrap}>{icon}</View>
             <Text style={styles.sheetLabel}>{label}</Text>
             <Text style={styles.sheetValue}>{strValue}</Text>
             <TouchableOpacity
@@ -96,8 +96,11 @@ const styles = StyleSheet.create({
     borderColor: T.border.default,
     overflow: 'hidden',
   },
-  icon: {
-    fontSize: 20,
+  iconWrap: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
     flex: 1,
@@ -133,8 +136,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: T.border.subtle,
   },
-  sheetIcon: {
-    fontSize: 40,
+  sheetIconWrap: {
     marginBottom: T.spacing[3],
   },
   sheetLabel: {

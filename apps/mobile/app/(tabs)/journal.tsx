@@ -15,9 +15,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { FortuneIcon, BookIcon, LockIcon } from '../../src/components/icons';
 import { useJournal } from '../../src/hooks/useJournal';
 import { JournalEventCard } from '../../src/components/JournalEventCard';
 import { AddEventModal } from '../../src/components/AddEventModal';
@@ -76,8 +78,17 @@ export default function JournalScreen() {
   );
 
   const handleDelete = useCallback(
-    async (id: string) => { await remove(id); },
-    [remove],
+    (id: string) => {
+      Alert.alert(
+        t('journal.deleteTitle'),
+        t('journal.deleteMessage'),
+        [
+          { text: t('journal.cancel'), style: 'cancel' },
+          { text: t('journal.delete'), style: 'destructive', onPress: () => remove(id) },
+        ],
+      );
+    },
+    [remove, t],
   );
 
   const handleLoadAnalysis = useCallback(async () => {
@@ -137,7 +148,7 @@ export default function JournalScreen() {
             onPress={() => setAnalysisVisible(true)}
             activeOpacity={0.85}
           >
-            <Text style={styles.analysisBannerIcon}>🔮</Text>
+            <View style={styles.analysisBannerIcon}><FortuneIcon color="#a78bfa" size={28} /></View>
             <View style={styles.analysisBannerText}>
               <Text style={styles.analysisBannerTitle}>{t('journal.analysisTitle')}</Text>
               <Text style={styles.analysisBannerDesc}>{t('journal.analysisDesc')}</Text>
@@ -149,6 +160,7 @@ export default function JournalScreen() {
         {/* Locked analysis banner (< 5 events) */}
         {events.length > 0 && events.length < MIN_EVENTS_FOR_ANALYSIS && (
           <View style={styles.lockedAnalysis}>
+            <LockIcon color="#9d8fbe" size={14} />
             <Text style={styles.lockedAnalysisText}>
               {t('journal.lockedAnalysis', { count: MIN_EVENTS_FOR_ANALYSIS - events.length })}
             </Text>
@@ -165,7 +177,7 @@ export default function JournalScreen() {
         {/* Empty state */}
         {!loading && events.length === 0 && (
           <View style={styles.emptyBox}>
-            <Text style={styles.emptyIcon}>📖</Text>
+            <View style={styles.emptyIcon}><BookIcon color="#9d8fbe" size={48} /></View>
             <Text style={styles.emptyTitle}>{t('journal.emptyTitle')}</Text>
             <Text style={styles.emptyDesc}>{t('journal.emptyDesc')}</Text>
           </View>
@@ -251,12 +263,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#2d1854', borderRadius: 14, padding: 14,
     marginBottom: 16, borderWidth: 1, borderColor: '#7c3aed',
   },
-  analysisBannerIcon:  { fontSize: 28 },
+  analysisBannerIcon:  { width: 28, height: 28, alignItems: 'center', justifyContent: 'center' },
   analysisBannerText:  { flex: 1 },
   analysisBannerTitle: { color: '#fff', fontWeight: '700', fontSize: 15 },
   analysisBannerDesc:  { color: '#9d8fbe', fontSize: 12, marginTop: 2 },
 
   lockedAnalysis: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
     backgroundColor: '#2d1854', borderRadius: 12, padding: 12,
     marginBottom: 16, borderWidth: 1, borderColor: '#3d2a6e',
   },
@@ -266,7 +279,7 @@ const styles = StyleSheet.create({
   errorText:   { color: '#f87171', fontSize: 13, textAlign: 'center' },
 
   emptyBox:  { alignItems: 'center', paddingVertical: 48 },
-  emptyIcon: { fontSize: 48, marginBottom: 12 },
+  emptyIcon: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   emptyTitle:{ color: '#fff', fontWeight: '700', fontSize: 18, marginBottom: 8 },
   emptyDesc: { color: '#9d8fbe', fontSize: 14, textAlign: 'center', lineHeight: 22, maxWidth: 280 },
 

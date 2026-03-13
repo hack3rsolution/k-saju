@@ -45,7 +45,7 @@
     "tryAgain": "Erneut versuchen",
     "weeklyUsedTitle": "Wöchentliche Lesung verwendet",
     "weeklyUsedDesc": "Ihre kostenlose Lesung für diese Woche wurde verwendet. Upgraden Sie auf Premium für unbegrenzte tägliche Lesungen.",
-    "freeReadingAvailable": "🎁 1 kostenlose Lesung übrig diese Woche",
+    "freeReadingAvailable": "1 kostenlose Lesung übrig diese Woche",
     "weeklyReadingUsed": "Kostenlose wöchentliche Lesung verwendet · ",
     "upgradeToPremium": "Auf Premium upgraden →",
     "upgradeShort": "Upgraden →",
@@ -57,11 +57,18 @@
       "annualReport": "Jahresbericht",
       "myChart": "Mein Diagramm",
       "fortune": "Glück",
-      "timing": "Timing-Analyse"
+      "timing": "Der Richtige Moment"
     },
-    "aiTools": "KI-Werkzeuge",
+    "aiTools": "Schicksals-Tools",
     "timingDesc": "KI analysiert den besten Zeitpunkt für Ihren nächsten Schritt",
-    "elementDaySuffix": "Tag"
+    "elementDaySuffix": "Tag",
+    "timingSheetTitle": "Der Richtige Moment",
+    "timingSheetSubtitle": "Welche Entscheidung analysieren?",
+    "timingLoading": "Die Zeichen des Himmels lesen...",
+    "timingResultTitle": "Der Richtige Moment",
+    "timingPositive": "Positive Faktoren",
+    "timingCaution": "Vorsichtsmaßnahmen",
+    "timingError": "Analyse fehlgeschlagen. Bitte erneut versuchen."
   },
   "fortune": {
     "title": "Glückslesungen",
@@ -102,7 +109,7 @@
     "subtitle": "Lebensereignisse · Saju-Fluss",
     "analysisTitle": "KI-Musteranalyse",
     "analysisDesc": "Sehen Sie, wie Ihre Saju-Zyklen Ihre Lebensereignisse geprägt haben",
-    "lockedAnalysis": "🔒 Fügen Sie {{count}} weiteres/weitere Ereignis(se) hinzu, um die KI-Musteranalyse freizuschalten",
+    "lockedAnalysis": "Fügen Sie {{count}} weiteres/weitere Ereignis(se) hinzu, um die KI-Musteranalyse freizuschalten",
     "emptyTitle": "Noch keine Ereignisse",
     "emptyDesc": "Zeichnen Sie Ihre wichtigsten Lebensereignisse auf und lassen Sie die KI die Saju-Muster dahinter finden.",
     "loading": "Tagebuch wird geladen…",
@@ -139,7 +146,11 @@
       "positive": "😊 Positiv",
       "neutral": "😐 Neutral",
       "negative": "😔 Negativ"
-    }
+    },
+    "deleteTitle": "Eintrag löschen",
+    "deleteMessage": "Möchtest du diesen Eintrag wirklich löschen? Dies kann nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "delete": "Löschen"
   },
   "relationships": {
     "title": "Beziehungskarte",

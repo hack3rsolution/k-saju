@@ -1,15 +1,17 @@
+import { type ReactNode } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { Relationship, CompatibilityStatus } from '../types/relationship';
+import { LoveIcon, CompatibilityIcon, FamilyIcon, CareerIcon, EtcIcon } from './icons';
 
 // ── Type icons ────────────────────────────────────────────────────────────────
 
-const TYPE_ICON: Record<string, string> = {
-  romantic:  '💞',
-  friend:    '🤝',
-  family:    '👨‍👩‍👧',
-  colleague: '💼',
-  other:     '⭐',
+const TYPE_ICON: Record<string, ReactNode> = {
+  romantic:  <LoveIcon          color="#C9A84C" size={22} />,
+  friend:    <CompatibilityIcon color="#C9A84C" size={22} />,
+  family:    <FamilyIcon        color="#C9A84C" size={22} />,
+  colleague: <CareerIcon        color="#C9A84C" size={22} />,
+  other:     <EtcIcon           color="#C9A84C" size={22} />,
 };
 
 const TYPE_LABEL: Record<string, string> = {
@@ -20,18 +22,12 @@ const TYPE_LABEL: Record<string, string> = {
   other:     'Other',
 };
 
-// ── Status colour & emoji ─────────────────────────────────────────────────────
+// ── Status colour ─────────────────────────────────────────────────────────────
 
 const STATUS_COLOR: Record<CompatibilityStatus, string> = {
   good:    '#22c55e',
   neutral: '#eab308',
   caution: '#ef4444',
-};
-
-const STATUS_EMOJI: Record<CompatibilityStatus, string> = {
-  good:    '🟢',
-  neutral: '🟡',
-  caution: '🔴',
 };
 
 const STATUS_LABEL: Record<CompatibilityStatus, string> = {
@@ -58,7 +54,7 @@ export function RelationshipCard({ relationship: rel, onPress, onDelete }: Relat
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
       {/* Left: type icon */}
       <View style={styles.iconWrap}>
-        <Text style={styles.typeIcon}>{TYPE_ICON[rel.relationshipType] ?? '⭐'}</Text>
+        {TYPE_ICON[rel.relationshipType] ?? <EtcIcon color="#C9A84C" size={22} />}
       </View>
 
       {/* Middle: info */}
@@ -74,7 +70,7 @@ export function RelationshipCard({ relationship: rel, onPress, onDelete }: Relat
 
         {status ? (
           <View style={styles.statusRow}>
-            <Text style={styles.statusEmoji}>{STATUS_EMOJI[status]}</Text>
+            <View style={[styles.statusDot, { backgroundColor: STATUS_COLOR[status] }]} />
             <Text style={[styles.statusLabel, { color: STATUS_COLOR[status] }]}>
               {STATUS_LABEL[status]}
             </Text>
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems:       'center',
     justifyContent:   'center',
   },
-  typeIcon: { fontSize: 22 },
+  statusDot: { width: 8, height: 8, borderRadius: 4 },
   info:     { flex: 1 },
   name:     { color: '#fff', fontWeight: '700', fontSize: 16, marginBottom: 2 },
   row:      { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
@@ -127,7 +123,6 @@ const styles = StyleSheet.create({
   dot:      { color: '#5b4d7e', fontSize: 12 },
   birth:    { color: '#9d8fbe', fontSize: 12 },
   statusRow:{ flexDirection: 'row', alignItems: 'center', gap: 4 },
-  statusEmoji: { fontSize: 12 },
   statusLabel: { fontSize: 12, fontWeight: '700' },
   score:    { color: '#9d8fbe', fontSize: 12 },
   tapHint:  { color: '#7c5fbf', fontSize: 12, fontStyle: 'italic' },

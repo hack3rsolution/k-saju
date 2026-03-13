@@ -45,7 +45,7 @@
     "tryAgain": "حاول مجددًا",
     "weeklyUsedTitle": "تمت قراءة الأسبوع",
     "weeklyUsedDesc": "لقد استخدمت قراءتك المجانية هذا الأسبوع. قم بالترقية إلى Premium للقراءات اليومية غير المحدودة.",
-    "freeReadingAvailable": "🎁 قراءة مجانية واحدة متبقية هذا الأسبوع",
+    "freeReadingAvailable": "قراءة مجانية واحدة متبقية هذا الأسبوع",
     "weeklyReadingUsed": "تمت القراءة الأسبوعية المجانية · ",
     "upgradeToPremium": "الترقية إلى Premium →",
     "upgradeShort": "ترقية →",
@@ -57,11 +57,18 @@
       "annualReport": "التقرير السنوي",
       "myChart": "مخططي",
       "fortune": "الحظ",
-      "timing": "تحليل التوقيت"
+      "timing": "الوقت المناسب"
     },
-    "aiTools": "أدوات الذكاء الاصطناعي",
+    "aiTools": "أدوات المصير",
     "timingDesc": "يحلل الذكاء الاصطناعي أفضل توقيت لخطوتك القادمة",
-    "elementDaySuffix": "يوم"
+    "elementDaySuffix": "يوم",
+    "timingSheetTitle": "الوقت المناسب",
+    "timingSheetSubtitle": "ما القرار الذي نحلله؟",
+    "timingLoading": "يستشير السماء...",
+    "timingResultTitle": "الوقت المناسب",
+    "timingPositive": "العوامل الإيجابية",
+    "timingCaution": "التحذيرات",
+    "timingError": "فشل التحليل. يرجى المحاولة مرة أخرى."
   },
   "fortune": {
     "title": "قراءات الحظ",
@@ -102,7 +109,7 @@
     "subtitle": "أحداث الحياة · تدفق ساجو",
     "analysisTitle": "تحليل الأنماط بالذكاء الاصطناعي",
     "analysisDesc": "انظر كيف شكّلت دورات ساجو أحداث حياتك",
-    "lockedAnalysis": "🔒 أضف {{count}} حدث/أحداث أخرى لفتح تحليل الأنماط بالذكاء الاصطناعي",
+    "lockedAnalysis": "أضف {{count}} حدث/أحداث أخرى لفتح تحليل الأنماط بالذكاء الاصطناعي",
     "emptyTitle": "لا توجد أحداث بعد",
     "emptyDesc": "سجّل أهم أحداث حياتك ودع الذكاء الاصطناعي يجد أنماط ساجو وراءها.",
     "loading": "جارٍ تحميل المجلة…",
@@ -139,7 +146,11 @@
       "positive": "😊 إيجابي",
       "neutral": "😐 محايد",
       "negative": "😔 سلبي"
-    }
+    },
+    "deleteTitle": "حذف الإدخال",
+    "deleteMessage": "هل أنت متأكد من حذف هذا الإدخال؟ لا يمكن التراجع عن هذا الإجراء.",
+    "cancel": "إلغاء",
+    "delete": "حذف"
   },
   "relationships": {
     "title": "خريطة العلاقات",

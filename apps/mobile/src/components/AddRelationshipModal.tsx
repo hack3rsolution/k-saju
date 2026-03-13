@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Modal,
   View,
@@ -12,15 +12,16 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { AddRelationshipInput, RelationshipType } from '../types/relationship';
+import { LoveIcon, CompatibilityIcon, FamilyIcon, CareerIcon, EtcIcon } from './icons';
 
 // ── Option sets ───────────────────────────────────────────────────────────────
 
-const REL_TYPE_VALUES: { value: RelationshipType; key: string; icon: string }[] = [
-  { value: 'romantic',  key: 'romantic',  icon: '💞' },
-  { value: 'friend',    key: 'friend',    icon: '🤝' },
-  { value: 'family',    key: 'family',    icon: '👨‍👩‍👧' },
-  { value: 'colleague', key: 'colleague', icon: '💼' },
-  { value: 'other',     key: 'other',     icon: '⭐' },
+const REL_TYPE_VALUES: { value: RelationshipType; key: string; icon: ReactNode }[] = [
+  { value: 'romantic',  key: 'romantic',  icon: <LoveIcon          color="#9d8fbe" size={18} /> },
+  { value: 'friend',    key: 'friend',    icon: <CompatibilityIcon color="#9d8fbe" size={18} /> },
+  { value: 'family',    key: 'family',    icon: <FamilyIcon        color="#9d8fbe" size={18} /> },
+  { value: 'colleague', key: 'colleague', icon: <CareerIcon        color="#9d8fbe" size={18} /> },
+  { value: 'other',     key: 'other',     icon: <EtcIcon           color="#9d8fbe" size={18} /> },
 ];
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -171,7 +172,7 @@ export function AddRelationshipModal({
                   style={[styles.typeChip, relType === item.value && styles.typeChipActive]}
                   onPress={() => setRelType(item.value)}
                 >
-                  <Text style={styles.typeIcon}>{item.icon}</Text>
+                  <View style={styles.typeIcon}>{item.icon}</View>
                   <Text style={[styles.typeLabel, relType === item.value && styles.typeLabelActive]}>
                     {t(`relationships.form.${item.key}`)}
                   </Text>
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#3d2471',
   },
   typeChipActive: { backgroundColor: '#7c3aed', borderColor: '#7c3aed' },
-  typeIcon:  { fontSize: 18 },
+  typeIcon:  { width: 18, height: 18, alignItems: 'center', justifyContent: 'center' },
   typeLabel: { color: '#9d8fbe', fontWeight: '600', fontSize: 13 },
   typeLabelActive: { color: '#fff' },
   submitBtn: {

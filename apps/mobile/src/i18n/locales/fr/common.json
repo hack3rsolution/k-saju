@@ -45,7 +45,7 @@
     "tryAgain": "Réessayer",
     "weeklyUsedTitle": "Lecture hebdomadaire utilisée",
     "weeklyUsedDesc": "Votre lecture gratuite de cette semaine a été utilisée. Passez à Premium pour des lectures quotidiennes illimitées.",
-    "freeReadingAvailable": "🎁 1 lecture gratuite restante cette semaine",
+    "freeReadingAvailable": "1 lecture gratuite restante cette semaine",
     "weeklyReadingUsed": "Lecture hebdomadaire gratuite utilisée · ",
     "upgradeToPremium": "Passer à Premium →",
     "upgradeShort": "Améliorer →",
@@ -57,11 +57,18 @@
       "annualReport": "Rapport Annuel",
       "myChart": "Mon Thème",
       "fortune": "Fortune",
-      "timing": "Conseiller Timing"
+      "timing": "Le Bon Moment"
     },
-    "aiTools": "Outils IA",
+    "aiTools": "Outils du Destin",
     "timingDesc": "L'IA analyse le meilleur timing pour votre prochain mouvement",
-    "elementDaySuffix": "Jour"
+    "elementDaySuffix": "Jour",
+    "timingSheetTitle": "Le Bon Moment",
+    "timingSheetSubtitle": "Quelle décision analyser ?",
+    "timingLoading": "Consultant les cieux...",
+    "timingResultTitle": "Le Bon Moment",
+    "timingPositive": "Facteurs Positifs",
+    "timingCaution": "Précautions",
+    "timingError": "Analyse échouée. Veuillez réessayer."
   },
   "fortune": {
     "title": "Lectures de Fortune",
@@ -102,7 +109,7 @@
     "subtitle": "Événements de vie · Flux Saju",
     "analysisTitle": "Analyse de patterns IA",
     "analysisDesc": "Découvrez comment vos cycles saju ont façonné vos événements de vie",
-    "lockedAnalysis": "🔒 Ajoutez {{count}} événement(s) de plus pour débloquer l'Analyse de Patterns IA",
+    "lockedAnalysis": "Ajoutez {{count}} événement(s) de plus pour débloquer l'Analyse de Patterns IA",
     "emptyTitle": "Aucun événement pour l'instant",
     "emptyDesc": "Enregistrez vos événements de vie importants et laissez l'IA trouver les patterns saju.",
     "loading": "Chargement du journal…",
@@ -139,7 +146,11 @@
       "positive": "😊 Positif",
       "neutral": "😐 Neutre",
       "negative": "😔 Négatif"
-    }
+    },
+    "deleteTitle": "Supprimer l'entrée",
+    "deleteMessage": "Voulez-vous vraiment supprimer cette entrée ? Cette action est irréversible.",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   },
   "relationships": {
     "title": "Carte des relations",

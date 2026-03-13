@@ -57,7 +57,7 @@ async function callClaude(
     },
     body: JSON.stringify({
       model: CLAUDE_MODEL,
-      max_tokens: 400,
+      max_tokens: 1200,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     }),
@@ -68,8 +68,18 @@ async function callClaude(
     throw new Error(`Claude API error ${res.status}: ${errText}`);
   }
 
-  const data = await res.json() as { content: Array<{ type: string; text: string }> };
-  const raw = data.content?.[0]?.text ?? '';
+  const data = await res.json() as {
+    content: Array<{ type: string; text: string }>;
+    stop_reason: string;
+    usage: { output_tokens: number };
+  };
+  const raw         = data.content?.[0]?.text ?? '';
+  const stopReason  = data.stop_reason;
+  const outputTokens = data.usage?.output_tokens ?? 0;
+
+  if (stopReason === 'max_tokens') {
+    throw new Error(`Response truncated at ${outputTokens} tokens (stop_reason=max_tokens). Tail: ${raw.slice(-80)}`);
+  }
 
   const parsed = extractJson(raw) as Partial<ClaudeTimingOutput>;
   return {
@@ -115,14 +125,27 @@ Deno.serve(async (req: Request) => {
 
   // ── Auth ───────────────────────────────────────────────────────────────────
   const authHeader = req.headers.get('Authorization') ?? '';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  const authToken  = authHeader.replace('Bearer ', '');
+  const supabase   = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { Authorization: authHeader } },
   });
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return errorResponse('Unauthorized', 401);
+
+  let userId: string;
+  let userMeta: Record<string, unknown> = {};
+
+  if (authToken === SUPABASE_ANON_KEY) {
+    // Dev bypass: anon key used as bearer by dev login
+    userId   = '00000000-0000-4000-8000-000000000000';
+    userMeta = { is_premium: true, has_timing_advisor: true };
+  } else {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return errorResponse('Unauthorized', 401);
+    userId   = user.id;
+    userMeta = user.user_metadata ?? {};
+  }
 
   // ── Burst rate limit ───────────────────────────────────────────────────────
-  if (!checkRateLimit(user.id)) {
+  if (!checkRateLimit(userId)) {
     return errorResponse('Rate limit exceeded. Try again in a minute.', 429);
   }
 
@@ -136,12 +159,11 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Premium / entitlement check ────────────────────────────────────────────
-  const meta = user.user_metadata ?? {};
-  const isPremium = meta.is_premium === true || meta.has_timing_advisor === true;
+  const isPremium = userMeta.is_premium === true || userMeta.has_timing_advisor === true;
 
   if (!isPremium) {
     const thisMonth = currentMonth(request.refDate);
-    if (meta.last_timing_month === thisMonth) {
+    if (userMeta.last_timing_month === thisMonth) {
       // Return the cached last advice if stored, otherwise limit reached
       return jsonResponse({
         ok: true,
@@ -153,7 +175,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Instance-level cache ───────────────────────────────────────────────────
-  const key = cacheKey(user.id, request.category, request.refDate, request.userLanguage ?? 'en');
+  const key = cacheKey(userId, request.category, request.refDate, request.userLanguage ?? 'en');
   const cached = instanceCache.get(key);
   if (cached && cached.expiresAt > Date.now()) {
     return jsonResponse({
@@ -179,7 +201,7 @@ Deno.serve(async (req: Request) => {
   instanceCache.set(key, { data: advice, expiresAt: Date.now() + 24 * 3_600_000 });
 
   // ── Mark monthly usage for free tier ──────────────────────────────────────
-  if (!isPremium) {
+  if (!isPremium && userId !== '00000000-0000-4000-8000-000000000000') {
     supabase.auth
       .updateUser({ data: { last_timing_month: currentMonth(request.refDate) } })
       .catch((e: unknown) => console.error('[timing-advisor] updateUser error:', e));

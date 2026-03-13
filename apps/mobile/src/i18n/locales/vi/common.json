@@ -45,7 +45,7 @@
     "tryAgain": "Thử lại",
     "weeklyUsedTitle": "Đã dùng xem vận tuần",
     "weeklyUsedDesc": "Bạn đã dùng lượt xem miễn phí tuần này. Nâng cấp Premium để xem hàng ngày.",
-    "freeReadingAvailable": "🎁 Còn 1 lượt xem miễn phí tuần này",
+    "freeReadingAvailable": "Còn 1 lượt xem miễn phí tuần này",
     "weeklyReadingUsed": "Đã dùng lượt xem miễn phí tuần · ",
     "upgradeToPremium": "Nâng cấp Premium →",
     "upgradeShort": "Nâng cấp →",
@@ -57,11 +57,18 @@
       "annualReport": "Báo cáo năm",
       "myChart": "Tử vi của tôi",
       "fortune": "Vận số",
-      "timing": "Phân tích Thời điểm"
+      "timing": "Thời Điểm Quyết Định"
     },
-    "aiTools": "Công cụ AI",
+    "aiTools": "Công cụ Vận mệnh",
     "timingDesc": "AI phân tích thời điểm tốt nhất cho bước tiếp theo của bạn",
-    "elementDaySuffix": "Ngày"
+    "elementDaySuffix": "Ngày",
+    "timingSheetTitle": "Thời Điểm Quyết Định",
+    "timingSheetSubtitle": "Phân tích quyết định nào?",
+    "timingLoading": "Đang hỏi ý trời...",
+    "timingResultTitle": "Thời Điểm Quyết Định",
+    "timingPositive": "Yếu tố tích cực",
+    "timingCaution": "Lưu ý",
+    "timingError": "Phân tích thất bại. Vui lòng thử lại."
   },
   "fortune": {
     "title": "Xem vận số",
@@ -102,7 +109,7 @@
     "subtitle": "Sự kiện cuộc đời · Dòng chảy Saju",
     "analysisTitle": "Phân tích mẫu AI",
     "analysisDesc": "Xem các chu kỳ saju của bạn đã định hình sự kiện cuộc đời như thế nào",
-    "lockedAnalysis": "🔒 Thêm {{count}} sự kiện nữa để mở khóa Phân tích mẫu AI",
+    "lockedAnalysis": "Thêm {{count}} sự kiện nữa để mở khóa Phân tích mẫu AI",
     "emptyTitle": "Chưa có sự kiện nào",
     "emptyDesc": "Ghi lại các sự kiện lớn trong cuộc đời và để AI tìm ra các mẫu saju đằng sau chúng.",
     "loading": "Đang tải nhật ký…",
@@ -139,7 +146,11 @@
       "positive": "😊 Tích cực",
       "neutral": "😐 Trung lập",
       "negative": "😔 Tiêu cực"
-    }
+    },
+    "deleteTitle": "Xóa nhật ký",
+    "deleteMessage": "Bạn có chắc muốn xóa nhật ký này không? Không thể khôi phục sau khi xóa.",
+    "cancel": "Hủy",
+    "delete": "Xóa"
   },
   "relationships": {
     "title": "Bản đồ quan hệ",

@@ -1,6 +1,17 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import {
+  TodayIcon,
+  MyChartIcon,
+  FortuneIcon,
+  RelationsIcon,
+  JournalIcon,
+  CalendarIcon,
+} from '../../src/components/icons';
+
+const ACTIVE_COLOR = '#C9A84C';
+const INACTIVE_COLOR = '#C9A84C59'; // 골드 35% opacity
 
 export default function TabsLayout() {
   const { t } = useTranslation('common');
@@ -8,17 +19,26 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: '#1a0a2e', borderTopColor: '#2d1854' },
-        tabBarActiveTintColor: '#a78bfa',
-        tabBarInactiveTintColor: '#5b4d7e',
+        tabBarStyle: {
+          backgroundColor: '#1a0a2e',
+          borderTopColor: '#2d1854',
+          paddingBottom: 6,
+        },
+        tabBarActiveTintColor: ACTIVE_COLOR,
+        tabBarInactiveTintColor: INACTIVE_COLOR,
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
           title: t('tabs.today'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="sunny" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <TodayIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />
@@ -26,8 +46,13 @@ export default function TabsLayout() {
         name="chart"
         options={{
           title: t('tabs.myChart'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <MyChartIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />
@@ -35,8 +60,13 @@ export default function TabsLayout() {
         name="fortune"
         options={{
           title: t('tabs.fortune'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="star" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <FortuneIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />
@@ -44,8 +74,13 @@ export default function TabsLayout() {
         name="relationships"
         options={{
           title: t('tabs.relations'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <RelationsIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />
@@ -53,8 +88,13 @@ export default function TabsLayout() {
         name="journal"
         options={{
           title: t('tabs.journal'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="book" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <JournalIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />
@@ -62,8 +102,13 @@ export default function TabsLayout() {
         name="calendar"
         options={{
           title: t('tabs.calendar'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <CalendarIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
           ),
         }}
       />

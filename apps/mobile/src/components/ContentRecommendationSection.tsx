@@ -23,6 +23,7 @@ import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 import { useContentRecommendation, type RecommendationItem } from '../hooks/useContentRecommendation';
+import { MusicIcon, BookIcon, TravelIcon } from './icons';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -54,41 +55,47 @@ interface TabLabels {
 const FRAME_TAB_LABELS: Record<CulturalFrame, TabLabels> = {
   kr: {
     sectionTitle: '당신의 오행에 맞는 추천',
-    music: '🎵 음악', books: '📚 책', travel: '✈️ 여행',
+    music: '음악', books: '책', travel: '여행',
     share: '공유하기', loading: '추천 생성 중…', errorRetry: '다시 시도',
     noChart: '온보딩을 완료하면 추천을 받을 수 있습니다.',
   },
   cn: {
     sectionTitle: '五行推荐',
-    music: '🎵 音乐', books: '📚 书籍', travel: '✈️ 旅行',
+    music: '音乐', books: '书籍', travel: '旅行',
     share: '分享', loading: '生成推荐中…', errorRetry: '重试',
     noChart: '完成引导后即可查看推荐。',
   },
   jp: {
     sectionTitle: '五行おすすめ',
-    music: '🎵 音楽', books: '📚 本', travel: '✈️ 旅行',
+    music: '音楽', books: '本', travel: '旅行',
     share: 'シェア', loading: 'おすすめを生成中…', errorRetry: '再試行',
     noChart: 'オンボーディングを完了するとおすすめが表示されます。',
   },
   en: {
     sectionTitle: 'Recommended for Your Element',
-    music: '🎵 Music', books: '📚 Books', travel: '✈️ Travel',
+    music: 'Music', books: 'Books', travel: 'Travel',
     share: 'Share', loading: 'Generating recommendations…', errorRetry: 'Retry',
     noChart: 'Complete onboarding to get recommendations.',
   },
   es: {
     sectionTitle: 'Recomendaciones para Tu Elemento',
-    music: '🎵 Música', books: '📚 Libros', travel: '✈️ Viajes',
+    music: 'Música', books: 'Libros', travel: 'Viajes',
     share: 'Compartir', loading: 'Generando recomendaciones…', errorRetry: 'Reintentar',
     noChart: 'Completa el onboarding para obtener recomendaciones.',
   },
   in: {
     sectionTitle: 'Recommended for Your Element',
-    music: '🎵 Music', books: '📚 Books', travel: '✈️ Travel',
+    music: 'Music', books: 'Books', travel: 'Travel',
     share: 'Share', loading: 'Generating recommendations…', errorRetry: 'Retry',
     noChart: 'Complete onboarding to receive your recommendations.',
   },
 };
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function stripLeadingEmoji(text: string): string {
+  return text.replace(/^[\p{Emoji_Presentation}\p{Emoji}\uFE0F\u20E3\u200D]+\s*/gu, '');
+}
 
 // ── Card (share-capturable) ────────────────────────────────────────────────────
 
@@ -107,7 +114,7 @@ function RecommendCard({
         <Text style={[styles.cardIndexText, { color: elemColor }]}>{index + 1}</Text>
       </View>
       <View style={styles.cardBody}>
-        <Text style={[styles.cardTag, { color: elemColor }]}>{item.tag}</Text>
+        <Text style={[styles.cardTag, { color: elemColor }]}>{stripLeadingEmoji(item.tag)}</Text>
         <Text style={styles.cardTitle}>{item.title}</Text>
         <Text style={styles.cardDesc}>{item.description}</Text>
       </View>
@@ -234,9 +241,17 @@ export function ContentRecommendationSection({ frame }: Props) {
                   onPress={() => setActiveTab(tab)}
                   activeOpacity={0.7}
                 >
-                  <Text style={[styles.tabText, isActive && { color: elemColor }]}>
-                    {label}
-                  </Text>
+                  <View style={styles.tabInner}>
+                    {tab === 'music'
+                      ? <MusicIcon color={isActive ? elemColor : '#6b5b8f'} size={14} />
+                      : tab === 'books'
+                      ? <BookIcon color={isActive ? elemColor : '#6b5b8f'} size={14} />
+                      : <TravelIcon color={isActive ? elemColor : '#6b5b8f'} size={14} />
+                    }
+                    <Text style={[styles.tabText, isActive && { color: elemColor }]}>
+                      {label}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             })}
@@ -338,6 +353,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2d1854',
     alignItems: 'center',
+  },
+  tabInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   tabText: {
     fontSize: 12,

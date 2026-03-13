@@ -13,6 +13,22 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import {
+  CompatibilityIcon,
+  AnnualReportIcon,
+  MyChartIcon,
+  FortuneIcon,
+  HourglassIcon,
+  ColorIcon,
+  DirectionIcon,
+  NumberIcon,
+  FoodIcon,
+  LockIcon,
+  ThumbUpIcon,
+  ThumbDownIcon,
+  ChatIcon,
+  GiftIcon,
+} from '../../src/components/icons';
 import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
 import type { FiveElement } from '@k-saju/saju-engine';
@@ -28,18 +44,12 @@ import { useTimingAdvisor } from '../../src/hooks/useTimingAdvisor';
 import type { TimingCategory } from '../../src/types/timing';
 import { T } from '../../src/theme/tokens';
 import { LuckyItemCard } from '../../src/components/LuckyItemCard';
+import { AskMoreModal } from '../../src/components/AskMoreModal';
 
 // ── Element palette ───────────────────────────────────────────────────────────
 
 const ELEMENT_COLOR: Record<FiveElement, string> = T.element;
 
-const ELEMENT_EMOJI: Record<FiveElement, string> = {
-  木: '🌿',
-  火: '🔥',
-  土: '⛰️',
-  金: '✦',
-  水: '🌊',
-};
 
 const ELEMENT_LABEL: Record<FiveElement, string> = {
   木: 'Wood', 火: 'Fire', 土: 'Earth', 金: 'Metal', 水: 'Water',
@@ -107,11 +117,11 @@ export default function HomeScreen() {
   })();
 
   const gridItems = [
-    { label: t('home.quickActions.compatibility'), icon: '💞', route: '/compatibility', deco: '合' },
-    { label: t('home.quickActions.annualReport'), icon: '📅', route: '/reports', deco: '年' },
-    { label: t('home.quickActions.myChart'), icon: '☯️', route: '/(tabs)/chart', deco: '命' },
-    { label: t('home.quickActions.fortune'), icon: '⭐', route: '/(tabs)/fortune', deco: '運' },
-  ] as const;
+    { label: t('home.quickActions.compatibility'), icon: <CompatibilityIcon color="#C9A84C" size={28} />, route: '/compatibility', deco: '合' },
+    { label: t('home.quickActions.annualReport'), icon: <AnnualReportIcon color="#C9A84C" size={28} />, route: '/reports', deco: '年' },
+    { label: t('home.quickActions.myChart'), icon: <MyChartIcon color="#C9A84C" size={28} />, route: '/(tabs)/chart', deco: '命' },
+    { label: t('home.quickActions.fortune'), icon: <FortuneIcon color="#C9A84C" size={28} />, route: '/(tabs)/fortune', deco: '運' },
+  ];
 
   // ── Feedback state ────────────────────────────────────────────────────────
   const { submitting: feedbackSubmitting, submitted: feedbackSubmitted, submitFeedback, reset: resetFeedback } = useFeedback();
@@ -128,6 +138,9 @@ export default function HomeScreen() {
     await submitFeedback(readingId, selectedRating, feedbackType);
     setSheetVisible(false);
   }
+
+  // ── Chat modal state ──────────────────────────────────────────────────────
+  const [chatVisible, setChatVisible] = useState(false);
 
   // ── Timing Advisor state ──────────────────────────────────────────────────
   const { loading: timingLoading, advice, limitReached, error: timingError, analyze, reset: resetTiming } = useTimingAdvisor();
@@ -171,7 +184,6 @@ export default function HomeScreen() {
 
   // ── Element helpers ───────────────────────────────────────────────────────
   const elementColor = ELEMENT_COLOR[todayElement] ?? T.primary.DEFAULT;
-  const elementEmoji = ELEMENT_EMOJI[todayElement] ?? '✦';
 
   // ── Share card data ───────────────────────────────────────────────────────
   const shareFrame = frame ?? 'en';
@@ -218,7 +230,7 @@ export default function HomeScreen() {
         <View style={[styles.ganjiPill, { borderColor: elementColor + '88' }]}>
           {/* Left element indicator */}
           <View style={[styles.ganjiIndicator, { backgroundColor: elementColor }]} />
-          <Text style={styles.ganjiEmoji}>{elementEmoji}</Text>
+          <View style={[styles.ganjiEmoji, { backgroundColor: elementColor }]} />
           <Text style={styles.ganjiText}>{ganji}</Text>
           <View style={[styles.elementBadge, { backgroundColor: elementColor + '22', borderColor: elementColor + '44' }]}>
             <Text style={[styles.elementBadgeText, { color: elementColor }]}>
@@ -260,7 +272,7 @@ export default function HomeScreen() {
               </View>
             ) : weeklyLimitReached && !reading ? (
               <View style={styles.lockedBox}>
-                <Text style={styles.lockedIcon}>🔒</Text>
+                <View style={styles.lockedIcon}><LockIcon color={elementColor} size={28} /></View>
                 <Text style={styles.lockedTitle}>{t('home.weeklyUsedTitle')}</Text>
                 <Text style={styles.lockedDesc}>{t('home.weeklyUsedDesc')}</Text>
               </View>
@@ -289,16 +301,16 @@ export default function HomeScreen() {
                     <Text style={styles.feedbackLabel}>도움이 됐나요?</Text>
                     <View style={styles.feedbackBtns}>
                       <TouchableOpacity
-                        style={[styles.feedbackBtn, selectedRating === 1 && styles.feedbackBtnActive]}
+                        style={[styles.feedbackBtn, selectedRating === 1 && styles.feedbackBtnPressed]}
                         onPress={() => handleFeedbackPress(1)}
                       >
-                        <Text style={styles.feedbackBtnText}>👍</Text>
+                        <ThumbUpIcon color="#C9A84C" size={20} />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={[styles.feedbackBtn, selectedRating === -1 && styles.feedbackBtnActive]}
+                        style={[styles.feedbackBtn, selectedRating === -1 && styles.feedbackBtnPressed]}
                         onPress={() => handleFeedbackPress(-1)}
                       >
-                        <Text style={styles.feedbackBtnText}>👎</Text>
+                        <ThumbDownIcon color="#C9A84C" size={20} />
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -306,21 +318,11 @@ export default function HomeScreen() {
 
                 {/* "더 물어보기" button */}
                 <TouchableOpacity
-                  style={[styles.chatBtn, !isPremium && styles.chatBtnLocked]}
-                  onPress={() => {
-                    const today = new Date().toISOString().split('T')[0];
-                    router.push({
-                      pathname: '/fortune-chat/[fortuneId]',
-                      params: {
-                        fortuneId: today,
-                        summary: reading.summary,
-                        details: JSON.stringify(reading.details),
-                      },
-                    } as never);
-                  }}
+                  style={styles.chatBtn}
+                  onPress={() => setChatVisible(true)}
                 >
-                  <Text style={styles.chatBtnIcon}>💬</Text>
-                  <Text style={styles.chatBtnText}>더 물어보기</Text>
+                  <ChatIcon color="#C9A84C" size={16} />
+                  <Text style={styles.chatBtnText}>{t('fortuneChat.title')}</Text>
                   {!isPremium && (
                     <View style={styles.chatBtnBadge}>
                       <Text style={styles.chatBtnBadgeText}>{t('premium')}</Text>
@@ -341,16 +343,16 @@ export default function HomeScreen() {
             </View>
             <View style={styles.luckyGrid}>
               {reading.luckyItems.color && (
-                <LuckyItemCard icon="🎨" label={t('home.luckyColor')} value={reading.luckyItems.color} />
+                <LuckyItemCard icon={<ColorIcon color="#C9A84C" size={20} />} label={t('home.luckyColor')} value={reading.luckyItems.color} />
               )}
               {reading.luckyItems.number != null && (
-                <LuckyItemCard icon="🔢" label={t('home.luckyNumber')} value={reading.luckyItems.number} />
+                <LuckyItemCard icon={<NumberIcon color="#C9A84C" size={20} />} label={t('home.luckyNumber')} value={reading.luckyItems.number} />
               )}
               {reading.luckyItems.direction && (
-                <LuckyItemCard icon="🧭" label={t('home.luckyDirection')} value={reading.luckyItems.direction} />
+                <LuckyItemCard icon={<DirectionIcon color="#C9A84C" size={20} />} label={t('home.luckyDirection')} value={reading.luckyItems.direction} />
               )}
               {reading.luckyItems.food && (
-                <LuckyItemCard icon="🍽️" label={t('home.luckyFood')} value={reading.luckyItems.food} />
+                <LuckyItemCard icon={<FoodIcon color="#C9A84C" size={20} />} label={t('home.luckyFood')} value={reading.luckyItems.food} />
               )}
             </View>
           </View>
@@ -364,7 +366,10 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ) : (
           <View style={styles.limitBannerFree}>
-            <Text style={styles.limitFreeText}>{t('home.freeReadingAvailable')}</Text>
+            <View style={styles.limitFreeRow}>
+              <GiftIcon color="#C9A84C" size={14} />
+              <Text style={styles.limitFreeText}>{t('home.freeReadingAvailable')}</Text>
+            </View>
             <TouchableOpacity onPress={() => router.push('/paywall')}>
               <Text style={styles.upgradeLink}>{t('home.upgradeShort')}</Text>
             </TouchableOpacity>
@@ -383,7 +388,7 @@ export default function HomeScreen() {
             >
               {/* Deco glyph watermark */}
               <Text style={styles.gridDeco}>{item.deco}</Text>
-              <Text style={styles.gridIcon}>{item.icon}</Text>
+              <View style={styles.gridIconWrap}>{item.icon}</View>
               <Text style={styles.gridLabel}>{item.label}</Text>
             </TouchableOpacity>
           ))}
@@ -398,7 +403,7 @@ export default function HomeScreen() {
         >
           <Text style={styles.timingCardDeco}>決</Text>
           <View style={styles.timingCardContent}>
-            <Text style={styles.timingCardIcon}>⏰</Text>
+            <HourglassIcon color="#C9A84C" size={32} />
             <View style={styles.timingCardBody}>
               <Text style={styles.timingCardTitle}>{t('home.quickActions.timing')}</Text>
               <Text style={styles.timingCardDesc}>{t('home.timingDesc')}</Text>
@@ -473,6 +478,14 @@ export default function HomeScreen() {
         error={timingError}
         onClose={() => { setResultSheetVisible(false); resetTiming(); }}
       />
+
+      <AskMoreModal
+        visible={chatVisible}
+        onClose={() => setChatVisible(false)}
+        isPremium={isPremium}
+        fortuneId={new Date().toISOString().split('T')[0]!}
+        todayReading={reading ? { summary: reading.summary, details: reading.details } : null}
+      />
     </>
   );
 }
@@ -505,7 +518,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   ganjiIndicator: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 3 },
-  ganjiEmoji: { fontSize: 18 },
+  ganjiEmoji: { width: 10, height: 10, borderRadius: 5 },
   ganjiText: { fontSize: T.fontSize.base, color: T.text.secondary, fontWeight: '600', flex: 1, marginLeft: 6 },
   elementBadge: { borderRadius: T.radius.sm, paddingHorizontal: T.spacing[2], paddingVertical: 3, borderWidth: 1 },
   elementBadgeText: { fontSize: T.fontSize.xs, fontWeight: '700' },
@@ -545,7 +558,6 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: T.primary.subtle,
   },
   chatBtnLocked: { opacity: 0.8 },
-  chatBtnIcon: { fontSize: 15 },
   chatBtnText: { color: T.primary.lighter, fontWeight: '600', fontSize: T.fontSize.base },
   chatBtnBadge: {
     backgroundColor: T.primary.DEFAULT, borderRadius: T.radius.sm,
@@ -559,7 +571,7 @@ const styles = StyleSheet.create({
   retryText: { color: T.primary.light, fontWeight: '600' },
 
   lockedBox: { alignItems: 'center', paddingVertical: T.spacing[2] },
-  lockedIcon: { fontSize: 28, marginBottom: T.spacing[2] },
+  lockedIcon: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', marginBottom: T.spacing[2] },
   lockedTitle: { color: T.text.secondary, fontWeight: '700', fontSize: T.fontSize.md, marginBottom: 6 },
   lockedDesc: { color: T.text.muted, fontSize: T.fontSize.sm, textAlign: 'center', lineHeight: 20 },
 
@@ -587,6 +599,7 @@ const styles = StyleSheet.create({
     marginBottom: T.spacing[6], borderWidth: 1, borderColor: T.border.default,
   },
   limitUsedText: { color: T.primary.lighter, fontSize: T.fontSize.sm },
+  limitFreeRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   limitFreeText: { color: T.primary.lighter, fontSize: T.fontSize.sm },
   upgradeLink: { color: T.primary.light, fontWeight: '700', fontSize: T.fontSize.sm },
 
@@ -600,11 +613,13 @@ const styles = StyleSheet.create({
   feedbackBtns: { flexDirection: 'row', gap: T.spacing[2] },
   feedbackBtn: {
     width: 40, height: 40, borderRadius: T.radius.md,
-    backgroundColor: T.bg.base, alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: T.border.default,
+    backgroundColor: 'rgba(201,168,76,0.10)', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1, borderColor: 'rgba(201,168,76,0.35)',
   },
-  feedbackBtnActive: { borderColor: T.primary.light, backgroundColor: T.bg.elevated },
-  feedbackBtnText: { fontSize: 18 },
+  feedbackBtnPressed: {
+    backgroundColor: 'rgba(201,168,76,0.35)',
+    borderColor: '#C9A84C',
+  },
   feedbackThanks: {
     marginTop: T.spacing[5], paddingTop: T.spacing[4],
     borderTopWidth: 1, borderTopColor: T.border.default, alignItems: 'center',
@@ -628,7 +643,7 @@ const styles = StyleSheet.create({
     color: T.primary.DEFAULT, opacity: 0.06,
     top: -8, right: 4,
   },
-  gridIcon: { fontSize: 28, marginBottom: T.spacing[2], zIndex: 1 },
+  gridIconWrap: { marginBottom: T.spacing[2], zIndex: 1 },
   gridLabel: { color: T.primary.lighter, fontWeight: '600', fontSize: T.fontSize.base, zIndex: 1 },
 
   // AI Tools section
@@ -643,7 +658,7 @@ const styles = StyleSheet.create({
     right: 8, top: -8,
   },
   timingCardContent: { flexDirection: 'row', alignItems: 'center', gap: T.spacing[4] },
-  timingCardIcon: { fontSize: 32 },
+  timingCardIcon: { width: 32, height: 32 },
   timingCardBody: { flex: 1 },
   timingCardTitle: { color: T.text.primary, fontWeight: '700', fontSize: T.fontSize.md, marginBottom: 4 },
   timingCardDesc: { color: T.text.muted, fontSize: T.fontSize.sm, lineHeight: 18 },

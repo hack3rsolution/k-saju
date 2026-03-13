@@ -45,7 +45,7 @@
     "tryAgain": "Try Again",
     "weeklyUsedTitle": "Weekly reading used",
     "weeklyUsedDesc": "Your free reading for this week has been used. Upgrade to Premium for unlimited daily readings.",
-    "freeReadingAvailable": "🎁 1 free reading left this week",
+    "freeReadingAvailable": "1 free reading left this week",
     "weeklyReadingUsed": "Free weekly reading used · ",
     "upgradeToPremium": "Upgrade to Premium →",
     "upgradeShort": "Upgrade →",
@@ -57,11 +57,18 @@
       "annualReport": "Annual Report",
       "myChart": "My Chart",
       "fortune": "Fortune",
-      "timing": "Timing Advisor"
+      "timing": "The Right Time"
     },
-    "aiTools": "AI Tools",
+    "aiTools": "Destiny Tools",
     "timingDesc": "AI analyzes the best timing for your next move",
-    "elementDaySuffix": "Day"
+    "elementDaySuffix": "Day",
+    "timingSheetTitle": "The Right Time",
+    "timingSheetSubtitle": "What decision shall we analyse?",
+    "timingLoading": "Consulting the heavens...",
+    "timingResultTitle": "The Right Time",
+    "timingPositive": "Positive Factors",
+    "timingCaution": "Cautions",
+    "timingError": "Analysis failed. Please try again."
   },
   "fortune": {
     "title": "Fortune Readings",
@@ -103,7 +110,7 @@
     "subtitle": "Life Events · Saju Flow",
     "analysisTitle": "AI Pattern Analysis",
     "analysisDesc": "See how your saju cycles shaped your life events",
-    "lockedAnalysis": "🔒 Add {{count}} more event(s) to unlock AI Pattern Analysis",
+    "lockedAnalysis": "Add {{count}} more event(s) to unlock AI Pattern Analysis",
     "emptyTitle": "No events yet",
     "emptyDesc": "Record your major life events and let AI find the saju patterns behind them.",
     "loading": "Loading journal…",
@@ -140,7 +147,11 @@
       "positive": "😊 Positive",
       "neutral": "😐 Neutral",
       "negative": "😔 Negative"
-    }
+    },
+    "deleteTitle": "Delete Entry",
+    "deleteMessage": "Are you sure you want to delete this entry? This cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "relationships": {
     "title": "Relationship Map",

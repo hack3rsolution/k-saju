@@ -45,7 +45,7 @@
     "tryAgain": "다시 시도",
     "weeklyUsedTitle": "주간 운세 사용 완료",
     "weeklyUsedDesc": "이번 주 무료 운세를 사용했습니다. 프리미엄으로 업그레이드하시면 매일 운세를 볼 수 있습니다.",
-    "freeReadingAvailable": "🎁 이번 주 무료 운세 1회 남음",
+    "freeReadingAvailable": "이번 주 무료 운세 1회 남음",
     "weeklyReadingUsed": "이번 주 무료 운세 사용 완료 · ",
     "upgradeToPremium": "프리미엄 업그레이드 →",
     "upgradeShort": "업그레이드 →",
@@ -57,11 +57,18 @@
       "annualReport": "연간 리포트",
       "myChart": "내 사주",
       "fortune": "운세",
-      "timing": "지금 결정 분석"
+      "timing": "결정의 때"
     },
-    "aiTools": "AI 도구",
+    "aiTools": "운명 탐구",
     "timingDesc": "AI가 지금 당장 최적 타이밍을 분석해드립니다",
-    "elementDaySuffix": "일"
+    "elementDaySuffix": "일",
+    "timingSheetTitle": "결정의 때",
+    "timingSheetSubtitle": "어떤 결정을 분석할까요?",
+    "timingLoading": "하늘의 뜻을 살피는 중...",
+    "timingResultTitle": "결정의 때",
+    "timingPositive": "긍정 요인",
+    "timingCaution": "주의 사항",
+    "timingError": "분석에 실패했습니다. 다시 시도해주세요."
   },
   "fortune": {
     "title": "운세 읽기",
@@ -103,7 +110,7 @@
     "subtitle": "인생 이벤트 기록 · 사주 흐름",
     "analysisTitle": "AI 패턴 분석",
     "analysisDesc": "사주 흐름이 인생 이벤트에 미친 영향을 확인하세요",
-    "lockedAnalysis": "🔒 AI 패턴 분석 활성화까지 {{count}}개 더 기록하세요",
+    "lockedAnalysis": "AI 패턴 분석 활성화까지 {{count}}개 더 기록하세요",
     "emptyTitle": "아직 이벤트가 없습니다",
     "emptyDesc": "인생의 주요 이벤트(경력 변화, 인간관계, 건강 이정표 등)를 기록하면 AI가 사주 흐름 패턴을 분석합니다.",
     "loading": "일지 로딩 중…",
@@ -140,7 +147,11 @@
       "positive": "😊 긍정",
       "neutral": "😐 보통",
       "negative": "😔 부정"
-    }
+    },
+    "deleteTitle": "일지 삭제",
+    "deleteMessage": "이 일지를 삭제할까요? 삭제된 내용은 복구할 수 없습니다.",
+    "cancel": "취소",
+    "delete": "삭제"
   },
   "relationships": {
     "title": "관계 지도",

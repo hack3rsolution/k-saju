@@ -1,21 +1,25 @@
 /**
  * JournalEventCard — timeline event row for the Life Journal.
  */
+import { type ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { LifeEvent, EventCategory } from '../types/journal';
+import { CareerIcon, LoveIcon, HealthIcon, FamilyIcon, TravelIcon, FinanceIcon, BookIcon, EtcIcon } from './icons';
 
 // ── Category metadata ─────────────────────────────────────────────────────────
 
-const CATEGORY_META: Record<EventCategory, { icon: string; color: string }> = {
-  career:    { icon: '💼', color: '#6366f1' },
-  love:      { icon: '💞', color: '#ec4899' },
-  health:    { icon: '🌿', color: '#22c55e' },
-  family:    { icon: '🏡', color: '#f59e0b' },
-  travel:    { icon: '✈️', color: '#06b6d4' },
-  finance:   { icon: '💰', color: '#84cc16' },
-  education: { icon: '📚', color: '#a78bfa' },
-  other:     { icon: '⭐', color: '#9ca3af' },
+const ICON_COLOR = { career: '#6366f1', love: '#ec4899', health: '#22c55e', family: '#f59e0b', travel: '#06b6d4', finance: '#84cc16', education: '#a78bfa', other: '#9ca3af' };
+
+const CATEGORY_META: Record<EventCategory, { icon: ReactNode; color: string }> = {
+  career:    { icon: <CareerIcon  color={ICON_COLOR.career}    size={20} />, color: ICON_COLOR.career    },
+  love:      { icon: <LoveIcon    color={ICON_COLOR.love}      size={20} />, color: ICON_COLOR.love      },
+  health:    { icon: <HealthIcon  color={ICON_COLOR.health}    size={20} />, color: ICON_COLOR.health    },
+  family:    { icon: <FamilyIcon  color={ICON_COLOR.family}    size={20} />, color: ICON_COLOR.family    },
+  travel:    { icon: <TravelIcon  color={ICON_COLOR.travel}    size={20} />, color: ICON_COLOR.travel    },
+  finance:   { icon: <FinanceIcon color={ICON_COLOR.finance}   size={20} />, color: ICON_COLOR.finance   },
+  education: { icon: <BookIcon    color={ICON_COLOR.education} size={20} />, color: ICON_COLOR.education },
+  other:     { icon: <EtcIcon     color={ICON_COLOR.other}     size={20} />, color: ICON_COLOR.other     },
 };
 
 const SENTIMENT_COLOR: Record<LifeEvent['sentiment'], string> = {
@@ -48,7 +52,7 @@ export function JournalEventCard({ event, isLast, onDelete }: Props) {
       {/* Card */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.categoryIcon}>{meta.icon}</Text>
+          <View style={styles.categoryIconWrap}>{meta.icon}</View>
           <View style={styles.cardMeta}>
             <Text style={styles.title} numberOfLines={1}>{event.title}</Text>
             <Text style={styles.date}>{event.eventDate}</Text>
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  categoryIcon: { fontSize: 20 },
+  categoryIconWrap: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
   cardMeta:  { flex: 1 },
   title:     { color: '#fff', fontWeight: '600', fontSize: 14 },
   date:      { color: '#9d8fbe', fontSize: 12, marginTop: 1 },

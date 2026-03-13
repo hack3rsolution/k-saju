@@ -14,7 +14,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { TimingAdvice } from '../hooks/useTimingAdvisor';
+import { HourglassIcon, LockIcon } from './icons';
 
 // ── Score color ───────────────────────────────────────────────────────────────
 
@@ -87,6 +89,7 @@ interface Props {
 }
 
 export function TimingResultSheet({ visible, loading, advice, limitReached, error, onClose }: Props) {
+  const { t } = useTranslation('common');
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -96,11 +99,11 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
           {loading ? (
             <View style={styles.centerBox}>
               <ActivityIndicator color="#a78bfa" size="large" />
-              <Text style={styles.loadingText}>사주 분석 중…</Text>
+              <Text style={styles.loadingText}>{t('home.timingLoading')}</Text>
             </View>
           ) : limitReached ? (
             <View style={styles.centerBox}>
-              <Text style={styles.limitIcon}>🔒</Text>
+              <View style={styles.limitIcon}><LockIcon color="#a78bfa" size={40} /></View>
               <Text style={styles.limitTitle}>이번 달 무료 분석 완료</Text>
               <Text style={styles.limitDesc}>
                 Premium으로 업그레이드하면 매일 무제한 타이밍 분석이 가능합니다.
@@ -114,18 +117,21 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
             </View>
           ) : error ? (
             <View style={styles.centerBox}>
-              <Text style={styles.errorText}>{error}</Text>
+              <Text style={styles.errorText}>{t('home.timingError')}</Text>
             </View>
           ) : advice ? (
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-              <Text style={styles.title}>⏰ 타이밍 분석 결과</Text>
+              <View style={styles.titleRow}>
+                <HourglassIcon color="#C9A84C" size={20} />
+                <Text style={styles.title}>{t('home.timingResultTitle')}</Text>
+              </View>
 
               <ScoreGauge score={advice.score} />
 
               <Text style={styles.headline}>{advice.headline}</Text>
 
               {/* Reasons */}
-              <Text style={styles.sectionLabel}>✅ 긍정 요인</Text>
+              <Text style={styles.sectionLabel}>{t('home.timingPositive')}</Text>
               {advice.reasons.map((r, i) => (
                 <View key={i} style={styles.reasonRow}>
                   <Text style={styles.bullet}>·</Text>
@@ -134,7 +140,7 @@ export function TimingResultSheet({ visible, loading, advice, limitReached, erro
               ))}
 
               {/* Cautions */}
-              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>⚠️ 주의 사항</Text>
+              <Text style={[styles.sectionLabel, { marginTop: 16 }]}>{t('home.timingCaution')}</Text>
               {advice.cautions.map((c, i) => (
                 <View key={i} style={styles.cautionRow}>
                   <Text style={styles.cautionBullet}>·</Text>
@@ -178,7 +184,7 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 0 },
   centerBox: { alignItems: 'center', paddingVertical: 24 },
   loadingText: { color: '#9d8fbe', marginTop: 16, fontSize: 15 },
-  limitIcon: { fontSize: 40, marginBottom: 12 },
+  limitIcon: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   limitTitle: { color: '#fff', fontWeight: '700', fontSize: 18, marginBottom: 8 },
   limitDesc: { color: '#b8a9d9', fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 20 },
   upgradeBtn: {
@@ -189,7 +195,8 @@ const styles = StyleSheet.create({
   },
   upgradeBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
   errorText: { color: '#f87171', fontSize: 14, textAlign: 'center' },
-  title: { color: '#a78bfa', fontSize: 12, fontWeight: '700', letterSpacing: 0.8, marginBottom: 16 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
+  title: { color: '#a78bfa', fontSize: 12, fontWeight: '700', letterSpacing: 0.8 },
   headline: {
     color: '#fff',
     fontSize: 18,

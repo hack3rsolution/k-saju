@@ -45,7 +45,7 @@
     "tryAgain": "重試",
     "weeklyUsedTitle": "本週鑑定已使用",
     "weeklyUsedDesc": "您本週的免費鑑定已使用。升級至Premium可每天查看運勢。",
-    "freeReadingAvailable": "🎁 本週剩餘1次免費鑑定",
+    "freeReadingAvailable": "本週剩餘1次免費鑑定",
     "weeklyReadingUsed": "本週免費鑑定已使用 · ",
     "upgradeToPremium": "升級至Premium →",
     "upgradeShort": "升級 →",
@@ -57,11 +57,18 @@
       "annualReport": "年度報告",
       "myChart": "我的命盤",
       "fortune": "運勢",
-      "timing": "決策分析"
+      "timing": "決斷之時"
     },
-    "aiTools": "AI工具",
+    "aiTools": "命運探索",
     "timingDesc": "AI即時分析您的最佳時機",
-    "elementDaySuffix": "日"
+    "elementDaySuffix": "日",
+    "timingSheetTitle": "決斷之時",
+    "timingSheetSubtitle": "分析哪個決定？",
+    "timingLoading": "正在探尋天意...",
+    "timingResultTitle": "決斷之時",
+    "timingPositive": "積極因素",
+    "timingCaution": "注意事項",
+    "timingError": "分析失敗，請重試。"
   },
   "fortune": {
     "title": "運勢鑑定",
@@ -102,7 +109,7 @@
     "subtitle": "人生事件記錄 · 四柱流年",
     "analysisTitle": "AI模式分析",
     "analysisDesc": "了解您的四柱運勢週期如何影響人生事件",
-    "lockedAnalysis": "🔒 再記錄{{count}}個事件即可解鎖AI模式分析",
+    "lockedAnalysis": "再記錄{{count}}個事件即可解鎖AI模式分析",
     "emptyTitle": "還沒有事件",
     "emptyDesc": "記錄您的重要人生事件，讓AI找出其中的四柱規律。",
     "loading": "載入日記…",
@@ -139,7 +146,11 @@
       "positive": "😊 積極",
       "neutral": "😐 平常",
       "negative": "😔 消極"
-    }
+    },
+    "deleteTitle": "刪除日記",
+    "deleteMessage": "確定要刪除這條日記嗎？刪除後無法復原。",
+    "cancel": "取消",
+    "delete": "刪除"
   },
   "relationships": {
     "title": "關係地圖",

@@ -5,7 +5,7 @@
  * Compatibility links to /compatibility screen.
  * Each report is gated behind its addon entitlement.
  */
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import {
+  CompatibilityIcon,
+  AnnualReportIcon,
+  MyChartIcon,
+  FortuneIcon,
+} from '../../src/components/icons';
 import { useTranslation } from 'react-i18next';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -170,19 +176,19 @@ function ReportCard({
   isUnlocked,
   children,
 }: {
-  icon: string;
+  icon: ReactNode;
   title: string;
   subtitle: string;
   desc: string;
   unlockPrice: string;
   isUnlocked: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const { t } = useTranslation('common');
   return (
     <View style={cardStyles.card}>
       <View style={cardStyles.header}>
-        <Text style={cardStyles.icon}>{icon}</Text>
+        <View style={cardStyles.iconWrap}>{icon}</View>
         <View style={{ flex: 1 }}>
           <Text style={cardStyles.title}>{title}</Text>
           <Text style={cardStyles.subtitle}>{subtitle}</Text>
@@ -202,7 +208,7 @@ function ReportCard({
 const cardStyles = StyleSheet.create({
   card: { backgroundColor: '#2d1854', borderRadius: 20, padding: 22, marginBottom: 16 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 14, marginBottom: 12 },
-  icon: { fontSize: 32 },
+  iconWrap: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 16, fontWeight: '700', color: '#fff' },
   subtitle: { fontSize: 12, color: '#9d8fbe', marginTop: 2 },
   lock: { fontSize: 18 },
@@ -273,7 +279,7 @@ export default function ReportsScreen() {
 
       {/* ── 1. Compatibility ──────────────────────────────────────────────── */}
       <ReportCard
-        icon="💞"
+        icon={<CompatibilityIcon color="#C9A84C" size={32} />}
         title={t('reports.deepCompatibility.title')}
         subtitle={t('reports.deepCompatibility.subtitle')}
         desc={t('reports.deepCompatibility.desc')}
@@ -290,7 +296,7 @@ export default function ReportsScreen() {
 
       {/* ── 2. Career & Wealth ────────────────────────────────────────────── */}
       <ReportCard
-        icon="💼"
+        icon={<AnnualReportIcon color="#C9A84C" size={32} />}
         title={t('reports.careerWealth.title')}
         subtitle={t('reports.careerWealth.subtitle')}
         desc={t('reports.careerWealth.desc')}
@@ -314,7 +320,7 @@ export default function ReportsScreen() {
 
       {/* ── 3. Full 대운 Report ───────────────────────────────────────────── */}
       <ReportCard
-        icon="🌊"
+        icon={<MyChartIcon color="#C9A84C" size={32} />}
         title={t('reports.daewoonPdf.title')}
         subtitle={t('reports.daewoonPdf.subtitle')}
         desc={t('reports.daewoonPdf.desc')}
@@ -338,7 +344,7 @@ export default function ReportsScreen() {
 
       {/* ── 4. Name Analysis ─────────────────────────────────────────────── */}
       <ReportCard
-        icon="📝"
+        icon={<FortuneIcon color="#C9A84C" size={32} />}
         title={t('reports.nameAnalysis.title')}
         subtitle={t('reports.nameAnalysis.subtitle')}
         desc={t('reports.nameAnalysis.desc')}

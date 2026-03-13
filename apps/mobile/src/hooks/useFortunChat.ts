@@ -109,9 +109,19 @@ export function useFortunChat(
       // ── Stream reading ─────────────────────────────────────────────────────
       const reader = resp.body?.getReader();
       if (!reader) {
-        // Fallback: read as text if streaming not available
+        // Fallback: read as text and parse SSE lines (body streaming unavailable in this env)
         const text = await resp.text();
-        setMessages([...nextMessages, { role: 'assistant', content: text }]);
+        const content = text
+          .split('\n')
+          .filter((l) => l.startsWith('data: '))
+          .map((l) => {
+            const d = l.slice(6).trim();
+            if (d === '[DONE]') return '';
+            try { return (JSON.parse(d) as { token?: string }).token ?? ''; }
+            catch { return ''; }
+          })
+          .join('');
+        setMessages([...nextMessages, { role: 'assistant', content: content || text }]);
         return;
       }
 

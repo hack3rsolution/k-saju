@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import type { EventType } from '../../types/calendar'
+import { WeddingIcon, FamilyIcon, ContractIcon, CareerIcon, LockIcon } from '../icons'
 
-const EVENT_CONFIG = [
-  { type: 'wedding'   as EventType, label: '결혼', emoji: '💍', premiumOnly: false },
-  { type: 'moving'    as EventType, label: '이사', emoji: '🏠', premiumOnly: true  },
-  { type: 'contract'  as EventType, label: '계약', emoji: '📝', premiumOnly: true  },
-  { type: 'interview' as EventType, label: '면접', emoji: '💼', premiumOnly: true  },
-] as const
+const EVENT_CONFIG: { type: EventType; label: string; icon: ReactNode; premiumOnly: boolean }[] = [
+  { type: 'wedding',   label: '결혼', icon: <WeddingIcon  color="#374151" size={15} />, premiumOnly: false },
+  { type: 'moving',    label: '이사', icon: <FamilyIcon   color="#374151" size={15} />, premiumOnly: true  },
+  { type: 'contract',  label: '계약', icon: <ContractIcon color="#374151" size={15} />, premiumOnly: true  },
+  { type: 'interview', label: '면접', icon: <CareerIcon   color="#374151" size={15} />, premiumOnly: true  },
+]
 
 interface Props {
   selected: EventType
@@ -24,7 +25,7 @@ export function EventTypePicker({ selected, onSelect, isPremium = false, onUpgra
       style={styles.scrollView}
       contentContainerStyle={styles.container}
     >
-      {EVENT_CONFIG.map(({ type, label, emoji, premiumOnly }) => {
+      {EVENT_CONFIG.map(({ type, label, icon, premiumOnly }) => {
         const locked = premiumOnly && !isPremium
         const active = selected === type
         return (
@@ -40,11 +41,22 @@ export function EventTypePicker({ selected, onSelect, isPremium = false, onUpgra
             }}
             activeOpacity={0.7}
           >
-            <Text style={styles.emoji}>{emoji}</Text>
+            <View style={styles.iconWrap}>
+              {locked
+                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#9CA3AF' })
+                : active
+                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#7C3AED' })
+                : icon
+              }
+            </View>
             <Text style={[styles.label, active && styles.activeLabel]}>
               {label}
             </Text>
-            {locked && <Text style={styles.lockIcon}>🔒</Text>}
+            {locked && (
+              <View style={styles.lockIconWrap}>
+                <LockIcon color="#9CA3AF" size={10} />
+              </View>
+            )}
           </TouchableOpacity>
         )
       })}
@@ -58,8 +70,8 @@ const styles = StyleSheet.create({
   tab:         { flexDirection: 'row', alignItems: 'center', height: 36, paddingHorizontal: 12, borderRadius: 18, backgroundColor: '#F5F0FF', gap: 4, borderWidth: 1.5, borderColor: 'transparent' },
   activeTab:   { backgroundColor: '#EDE9FE', borderColor: '#7C3AED' },
   lockedTab:   { opacity: 0.6 },
-  emoji:       { fontSize: 15 },
+  iconWrap:    { width: 15, height: 15, alignItems: 'center', justifyContent: 'center' },
   label:       { fontSize: 13, color: '#374151', fontWeight: '500' },
   activeLabel: { color: '#7C3AED', fontWeight: '700' },
-  lockIcon:    { fontSize: 10 },
+  lockIconWrap:{ width: 10, height: 10, alignItems: 'center', justifyContent: 'center' },
 })

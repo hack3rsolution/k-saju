@@ -1,7 +1,7 @@
 /**
  * AddEventModal — bottom-sheet modal for adding a life event.
  */
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -16,13 +16,20 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { EventCategory, EventSentiment, AddEventInput } from '../types/journal';
+import { CareerIcon, LoveIcon, HealthIcon, FamilyIcon, TravelIcon, FinanceIcon, BookIcon, EtcIcon } from './icons';
 
 // ── Category options ──────────────────────────────────────────────────────────
 
 const CATEGORY_IDS: EventCategory[] = ['career', 'love', 'health', 'family', 'travel', 'finance', 'education', 'other'];
-const CATEGORY_ICONS: Record<EventCategory, string> = {
-  career: '💼', love: '💞', health: '🌿', family: '🏡',
-  travel: '✈️', finance: '💰', education: '📚', other: '⭐',
+const CATEGORY_ICONS: Record<EventCategory, ReactNode> = {
+  career:    <CareerIcon  color="#c4b5fd" size={14} />,
+  love:      <LoveIcon    color="#c4b5fd" size={14} />,
+  health:    <HealthIcon  color="#c4b5fd" size={14} />,
+  family:    <FamilyIcon  color="#c4b5fd" size={14} />,
+  travel:    <TravelIcon  color="#c4b5fd" size={14} />,
+  finance:   <FinanceIcon color="#c4b5fd" size={14} />,
+  education: <BookIcon    color="#c4b5fd" size={14} />,
+  other:     <EtcIcon     color="#c4b5fd" size={14} />,
 };
 
 const SENTIMENT_IDS: EventSentiment[] = ['positive', 'neutral', 'negative'];
@@ -120,7 +127,10 @@ export function AddEventModal({ visible, loading, onClose, onSubmit }: Props) {
                   style={[styles.chip, category === id && styles.chipActive]}
                   onPress={() => setCategory(id)}
                 >
-                  <Text style={styles.chipText}>{CATEGORY_ICONS[id]} {t(`journal.categories.${id}`)}</Text>
+                  <View style={styles.chipInner}>
+                    {CATEGORY_ICONS[id]}
+                    <Text style={styles.chipText}>{t(`journal.categories.${id}`)}</Text>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -216,6 +226,7 @@ const styles = StyleSheet.create({
     borderColor: '#3d2a6e', backgroundColor: '#2d1854',
   },
   chipActive: { borderColor: '#a78bfa', backgroundColor: '#3d2a6e' },
+  chipInner: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   chipText:   { color: '#c4b5fd', fontSize: 13 },
 
   sentimentRow: { flexDirection: 'row', gap: 8 },

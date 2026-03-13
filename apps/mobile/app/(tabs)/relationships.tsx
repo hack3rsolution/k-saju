@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LoveIcon } from '../../src/components/icons';
 import { useRelationships } from '../../src/hooks/useRelationships';
 import { useTranslation } from 'react-i18next';
 import { RelationshipCard } from '../../src/components/RelationshipCard';
@@ -94,7 +95,7 @@ export default function RelationshipsScreen() {
           <Text style={styles.title}>{t('relationships.title')}</Text>
           <Text style={styles.subtitle}>관계 지도 · 人脈運</Text>
           <View style={styles.lockedCard}>
-            <Text style={styles.lockedIcon}>💞</Text>
+            <View style={styles.lockedIcon}><LoveIcon color="#a78bfa" size={48} /></View>
             <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
             <Text style={styles.lockedDesc}>{t('relationships.premiumDesc')}</Text>
             <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
@@ -129,7 +130,7 @@ export default function RelationshipsScreen() {
         {/* Empty state */}
         {!loading && relationships.length === 0 && (
           <View style={styles.emptyBox}>
-            <Text style={styles.emptyIcon}>💞</Text>
+            <View style={styles.emptyIcon}><LoveIcon color="#9d8fbe" size={48} /></View>
             <Text style={styles.emptyTitle}>{t('relationships.emptyTitle')}</Text>
             <Text style={styles.emptyDesc}>{t('relationships.emptyDesc')}</Text>
           </View>
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   errorText:   { color: '#f87171', fontSize: 13, textAlign: 'center' },
 
   emptyBox:  { alignItems: 'center', paddingVertical: 48 },
-  emptyIcon: { fontSize: 48, marginBottom: 12 },
+  emptyIcon: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   emptyTitle:{ color: '#fff', fontWeight: '700', fontSize: 18, marginBottom: 8 },
   emptyDesc: { color: '#9d8fbe', fontSize: 14, textAlign: 'center', lineHeight: 22, maxWidth: 280 },
 
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2d1854', borderRadius: 20, padding: 28,
     alignItems: 'center', marginTop: 16,
   },
-  lockedIcon:  { fontSize: 48, marginBottom: 12 },
+  lockedIcon:  { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   lockedTitle: { color: '#fff', fontWeight: '700', fontSize: 20, marginBottom: 8 },
   lockedDesc:  { color: '#9d8fbe', fontSize: 14, textAlign: 'center', lineHeight: 22, marginBottom: 24 },
   upgradeBtn:  { backgroundColor: '#7c3aed', borderRadius: 12, paddingVertical: 14, paddingHorizontal: 24 },

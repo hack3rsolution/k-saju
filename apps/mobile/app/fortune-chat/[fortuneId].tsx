@@ -1,6 +1,9 @@
 /**
  * Fortune Chat screen — AI follow-up Q&A for today's saju reading.
  *
+ * @deprecated Home tab now uses AskMoreModal (floating bottom sheet).
+ *   This full-screen route is kept for backward compat / deep-link fallback.
+ *
  * Route: /fortune-chat/[fortuneId]
  * Params: fortuneId (YYYY-MM-DD), summary, details (JSON-encoded string array)
  *
@@ -25,6 +28,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useFortunChat, loadChatHistory, type ChatMessage } from '../../src/hooks/useFortunChat';
 import { useIsPremium } from '../../src/store/entitlementStore';
+import { ChatIcon, RefreshIcon, CloseIcon } from '../../src/components/icons';
 
 // ── Suggested question chips ──────────────────────────────────────────────────
 
@@ -133,7 +137,7 @@ function LockedOverlay() {
   return (
     <View style={lock.overlay}>
       <View style={lock.card}>
-        <Text style={lock.icon}>💬</Text>
+        <View style={lock.iconWrap}><ChatIcon color="#a78bfa" size={40} /></View>
         <Text style={lock.title}>{t('fortuneChat.lockTitle')}</Text>
         <Text style={lock.desc}>{t('fortuneChat.lockDesc')}</Text>
         <TouchableOpacity style={lock.btn} onPress={() => router.push('/paywall')}>
@@ -157,7 +161,7 @@ const lock = StyleSheet.create({
     backgroundColor: '#1a0a2e', borderRadius: 24,
     padding: 28, alignItems: 'center', width: '100%', borderWidth: 1, borderColor: '#7c3aed44',
   },
-  icon:   { fontSize: 40, marginBottom: 14 },
+  iconWrap: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
   title:  { color: '#fff', fontSize: 20, fontWeight: '700', marginBottom: 10, textAlign: 'center' },
   desc:   { color: '#b8a9d9', fontSize: 14, lineHeight: 22, textAlign: 'center', marginBottom: 24 },
   btn: {
@@ -190,7 +194,7 @@ export default function FortuneChatScreen() {
 
   const { t } = useTranslation('common');
   const isPremium = useIsPremium();
-  const { messages, streaming, error, rateLimited, premiumRequired, sendMessage } =
+  const { messages, streaming, error, rateLimited, premiumRequired, sendMessage, reset } =
     useFortunChat(fortuneId, todayReading);
 
   const [inputText, setInputText] = useState('');
@@ -231,6 +235,16 @@ export default function FortuneChatScreen() {
     setInputText(q);
   }
 
+  function handleClearChat() {
+    reset();
+    setLocalMessages([]);
+    setInputText('');
+  }
+
+  function handleClose() {
+    router.back();
+  }
+
   const showChips = allMessages.length === 0 && !streaming;
   const showLocked = !isPremium || premiumRequired;
 
@@ -242,6 +256,20 @@ export default function FortuneChatScreen() {
           headerStyle: { backgroundColor: '#1a0a2e' },
           headerTintColor: '#a78bfa',
           headerTitleStyle: { color: '#fff', fontWeight: '700' },
+          headerRight: () => (
+            <View style={styles.headerControls}>
+              <TouchableOpacity
+                style={styles.controlBtn}
+                onPress={handleClearChat}
+                disabled={streaming}
+              >
+                <RefreshIcon color="rgba(201,168,76,0.55)" size={18} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlBtn} onPress={handleClose}>
+                <CloseIcon color="rgba(201,168,76,0.55)" size={18} />
+              </TouchableOpacity>
+            </View>
+          ),
         }}
       />
       <KeyboardAvoidingView
@@ -353,4 +381,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#7c3aed', alignItems: 'center', justifyContent: 'center',
   },
   sendBtnDisabled: { backgroundColor: '#3d2471' },
+
+  // Header controls
+  headerControls: { flexDirection: 'row', gap: 4, marginRight: 4 },
+  controlBtn: { padding: 6 },
 });

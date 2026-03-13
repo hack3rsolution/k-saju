@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, type ReactNode } from 'react';
 import {
   View,
   Text,
@@ -12,27 +12,39 @@ import { useTranslation } from 'react-i18next';
 import { useIsPremium } from '../../src/store/entitlementStore';
 import { useFortune, type FortuneType } from '../../src/hooks/useFortune';
 import { T } from '../../src/theme/tokens';
+import {
+  TodayIcon,
+  WeekIcon,
+  MonthIcon,
+  AnnualReportIcon,
+  MyChartIcon,
+  ColorIcon,
+  DirectionIcon,
+  NumberIcon,
+  FoodIcon,
+  LockIcon,
+} from '../../src/components/icons';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
 interface FortuneCard {
   key: FortuneType;
   labelKey: string;
-  icon: string;
+  icon: ReactNode;
   premium: boolean;
 }
 
 const FORTUNE_CARDS: FortuneCard[] = [
-  { key: 'daily',   labelKey: 'fortune.daily',   icon: '☀️', premium: false },
-  { key: 'weekly',  labelKey: 'fortune.weekly',  icon: '📆', premium: false },
-  { key: 'monthly', labelKey: 'fortune.monthly', icon: '🌙', premium: true  },
-  { key: 'annual',  labelKey: 'fortune.annual',  icon: '🎆', premium: true  },
-  { key: 'daewoon', labelKey: 'fortune.daewoon', icon: '♾️', premium: true  },
+  { key: 'daily',   labelKey: 'fortune.daily',   icon: <TodayIcon        color="#C9A84C" size={28} />, premium: false },
+  { key: 'weekly',  labelKey: 'fortune.weekly',  icon: <WeekIcon         color="#C9A84C" size={28} />, premium: false },
+  { key: 'monthly', labelKey: 'fortune.monthly', icon: <MonthIcon        color="#C9A84C" size={28} />, premium: true  },
+  { key: 'annual',  labelKey: 'fortune.annual',  icon: <AnnualReportIcon color="#C9A84C" size={28} />, premium: true  },
+  { key: 'daewoon', labelKey: 'fortune.daewoon', icon: <MyChartIcon      color="#C9A84C" size={28} />, premium: true  },
 ];
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 
-function Skeleton({ width, height }: { width: number | string; height: number }) {
+function Skeleton({ width, height }: { width: number | `${number}%`; height: number }) {
   const opacity = useRef(new Animated.Value(0.4)).current;
   useEffect(() => {
     const anim = Animated.loop(
@@ -93,10 +105,30 @@ function ReadingPanel({ type }: { type: FortuneType }) {
       ))}
       {reading.luckyItems && (
         <View style={styles.luckyRow}>
-          {reading.luckyItems.color     && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🎨 {reading.luckyItems.color}</Text>}
-          {reading.luckyItems.number != null && <Text style={styles.luckyChip} numberOfLines={1}>🔢 {reading.luckyItems.number}</Text>}
-          {reading.luckyItems.direction && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🧭 {reading.luckyItems.direction}</Text>}
-          {reading.luckyItems.food      && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🍽️ {reading.luckyItems.food}</Text>}
+          {reading.luckyItems.color && (
+            <View style={styles.luckyChip}>
+              <ColorIcon color="#C9A84C" size={12} />
+              <Text style={styles.luckyChipText} numberOfLines={1} ellipsizeMode="tail">{reading.luckyItems.color}</Text>
+            </View>
+          )}
+          {reading.luckyItems.number != null && (
+            <View style={styles.luckyChip}>
+              <NumberIcon color="#C9A84C" size={12} />
+              <Text style={styles.luckyChipText} numberOfLines={1}>{reading.luckyItems.number}</Text>
+            </View>
+          )}
+          {reading.luckyItems.direction && (
+            <View style={styles.luckyChip}>
+              <DirectionIcon color="#C9A84C" size={12} />
+              <Text style={styles.luckyChipText} numberOfLines={1} ellipsizeMode="tail">{reading.luckyItems.direction}</Text>
+            </View>
+          )}
+          {reading.luckyItems.food && (
+            <View style={styles.luckyChip}>
+              <FoodIcon color="#C9A84C" size={12} />
+              <Text style={styles.luckyChipText} numberOfLines={1} ellipsizeMode="tail">{reading.luckyItems.food}</Text>
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -136,16 +168,17 @@ export default function FortuneScreen() {
           >
             {/* Card header row */}
             <View style={styles.cardRow}>
-              <Text style={styles.cardIcon}>{card.icon}</Text>
+              <View style={styles.cardIconWrap}>{card.icon}</View>
               <View style={styles.cardBody}>
                 <Text style={styles.cardTitle}>{t(card.labelKey)}</Text>
                 {locked && (
                   <Text style={styles.premiumBadge}>{t('fortune.premium')}</Text>
                 )}
               </View>
-              <Text style={styles.arrow}>
-                {locked ? '🔒' : isOpen ? '▲' : '→'}
-              </Text>
+              {locked
+                ? <View style={styles.arrowWrap}><LockIcon color={T.text.faint} size={16} /></View>
+                : <Text style={styles.arrow}>{isOpen ? '▲' : '→'}</Text>
+              }
             </View>
 
             {/* Expanded reading panel */}
@@ -184,11 +217,12 @@ const styles = StyleSheet.create({
   cardOpen:   { borderColor: T.primary.DEFAULT },
   cardLocked: { opacity: 0.7 },
   cardRow:    { flexDirection: 'row', alignItems: 'center' },
-  cardIcon:   { fontSize: 28, marginRight: T.spacing[4] },
+  cardIconWrap: { width: 28, height: 28, marginRight: T.spacing[4], alignItems: 'center', justifyContent: 'center' },
   cardBody:   { flex: 1 },
   cardTitle:  { color: T.text.primary, fontWeight: '600', fontSize: T.fontSize.md },
   premiumBadge: { color: T.primary.light, fontSize: T.fontSize.xs, fontWeight: '600', marginTop: 2 },
   arrow:      { color: T.text.faint, fontSize: T.fontSize.md },
+  arrowWrap:  { width: 16, height: 16, alignItems: 'center', justifyContent: 'center' },
 
   // Reading panel (inside expanded card)
   panel:       { marginTop: T.spacing[4] },
@@ -201,11 +235,15 @@ const styles = StyleSheet.create({
 
   luckyRow:  { flexDirection: 'row', flexWrap: 'wrap', gap: T.spacing[2], marginTop: T.spacing[3] },
   luckyChip: {
-    fontSize: T.fontSize.xs, color: T.text.secondary, fontWeight: '600',
+    flexDirection: 'row', alignItems: 'center', gap: 4,
     backgroundColor: T.bg.base, borderRadius: T.radius.sm,
     paddingHorizontal: T.spacing[2], paddingVertical: 4,
     borderWidth: 1, borderColor: T.border.default,
-    maxWidth: '48%',   // prevents chip from exceeding half-row on long text (de/ar)
+    maxWidth: '48%',
+  },
+  luckyChipText: {
+    fontSize: T.fontSize.xs, color: T.text.secondary, fontWeight: '600',
+    flexShrink: 1,
   },
 
   retryBtn:  { alignSelf: 'flex-start', paddingHorizontal: T.spacing[3], paddingVertical: T.spacing[2], borderRadius: T.radius.sm, borderWidth: 1, borderColor: T.border.default },
