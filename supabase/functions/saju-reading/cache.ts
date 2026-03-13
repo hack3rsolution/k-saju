@@ -1,5 +1,12 @@
 import type { CulturalFrame, ReadingType, ClaudeReadingOutput } from './types.ts';
 
+// Encode language into the stored culturalFrame value so language changes
+// invalidate the cache without requiring a DB schema migration.
+// e.g. frame='kr', lang='ko' → stored as 'kr:ko'
+function frameKey(frame: CulturalFrame, userLanguage?: string): string {
+  return userLanguage ? `${frame}:${userLanguage}` : frame;
+}
+
 interface SupabaseClient {
   from: (table: string) => SupabaseQueryBuilder;
 }
@@ -41,6 +48,7 @@ export async function getCachedReading(
   type: ReadingType,
   refDate: string,
   frame: CulturalFrame,
+  userLanguage?: string,
 ): Promise<CachedReading | null> {
   const { data, error } = await supabase
     .from('Reading')
@@ -48,7 +56,7 @@ export async function getCachedReading(
     .eq('userId', userId)
     .eq('type', type)
     .eq('refDate', refDate)
-    .eq('culturalFrame', frame)
+    .eq('culturalFrame', frameKey(frame, userLanguage))
     .single();
 
   if (error || !data) return null;
@@ -57,6 +65,9 @@ export async function getCachedReading(
   const ageHours =
     (Date.now() - new Date(row.createdAt).getTime()) / 3_600_000;
   if (ageHours > CACHE_TTL_HOURS) return null;
+
+  // Reject poisoned cache entries: error placeholders have empty details
+  if (!Array.isArray(row.details) || row.details.length === 0) return null;
 
   return {
     id: row.id,
@@ -78,6 +89,7 @@ export async function storeReading(
   frame: CulturalFrame,
   output: ClaudeReadingOutput,
   rawContent: string,
+  userLanguage?: string,
 ): Promise<string | null> {
   const { data, error } = await supabase
     .from('Reading')
@@ -85,7 +97,7 @@ export async function storeReading(
       userId,
       type,
       refDate,
-      culturalFrame: frame,
+      culturalFrame: frameKey(frame, userLanguage),
       summary: output.summary,
       details: output.details,
       luckyItems: output.luckyItems,

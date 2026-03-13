@@ -1,0 +1,6 @@
+module Pods_ksaju {
+  umbrella header "Pods-ksaju-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -11,6 +11,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { JournalAnalysisData, EventCategory } from '../types/journal';
 
 const CATEGORY_ICON: Record<EventCategory, string> = {
@@ -34,12 +35,13 @@ interface Props {
 }
 
 export function JournalAnalysisSheet({ visible, analysis, loading, error, onClose, onLoad }: Props) {
+  const { t } = useTranslation('common');
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.handle} />
-          <Text style={styles.heading}>AI Pattern Analysis</Text>
+          <Text style={styles.heading}>{t('journal.analysisTitle')}</Text>
           <Text style={styles.subheading}>사주 흐름 × 인생 이벤트</Text>
 
           <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
@@ -47,11 +49,9 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
             {!analysis && !loading && !error && (
               <View style={styles.centerBox}>
                 <Text style={styles.promptIcon}>🔮</Text>
-                <Text style={styles.promptText}>
-                  Tap below to discover which saju cycles shaped your biggest life events.
-                </Text>
+                <Text style={styles.promptText}>{t('journal.analyzePrompt')}</Text>
                 <TouchableOpacity style={styles.loadBtn} onPress={onLoad}>
-                  <Text style={styles.loadBtnText}>Analyze My Patterns →</Text>
+                  <Text style={styles.loadBtnText}>{t('journal.analyzePatterns')}</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -60,7 +60,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
             {loading && (
               <View style={styles.centerBox}>
                 <ActivityIndicator color="#a78bfa" size="large" />
-                <Text style={styles.loadingText}>Claude is reading your life story…</Text>
+                <Text style={styles.loadingText}>{t('journal.analyzingStory')}</Text>
               </View>
             )}
 
@@ -69,7 +69,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
               <View style={styles.errorBox}>
                 <Text style={styles.errorText}>{error}</Text>
                 <TouchableOpacity style={styles.retryBtn} onPress={onLoad}>
-                  <Text style={styles.retryText}>Retry</Text>
+                  <Text style={styles.retryText}>{t('retry')}</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -79,7 +79,7 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
               <>
                 {/* Summary */}
                 <View style={styles.summaryCard}>
-                  <Text style={styles.sectionLabel}>Overall Pattern</Text>
+                  <Text style={styles.sectionLabel}>{t('journal.overallPattern')}</Text>
                   <Text style={styles.summaryText}>{analysis.summary}</Text>
                   <View style={styles.metaRow}>
                     <Text style={styles.metaChip}>⚡ {analysis.dominantElement}</Text>
@@ -97,11 +97,11 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
                     <Text style={styles.patternDesc}>{p.description}</Text>
                     <View style={styles.periodRow}>
                       <View style={styles.periodBadge}>
-                        <Text style={styles.periodLabel}>Best</Text>
+                        <Text style={styles.periodLabel}>{t('journal.bestPeriod')}</Text>
                         <Text style={styles.periodValue}>{p.bestPeriod}</Text>
                       </View>
                       <View style={[styles.periodBadge, styles.watchBadge]}>
-                        <Text style={styles.periodLabel}>Watch</Text>
+                        <Text style={styles.periodLabel}>{t('journal.watchPeriod')}</Text>
                         <Text style={[styles.periodValue, styles.watchValue]}>{p.watchPeriod}</Text>
                       </View>
                     </View>
@@ -109,15 +109,13 @@ export function JournalAnalysisSheet({ visible, analysis, loading, error, onClos
                 ))}
 
                 {/* Cached note */}
-                <Text style={styles.cacheNote}>
-                  Cached · refreshes when you add more events
-                </Text>
+                <Text style={styles.cacheNote}>{t('journal.cacheNote')}</Text>
               </>
             )}
           </ScrollView>
 
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>Close</Text>
+            <Text style={styles.closeBtnText}>{t('close')}</Text>
           </TouchableOpacity>
         </View>
       </View>

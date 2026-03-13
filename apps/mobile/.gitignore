@@ -5,6 +5,9 @@
 expo-env.d.ts
 # @end expo-cli
 
+# Environment overrides — never commit
+.env.local
+
 # Native build outputs (EAS Build manages these on server)
 ios/
 android/

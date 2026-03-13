@@ -51,6 +51,7 @@ function validateRequest(body: unknown): SajuReadingRequest {
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return corsResponse();
+
   if (req.method !== 'POST') return errorResponse('Method not allowed', 405);
 
   // ── Env ───────────────────────────────────────────────────────────────────
@@ -62,15 +63,24 @@ Deno.serve(async (req: Request) => {
 
   // ── Auth — extract user from JWT ──────────────────────────────────────────
   const authHeader = req.headers.get('Authorization') ?? '';
+  const authToken = authHeader.replace('Bearer ', '').trim();
+
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { Authorization: authHeader } },
   });
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) return errorResponse('Unauthorized', 401);
+  // Dev bypass: anon key used as bearer token (signInDev()) → treat as guest
+  let userId: string;
+  if (SUPABASE_ANON_KEY && authToken === SUPABASE_ANON_KEY) {
+    userId = '00000000-0000-4000-8000-000000000000';
+  } else {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return errorResponse('Unauthorized', 401);
+    userId = user.id;
+  }
 
   // ── Rate limit ────────────────────────────────────────────────────────────
-  if (!checkRateLimit(user.id)) {
+  if (!checkRateLimit(userId)) {
     return errorResponse('Rate limit exceeded. Try again in a minute.', 429);
   }
 
@@ -86,10 +96,11 @@ Deno.serve(async (req: Request) => {
   // ── Cache lookup ──────────────────────────────────────────────────────────
   const cached = await getCachedReading(
     supabase,
-    user.id,
+    userId,
     request.type,
     request.refDate,
     request.frame,
+    request.userLanguage,
   );
 
   if (cached) {
@@ -107,18 +118,29 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Fetch recent user feedback for prompt personalization ─────────────────
-  const recentFeedback = await getRecentFeedback(supabase, user.id, 5).catch(() => []);
+  const recentFeedback = await getRecentFeedback(supabase, userId, 5).catch(() => []);
 
   // ── Build prompts ─────────────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback);
+  const systemPrompt = buildSystemPrompt(request.frame, recentFeedback, request.userLanguage);
   const userPrompt   = buildUserPrompt(request);
 
   // ── Claude API call ───────────────────────────────────────────────────────
   let output: Awaited<ReturnType<typeof callClaude>>;
   try {
-    output = await callClaude(systemPrompt, userPrompt, ANTHROPIC_API_KEY);
+    output = await callClaude(systemPrompt, userPrompt, ANTHROPIC_API_KEY, request.type, request.userLanguage);
   } catch (e) {
-    console.error('[saju-reading] Claude error:', e);
+    const msg = (e as Error).message ?? String(e);
+    console.error('[saju-reading] Claude error:', msg);
+    // Transient server errors (overload / billing) → 503; parse/logic errors → 502
+    if (
+      msg.includes('credit balance is too low') ||
+      msg.includes('insufficient_quota') ||
+      msg.includes('overloaded_error') ||
+      msg.includes('error 529') ||
+      msg.includes('error 500')
+    ) {
+      return errorResponse('Service temporarily unavailable. Please try again later.', 503);
+    }
     return errorResponse('AI reading failed. Please try again.', 502);
   }
 
@@ -127,12 +149,13 @@ Deno.serve(async (req: Request) => {
   try {
     readingId = await storeReading(
       supabase,
-      user.id,
+      userId,
       request.type,
       request.refDate,
       request.frame,
       output,
       output.rawContent,
+      request.userLanguage,
     );
   } catch (e) {
     console.error('[saju-reading] store error:', e);

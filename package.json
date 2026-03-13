@@ -44,5 +44,12 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/ios": "^7.4.3"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "expo-localization@15.0.3": "patches/expo-localization@15.0.3.patch",
+      "expo-device@6.0.2": "patches/expo-device@6.0.2.patch",
+      "react-native@0.74.0": "patches/react-native@0.74.0.patch"
+    }
   }
 }

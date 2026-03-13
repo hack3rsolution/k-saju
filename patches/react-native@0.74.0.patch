@@ -1,0 +1,14 @@
+diff --git a/ReactCommon/jsinspector-modern/React-jsinspector.podspec b/ReactCommon/jsinspector-modern/React-jsinspector.podspec
+index e338fcd843e9b95f4a3a94c9653247c005d2a971..0a88f2362f477df1bdb0c32b28d346aa83498d3a 100644
+--- a/ReactCommon/jsinspector-modern/React-jsinspector.podspec
++++ b/ReactCommon/jsinspector-modern/React-jsinspector.podspec
+@@ -38,7 +38,8 @@ Pod::Spec.new do |s|
+   s.compiler_flags         = folly_compiler_flags
+   s.pod_target_xcconfig    = {
+                                "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/..\" \"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/RCT-Folly\" \"$(PODS_ROOT)/DoubleConversion\" \"$(PODS_ROOT)/fmt/include\"",
+-                               "CLANG_CXX_LANGUAGE_STANDARD" => "c++20"
++                               "CLANG_CXX_LANGUAGE_STANDARD" => "c++20",
++                               "DEFINES_MODULE" => "YES"
+   }.merge!(use_frameworks ? {
+     "PUBLIC_HEADERS_FOLDER_PATH" => "#{module_name}.framework/Headers/#{header_dir}"
+   } : {})

@@ -226,14 +226,437 @@ pnpm -r type-check
 
 ---
 
-## TODO (Next Implementation Steps)
+## 트러블슈팅 히스토리 (2026-03-11)
 
-- [ ] Supabase client setup (`src/lib/supabase.ts`) + deep-link callback
-- [ ] Zustand store: `authStore`, `sajuStore`, `entitlementStore`
-- [ ] Birth-date / time picker UI components
-- [ ] Wire `calculateFourPillars` from saju-engine into chart screen
-- [ ] Solar-term (절기) lookup table for precise month pillar
-- [ ] RevenueCat SDK integration + paywall purchase flow
-- [ ] Supabase Edge Function: `saju-reading` (Claude API call)
-- [ ] Push notifications (daily fortune via Expo Notifications)
-- [ ] i18n setup (ko, zh-Hans, zh-Hant, ja, en, es, hi)
+### expo-calendar 설치 후 iOS 빌드 문제
+- expo-calendar는 네이티브 모듈이라 설치 후 반드시 pod install 필요
+- pod deintegrate → pod install --repo-update 순서로 실행
+- Xcode DerivedData도 삭제 필요: `rm -rf ~/Library/Developer/Xcode/DerivedData/KSaju-*`
+- Clean Build Folder (⇧⌘K) 후 빌드
+
+### pod 관련 에러 패턴 및 해결
+- **EXImageLoader "Build input file cannot be found"** → pod deintegrate + pod install로 xcworkspace 재생성
+- **PurchasesHybridCommon "SubscriptionPeriod ambiguous"** → `Pods/PurchasesHybridCommon/StoreProduct+HybridAdditions.swift`에서 `SubscriptionPeriod` → `RevenueCat.SubscriptionPeriod`로 명시
+- **ExpoLocalization "Switch must be exhaustive"** → `node_modules/expo-localization/ios/LocalizationModule.swift` switch문 끝에 `@unknown default: return "gregory"` 추가
+- **ExpoDevice "Cannot find TARGET_OS_SIMULATOR"** → `node_modules/expo-device/ios/UIDevice.swift`에서 `TARGET_OS_SIMULATOR != 0` → `#if targetEnvironment(simulator)` 로 교체
+
+### Expo Go vs Development Build
+- RevenueCat(인앱결제), expo-calendar 등 네이티브 모듈은 Expo Go에서 실행 불가
+- 반드시 `npx expo run:ios` 또는 Xcode 빌드로 실행
+- Expo Go에서 실행 시 "NativeEventEmitter requires a non-null module" 에러 발생
+
+### expo-calendar 권한 설정
+- `app.json`의 `expo.ios.infoPlist`에 반드시 추가:
+  - `NSCalendarsUsageDescription`
+  - `NSCalendarsFullAccessUsageDescription` (iOS 17+ 필수)
+  - `NSRemindersUsageDescription`
+- `apps/mobile/ios/KSaju/Info.plist`에도 동일하게 추가 (로컬 Xcode 빌드용)
+- 누락 시 `ExpoCalendar.MissingCalendarPListValueException` 발생
+
+### saju-engine 빌드
+- node_modules 재설치 후 `dist/` 파일이 사라질 수 있음
+- 증상: "Unable to resolve @k-saju/saju-engine from app/(tabs)/chart.tsx"
+- 해결: `PATH="$PWD/node_modules/.bin:$PATH" tsup src/index.ts --format cjs,esm --dts --tsconfig tsconfig.build.json` (packages/saju-engine에서 실행)
+- `tsconfig.build.json`에 `"types": []` 필수 — `@types/minimatch@6` 충돌 방지
+
+### expo-calendar 버전
+- Expo SDK 51 호환 버전: `expo-calendar@~13.0.5`
+- 주의: 최신 버전(55.x) 설치 시 호환성 문제 발생
+- 설치: `pnpm --filter mobile add expo-calendar@~13.0.5`
+
+### node_modules 꼬임 증상 및 해결
+- 증상: "Unable to resolve expo/build/Expo.fx"
+- 해결: `rm -rf node_modules apps/mobile/node_modules && pnpm install`
+
+### iOS 빌드 vs npx expo run:ios
+- Xcode 직접 빌드보다 `npx expo run:ios`가 더 안정적
+- expo-router, metro 관련 문제는 `npx expo run:ios`가 자동 처리
+- Xcode는 pod 에러 디버깅 시에만 사용
+
+### node_modules 패치 영구 적용 (pnpm patch)
+- **문제**: node_modules 재설치 시 수동 수정이 초기화됨
+- **해결**: `pnpm patch <pkg>` → 수정 → `pnpm patch-commit <tmpdir>` 으로 `patches/` 폴더에 등록
+- 등록된 패치 목록 (`patches/` 폴더 + `pnpm-lock.yaml` `patchedDependencies`에 자동 반영):
+  - `expo-localization@15.0.3.patch` — Calendar.identifier switch에 `@unknown default: return "gregory"` 추가
+  - `expo-device@6.0.2.patch` — `TARGET_OS_SIMULATOR != 0` → `#if targetEnvironment(simulator)` 교체
+  - `react-native@0.74.0.patch` — `React-jsinspector.podspec`에 `"DEFINES_MODULE" => "YES"` 추가
+- `pnpm install` 실행 시 자동 적용 — 추가 작업 불필요
+- **주의**: `pnpm patch-commit` 실패 시("not in npm registry") → `pnpm patch`로 tmpdir 생성 후 수동 수정하면 성공
+
+### Dev Login 버튼 조건 (expo run:ios 동작 특이사항)
+- `npx expo run:ios`는 네이티브 빌드이므로 `__DEV__` 가 `false`가 될 수 있음
+- Dev Login 버튼 조건을 `__DEV__` 단독에서 변경:
+  ```tsx
+  {(process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true' || __DEV__) && (
+    <TouchableOpacity onPress={signInDev}>⚡ Dev Login</TouchableOpacity>
+  )}
+  ```
+- **`apps/mobile/.env`에 `EXPO_PUBLIC_ENABLE_DEV_BYPASS` 없음** — 프로덕션 빌드 보안
+- 로컬 개발 시 `apps/mobile/.env.local`에 `EXPO_PUBLIC_ENABLE_DEV_BYPASS=true` 설정 (gitignore됨)
+
+---
+
+## 현재 상태 (2026-03-13)
+
+**브랜치**: `feat/auspicious-calendar`
+**버전**: v2.4.0 준비 중
+
+### 완료된 주요 기능 (Issues #1–#34 모두 CLOSED)
+
+- [x] Supabase Auth (magic-link PKCE), Zustand stores
+- [x] 온보딩 플로우 (생년월일 입력, 문화권 선택, 결과 미리보기)
+- [x] saju-engine (사주 계산, 오행 균형, 대운) — 100% test coverage
+- [x] AI 운세 읽기 (Supabase Edge Function + Claude API)
+- [x] 홈 화면, 사주 차트, 운세 탭
+- [x] RevenueCat 인앱결제 + 페이월
+- [x] 4종 애드온 리포트 + PDF export
+- [x] 푸시 알림 (Expo Notifications, 매일 8시)
+- [x] i18n 14개 언어 (ko, en, ja, zh-Hans, zh-Hant, es, pt-BR, hi, vi, id, fr, de, th, ar)
+- [x] 관계 지도 (Relationship Map) — 궁합, AI 운세
+- [x] 인생 일지 (Life Journal) — 타임라인, AI 패턴 분석
+- [x] 디자인 시스템 v2.2 (tokens.ts, 오방색, 문화권별 accent)
+- [x] K-Culture 레퍼런스 레이어
+- [x] AI 팔로업 채팅 (Fortune Chat SSE)
+- [x] 타이밍 어드바이저 (1 free/month)
+- [x] 길일 캘린더 (Auspicious Days) — 천간지지 상생/상극 기반 점수 계산
+- [x] K-Personality (사상체질 + 오행 기반) — M1~M4 완료
+- [x] 코드 품질 개선 — 보안/성능/아키텍처/리팩토링 (2026-03-12)
+
+### v2.4.0 QA 버그 수정 (2026-03-13)
+
+- [x] **리포트 3-tier 캐시**: Zustand(즉시) → AsyncStorage TTL → AI 생성. 재물운 30일 / 대운 1년. `reportCacheStore.ts` 신규, `useCachedAddonReport` 훅 추가
+- [x] **리포트 '새 리포트 생성' 버튼 제거**: 재물운·대운은 캐시 정책에 따라 자동 유지
+- [x] **하단 탭 메뉴 i18n**: `tabs.*` 키 14개 언어 추가, `_layout.tsx` `useTranslation` 적용
+- [x] **My Chart 상세 모달 복원**: 오행/십신/대운 섹션 헤더 + 개별 행/카드 onPress 연결
+- [x] **My Chart 사주 데이터 기반 맞춤 설명**: 오행 과다/부족 분석, 십신 `SHISHIN_DESC`, 현재 대운 천간·지지 연결
+- [x] **saju-engine `daewoon.ts` 버그 수정**: `element`가 영문(`'Wood'`)을 반환하던 버그 → `BRANCH_ELEMENT[branch]` (kanji) 직접 반환
+- [x] **`SHISHIN_DESC` 키 수정**: 한자(`比肩`) → 한국어(`비견`) — `ShiShin` 타입과 일치
+- [x] **일간 탭 상세 설명**: 십신 테이블에서 일간(isDay=true) 탭 시 `STEM_DESC` 기반 설명 표시
+- [x] **전체 i18n 하드코딩 수정**: `check:i18n` 스크립트 신규, 온보딩/관계/일지/공유카드 등 영어 하드코딩 제거
+
+### 진행 중 / 미완료
+
+- [ ] v2.4.0 최종 QA 및 릴리스
+- [ ] 월주 계산 정밀도 개선 (절기 룩업 테이블 — 현재 근사치 사용)
+- [ ] Android 테스트 (현재 iOS 위주로 검증)
+- [ ] App Store / Play Store 메타데이터 업데이트 (v2.4.0 기준)
+
+---
+
+## Edge Function 수정 히스토리 (feat/auspicious-calendar 브랜치, 2026-03-12)
+
+### saju-reading Edge Function — 핵심 버그 수정
+
+**배포 명령**: 항상 `--no-verify-jwt` 필수
+```bash
+npx supabase functions deploy saju-reading --no-verify-jwt --project-ref omypurqmhfihmikyusnc
+```
+
+**수정 사항**:
+- `claude.ts`: `MAX_TOKENS` 고정값 → 타입별 차등 (`daily:800, weekly:1000, monthly:1000, annual:1200, daewoon:1500`)
+- `claude.ts`: `parseClaudeOutput` — 파싱 실패 시 에러 플레이스홀더 반환 → **throw** 로 변경 (호출자가 502 반환 → DB 미캐시)
+- `claude.ts`: `stripCodeFences()` 추가 — ` ```json ` 마크다운 노출 방지
+- `cache.ts`: `getCachedReading` — `details.length === 0` 인 오염된 캐시 항목 거부 (에러 플레이스홀더 캐시 무효화)
+- `cache.ts`: `frameKey(frame, userLanguage)` — 언어를 `culturalFrame` 값에 인코딩 (e.g. `kr:ko`) — DB 마이그레이션 없이 언어별 캐시 분리
+- `index.ts`: Dev bypass — `authToken === SUPABASE_ANON_KEY` → `userId = '00000000-0000-4000-8000-000000000000'`
+- `prompts.ts`: `langInstruction`을 frame 프롬프트 **앞**에 배치, JSON 출력 형식 강화
+
+**Supabase CLI v2.75.0 주의**: `functions logs` 명령 없음 — 로그는 Supabase 대시보드에서 확인
+
+### content-recommendation Edge Function
+
+**수정 사항**:
+- `prompts.ts`: `en`/`in` frame에서 "Descriptions in English" 제거 — `langInstruction`과 충돌 방지
+- `prompts.ts`: `buildSystemPrompt` — 앞뒤 bookend 강화: `CRITICAL: ... This overrides everything below` + `REMINDER: ... MUST be in ${langName}`
+- `index.ts`: Claude 오류 시 영어 FALLBACK 캐시 대신 **502 반환** — 영어 데이터가 타 언어 키로 캐시되는 것 방지
+- `index.ts`: 캐시 키에 `userLanguage` 포함: `${dayStem}-${frame}-${userLanguage}`
+
+### calculate-auspicious-days Edge Function
+
+**수정 사항**:
+- `STEM_ELEMENT`, `BRANCH_ELEMENT`, `GENERATES`(상생), `CONTROLS`(상극) 매핑 추가
+- `calculateDayScore`: 기존 단순 갑자 인덱스 → 천간지지 오행과 사용자 지배 오행의 상생/상극 관계로 점수 계산
+  - 기본 50점 + 천간 ±25 + 지지 ±15 + 이벤트 가중치 ±15 + 길갑자 +8
+- 동점 threshold 처리: `luckyThreshold === unluckyThreshold`일 때 절대값으로 분류 (65↑=lucky, 40↓=unlucky)
+- 캐시 upsert: FK 위반(dev 유저) try/catch로 비치명 처리
+- `onConflict`: `user_id,year_month,event_type,language` (실제 UNIQUE 제약에 맞게 수정)
+
+### useFortune.ts 훅
+
+- `FortuneType = 'daily' | 'weekly' | 'monthly' | 'annual' | 'daewoon'` export
+- `getRefDate(type, now)`: weekly=ISO 월요일, monthly=1일, annual=Jan1, daily/daewoon=오늘
+- `type` 파라미터로 5개 운세 타입 분기
+- Cold start: chart 없으면 `session.user.user_metadata`에서 재구성
+- `userLanguage: language` Edge Function에 전달
+
+### home.tsx — UI 개선
+
+- 탐색 그리드에서 "지금 결정 분석" 카드 제거
+- 별도 "AI 도구" 섹션으로 분리 (가로 풀위드 카드 + 설명 텍스트)
+- 14개 locale `common.json`에 `home.aiTools` / `home.timingDesc` 키 추가
+
+---
+
+## 코드 품질 개선 히스토리 (2026-03-12)
+
+병렬 에이전트 팀(보안/성능/아키텍처/리팩토링) 코드 리뷰 및 수정.
+
+### 보안 (Agent 1)
+
+- **DEV_BYPASS 분리**: `apps/mobile/.env`에서 `EXPO_PUBLIC_ENABLE_DEV_BYPASS` 제거
+  → 로컬 개발 전용 `apps/mobile/.env.local`로 이동 (gitignore됨)
+  → 프로덕션 빌드에서 Dev Login 완전 비활성화
+
+### 성능 (Agent 2)
+
+- **`useAuspiciousDays.ts` deps 축소**: `[user, session, chart, month, eventType, language, setChart]`
+  → `[user?.id, session?.access_token, month, eventType, language]`
+  → auth refresh 시 불필요한 월간 길일 재계산 방지
+- **`useContentRecommendation.ts` AsyncStorage 캐시 추가**: TTL 30일
+  → 캐시 키: `content-recommendation:{userId}:{dayStem}:{language}`
+  → 차트 화면 진입마다 반복되던 Claude API 호출 대폭 감소
+- **`languageStore.ts` RTL 지원**: `I18nManager.forceRTL()` 추가
+  → 아랍어(`ar`) 선택 시 레이아웃 자동 반전, 언어 복원 시에도 적용
+
+### 아키텍처 (Agent 3)
+
+- **`supabase/functions/_shared/claude.ts` 신규 생성**: 공통 유틸 허브
+  - `CLAUDE_MODEL`: 모델명 상수 (`'claude-sonnet-4-6'`)
+  - `LANGUAGE_NAMES`: 14개 언어 맵
+  - `buildLangInstruction(userLanguage?)`: Claude 언어 지시 프롬프트 생성
+  - `stripCodeFences(text)`: 마크다운 코드펜스 제거
+  - `extractJson(raw)`: JSON 추출 + 파싱 (실패 시 throw)
+  - `buildCacheKey({type, userId, refDate, language, extra?})`: 표준 캐시 키 생성
+- **언어 파이프라인 완성**: 클라이언트 → Edge Function → Claude 프롬프트
+  - `fortune-chat`: `FortuneChatRequest.userLanguage` 추가 + `buildSystemPrompt` 연결
+  - `timing-advisor`: `TimingRequest.userLanguage` 추가 + `buildSystemPrompt` 연결
+  - `journal-analysis`: `JournalAnalysisRequest.userLanguage` 추가 + 캐시 키에 language 포함
+  - `ai-calendar-interpretation`: 언어 지시 프롬프트 system prompt 앞에 추가
+  - 클라이언트 훅: `useFortunChat`, `useTimingAdvisor`, `useJournal` → `userLanguage: language` 전달
+
+### 리팩토링 (Agent 4)
+
+- **모델명 중앙화**: `saju-reading`, `fortune-chat`, `timing-advisor`, `journal-analysis`
+  → 각자 하드코딩하던 `'claude-sonnet-4-6'` → `_shared/claude.ts`의 `CLAUDE_MODEL` import
+- **`LANGUAGE_NAMES` 중복 제거**: `saju-reading/prompts.ts`, `content-recommendation/prompts.ts`
+  → 로컬 정의 삭제 후 `_shared/claude.ts` import로 교체
+- **`buildLangInstruction()` 통일**: `saju-reading/prompts.ts` 수동 구현 → shared 함수 사용
+- **`extractJson()` 표준화**: `timing-advisor`, `journal-analysis` 수동 JSON 추출 → shared 함수
+- **`timing-advisor` 캐시 키 개선**: `cacheKey(userId, category, date)` → language 포함
+  → 다국어 사용자 캐시 오염 방지
+- **`saju-reading/claude.ts` 로컬 `stripCodeFences` 제거** → shared 함수 사용
+
+### 배포 현황
+
+모든 수정 후 `--no-verify-jwt` 플래그로 재배포 완료:
+`saju-reading` · `fortune-chat` · `timing-advisor` · `journal-analysis` · `content-recommendation` · `ai-calendar-interpretation` · `daily-routine`
+
+---
+
+## 버그 수정 히스토리 (2026-03-12, 2회차)
+
+코드 품질 개선(1회차) 후 발생한 리그레션 및 성능 문제 해결.
+
+### 공통 근본 원인: MAX_TOKENS 과소 설정
+
+한국어/CJK 텍스트는 영어 대비 1.5–2× 더 많은 BPE 토큰을 소모함.
+기존 토큰 한도는 영어 기준으로 설계되어 CJK 응답이 중간에 잘려 JSON 파싱 실패 → 502 발생.
+
+**진단 패턴**: Claude 응답의 `stop_reason: "max_tokens"` → JSON 불완전 → `JSON.parse()` throw → 502
+
+### saju-reading — CJK 502 수정
+
+**파일**: `supabase/functions/saju-reading/claude.ts`, `prompts.ts`
+
+- `MAX_TOKENS_BY_TYPE` 전면 상향 (CJK 대응):
+  - `daily`: 800 → **1400**
+  - `weekly`: 1000 → **1800**
+  - `monthly`: 1000 → **1800**
+  - `annual`: 1200 → **2200**
+  - `daewoon`: 1500 → **2800**
+- `prompts.ts` 출력 형식 강화:
+  - `summary`: max 100 chars → **max 80 chars**
+  - `details` 각 항목: 미지정 → **"1 sentence, max 50 words"** 명시
+  - → Claude 과도한 장문 출력 방지 + 파싱 안정성 확보
+- **검증**: ko/zh-Hans/ja × 5개 타입(daily/weekly/monthly/annual/daewoon) 모두 정상 확인
+
+### content-recommendation — 502 + 응답 속도 개선
+
+**파일**: `supabase/functions/content-recommendation/index.ts`, `prompts.ts`
+**클라이언트**: `apps/mobile/src/hooks/useContentRecommendation.ts`
+**컴포넌트**: `apps/mobile/src/components/ContentRecommendationSection.tsx`
+
+**버그 수정**:
+- 근본 원인: `MAX_TOKENS=700`에서 한국어 9개 아이템 응답 잘림 → `JSON.parse()` 실패 → 502
+- `parseOutput()`: `stripCodeFences()` 미적용 → ` ```json ``` ` 코드 펜스 포함 시 파싱 실패
+- 두 가지 동시 수정 → `MAX_TOKENS` 인상 + `stripCodeFences` 적용
+
+**스트리밍 아키텍처 전환** (단일 대기 → 카테고리별 병렬 SSE 스트리밍):
+- **Edge Function**: 기존 단일 Claude 호출(2000토큰) → **3개 병렬 호출(400토큰 × 3)**
+  - `callClaudeForCategory(category, req, dominant, systemPrompt, apiKey)` 신규
+  - `buildCategoryUserPrompt(req, category, dominant)` 신규 (`prompts.ts`)
+  - 캐시 히트/미스 모두 SSE 스트림으로 응답 (클라이언트 코드 경로 통일)
+  - SSE 이벤트 형식: `{"type":"music"|"books"|"travel","element":"Wood","items":[...]}`
+  - 캐시 히트 시: 3개 이벤트 즉시 emit → 사실상 0ms 응답
+- **Hook**: `resp.body.getReader()` SSE 읽기로 교체
+  - `loading`: 첫 카테고리 도착 시 `false`로 전환 (이전: 전체 완료까지 `true`)
+  - `streaming: boolean` 신규 — SSE 스트림 진행 중 `true`
+  - 카테고리별 `setData()` progressive update
+  - `[DONE]` 수신 시 AsyncStorage 30일 캐시 저장
+- **컴포넌트**: `loading && !data` 조건으로 변경
+  - 첫 카테고리 도착 즉시 탭+카드 렌더링
+  - 스트리밍 중 `✦` 인디케이터 표시, 완료 후 공유 버튼 노출
+
+**체감 속도**: 이전 10–15초 후 전체 표시 → **3–4초 후 첫 카테고리 표시**, 5–8초 전체 완료
+**캐시 구조**:
+- 클라이언트 AsyncStorage 30일 (앱 재시작 포함) — 두 번째 방문 즉시 반환
+- 서버 in-memory 24h (인스턴스 내, serverless multi-instance 환경에서는 miss 가능 — 정상)
+
+### 디버깅 노트
+
+- **`functions logs` 커맨드 없음**: Supabase CLI v2.75.0에서 미지원 → curl + 임시 디버그 에러 노출 방식으로 대체
+- **디버그 패턴**:
+  ```typescript
+  // 1. 에러 메시지 노출
+  return errorResponse(`DEBUG: ${(e as Error).message}`, 502);
+  // 2. Claude raw 응답 tail + stop_reason 노출
+  throw new Error(`STOP[${stop_reason}] TOKENS[${output_tokens}] TAIL[${raw.slice(-150)}]`);
+  ```
+- **배포**: `saju-reading` · `content-recommendation` 재배포 완료
+
+---
+
+## 🚫 에러 재발 방지 (Do NOT change)
+
+### 오늘의 행운 카드 (LuckyItemCard)
+- 카드 텍스트는 항상 `numberOfLines={1}` `ellipsizeMode="tail"` 유지
+- 카드 탭 시 **Modal 방식**으로 전체 텍스트 표시 — `measureContainer` / `LayoutAnimation` 방식 사용 금지 (크로스 플랫폼 오동작으로 폐기)
+- Modal은 오방색 디자인 토큰 사용, 오버레이 탭으로 닫힘
+- 4개 카드(색깔/숫자/방향/음식) 모두 `LuckyItemCard` 컴포넌트 사용 필수
+
+### Anthropic API
+- 모델명: `claude-sonnet-4-6` (`_shared/claude.ts`의 `CLAUDE_MODEL` 상수 사용) — 하드코딩 및 구버전 모델명 직접 사용 금지
+- `MAX_TOKENS`는 언어별 동적 계산 (`getMaxTokens()` 함수 사용) — 고정값 사용 금지
+- JSON 파싱은 `extractJson()` 함수 사용 (`_shared/claude.ts`) — greedy regex 직접 사용 금지
+- 529 Overloaded / 429 Rate Limit은 재시도 로직으로 처리 (최대 2회, 1.5초 간격) — 이미 `callClaude()`에 구현됨
+
+### Edge Function
+- 배포 시 반드시 `--no-verify-jwt` 플래그 포함 (누락 시 ES256 JWT 검증 실패 → 401)
+- `_shared/claude.ts` 수정 시 의존하는 모든 함수 동시 재배포 필수: `saju-reading` · `fortune-chat` · `timing-advisor` · `journal-analysis` · `content-recommendation` · `ai-calendar-interpretation`
+- `functions logs` 명령 미지원 (CLI v2.75.0) — 에러 진단은 `/ping` 프로브 또는 임시 `DEBUG:` 에러 노출 방식 사용
+
+### i18n
+- 캐시 키에 반드시 언어 코드 포함 — 누락 시 다른 언어 사용자에게 stale 컨텐츠 반환
+- 새 옵션/문구 추가 시 14~15개 언어 전체 키 정의 필수 (ko · en · ja · zh-Hans · zh-Hant · es · pt-BR · hi · vi · id · fr · de · th · ar)
+- **하단 탭 메뉴(`app/(tabs)/_layout.tsx`)는 반드시 `t('tabs.*')` 키 사용** — 영어 하드코딩 금지. `useTranslation`을 레이아웃 컴포넌트 내부에서 호출하여 `title:` 에 전달할 것
+- **UI 텍스트 하드코딩 전면 금지** — `<Text>` 내부, prop 값 모두 `t()` 호출 사용. `yarn check:i18n` 실행으로 검증 필수
+- **새 화면/컴포넌트 추가 후 반드시 `yarn check:i18n` 실행** (`apps/mobile/` 에서) — CI 등가 검증
+
+### 애드온 리포트 캐시
+- **재물운(career): 30일 TTL**, **대운(daewoon_full): 1년 TTL** — 변경 금지 (운 주기 기반)
+- **3-tier 캐시 구조 유지**: Zustand(`reportCacheStore.ts`) → AsyncStorage TTL → AI API 순서
+  - `useCachedAddonReport('career' | 'daewoon_full', isUnlocked)` 훅 사용 — 직접 API 호출 금지
+- **캐시 키**: `report-{reportType}-{dayStem}-{dayBranch}-{language}` — 변경 시 기존 캐시 무효화됨
+- **'새 리포트 생성' 버튼 없음**: 재물운·대운은 캐시 만료 전까지 재생성 불가 (의도된 UX)
+
+### 차트 카드 데이터 구조 규칙 (재발 방지)
+- **`DaewoonPeriod.element`는 반드시 kanji FiveElement** (`木`/`火`/`土`/`金`/`水`) — `daewoon.ts`에서 English string(`'Wood'`)으로 바꾸면 `ELEM_COLOR`/`ELEM_DETAIL` lookup 실패 → 크래시
+  - 현재 fix: `element: BRANCH_ELEMENT[branch]` (직접 반환) — English 매핑 삽입 금지
+- **`ShiShin` type은 한국어** (`'비견'`/`'겁재'`/`'식신'`/`'상관'`/`'편재'`/`'정재'`/`'편관'`/`'정관'`/`'편인'`/`'정인'`) — `SHISHIN_DESC` 키를 Chinese(`比肩` 등)로 쓰면 lookup 실패 → 모달 미표시
+- `setSectionInfo()` 호출부에 반드시 `?.` optional chaining 및 `?? ''` fallback 사용 — `undefined.property` 크래시 방지
+- **십신 테이블에서 일간(isDay=true)은 `shiShin` 값이 `null`** — 일반 십신 설명이 아닌 `STEM_DESC[p.stem]` (일간 자체 설명)으로 별도 처리 필수. `onPress={p.isDay ? undefined : ...}` 패턴 금지
+- 새 카드 타입 추가 시 데이터 인터페이스(`DaewoonPeriod` / `ShiShin` / `FiveElement`) 타입 실제 값과 lookup 테이블 키가 일치하는지 확인 후 구현
+
+### My Chart 화면 (`app/(tabs)/chart.tsx`)
+- **일간(Day Master) · 오행 균형 · 십신 · 대운 섹션 헤더는 반드시 `onPress` 핸들러 유지** — 탭 시 `setSectionInfo()` 호출하여 상세 설명 모달 표시
+- **사주 글자(천간·지지) 탭 시 `setDetailChar()` 호출 유지** — 개별 글자 상세 설명 모달 표시
+- **오행 개별 행, 십신 테이블 행, 대운 카드는 `TouchableOpacity` 유지** — `View`로 변경 금지 (탭 반응 소실)
+- **`SECTION_INFO` 내용은 반드시 `useSajuStore()`의 실제 사주 데이터 기반 맞춤 텍스트** — 일반 설명으로 대체 금지
+  - 오행: `elements.Wood/Fire/Earth/Metal/Water` 실제 점수 + 과다/부족 해석
+  - 십신: `getShiShin(dayStem, stem)` 실제 결과 + `SHISHIN_DESC` 개별 설명
+  - 대운: `daewoon[currentDwIdx]` 현재 대운 천간·지지 + `STEM_DESC`/`BRANCH_DESC` 연결
+- **Pillar Detail Modal / Section Info Modal 절대 삭제 금지** — 두 Modal은 `<>` Fragment 안, ScrollView 바깥에 위치해야 함
+- **Section Info Modal은 ScrollView 내부에 body 표시** — 긴 맞춤 설명이 잘리지 않도록 `maxHeight: 320` ScrollView 유지
+- `SECTION_INFO` 객체는 반드시 `const { pillars, elements, dayStem } = chart` 이후에 정의 (early return `if (!chart)` 뒤에 위치)
+
+---
+
+## 🛡️ 개발 안전 규칙 (2026-03-12 수립)
+
+### 새 기능 구현 전 필수 점검 (구현 시작 전 나에게 보고 후 승인 받을 것)
+1. 기존 구조와 충돌 가능성 (_shared/claude.ts, entitlementStore, cacheKey 패턴)
+2. 상태관리 영향 범위 (Zustand store, AsyncStorage TTL)
+3. API/DB schema 영향 (Supabase RLS, Edge Function 재배포 필요 여부)
+4. 권한 및 예외 처리 누락 가능성 (free/premium 분기, 언어 fallback)
+5. iOS/Android 공통 이슈 (Metro 캐시, dayjs 플러그인, deep link)
+6. 재사용 가능한 공통 모듈 분리 여부 (_shared/ 활용)
+7. 테스트가 필요한 핵심 시나리오 목록
+
+**⚠️ 승인 없이 코드 수정 금지. 점검 결과 보고 → 승인 → 구현 순서 준수**
+
+### 에러 수정 시 필수 원칙
+1. 직접 원인과 구조적 원인을 분리해서 설명
+2. 임시 수정 금지 — 재발 방지까지 포함한 근본 수정
+3. 동일 문제가 발생할 수 있는 파일 전체 일괄 수정
+   (예: MAX_TOKENS 이슈 → 모든 Edge Function 동시 점검)
+4. 수정 후 체크리스트 + 핵심 시나리오 테스트 코드 제공
+
+### Edge Function 수정 시 추가 규칙
+- _shared/claude.ts 변경 시 → 의존하는 모든 함수 재배포 필수
+- MAX_TOKENS는 언어별 토큰 소비 차이 고려 (한국어/중국어 = 영어의 1.5-2배)
+- 배포 후 반드시 로그 확인: `npx supabase functions logs {fn} --project-ref omypurqmhfihmikyusnc --tail 20`
+
+### UI/디자인 수정 시 추가 규칙
+- 오방색 디자인 토큰(colors.ts) 직접 수정 금지 — 토큰 참조 방식 사용
+- 공통 컴포넌트 수정 시 영향받는 화면 목록 먼저 파악
+- 레이아웃 변경 시 iOS/Android 시뮬레이터 양쪽 확인
+- **행운 카드(luckyItems)는 반드시 `LuckyItemCard` 컴포넌트 사용**
+  - `src/components/LuckyItemCard.tsx` — overflow 처리가 캡슐화된 전용 컴포넌트
+  - 절대 로컬 Pill/Chip으로 재정의 금지
+  - 핵심: `textContainer`의 `flex: 1` 제거 시 `numberOfLines`가 동작하지 않음 (RN 측정 제약)
+
+### 🌐 i18n 규칙 (하드코딩 문자열 금지)
+
+**절대 금지**: JSX/TSX에서 영문 문자열 직접 사용
+
+```tsx
+// ❌ 금지
+<Text>Fortune Readings</Text>
+<Button title="Upgrade to Premium" />
+
+// ✅ 필수
+const { t } = useTranslation('common');
+<Text>{t('fortune.title')}</Text>
+<Button title={t('upgrade')} />
+```
+
+**키 네이밍 컨벤션**: `<screen>.<section>.<key>`
+
+| 화면 | 예시 키 |
+|---|---|
+| 홈 | `home.greeting.morning`, `home.quickActions.compatibility` |
+| 운세 | `fortune.title`, `fortune.daily` |
+| 리포트 | `reports.deepCompatibility.title`, `reports.careerWealth.desc` |
+| 궁합 | `compatibility.formTitle`, `compatibility.invalidDate` |
+| 채팅 | `fortuneChat.lockTitle`, `fortuneChat.chip1` |
+| 설정 | `settings.dailyNotification`, `settings.restoreSuccess` |
+| 공통 | `cancel`, `save`, `loading`, `upgrade` (최상위, 전역 재사용) |
+
+**useTranslation 훅 규칙**:
+- 반드시 **각 함수 컴포넌트 내부**에서 호출 (Rules of Hooks 준수)
+- `t`를 prop으로 전달하지 말 것 — 자식 컴포넌트에서 직접 `useTranslation` 호출
+- 네임스페이스는 `'common'` 단일 사용 (예: `useTranslation('common')`)
+
+**14개 언어 locale 파일 경로**:
+`apps/mobile/src/i18n/locales/{lang}/common.json`
+(ko, en, ja, zh-Hans, zh-Hant, es, pt-BR, hi, vi, id, fr, de, th, ar)
+
+**하드코딩 감지 스크립트**:
+```bash
+# apps/mobile 디렉터리에서 실행
+yarn check:i18n
+# 또는 모노레포 루트에서
+npx tsx scripts/check-i18n.ts
+```
+
+새 화면/컴포넌트 추가 시 반드시 위 스크립트로 검증 후 커밋할 것.

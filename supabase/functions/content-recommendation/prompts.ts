@@ -5,6 +5,7 @@ import type {
   RecommendationItem,
   ClaudeRecommendationOutput,
 } from './types.ts';
+import { LANGUAGE_NAMES } from '../_shared/claude.ts';
 
 // ── Dominant element resolver ─────────────────────────────────────────────────
 
@@ -131,23 +132,55 @@ JSON形式のみで返答し、説明文は日本語で記述してください�
   en: `You are a Cosmic Blueprint life curator blending Eastern metaphysics with modern wellness.
 Analyze the user\'s Day Master element and Five Element balance to recommend music, books, and travel.
 Use a personality-first, psychologically grounded approach (similar to MBTI but deeper).
-Return JSON only. Descriptions in English, warm and engaging tone.`,
+Return JSON only. Use a warm and engaging tone.`,
 
   es: `Eres un curador de estilo de vida que fusiona la astrología cósmica oriental con el horóscopo latino.
 Analiza el elemento del Maestro del Día y el balance elemental para recomendar música, libros y destinos de viaje.
 Usa un tono apasionado y relatable, enfocado en relaciones, amor y experiencias vitales.
-Responde solo en JSON. Las descripciones en español.`,
+Responde solo en JSON.`,
 
   in: `You are a Vedic Fusion life guide blending Jyotish wisdom with Ba Zi metaphysics.
 Analyze the user\'s Day Master element and Panchabhoota (Five Element) balance to recommend music, books, and travel.
 Use karma, dharma, and spiritual growth as lenses. References to Indian classical arts and sacred sites are welcome.
-Return JSON only. Descriptions in English with Sanskrit/Hindi terms where natural.`,
+Return JSON only. Sanskrit/Hindi terms are welcome where natural.`,
 };
 
 // ── User prompt builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const langName = userLanguage ? (LANGUAGE_NAMES[userLanguage] ?? 'English') : null;
+  if (!langName) return `${SYSTEM_PROMPTS[frame]}\n\nOUTPUT RULES: Start your response with { and end with }. Do NOT use markdown code fences. Return ONLY the JSON object, no text before or after.`;
+  return `CRITICAL: You MUST write ALL titles, descriptions, and tags in ${langName}. This overrides everything below.\n\n${SYSTEM_PROMPTS[frame]}\n\nOUTPUT RULES: Start your response with { and end with }. Do NOT use markdown code fences. Return ONLY the JSON object, no text before or after.\nREMINDER: Every single word of output (titles, descriptions, tags) MUST be in ${langName}.`;
+}
+
+// ── Per-category prompt (used by parallel streaming calls) ────────────────────
+
+const CATEGORY_LABELS: Record<'music' | 'books' | 'travel', string> = {
+  music:  'music albums, playlists, or artists',
+  books:  'books',
+  travel: 'travel destinations',
+};
+
+export function buildCategoryUserPrompt(
+  req: ContentRecommendationRequest,
+  category: 'music' | 'books' | 'travel',
+  dominant: string,
+): string {
+  const balanceStr = Object.entries(req.elementBalance)
+    .map(([el, v]) => `${el}: ${v}`)
+    .join(', ');
+  const label = CATEGORY_LABELS[category];
+
+  return `Day Master: ${req.dayStem}
+Dominant Element: ${dominant}
+Five Element Balance: { ${balanceStr} }
+
+Recommend exactly 3 ${label} for this person based on their ${dominant} element.
+Each description: 1 concise sentence (max 20 words) explaining why it resonates with this element.
+Each tag: emoji + short genre/type label.
+
+Return ONLY this JSON (no text before or after, no code fences):
+{"items":[{"title":"...","description":"...","tag":"..."},{"title":"...","description":"...","tag":"..."},{"title":"...","description":"...","tag":"..."}]}`;
 }
 
 export function buildUserPrompt(req: ContentRecommendationRequest): string {

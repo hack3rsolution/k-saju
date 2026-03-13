@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import {
   calculateFourPillars,
   calculateElementBalance,
@@ -67,6 +68,7 @@ const sStyles = StyleSheet.create({
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function CompatibilityScreen() {
+  const { t } = useTranslation('common');
   const { loading, report, error, generate, reset } = useAddonReport();
   const { addons } = useEntitlementStore();
   const isUnlocked = addons.deepCompatibility;
@@ -88,7 +90,7 @@ export default function CompatibilityScreen() {
       isNaN(month) || month < 1    || month > 12   ||
       isNaN(day)   || day   < 1    || day   > 31
     ) {
-      setInputError('Please enter a valid birth date (year 1920–2020).');
+      setInputError(t('compatibility.invalidDate'));
       return null;
     }
     setInputError(null);
@@ -123,19 +125,16 @@ export default function CompatibilityScreen() {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-          <Text style={styles.backText}>← Back</Text>
+          <Text style={styles.backText}>{t('compatibility.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Compatibility</Text>
-        <Text style={styles.subtitle}>궁합 · 合婚 · Relationship Harmony</Text>
+        <Text style={styles.title}>{t('compatibility.title')}</Text>
+        <Text style={styles.subtitle}>{t('compatibility.subtitle')}</Text>
         <View style={styles.lockCard}>
           <Text style={styles.lockIcon}>💞</Text>
-          <Text style={styles.lockTitle}>Deep Compatibility Report</Text>
-          <Text style={styles.lockDesc}>
-            Unlock a full 합충형파 analysis of two charts, elemental harmony score,
-            and a 5-year relationship forecast.
-          </Text>
+          <Text style={styles.lockTitle}>{t('compatibility.lockTitle')}</Text>
+          <Text style={styles.lockDesc}>{t('compatibility.lockDesc')}</Text>
           <TouchableOpacity style={styles.unlockBtn} onPress={() => router.push('/paywall')}>
-            <Text style={styles.unlockBtnText}>Unlock — $4.99</Text>
+            <Text style={styles.unlockBtnText}>{t('compatibility.unlock')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -147,23 +146,21 @@ export default function CompatibilityScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Text style={styles.backText}>← Back</Text>
+        <Text style={styles.backText}>{t('compatibility.back')}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Compatibility</Text>
-      <Text style={styles.subtitle}>궁합 · 合婚 · Relationship Harmony</Text>
+      <Text style={styles.title}>{t('compatibility.title')}</Text>
+      <Text style={styles.subtitle}>{t('compatibility.subtitle')}</Text>
 
       {/* Partner input form */}
       {!report && (
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>Partner's Birth Date</Text>
-          <Text style={styles.formHint}>
-            Enter your partner's birth information to compare charts.
-          </Text>
+          <Text style={styles.formTitle}>{t('compatibility.formTitle')}</Text>
+          <Text style={styles.formHint}>{t('compatibility.formHint')}</Text>
 
           <View style={styles.inputRow}>
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Year</Text>
+              <Text style={styles.inputLabel}>{t('compatibility.year')}</Text>
               <TextInput
                 style={styles.input}
                 value={pYear}
@@ -175,7 +172,7 @@ export default function CompatibilityScreen() {
               />
             </View>
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Month</Text>
+              <Text style={styles.inputLabel}>{t('compatibility.month')}</Text>
               <TextInput
                 style={styles.input}
                 value={pMonth}
@@ -187,7 +184,7 @@ export default function CompatibilityScreen() {
               />
             </View>
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Day</Text>
+              <Text style={styles.inputLabel}>{t('compatibility.day')}</Text>
               <TextInput
                 style={styles.input}
                 value={pDay}
@@ -201,7 +198,7 @@ export default function CompatibilityScreen() {
           </View>
 
           {/* Gender toggle */}
-          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>Partner Gender</Text>
+          <Text style={[styles.inputLabel, { marginTop: 16, marginBottom: 8 }]}>{t('compatibility.partnerGender')}</Text>
           <View style={styles.genderRow}>
             {(['M', 'F'] as const).map((g) => (
               <TouchableOpacity
@@ -210,7 +207,7 @@ export default function CompatibilityScreen() {
                 onPress={() => setPGender(g)}
               >
                 <Text style={[styles.genderText, pGender === g && styles.genderTextActive]}>
-                  {g === 'M' ? '♂ Male' : '♀ Female'}
+                  {g === 'M' ? t('compatibility.male') : t('compatibility.female')}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -226,7 +223,7 @@ export default function CompatibilityScreen() {
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.analyzeBtnText}>Analyze Compatibility</Text>
+              <Text style={styles.analyzeBtnText}>{t('compatibility.analyze')}</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -237,7 +234,7 @@ export default function CompatibilityScreen() {
         <View style={styles.errorCard}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => { reset(); }}>
-            <Text style={styles.retryText}>Try Again</Text>
+            <Text style={styles.retryText}>{t('retry')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -255,7 +252,7 @@ export default function CompatibilityScreen() {
           ))}
 
           <TouchableOpacity style={styles.resetBtn} onPress={reset}>
-            <Text style={styles.resetBtnText}>Analyze Another Person →</Text>
+            <Text style={styles.resetBtnText}>{t('compatibility.analyzeAnother')}</Text>
           </TouchableOpacity>
         </>
       )}

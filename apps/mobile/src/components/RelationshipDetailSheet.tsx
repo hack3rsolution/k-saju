@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { Relationship, RelationshipFortuneData, CompatibilityStatus } from '../types/relationship';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -23,11 +24,7 @@ const STATUS_EMOJI: Record<CompatibilityStatus, string> = {
   caution: '🔴',
 };
 
-const STATUS_LABEL: Record<CompatibilityStatus, string> = {
-  good:    'Harmonious',
-  neutral: 'Balanced',
-  caution: 'Challenging',
-};
+// STATUS_LABEL is now resolved via t() inside ScoreRing
 
 const ELEMENT_COLOR: Record<string, string> = {
   Wood: '#22c55e', Fire: '#ef4444', Earth: '#eab308', Metal: '#94a3b8', Water: '#3b82f6',
@@ -40,7 +37,13 @@ const ELEMENT_EMOJI: Record<string, string> = {
 // ── Compatibility Score Arc ───────────────────────────────────────────────────
 
 function ScoreRing({ score, status }: { score: number; status: CompatibilityStatus }) {
+  const { t } = useTranslation('common');
   const color = STATUS_COLOR[status];
+  const statusLabel: Record<CompatibilityStatus, string> = {
+    good:    t('relationships.statusHarmonious'),
+    neutral: t('relationships.statusBalanced'),
+    caution: t('relationships.statusChallenging'),
+  };
   return (
     <View style={ring.container}>
       <View style={[ring.outer, { borderColor: color + '44' }]}>
@@ -51,7 +54,7 @@ function ScoreRing({ score, status }: { score: number; status: CompatibilityStat
       </View>
       <View style={ring.statusRow}>
         <Text style={ring.statusEmoji}>{STATUS_EMOJI[status]}</Text>
-        <Text style={[ring.statusLabel, { color }]}>{STATUS_LABEL[status]}</Text>
+        <Text style={[ring.statusLabel, { color }]}>{statusLabel[status]}</Text>
       </View>
     </View>
   );
@@ -71,10 +74,11 @@ const ring = StyleSheet.create({
 // ── Element Synergy Chart ─────────────────────────────────────────────────────
 
 function ElementSynergyChart({ data }: { data: Record<string, number> }) {
+  const { t } = useTranslation('common');
   const max = Math.max(...Object.values(data), 1);
   return (
     <View style={synergy.container}>
-      <Text style={synergy.title}>Element Synergy</Text>
+      <Text style={synergy.title}>{t('relationships.elementSynergy')}</Text>
       {Object.entries(data).map(([elem, count]) => (
         <View key={elem} style={synergy.row}>
           <Text style={synergy.emoji}>{ELEMENT_EMOJI[elem] ?? '·'}</Text>
@@ -122,6 +126,7 @@ interface RelationshipDetailSheetProps {
 export function RelationshipDetailSheet({
   visible, relationship: rel, fortune, loading, error, onClose, onLoadFortune,
 }: RelationshipDetailSheetProps) {
+  const { t } = useTranslation('common');
   if (!rel) return null;
 
   const monthLabel = new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
@@ -144,21 +149,19 @@ export function RelationshipDetailSheet({
             {loading ? (
               <View style={styles.loadingBox}>
                 <ActivityIndicator color="#a78bfa" size="large" />
-                <Text style={styles.loadingText}>Analyzing compatibility…</Text>
+                <Text style={styles.loadingText}>{t('relationships.analyzingCompat')}</Text>
               </View>
             ) : error === 'premium_required' ? (
               <View style={styles.lockedBox}>
                 <Text style={styles.lockedIcon}>🔒</Text>
-                <Text style={styles.lockedTitle}>Premium Feature</Text>
-                <Text style={styles.lockedDesc}>
-                  Relationship analysis requires Premium or the Deep Compatibility add-on.
-                </Text>
+                <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
+                <Text style={styles.lockedDesc}>{t('relationships.premiumRequired')}</Text>
               </View>
             ) : error ? (
               <View style={styles.errorBox}>
                 <Text style={styles.errorText}>{error}</Text>
                 <TouchableOpacity style={styles.retryBtn} onPress={onLoadFortune}>
-                  <Text style={styles.retryText}>Try again</Text>
+                  <Text style={styles.retryText}>{t('retry')}</Text>
                 </TouchableOpacity>
               </View>
             ) : fortune ? (
@@ -168,20 +171,20 @@ export function RelationshipDetailSheet({
 
                 {/* Summary */}
                 <View style={styles.card}>
-                  <Text style={styles.cardLabel}>Compatibility Summary</Text>
+                  <Text style={styles.cardLabel}>{t('relationships.compatSummary')}</Text>
                   <Text style={styles.cardText}>{fortune.summary}</Text>
                 </View>
 
                 {/* Monthly flow */}
                 <View style={styles.card}>
-                  <Text style={styles.cardLabel}>{monthLabel} Energy Flow</Text>
+                  <Text style={styles.cardLabel}>{t('relationships.energyFlow', { month: monthLabel })}</Text>
                   <Text style={styles.cardText}>{fortune.monthlyFlow}</Text>
                 </View>
 
                 {/* Strengths */}
                 {fortune.strengths.length > 0 && (
                   <View style={styles.card}>
-                    <Text style={styles.cardLabel}>Strengths ✨</Text>
+                    <Text style={styles.cardLabel}>{t('relationships.strengths')}</Text>
                     {fortune.strengths.map((s, i) => (
                       <View key={i} style={styles.bulletRow}>
                         <Text style={styles.bullet}>·</Text>
@@ -194,7 +197,7 @@ export function RelationshipDetailSheet({
                 {/* Cautions */}
                 {fortune.cautions.length > 0 && (
                   <View style={styles.card}>
-                    <Text style={styles.cardLabel}>Things to Watch ⚠️</Text>
+                    <Text style={styles.cardLabel}>{t('relationships.cautions')}</Text>
                     {fortune.cautions.map((c, i) => (
                       <View key={i} style={styles.bulletRow}>
                         <Text style={[styles.bullet, { color: '#f87171' }]}>·</Text>
@@ -213,15 +216,15 @@ export function RelationshipDetailSheet({
               <TouchableOpacity style={styles.analyzeBtn} onPress={onLoadFortune}>
                 <Text style={styles.analyzeIcon}>✨</Text>
                 <View>
-                  <Text style={styles.analyzeBtnText}>Analyze Compatibility</Text>
-                  <Text style={styles.analyzeBtnSub}>{monthLabel} reading</Text>
+                  <Text style={styles.analyzeBtnText}>{t('relationships.analyzeCompat')}</Text>
+                  <Text style={styles.analyzeBtnSub}>{t('relationships.monthReading', { month: monthLabel })}</Text>
                 </View>
               </TouchableOpacity>
             )}
           </ScrollView>
 
           <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
-            <Text style={styles.closeBtnText}>Close</Text>
+            <Text style={styles.closeBtnText}>{t('close')}</Text>
           </TouchableOpacity>
         </View>
       </View>

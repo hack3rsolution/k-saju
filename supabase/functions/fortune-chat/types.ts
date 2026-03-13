@@ -27,6 +27,7 @@ export interface FortuneChatRequest {
   frame:        CulturalFrame;
   chart:        ChartSnapshot;
   todayReading: TodayReading;
+  userLanguage?: string;         // BCP-47 code e.g. 'ko', 'en', 'ja'
 }
 
 export interface FortuneChatStreamToken {

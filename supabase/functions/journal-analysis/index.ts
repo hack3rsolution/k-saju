@@ -11,6 +11,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
+import { CLAUDE_MODEL, extractJson } from '../_shared/claude.ts';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.ts';
 import type {
   JournalAnalysisRequest,
@@ -39,7 +40,6 @@ function setCached(key: string, data: JournalAnalysisResponse): void {
 
 // ── Claude call ───────────────────────────────────────────────────────────────
 
-const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 800;
 
 async function callClaude(
@@ -55,7 +55,7 @@ async function callClaude(
       'content-type':      'application/json',
     },
     body: JSON.stringify({
-      model:      MODEL,
+      model:      CLAUDE_MODEL,
       max_tokens: MAX_TOKENS,
       system:     systemPrompt,
       messages:   [{ role: 'user', content: userPrompt }],
@@ -67,10 +67,7 @@ async function callClaude(
   const json = await res.json() as { content: { type: string; text: string }[] };
   const text = json.content.find((c) => c.type === 'text')?.text ?? '{}';
 
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('No JSON in Claude response');
-
-  return JSON.parse(match[0]) as {
+  return extractJson(text) as {
     summary: string;
     patterns: PatternInsight[];
     dominantElement: string;
@@ -121,8 +118,8 @@ Deno.serve(async (req: Request) => {
     return errorResponse((e as Error).message);
   }
 
-  // ── Cache check (keyed by userId + eventCount for invalidation) ───────────
-  const cacheKey = `${user.id}:${request.events.length}`;
+  // ── Cache check (keyed by userId + eventCount + language for invalidation) ──
+  const cacheKey = `${user.id}:${request.events.length}:${request.userLanguage ?? 'en'}`;
   const cached = getCached(cacheKey);
   if (cached) return jsonResponse(cached);
 
@@ -130,7 +127,7 @@ Deno.serve(async (req: Request) => {
   let claudeResult: { summary: string; patterns: PatternInsight[]; dominantElement: string };
   try {
     claudeResult = await callClaude(
-      buildSystemPrompt(request.frame),
+      buildSystemPrompt(request.frame, request.userLanguage),
       buildUserPrompt(request.events, request.chart),
       ANTHROPIC_API_KEY,
     );

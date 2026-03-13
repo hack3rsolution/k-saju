@@ -19,7 +19,8 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
-import { useEntitlementStore } from '../store/entitlementStore';
+import { useIsPremium, useHasAddon } from '../store/entitlementStore';
+import { useLanguageStore } from '../store/languageStore';
 import type { TimingCategory } from '../types/timing';
 
 
@@ -47,9 +48,11 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
-  const { isPremium, addons } = useEntitlementStore();
+  const { language } = useLanguageStore();
+  const isPremium = useIsPremium();
+  const hasTimingAddon = useHasAddon('timingAdvisor');
 
-  const hasEntitlement = isPremium || addons.timingAdvisor;
+  const hasEntitlement = isPremium || hasTimingAddon;
 
   async function analyze(category: TimingCategory) {
     if (!session || loading) return;
@@ -112,7 +115,8 @@ export function useTimingAdvisor(): UseTimingAdvisorResult {
               dayStem:        activeChart.dayStem,
               daewoonList:    activeDaewoon ?? [],
             },
-            frame:           activeFrame ?? 'en',
+            frame:        activeFrame ?? 'en',
+            userLanguage: language,
             category,
             refDate,
             todaySexagenary,

@@ -16,6 +16,8 @@ interface AuthState {
   signInWithMagicLink: (email: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  /** DEV only: bypasses Supabase auth with a fake local session */
+  signInDev: () => void;
   signOut: () => Promise<void>;
 }
 
@@ -76,6 +78,28 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
     if (error) throw error;
     set({ session: data.session, user: data.session?.user ?? null, initialized: true });
+  },
+
+  signInDev: () => {
+    const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? 'dev-token';
+    const devUser: User = {
+      id: '00000000-0000-4000-8000-000000000000',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'dev@k-saju.com',
+      app_metadata: { provider: 'dev' },
+      user_metadata: { name: 'Dev User', is_premium: true, birth_year: 1990, birth_month: 6, birth_day: 15, birth_hour: 10, gender: 'M', cultural_frame: 'kr' },
+      created_at: new Date().toISOString(),
+    };
+    const devSession: Session = {
+      access_token: anonKey,
+      refresh_token: '',
+      token_type: 'bearer',
+      expires_in: 3600,
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      user: devUser,
+    };
+    set({ session: devSession, user: devUser, initialized: true });
   },
 
   signOut: async () => {

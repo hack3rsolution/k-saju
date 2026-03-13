@@ -51,6 +51,8 @@ export interface SajuReadingRequest {
   todaySexagenary?: string;
   /** Current year pillar for annual readings */
   currentYearPillar?: Pillar;
+  /** BCP-47 language code for AI response language, e.g. 'ko', 'en', 'ja' */
+  userLanguage?: string;
 }
 
 // ── Response payload ─────────────────────────────────────────────────────────

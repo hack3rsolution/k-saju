@@ -1,4 +1,5 @@
 import type { CulturalFrame, LifeEvent, SajuChart } from './types.ts';
+import { buildLangInstruction } from '../_shared/claude.ts';
 
 // ── System prompts per cultural frame ────────────────────────────────────────
 
@@ -13,8 +14,9 @@ const SYSTEM_PROMPTS: Record<CulturalFrame, string> = {
 
 // ── User prompt builder ───────────────────────────────────────────────────────
 
-export function buildSystemPrompt(frame: CulturalFrame): string {
-  return SYSTEM_PROMPTS[frame];
+export function buildSystemPrompt(frame: CulturalFrame, userLanguage?: string): string {
+  const langInstruction = buildLangInstruction(userLanguage);
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}`;
 }
 
 export function buildUserPrompt(events: LifeEvent[], chart: SajuChart): string {

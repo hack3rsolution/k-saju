@@ -7,6 +7,7 @@
  */
 import { forwardRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import type { CulturalFrame, FiveElement } from '@k-saju/saju-engine';
 import { T } from '../theme/tokens';
 
@@ -106,6 +107,7 @@ export const ShareCard = forwardRef<View, ShareCardProps>(function ShareCard(
   { frame, dayStem, dayBranch, dayElement, ganji, summary },
   ref,
 ) {
+  const { t } = useTranslation('common');
   const theme = THEMES[frame] ?? THEMES.en;
   const elemColor = T.element[dayElement] ?? T.primary.DEFAULT;
 
@@ -164,7 +166,7 @@ export const ShareCard = forwardRef<View, ShareCardProps>(function ShareCard(
       </View>
 
       {/* ── Fortune section ── */}
-      <Text style={[styles.fortuneLabel, { color: theme.highlight }]}>TODAY'S FORTUNE</Text>
+      <Text style={[styles.fortuneLabel, { color: theme.highlight }]}>{t('fortuneChat.todaysFortune')}</Text>
       <Text style={styles.summary}>{displaySummary}</Text>
 
       {/* ── Footer ── */}

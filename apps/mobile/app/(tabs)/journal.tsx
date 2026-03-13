@@ -17,6 +17,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useJournal } from '../../src/hooks/useJournal';
 import { JournalEventCard } from '../../src/components/JournalEventCard';
 import { AddEventModal } from '../../src/components/AddEventModal';
@@ -39,6 +40,7 @@ function currentYearPillar(): string {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function JournalScreen() {
+  const { t } = useTranslation('common');
   const { daewoon, birthData } = useSajuStore();
   const {
     events,
@@ -108,18 +110,18 @@ export default function JournalScreen() {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
         {/* Header */}
-        <Text style={styles.title}>Life Journal</Text>
-        <Text style={styles.subtitle}>인생 이벤트 기록 · 사주 흐름</Text>
+        <Text style={styles.title}>{t('journal.title')}</Text>
+        <Text style={styles.subtitle}>{t('journal.subtitle')}</Text>
 
         {/* 대운/세운 overlay banner */}
         <View style={styles.cycleBanner}>
           <View style={styles.cycleChip}>
-            <Text style={styles.cycleLabel}>세운</Text>
+            <Text style={styles.cycleLabel}>{t('journal.annualLuck')}</Text>
             <Text style={styles.cycleValue}>{yearPillar}</Text>
           </View>
           {activeDaewoon && (
             <View style={styles.cycleChip}>
-              <Text style={styles.cycleLabel}>대운</Text>
+              <Text style={styles.cycleLabel}>{t('journal.majorLuck')}</Text>
               <Text style={styles.cycleValue}>
                 {activeDaewoon.pillar.stem}{activeDaewoon.pillar.branch}
               </Text>
@@ -137,10 +139,8 @@ export default function JournalScreen() {
           >
             <Text style={styles.analysisBannerIcon}>🔮</Text>
             <View style={styles.analysisBannerText}>
-              <Text style={styles.analysisBannerTitle}>AI Pattern Analysis</Text>
-              <Text style={styles.analysisBannerDesc}>
-                See how your saju cycles shaped your life events
-              </Text>
+              <Text style={styles.analysisBannerTitle}>{t('journal.analysisTitle')}</Text>
+              <Text style={styles.analysisBannerDesc}>{t('journal.analysisDesc')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#a78bfa" />
           </TouchableOpacity>
@@ -150,7 +150,7 @@ export default function JournalScreen() {
         {events.length > 0 && events.length < MIN_EVENTS_FOR_ANALYSIS && (
           <View style={styles.lockedAnalysis}>
             <Text style={styles.lockedAnalysisText}>
-              🔒 Add {MIN_EVENTS_FOR_ANALYSIS - events.length} more event{events.length < 4 ? 's' : ''} to unlock AI Pattern Analysis
+              {t('journal.lockedAnalysis', { count: MIN_EVENTS_FOR_ANALYSIS - events.length })}
             </Text>
           </View>
         )}
@@ -166,10 +166,8 @@ export default function JournalScreen() {
         {!loading && events.length === 0 && (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyIcon}>📖</Text>
-            <Text style={styles.emptyTitle}>No events yet</Text>
-            <Text style={styles.emptyDesc}>
-              Record your major life events — career shifts, relationships, health milestones — and let AI find the saju patterns behind them.
-            </Text>
+            <Text style={styles.emptyTitle}>{t('journal.emptyTitle')}</Text>
+            <Text style={styles.emptyDesc}>{t('journal.emptyDesc')}</Text>
           </View>
         )}
 
@@ -177,7 +175,7 @@ export default function JournalScreen() {
         {loading && events.length === 0 && (
           <View style={styles.loadingBox}>
             <ActivityIndicator color="#a78bfa" size="large" />
-            <Text style={styles.loadingText}>Loading journal…</Text>
+            <Text style={styles.loadingText}>{t('journal.loading')}</Text>
           </View>
         )}
 

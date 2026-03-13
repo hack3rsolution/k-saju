@@ -1,6 +1,22 @@
 {
   "title": "Unlock Your Full Destiny",
   "subtitle": "Premium gives you unlimited access to every reading, report, and cosmic insight.",
+  "loading": "Loading plans…",
+  "active": "Active",
+  "alreadyPremium": "Already Premium",
+  "notAvailable": "Not Available",
+  "notAvailableMsg": "is not available right now. Please try again later.",
+  "purchaseSuccess": "Success!",
+  "purchaseSuccessMsg": "You are now a Premium member. Enjoy unlimited readings!",
+  "purchaseFailed": "Purchase Failed",
+  "purchaseFailedMsg": "Please try again.",
+  "done": "Done",
+  "restoreSuccess": "Purchases Restored",
+  "restoreSuccessMsg": "Your subscription has been restored.",
+  "restoreEmpty": "Nothing to Restore",
+  "restoreEmptyMsg": "No previous purchases found for this account.",
+  "restoreFailed": "Restore Failed",
+  "restoreFailedMsg": "Please try again.",
   "plans": {
     "monthly": {
       "name": "Premium Monthly",
@@ -18,6 +34,7 @@
   },
   "addons": {
     "title": "Add-ons (one-time)",
+    "timing_advisor": "Timing Advisor",
     "deep_compatibility": "Deep Compatibility Report",
     "career_wealth": "Career & Wealth Report",
     "daewoon_report_pdf": "Full Luck Cycle Report (PDF)",

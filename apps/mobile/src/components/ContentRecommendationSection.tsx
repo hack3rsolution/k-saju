@@ -127,7 +127,7 @@ export function ContentRecommendationSection({ frame }: Props) {
   const [sharing, setSharing]     = useState(false);
   const shareRef = useRef<View>(null);
 
-  const { loading, data, error, fetch } = useContentRecommendation();
+  const { loading, streaming, data, error, fetch } = useContentRecommendation();
 
   // Auto-fetch on mount
   useEffect(() => { fetch(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -178,7 +178,10 @@ export function ContentRecommendationSection({ frame }: Props) {
         <Text style={[styles.sectionTitle, { color: elemColor }]}>
           {labels.sectionTitle}
         </Text>
-        {data && (
+        {streaming && data && (
+          <Text style={styles.streamingDot}>✦</Text>
+        )}
+        {data && !streaming && (
           <TouchableOpacity
             style={[styles.shareBtn, { borderColor: elemColor + '66' }]}
             onPress={handleShare}
@@ -190,18 +193,19 @@ export function ContentRecommendationSection({ frame }: Props) {
             </Text>
           </TouchableOpacity>
         )}
+
       </View>
 
-      {/* Loading */}
-      {loading && (
+      {/* Loading spinner — only while no data has arrived yet */}
+      {loading && !data && (
         <View style={styles.center}>
           <ActivityIndicator color={elemColor} />
           <Text style={styles.loadingText}>{labels.loading}</Text>
         </View>
       )}
 
-      {/* Error */}
-      {!loading && error && (
+      {/* Error — only when no data and not loading */}
+      {!loading && !data && error && (
         <View style={styles.center}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={fetch}>
@@ -210,8 +214,8 @@ export function ContentRecommendationSection({ frame }: Props) {
         </View>
       )}
 
-      {/* Tab picker */}
-      {!loading && data && (
+      {/* Tab picker — shows as soon as first category arrives */}
+      {data && (
         <>
           <View style={styles.tabs}>
             {(['music', 'books', 'travel'] as TabKey[]).map((tab) => {
@@ -287,6 +291,11 @@ const styles = StyleSheet.create({
   shareBtnText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  streamingDot: {
+    fontSize: 14,
+    opacity: 0.6,
+    marginLeft: 4,
   },
 
   // ── Loading / error

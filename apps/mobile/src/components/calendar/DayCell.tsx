@@ -1,0 +1,56 @@
+import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import type { AuspiciousDay, DayStatus } from '../../types/calendar'
+
+// DayStatus별 오방색 매핑
+const STATUS_STYLE: Record<DayStatus, { bg: string; border: string; marker: string }> = {
+  lucky:   { bg: '#E8F5E9', border: '#4CAF50', marker: '🌟' },
+  neutral: { bg: '#FFFFFF', border: '#E0E0E0', marker: ''   },
+  unlucky: { bg: '#FFEBEE', border: '#E53935', marker: '⚠️' },
+}
+
+interface Props {
+  day: AuspiciousDay
+  isToday: boolean
+  isCurrentMonth: boolean
+  onPress: (day: AuspiciousDay) => void
+  /** Free 유저: lucky 날 중 상위 3개만 표시, 나머지 neutral */
+  visibleStatus?: DayStatus
+}
+
+export function DayCell({ day, isToday, isCurrentMonth, onPress, visibleStatus }: Props) {
+  const effectiveStatus = visibleStatus ?? day.status
+  const style = STATUS_STYLE[effectiveStatus]
+  const dayNumber = day.date.split('-')[2]
+
+  return (
+    <TouchableOpacity
+      onPress={() => onPress(day)}
+      style={[
+        styles.cell,
+        { backgroundColor: style.bg, borderColor: style.border },
+        isToday && styles.todayBorder,
+        !isCurrentMonth && styles.otherMonth,
+      ]}
+      activeOpacity={0.7}
+    >
+      {isToday && <View style={styles.todayDot} />}
+      <Text style={[styles.dayNumber, !isCurrentMonth && styles.otherMonthText]}>
+        {dayNumber}
+      </Text>
+      {effectiveStatus !== 'neutral' && (
+        <Text style={styles.marker}>{style.marker}</Text>
+      )}
+    </TouchableOpacity>
+  )
+}
+
+const styles = StyleSheet.create({
+  cell:           { flex: 1, aspectRatio: 1, margin: 2, borderRadius: 8, borderWidth: 1, alignItems: 'center', justifyContent: 'center', padding: 2 },
+  todayBorder:    { borderWidth: 2, borderColor: '#2563EB' },
+  otherMonth:     { opacity: 0.35 },
+  todayDot:       { position: 'absolute', top: 3, right: 3, width: 5, height: 5, borderRadius: 3, backgroundColor: '#2563EB' },
+  dayNumber:      { fontSize: 13, fontWeight: '600', color: '#1F2937' },
+  otherMonthText: { color: '#9CA3AF' },
+  marker:         { fontSize: 10, marginTop: 1 },
+})

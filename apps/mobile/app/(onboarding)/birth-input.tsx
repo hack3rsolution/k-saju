@@ -8,6 +8,7 @@ import {
   Switch,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { WheelPicker } from '../../src/components/WheelPicker';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 
@@ -20,6 +21,7 @@ function daysInMonth(year: number, month: number) {
 }
 
 export default function BirthInputScreen() {
+  const { t } = useTranslation('common');
   const { setBirthData } = useOnboardingStore();
 
   const [yearIdx, setYearIdx] = useState(60);   // 1990
@@ -54,7 +56,7 @@ export default function BirthInputScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.step}>Step 1 of 3</Text>
-      <Text style={styles.title}>Your Birth Info</Text>
+      <Text style={styles.title}>{t('onboarding.birthInfoTitle')}</Text>
       <Text style={styles.subtitle}>
         We use your birth date and time to calculate your Four Pillars (四柱).
       </Text>
@@ -67,7 +69,7 @@ export default function BirthInputScreen() {
             <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Month</Text>
+            <Text style={styles.pickerLabel}>{t('compatibility.month')}</Text>
             <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
           </View>
           <View style={styles.pickerCol}>
@@ -85,7 +87,7 @@ export default function BirthInputScreen() {
       {/* Time */}
       <View style={styles.card}>
         <View style={styles.switchRow}>
-          <Text style={styles.cardLabel}>Birth time known?</Text>
+          <Text style={styles.cardLabel}>{t('onboarding.birthTimeKnown')}</Text>
           <Switch
             value={timeKnown}
             onValueChange={setTimeKnown}
@@ -103,7 +105,7 @@ export default function BirthInputScreen() {
 
       {/* Gender */}
       <View style={styles.card}>
-        <Text style={styles.cardLabel}>Gender</Text>
+        <Text style={styles.cardLabel}>{t('relationships.form.gender')}</Text>
         <View style={styles.genderRow}>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
@@ -115,7 +117,7 @@ export default function BirthInputScreen() {
             style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
             onPress={() => setGender('F')}
           >
-            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>Female</Text>
+            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{t('onboarding.female')}</Text>
           </TouchableOpacity>
         </View>
       </View>

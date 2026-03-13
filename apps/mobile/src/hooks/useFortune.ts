@@ -1,7 +1,8 @@
 /**
- * useFortune — fetches today's daily reading from the saju-reading Edge Function.
+ * useFortune — fetches a reading (daily/weekly/monthly/annual/daewoon) from the saju-reading Edge Function.
  *
- * Free tier: 1 reading per ISO week, tracked via user_metadata.last_free_reading_week.
+ * Free tier: 1 daily reading per ISO week, tracked via user_metadata.last_free_reading_week.
+ * Weekly/Monthly/Annual/Daewoon are premium-only (gated in the UI before calling this hook).
  * If the chart isn't in sajuStore (cold start), it's reconstructed from user_metadata.
  */
 import { useEffect, useRef, useState } from 'react';
@@ -19,8 +20,11 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
+import { useLanguageStore } from '../store/languageStore';
 
-// ── Response types (mirrors supabase/functions/saju-reading/types.ts) ────────
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export type FortuneType = 'daily' | 'weekly' | 'monthly' | 'annual' | 'daewoon';
 
 interface LuckyItems {
   color?: string;
@@ -43,6 +47,29 @@ function isoWeek(date: Date): string {
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
   return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+}
+
+// ── refDate computation per type ──────────────────────────────────────────────
+
+function getRefDate(type: FortuneType, now: Date): string {
+  switch (type) {
+    case 'weekly': {
+      // Monday of current ISO week
+      const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+      const day = d.getUTCDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setUTCDate(d.getUTCDate() + diff);
+      return d.toISOString().split('T')[0];
+    }
+    case 'monthly':
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    case 'annual':
+      return `${now.getFullYear()}-01-01`;
+    case 'daily':
+    case 'daewoon':
+    default:
+      return now.toISOString().split('T')[0];
+  }
 }
 
 // ── Today's sexagenary date ───────────────────────────────────────────────────
@@ -76,12 +103,12 @@ export interface FortuneState {
   todayDay: string;
   /** Five-element key for today's day stem */
   todayElement: FiveElement;
-  /** Free tier: true if the weekly reading has already been used */
+  /** Free tier: true if the weekly reading has already been used (daily only) */
   weeklyLimitReached: boolean;
   refresh: () => void;
 }
 
-export function useFortune(): FortuneState {
+export function useFortune(type: FortuneType = 'daily'): FortuneState {
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<ReadingData | null>(null);
   const [readingId, setReadingId] = useState<string | null>(null);
@@ -91,6 +118,7 @@ export function useFortune(): FortuneState {
 
   const { session } = useAuthStore();
   const { chart, daewoon, frame, setChart } = useSajuStore();
+  const { language } = useLanguageStore();
 
   const ganji = todayGanji();
   // Stable ref so the effect below doesn't re-fire when ganji object changes identity
@@ -104,6 +132,9 @@ export function useFortune(): FortuneState {
     async function fetch() {
       setLoading(true);
       setError(null);
+      // Reset reading when switching types so stale data isn't shown
+      setReading(null);
+      setReadingId(null);
       try {
         const now = new Date();
 
@@ -139,15 +170,14 @@ export function useFortune(): FortuneState {
           setChart(activeChart, birthData, dw, activeFrame!);
         }
 
-        // ── 2. Check free weekly limit ─────────────────────────────────────
+        // ── 2. Check free weekly limit (daily type only for free users) ────
         const meta = session!.user.user_metadata;
         const currentWeek = isoWeek(now);
         const isPremium = meta?.is_premium === true;
-        const usedThisWeek = !isPremium && meta?.last_free_reading_week === currentWeek;
+        const usedThisWeek = !isPremium && type === 'daily' && meta?.last_free_reading_week === currentWeek;
 
         if (usedThisWeek) {
           setWeeklyLimitReached(true);
-          // Don't block on showing previously-loaded reading
           if (!cancelled) setLoading(false);
           return;
         }
@@ -155,8 +185,14 @@ export function useFortune(): FortuneState {
 
         // ── 3. Call Edge Function ──────────────────────────────────────────
         const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
-        const refDate = now.toISOString().split('T')[0];
+        const refDate = getRefDate(type, now);
         const { dayStr: todayDay } = ganjiRef.current;
+
+        // For annual/daewoon — pass the current year's pillar for richer prompt context
+        const currentYp = yearPillar(now.getFullYear());
+        const currentYearPillar = (type === 'annual' || type === 'daewoon')
+          ? { stem: currentYp.stem, branch: currentYp.branch }
+          : undefined;
 
         const resp = await globalThis.fetch(
           `${supabaseUrl}/functions/v1/saju-reading`,
@@ -177,9 +213,11 @@ export function useFortune(): FortuneState {
                 daewoonList: activeDaewoon,
               },
               frame: activeFrame ?? 'en',
-              type: 'daily',
+              type,
               refDate,
               todaySexagenary: todayDay,
+              userLanguage: language,
+              ...(currentYearPillar && { currentYearPillar }),
             }),
           },
         );
@@ -195,8 +233,8 @@ export function useFortune(): FortuneState {
           setReadingId(data.readingId ?? null);
         }
 
-        // ── 4. Mark weekly usage for free tier ────────────────────────────
-        if (!isPremium) {
+        // ── 4. Mark weekly usage for free tier (daily only) ───────────────
+        if (!isPremium && type === 'daily') {
           supabase.auth
             .updateUser({ data: { last_free_reading_week: currentWeek } })
             .catch(console.error);
@@ -213,7 +251,7 @@ export function useFortune(): FortuneState {
     fetch();
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, tick]);
+  }, [session, type, tick, language]);
 
   return {
     loading,

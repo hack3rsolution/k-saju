@@ -18,6 +18,8 @@ export interface ContentRecommendationRequest {
   dayStem: string;
   elementBalance: ElementBalance;
   frame: CulturalFrame;
+  /** BCP-47 language code for AI response language, e.g. 'ko', 'en', 'ja' */
+  userLanguage?: string;
 }
 
 // ── Response payload ──────────────────────────────────────────────────────────

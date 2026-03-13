@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import type { CulturalFrame } from '@k-saju/saju-engine';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { T } from '../../src/theme/tokens';
@@ -57,6 +58,7 @@ const FRAMES: {
 ];
 
 export default function CulturalFrameScreen() {
+  const { t } = useTranslation('common');
   const { setFrame } = useOnboardingStore();
   const [selected, setSelected] = useState<CulturalFrame | null>(null);
 
@@ -78,7 +80,7 @@ export default function CulturalFrameScreen() {
         ))}
       </View>
       <Text style={styles.step}>Step 2 of 3</Text>
-      <Text style={styles.title}>Choose Your Lens</Text>
+      <Text style={styles.title}>{t('onboarding.chooseLens')}</Text>
 
       {/* ── Decorative line ── */}
       <View style={styles.titleDivider}>

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../src/i18n';
 import { useLanguageStore } from '../../src/store/languageStore';
 import { useAuthStore } from '../../src/store/authStore';
-import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useIsPremium } from '../../src/store/entitlementStore';
 import { restorePurchases } from '../../src/lib/purchases';
 import {
   isDailyNotificationScheduled,
@@ -23,7 +23,7 @@ export default function SettingsScreen() {
   const [restoring, setRestoring] = useState(false);
   const { language, setLanguage } = useLanguageStore();
   const { user, signOut } = useAuthStore();
-  const { isPremium } = useEntitlementStore();
+  const isPremium = useIsPremium();
 
   // Sync notification toggle with actual scheduled state on mount
   useEffect(() => {
@@ -42,8 +42,8 @@ export default function SettingsScreen() {
         const granted = await requestNotificationPermission();
         if (!granted) {
           Alert.alert(
-            'Permission Required',
-            'Enable notifications in your device Settings to receive daily fortune reminders.',
+            t('settings.permissionRequired'),
+            t('settings.permissionMessage'),
           );
           return;
         }
@@ -55,7 +55,7 @@ export default function SettingsScreen() {
       }
       setNotifications(value);
     } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not update notifications.');
+      Alert.alert(t('error'), e instanceof Error ? e.message : t('settings.notifError'));
     } finally {
       setNotifLoading(false);
     }
@@ -67,13 +67,13 @@ export default function SettingsScreen() {
       const info = await restorePurchases();
       const hasActive = Object.keys(info.entitlements.active).length > 0;
       Alert.alert(
-        hasActive ? 'Purchases Restored' : 'Nothing to Restore',
+        hasActive ? t('settings.restoreSuccess') : t('settings.restoreEmpty'),
         hasActive
-          ? 'Your subscription has been restored.'
-          : 'No previous purchases found for this account.',
+          ? t('settings.restoreSuccessMsg')
+          : t('settings.restoreEmptyMsg'),
       );
     } catch (e: unknown) {
-      Alert.alert('Restore Failed', e instanceof Error ? e.message : 'Please try again.');
+      Alert.alert(t('settings.restoreFailed'), e instanceof Error ? e.message : t('settings.restoreFailedMsg'));
     } finally {
       setRestoring(false);
     }
@@ -89,12 +89,12 @@ export default function SettingsScreen() {
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('back') === 'Back' ? 'Settings' : t('save') === '저장' ? '설정' : 'Settings'}</Text>
+        <Text style={styles.title}>{t('settings.title')}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Account</Text>
+          <Text style={styles.sectionLabel}>{t('settings.account')}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowText}>Email</Text>
+            <Text style={styles.rowText}>{t('settings.email')}</Text>
             <Text style={styles.rowValue}>{user?.email ?? '—'}</Text>
           </View>
           <TouchableOpacity
@@ -112,7 +112,7 @@ export default function SettingsScreen() {
             )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.row} onPress={handleRestore} disabled={restoring}>
-            <Text style={styles.rowText}>Restore Purchases</Text>
+            <Text style={styles.rowText}>{t('settings.restore')}</Text>
             {restoring ? (
               <ActivityIndicator color="#9d8fbe" size="small" />
             ) : (
@@ -122,12 +122,12 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Preferences</Text>
+          <Text style={styles.sectionLabel}>{t('settings.preferences')}</Text>
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.rowText}>Daily Notification</Text>
+              <Text style={styles.rowText}>{t('settings.dailyNotification')}</Text>
               <Text style={[styles.rowValue, { fontSize: 11, marginTop: 2 }]}>
-                Reminder every day at 8:00 AM
+                {t('settings.notifReminder')}
               </Text>
             </View>
             {notifLoading ? (
@@ -142,11 +142,11 @@ export default function SettingsScreen() {
             )}
           </View>
           <TouchableOpacity style={styles.row} onPress={() => router.push('/(onboarding)/cultural-frame')}>
-            <Text style={styles.rowText}>Cultural Frame</Text>
+            <Text style={styles.rowText}>{t('settings.culturalFrame')}</Text>
             <Text style={styles.rowValue}>🇰🇷 Korean →</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.row} onPress={() => setLangPickerVisible(true)}>
-            <Text style={styles.rowText}>Language</Text>
+            <Text style={styles.rowText}>{t('settings.language')}</Text>
             <Text style={styles.rowValue}>
               {currentLang ? `${currentLang.flag} ${currentLang.label}` : language} →
             </Text>
@@ -154,9 +154,9 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>About</Text>
+          <Text style={styles.sectionLabel}>{t('settings.about')}</Text>
           <View style={styles.row}>
-            <Text style={styles.rowText}>Version</Text>
+            <Text style={styles.rowText}>{t('settings.version')}</Text>
             <Text style={styles.rowValue}>1.0.0</Text>
           </View>
         </View>
@@ -174,7 +174,7 @@ export default function SettingsScreen() {
       >
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setLangPickerVisible(false)} />
         <View style={styles.sheet}>
-          <Text style={styles.sheetTitle}>Language</Text>
+          <Text style={styles.sheetTitle}>{t('settings.languageSheet')}</Text>
           <FlatList
             data={SUPPORTED_LANGUAGES}
             keyExtractor={(item) => item.code}

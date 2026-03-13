@@ -21,46 +21,35 @@ import {
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import Purchases, { PACKAGE_TYPE } from 'react-native-purchases';
 import type { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
 import { purchasePackage, restorePurchases } from '../src/lib/purchases';
-import { useEntitlementStore } from '../src/store/entitlementStore';
+import { useIsPremium } from '../src/store/entitlementStore';
 
-// ── Static plan metadata (labels, features) ───────────────────────────────────
+// ── Static plan metadata (prices, non-translatable config) ───────────────────
 
 const PLAN_META = {
   monthly: {
-    name: 'Premium Monthly',
+    key: 'monthly' as const,
     fallbackPrice: '$8.99/mo',
     highlight: false,
-    features: [
-      'Unlimited daily fortune readings',
-      'Monthly & annual luck cycles',
-      '대운 (10-year cycle) analysis',
-      'Compatibility reports',
-      'All cultural frame styles',
-    ],
+    featureKeys: ['unlimited_daily', 'monthly_annual', 'daewoon', 'compatibility', 'all_frames'],
   },
   annual: {
-    name: 'Premium Annual',
+    key: 'annual' as const,
     fallbackPrice: '$59.99/yr',
     highlight: true,
-    badge: 'Best Value · Save 44%',
-    features: [
-      'Everything in Monthly',
-      '2 add-on reports per year',
-      'Priority AI readings',
-      'Early access to new features',
-    ],
+    featureKeys: ['unlimited_daily', 'monthly_annual', 'daewoon', 'compatibility', 'all_frames', 'priority_ai', 'early_access'],
   },
 };
 
-const ADDON_META: { key: string; name: string; fallbackPrice: string }[] = [
-  { key: 'k_saju_timing',        name: 'Timing Advisor (타이밍 어드바이저)', fallbackPrice: '$2.99' },
-  { key: 'k_saju_compatibility', name: 'Deep Compatibility Report',          fallbackPrice: '$4.99' },
-  { key: 'k_saju_career',        name: 'Career & Wealth Report',             fallbackPrice: '$4.99' },
-  { key: 'k_saju_daewoon_pdf',   name: 'Full 대운 Report (PDF)',             fallbackPrice: '$6.99' },
-  { key: 'k_saju_name_analysis', name: 'Name Analysis (작명)',               fallbackPrice: '$9.99' },
+const ADDON_META: { key: string; tKey: string; fallbackPrice: string }[] = [
+  { key: 'k_saju_timing',        tKey: 'timing_advisor',      fallbackPrice: '$2.99' },
+  { key: 'k_saju_compatibility', tKey: 'deep_compatibility',  fallbackPrice: '$4.99' },
+  { key: 'k_saju_career',        tKey: 'career_wealth',       fallbackPrice: '$4.99' },
+  { key: 'k_saju_daewoon_pdf',   tKey: 'daewoon_report_pdf',  fallbackPrice: '$6.99' },
+  { key: 'k_saju_name_analysis', tKey: 'name_analysis',       fallbackPrice: '$9.99' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -72,12 +61,13 @@ function packagePrice(pkg: PurchasesPackage): string {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function PaywallScreen() {
+  const { t } = useTranslation('paywall');
   const [offering, setOffering] = useState<PurchasesOffering | null>(null);
   const [offeringLoading, setOfferingLoading] = useState(true);
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [restoring, setRestoring] = useState(false);
 
-  const isPremium = useEntitlementStore((s) => s.isPremium);
+  const isPremium = useIsPremium();
 
   // Fetch current offering on mount
   useEffect(() => {
@@ -117,19 +107,19 @@ export default function PaywallScreen() {
 
   async function handlePurchase(pkg: PurchasesPackage | null, label: string) {
     if (!pkg) {
-      Alert.alert('Not Available', `${label} is not available right now. Please try again later.`);
+      Alert.alert(t('notAvailable'), `${label} ${t('notAvailableMsg')}`);
       return;
     }
     setPurchasing(pkg.identifier);
     try {
       await purchasePackage(pkg);
-      Alert.alert('Success!', 'You are now a Premium member. Enjoy unlimited readings!', [
-        { text: 'Done', onPress: () => router.back() },
+      Alert.alert(t('purchaseSuccess'), t('purchaseSuccessMsg'), [
+        { text: t('done'), onPress: () => router.back() },
       ]);
     } catch (e: unknown) {
       // PurchasesError code 1 = user cancelled — don't show error
       if ((e as { userCancelled?: boolean })?.userCancelled) return;
-      Alert.alert('Purchase Failed', e instanceof Error ? e.message : 'Please try again.');
+      Alert.alert(t('purchaseFailed'), e instanceof Error ? e.message : t('purchaseFailedMsg'));
     } finally {
       setPurchasing(null);
     }
@@ -141,13 +131,11 @@ export default function PaywallScreen() {
       const info = await restorePurchases();
       const hasActive = Object.keys(info.entitlements.active).length > 0;
       Alert.alert(
-        hasActive ? 'Purchases Restored' : 'Nothing to Restore',
-        hasActive
-          ? 'Your subscription has been restored.'
-          : 'No previous purchases found for this account.',
+        hasActive ? t('restoreSuccess') : t('restoreEmpty'),
+        hasActive ? t('restoreSuccessMsg') : t('restoreEmptyMsg'),
       );
     } catch (e: unknown) {
-      Alert.alert('Restore Failed', e instanceof Error ? e.message : 'Please try again.');
+      Alert.alert(t('restoreFailed'), e instanceof Error ? e.message : t('restoreFailedMsg'));
     } finally {
       setRestoring(false);
     }
@@ -159,31 +147,31 @@ export default function PaywallScreen() {
     meta,
     pkg,
   }: {
-    meta: typeof PLAN_META.monthly;
+    meta: typeof PLAN_META.monthly | typeof PLAN_META.annual;
     pkg: PurchasesPackage | null;
   }) {
     const isBuying = purchasing === pkg?.identifier;
     const price = pkg ? packagePrice(pkg) : meta.fallbackPrice;
-    const label = 'badge' in meta && meta.badge ? (meta as typeof PLAN_META.annual).badge : undefined;
+    const planName = t(`plans.${meta.key}.name`);
 
     return (
       <View style={[styles.planCard, meta.highlight && styles.planCardHighlight]}>
-        {label && (
+        {meta.highlight && (
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>{label}</Text>
+            <Text style={styles.badgeText}>{t(`plans.${meta.key}.badge`)}</Text>
           </View>
         )}
         {isPremium && (
           <View style={[styles.badge, { backgroundColor: '#16a34a' }]}>
-            <Text style={styles.badgeText}>Active</Text>
+            <Text style={styles.badgeText}>{t('active')}</Text>
           </View>
         )}
-        <Text style={styles.planName}>{meta.name}</Text>
+        <Text style={styles.planName}>{planName}</Text>
         <View style={styles.priceRow}>
           <Text style={styles.planPrice}>{price}</Text>
         </View>
-        {meta.features.map((f) => (
-          <Text key={f} style={styles.feature}>✓  {f}</Text>
+        {meta.featureKeys.map((fk) => (
+          <Text key={fk} style={styles.feature}>✓  {t(`features.${fk}`)}</Text>
         ))}
         <TouchableOpacity
           style={[
@@ -191,14 +179,14 @@ export default function PaywallScreen() {
             meta.highlight && styles.planBtnHighlight,
             (isBuying || isPremium) && styles.planBtnDisabled,
           ]}
-          onPress={() => handlePurchase(pkg, meta.name)}
+          onPress={() => handlePurchase(pkg, planName)}
           disabled={isBuying || isPremium || purchasing !== null}
         >
           {isBuying ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.planBtnText}>
-              {isPremium ? 'Already Premium' : `Get ${meta.name}`}
+              {isPremium ? t('alreadyPremium') : t(`plans.${meta.key}.cta`)}
             </Text>
           )}
         </TouchableOpacity>
@@ -214,15 +202,13 @@ export default function PaywallScreen() {
         <Text style={styles.closeText}>✕</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Unlock Your Full Destiny</Text>
-      <Text style={styles.subtitle}>
-        Premium gives you unlimited access to every reading, report, and cosmic insight.
-      </Text>
+      <Text style={styles.title}>{t('title')}</Text>
+      <Text style={styles.subtitle}>{t('subtitle')}</Text>
 
       {offeringLoading ? (
         <View style={styles.loadingBox}>
           <ActivityIndicator color="#a78bfa" />
-          <Text style={styles.loadingText}>Loading plans…</Text>
+          <Text style={styles.loadingText}>{t('loading')}</Text>
         </View>
       ) : (
         <>
@@ -232,19 +218,20 @@ export default function PaywallScreen() {
       )}
 
       {/* ── Add-ons ─────────────────────────────────────────────────────── */}
-      <Text style={styles.addonTitle}>Add-ons (one-time)</Text>
+      <Text style={styles.addonTitle}>{t('addons.title')}</Text>
       {ADDON_META.map((a) => {
         const addonPkg = findAddonPkg(a.key);
         const price = addonPkg ? packagePrice(addonPkg) : a.fallbackPrice;
         const isBuying = purchasing === addonPkg?.identifier;
+        const addonName = t(`addons.${a.tKey}`);
         return (
           <TouchableOpacity
             key={a.key}
             style={styles.addonRow}
-            onPress={() => handlePurchase(addonPkg, a.name)}
+            onPress={() => handlePurchase(addonPkg, addonName)}
             disabled={isBuying || purchasing !== null}
           >
-            <Text style={styles.addonName}>{a.name}</Text>
+            <Text style={styles.addonName}>{addonName}</Text>
             {isBuying ? (
               <ActivityIndicator color="#a78bfa" size="small" />
             ) : (
@@ -263,14 +250,11 @@ export default function PaywallScreen() {
         {restoring ? (
           <ActivityIndicator color="#9d8fbe" size="small" />
         ) : (
-          <Text style={styles.restoreText}>Restore Purchases</Text>
+          <Text style={styles.restoreText}>{t('restore')}</Text>
         )}
       </TouchableOpacity>
 
-      <Text style={styles.legalText}>
-        Payment charged to your App Store/Google Play account. Cancel anytime.
-        Prices may vary by region.
-      </Text>
+      <Text style={styles.legalText}>{t('legal')}</Text>
     </ScrollView>
   );
 }

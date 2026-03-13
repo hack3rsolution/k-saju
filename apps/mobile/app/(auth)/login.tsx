@@ -10,17 +10,19 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../src/store/authStore';
 
 type LoadingKey = 'magic' | 'google' | 'apple' | null;
 
 export default function LoginScreen() {
+  const { t } = useTranslation('common');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState<LoadingKey>(null);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { signInWithMagicLink, signInWithGoogle, signInWithApple } = useAuthStore();
+  const { signInWithMagicLink, signInWithGoogle, signInWithApple, signInDev } = useAuthStore();
 
   async function withLoading(key: LoadingKey, fn: () => Promise<void>) {
     setLoading(key);
@@ -42,15 +44,15 @@ export default function LoginScreen() {
     >
       <View style={styles.inner}>
         <Text style={styles.title}>K-Saju</Text>
-        <Text style={styles.subtitle}>Discover your cosmic blueprint</Text>
+        <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
 
         {sent ? (
-          <Text style={styles.success}>Check your inbox for the magic link.</Text>
+          <Text style={styles.success}>{t('login.checkInbox')}</Text>
         ) : (
           <>
             <TextInput
               style={styles.input}
-              placeholder="your@email.com"
+              placeholder={t('login.emailPlaceholder')}
               placeholderTextColor="#888"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -61,7 +63,7 @@ export default function LoginScreen() {
               style={[styles.button, !!loading && styles.buttonDisabled]}
               onPress={() =>
                 withLoading('magic', async () => {
-                  if (!email.trim()) throw new Error('Enter your email');
+                  if (!email.trim()) throw new Error(t('login.enterEmail'));
                   await signInWithMagicLink(email.trim());
                   setSent(true);
                 })
@@ -71,13 +73,13 @@ export default function LoginScreen() {
               {loading === 'magic' ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.buttonText}>Send magic link</Text>
+                <Text style={styles.buttonText}>{t('login.sendMagicLink')}</Text>
               )}
             </TouchableOpacity>
 
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
+              <Text style={styles.dividerText}>{t('login.or')}</Text>
               <View style={styles.dividerLine} />
             </View>
 
@@ -91,7 +93,7 @@ export default function LoginScreen() {
               ) : (
                 <>
                   <Ionicons name="logo-google" size={20} color="#fff" style={styles.icon} />
-                  <Text style={styles.socialText}>Continue with Google</Text>
+                  <Text style={styles.socialText}>{t('login.continueGoogle')}</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -107,13 +109,22 @@ export default function LoginScreen() {
                 ) : (
                   <>
                     <Ionicons name="logo-apple" size={20} color="#000" style={styles.icon} />
-                    <Text style={styles.appleText}>Sign in with Apple</Text>
+                    <Text style={styles.appleText}>{t('login.signInApple')}</Text>
                   </>
                 )}
               </TouchableOpacity>
             )}
 
             {error && <Text style={styles.error}>{error}</Text>}
+
+            {(process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true' || __DEV__) && (
+              <TouchableOpacity
+                style={styles.devButton}
+                onPress={signInDev}
+              >
+                <Text style={styles.devButtonText}>⚡ Dev Login</Text>
+              </TouchableOpacity>
+            )}
           </>
         )}
       </View>
@@ -171,4 +182,13 @@ const styles = StyleSheet.create({
   appleText: { color: '#000', fontWeight: '600', fontSize: 15 },
   error: { color: '#f87171', marginTop: 12, textAlign: 'center' },
   success: { color: '#4ade80', fontSize: 16, textAlign: 'center' },
+  devButton: {
+    marginTop: 24,
+    borderWidth: 1,
+    borderColor: '#f59e0b',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  devButtonText: { color: '#f59e0b', fontWeight: '600', fontSize: 14 },
 });

@@ -1,4 +1,5 @@
 import type { CulturalFrame, ReadingType, SajuReadingRequest } from './types.ts';
+import { LANGUAGE_NAMES, buildLangInstruction } from '../_shared/claude.ts';
 
 // ── Cultural Frame System Prompts ─────────────────────────────────────────────
 
@@ -98,15 +99,20 @@ function buildFeedbackNote(feedbacks: FeedbackContext[]): string {
   return note;
 }
 
-export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = []): string {
+export function buildSystemPrompt(frame: CulturalFrame, feedbacks: FeedbackContext[] = [], userLanguage?: string): string {
   const feedbackNote = buildFeedbackNote(feedbacks);
+  const langInstruction = buildLangInstruction(userLanguage);
 
-  return `${SYSTEM_PROMPTS[frame]}${feedbackNote}
+  return `${langInstruction}${SYSTEM_PROMPTS[frame]}${feedbackNote}
 
-IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
+OUTPUT FORMAT (strictly enforced):
+- Start your response with { and end with }
+- Do NOT use markdown code fences (no \`\`\`json or \`\`\`)
+- Do NOT add any text before or after the JSON
+- Return ONLY this JSON structure:
 {
-  "summary": "<one sentence, max 100 chars>",
-  "details": ["<sentence 1>", "<sentence 2>", "<sentence 3>", "<sentence 4>"],
+  "summary": "<one sentence, max 80 chars>",
+  "details": ["<1 sentence, max 50 words>", "<1 sentence, max 50 words>", "<1 sentence, max 50 words>", "<1 sentence, max 50 words>"],
   "luckyItems": {
     "color": "<lucky color>",
     "number": <lucky number 1-9>,
@@ -114,7 +120,7 @@ IMPORTANT: You must respond ONLY with a valid JSON object in this exact format:
     "food": "<recommended food>"
   }
 }
-No markdown. No explanation outside the JSON. The luckyItems can be null if not applicable.`;
+Keep each details item to ONE concise sentence (max 50 words). luckyItems can be null if not applicable. Any output outside the JSON object will be discarded.`;
 }
 
 export function buildUserPrompt(req: SajuReadingRequest): string {

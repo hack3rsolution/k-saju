@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -44,12 +45,13 @@ function PillarCard({
   pillar: { stem: string; branch: string } | null;
   blurred?: boolean;
 }) {
+  const { t } = useTranslation('common');
   if (!pillar) {
     return (
       <View style={pStyles.card}>
         <Text style={pStyles.title}>{title}</Text>
         <Text style={pStyles.na}>N/A</Text>
-        <Text style={pStyles.naHint}>Time unknown</Text>
+        <Text style={pStyles.naHint}>{t('onboarding.timeUnknown')}</Text>
       </View>
     );
   }
@@ -129,6 +131,7 @@ const eStyles = StyleSheet.create({
 
 // ── Main screen ──────────────────────────────────────────────────────────────
 export default function ResultPreviewScreen() {
+  const { t } = useTranslation('common');
   const { birthYear, birthMonth, birthDay, birthHour, gender, frame } = useOnboardingStore();
   const { setChart } = useSajuStore();
 
@@ -214,7 +217,7 @@ export default function ResultPreviewScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.step}>Step 3 of 3</Text>
-      <Text style={styles.title}>Your Cosmic Blueprint</Text>
+      <Text style={styles.title}>{t('onboarding.cosmicBlueprint')}</Text>
       <Text style={styles.subtitle}>
         Born {birthYear}/{String(birthMonth).padStart(2,'0')}/{String(birthDay).padStart(2,'0')}
         {birthHour != null ? ` at ${String(birthHour).padStart(2,'0')}:00` : ' (time unknown)'}
@@ -269,7 +272,7 @@ export default function ResultPreviewScreen() {
         style={styles.secondaryBtn}
         onPress={() => router.push('/paywall')}
       >
-        <Text style={styles.secondaryBtnText}>View Premium plans</Text>
+        <Text style={styles.secondaryBtnText}>{t('onboarding.viewPremiumPlans')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

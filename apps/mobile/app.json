@@ -18,7 +18,10 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.ksaju.global",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCalendarsUsageDescription": "K-Saju uses your calendar to save auspicious days for important events.",
+        "NSCalendarsFullAccessUsageDescription": "K-Saju needs full calendar access to add and manage auspicious day events.",
+        "NSRemindersUsageDescription": "K-Saju uses reminders to notify you before your auspicious days."
       }
     },
     "android": {

@@ -26,6 +26,8 @@ export interface TimingRequest {
   refDate: string;
   /** Today's sexagenary stem+branch e.g. "甲子" */
   todaySexagenary?: string;
+  /** BCP-47 language code e.g. 'ko', 'en', 'ja' */
+  userLanguage?: string;
 }
 
 export interface TimingResponse {

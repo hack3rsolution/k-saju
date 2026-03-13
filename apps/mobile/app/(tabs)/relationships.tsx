@@ -19,15 +19,18 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useRelationships } from '../../src/hooks/useRelationships';
+import { useTranslation } from 'react-i18next';
 import { RelationshipCard } from '../../src/components/RelationshipCard';
 import { AddRelationshipModal } from '../../src/components/AddRelationshipModal';
 import { RelationshipDetailSheet } from '../../src/components/RelationshipDetailSheet';
-import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useIsPremium, useHasAddon } from '../../src/store/entitlementStore';
 import type { Relationship, RelationshipFortuneData } from '../../src/types/relationship';
 
 export default function RelationshipsScreen() {
-  const { isPremium, addons } = useEntitlementStore();
-  const hasAccess = isPremium || addons.deepCompatibility;
+  const { t } = useTranslation('common');
+  const isPremium = useIsPremium();
+  const hasDeepCompat = useHasAddon('deepCompatibility');
+  const hasAccess = isPremium || hasDeepCompat;
 
   const {
     relationships,
@@ -88,16 +91,14 @@ export default function RelationshipsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>Relationship Map</Text>
+          <Text style={styles.title}>{t('relationships.title')}</Text>
           <Text style={styles.subtitle}>관계 지도 · 人脈運</Text>
           <View style={styles.lockedCard}>
             <Text style={styles.lockedIcon}>💞</Text>
-            <Text style={styles.lockedTitle}>Premium Feature</Text>
-            <Text style={styles.lockedDesc}>
-              See compatibility scores, monthly energy flows, and five-element synergy for everyone in your life.
-            </Text>
+            <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
+            <Text style={styles.lockedDesc}>{t('relationships.premiumDesc')}</Text>
             <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
-              <Text style={styles.upgradeBtnText}>Unlock Relationship Map →</Text>
+              <Text style={styles.upgradeBtnText}>{t('relationships.unlockCta')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -115,8 +116,8 @@ export default function RelationshipsScreen() {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
         {/* Header */}
-        <Text style={styles.title}>Relationship Map</Text>
-        <Text style={styles.subtitle}>관계 지도 · {new Date().toLocaleString('en', { month: 'long', year: 'numeric' })}</Text>
+        <Text style={styles.title}>{t('relationships.title')}</Text>
+        <Text style={styles.subtitle}>{t('relationships.subtitle', { date: new Date().toLocaleString(undefined, { month: 'long', year: 'numeric' }) })}</Text>
 
         {/* Error banner */}
         {error && error !== 'premium_required' && (
@@ -129,10 +130,8 @@ export default function RelationshipsScreen() {
         {!loading && relationships.length === 0 && (
           <View style={styles.emptyBox}>
             <Text style={styles.emptyIcon}>💞</Text>
-            <Text style={styles.emptyTitle}>No relationships yet</Text>
-            <Text style={styles.emptyDesc}>
-              Tap the + button to add a partner, friend, or family member and see your cosmic compatibility.
-            </Text>
+            <Text style={styles.emptyTitle}>{t('relationships.emptyTitle')}</Text>
+            <Text style={styles.emptyDesc}>{t('relationships.emptyDesc')}</Text>
           </View>
         )}
 
@@ -150,7 +149,7 @@ export default function RelationshipsScreen() {
         {loading && relationships.length === 0 && (
           <View style={styles.loadingBox}>
             <ActivityIndicator color="#a78bfa" size="large" />
-            <Text style={styles.loadingText}>Loading relationships…</Text>
+            <Text style={styles.loadingText}>{t('relationships.loading')}</Text>
           </View>
         )}
       </ScrollView>

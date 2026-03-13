@@ -13,6 +13,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
+import { CLAUDE_MODEL } from '../_shared/claude.ts';
 import { buildSystemPrompt, SUGGESTED_QUESTIONS } from './prompts.ts';
 import type {
   FortuneChatRequest,
@@ -56,7 +57,7 @@ function validateRequest(body: unknown): FortuneChatRequest {
 // ── Streaming Claude call (SSE) ───────────────────────────────────────────────
 
 const ANTHROPIC_STREAM_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = CLAUDE_MODEL;
 const MAX_TOKENS = 512;
 
 async function streamClaudeResponse(
@@ -195,7 +196,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Build Claude messages ─────────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame, request.chart, request.todayReading);
+  const systemPrompt = buildSystemPrompt(request.frame, request.chart, request.todayReading, request.userLanguage);
   const claudeMessages = request.messages.map((m) => ({
     role:    m.role,
     content: m.content,

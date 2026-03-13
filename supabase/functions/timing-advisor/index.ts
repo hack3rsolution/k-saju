@@ -14,6 +14,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
+import { CLAUDE_MODEL, extractJson } from '../_shared/claude.ts';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.ts';
 import type { TimingRequest, TimingResponse, ClaudeTimingOutput } from './types.ts';
 
@@ -21,8 +22,8 @@ import type { TimingRequest, TimingResponse, ClaudeTimingOutput } from './types.
 
 const instanceCache = new Map<string, { data: ClaudeTimingOutput; expiresAt: number }>();
 
-function cacheKey(userId: string, category: string, date: string) {
-  return `${userId}:${category}:${date}`;
+function cacheKey(userId: string, category: string, date: string, language: string) {
+  return `${userId}:${category}:${date}:${language}`;
 }
 
 // ── Rate limit (in-memory, per instance) ──────────────────────────────────────
@@ -55,7 +56,7 @@ async function callClaude(
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model: CLAUDE_MODEL,
       max_tokens: 400,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
@@ -70,10 +71,7 @@ async function callClaude(
   const data = await res.json() as { content: Array<{ type: string; text: string }> };
   const raw = data.content?.[0]?.text ?? '';
 
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Claude response had no JSON');
-
-  const parsed = JSON.parse(jsonMatch[0]) as Partial<ClaudeTimingOutput>;
+  const parsed = extractJson(raw) as Partial<ClaudeTimingOutput>;
   return {
     score:    Math.max(1, Math.min(10, Number(parsed.score ?? 5))),
     headline: String(parsed.headline ?? '').slice(0, 120),
@@ -155,7 +153,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Instance-level cache ───────────────────────────────────────────────────
-  const key = cacheKey(user.id, request.category, request.refDate);
+  const key = cacheKey(user.id, request.category, request.refDate, request.userLanguage ?? 'en');
   const cached = instanceCache.get(key);
   if (cached && cached.expiresAt > Date.now()) {
     return jsonResponse({
@@ -166,7 +164,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ── Build prompts & call Claude ────────────────────────────────────────────
-  const systemPrompt = buildSystemPrompt(request.frame);
+  const systemPrompt = buildSystemPrompt(request.frame, request.userLanguage);
   const userPrompt   = buildUserPrompt(request);
 
   let advice: ClaudeTimingOutput;

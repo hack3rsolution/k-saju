@@ -27,9 +27,10 @@ export interface SajuChart {
 }
 
 export interface JournalAnalysisRequest {
-  events: LifeEvent[];
-  chart:  SajuChart;
-  frame:  CulturalFrame;
+  events:        LifeEvent[];
+  chart:         SajuChart;
+  frame:         CulturalFrame;
+  userLanguage?: string;  // BCP-47 code e.g. 'ko', 'en', 'ja'
 }
 
 export interface PatternInsight {

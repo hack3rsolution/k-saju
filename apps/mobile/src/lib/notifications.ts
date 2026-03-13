@@ -42,7 +42,11 @@ export function configureNotifications(): void {
 
 /** Returns true if notifications are granted after the request. */
 export async function requestNotificationPermission(): Promise<boolean> {
-  if (!Device.isDevice) return false;
+  if (!Device.isDevice) {
+    // Simulator: skip real permission request and return granted for dev testing
+    console.log('[notifications] Simulator detected — returning granted for dev');
+    return true;
+  }
 
   const { status: existing } = await Notifications.getPermissionsAsync();
   if (existing === 'granted') return true;

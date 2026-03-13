@@ -3,9 +3,10 @@
  * Issue #16: AI Feedback Loop
  *
  * Step 1: User taps 👍 or 👎 (passed in as `initialRating`)
- * Step 2: Sheet shows reason chips → submit
+ * Step 2: Sheet shows reason chips (3 examples + 직접 작성) → submit
  */
-import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import type { FeedbackRating, FeedbackType } from '../hooks/useFeedback';
 
 interface Reason {
@@ -14,10 +15,16 @@ interface Reason {
   label: string;
 }
 
-const REASONS: Reason[] = [
-  { key: 'accurate',  emoji: '✨', label: '정확해요' },
-  { key: 'too_vague', emoji: '🌫️', label: '너무 모호해요' },
-  { key: 'not_me',    emoji: '🤔', label: '나랑 안 맞아요' },
+const POSITIVE_REASONS: Reason[] = [
+  { key: 'accurate',   emoji: '✨', label: '정확해요' },
+  { key: 'insightful', emoji: '💡', label: '통찰력 있어요' },
+  { key: 'motivating', emoji: '🌟', label: '힘이 됐어요' },
+];
+
+const NEGATIVE_REASONS: Reason[] = [
+  { key: 'too_vague',   emoji: '🌫️', label: '너무 모호해요' },
+  { key: 'not_me',      emoji: '🤔', label: '나랑 안 맞아요' },
+  { key: 'too_general', emoji: '📋', label: '너무 일반적이에요' },
 ];
 
 interface Props {
@@ -29,14 +36,34 @@ interface Props {
 }
 
 export function FeedbackSheet({ visible, initialRating, submitting, onSelect, onClose }: Props) {
+  const [customMode, setCustomMode] = useState(false);
+  const [customText, setCustomText] = useState('');
+
+  const reasons = initialRating === 1 ? POSITIVE_REASONS : NEGATIVE_REASONS;
+
+  function handleClose() {
+    setCustomMode(false);
+    setCustomText('');
+    onClose();
+  }
+
+  function handleCustomSubmit() {
+    setCustomMode(false);
+    setCustomText('');
+    onSelect('custom');
+  }
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
         <View style={styles.sheet}>
           <View style={styles.handle} />
 
@@ -47,24 +74,56 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
 
           {submitting ? (
             <ActivityIndicator color="#a78bfa" style={styles.spinner} />
-          ) : (
-            REASONS.map((r) => (
+          ) : customMode ? (
+            <View style={styles.customContainer}>
+              <TextInput
+                style={styles.customInput}
+                placeholder="직접 입력해 주세요…"
+                placeholderTextColor="#6b5a8a"
+                value={customText}
+                onChangeText={setCustomText}
+                multiline
+                autoFocus
+              />
               <TouchableOpacity
-                key={r.key}
-                style={styles.reasonBtn}
-                onPress={() => onSelect(r.key)}
+                style={[styles.reasonBtn, styles.customSendBtn]}
+                onPress={handleCustomSubmit}
               >
-                <Text style={styles.reasonEmoji}>{r.emoji}</Text>
-                <Text style={styles.reasonLabel}>{r.label}</Text>
+                <Text style={styles.reasonEmoji}>✉️</Text>
+                <Text style={styles.reasonLabel}>보내기</Text>
               </TouchableOpacity>
-            ))
-          )}
+              <TouchableOpacity style={styles.cancelBtn} onPress={() => setCustomMode(false)}>
+                <Text style={styles.cancelText}>← 돌아가기</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <>
+              {reasons.map((r) => (
+                <TouchableOpacity
+                  key={r.key}
+                  style={styles.reasonBtn}
+                  onPress={() => onSelect(r.key)}
+                >
+                  <Text style={styles.reasonEmoji}>{r.emoji}</Text>
+                  <Text style={styles.reasonLabel}>{r.label}</Text>
+                </TouchableOpacity>
+              ))}
 
-          <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelText}>취소</Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.reasonBtn}
+                onPress={() => setCustomMode(true)}
+              >
+                <Text style={styles.reasonEmoji}>✏️</Text>
+                <Text style={styles.reasonLabel}>직접 작성</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
+                <Text style={styles.cancelText}>취소</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -137,5 +196,24 @@ const styles = StyleSheet.create({
     color: '#9d8fbe',
     fontWeight: '600',
     fontSize: 15,
+  },
+  customContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  customInput: {
+    width: '100%',
+    backgroundColor: '#2d1854',
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    color: '#e9d5ff',
+    fontSize: 15,
+    marginBottom: 10,
+    minHeight: 90,
+    textAlignVertical: 'top',
+  },
+  customSendBtn: {
+    marginBottom: 0,
   },
 });

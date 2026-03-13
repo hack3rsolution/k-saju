@@ -22,18 +22,19 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useFortunChat, loadChatHistory, type ChatMessage } from '../../src/hooks/useFortunChat';
-import { useEntitlementStore } from '../../src/store/entitlementStore';
+import { useIsPremium } from '../../src/store/entitlementStore';
 
 // ── Suggested question chips ──────────────────────────────────────────────────
 
-const CHIP_QUESTIONS = [
-  'Should I make an important decision today?',
-  'How can I make the most of my lucky elements?',
-  'What should I focus on this week?',
-];
-
 function SuggestedChips({ onSelect, visible }: { onSelect: (q: string) => void; visible: boolean }) {
+  const { t } = useTranslation('common');
+  const chipQuestions = [
+    t('fortuneChat.chip1'),
+    t('fortuneChat.chip2'),
+    t('fortuneChat.chip3'),
+  ];
   if (!visible) return null;
   return (
     <ScrollView
@@ -42,7 +43,7 @@ function SuggestedChips({ onSelect, visible }: { onSelect: (q: string) => void; 
       style={chips.container}
       contentContainerStyle={chips.content}
     >
-      {CHIP_QUESTIONS.map((q) => (
+      {chipQuestions.map((q) => (
         <TouchableOpacity key={q} style={chips.chip} onPress={() => onSelect(q)}>
           <Text style={chips.chipText}>{q}</Text>
         </TouchableOpacity>
@@ -106,9 +107,10 @@ const bubble = StyleSheet.create({
 // ── Fortune summary header ────────────────────────────────────────────────────
 
 function FortuneSummaryCard({ summary }: { summary: string }) {
+  const { t } = useTranslation('common');
   return (
     <View style={summaryCard.card}>
-      <Text style={summaryCard.label}>Today's Fortune</Text>
+      <Text style={summaryCard.label}>{t('fortuneChat.todaysFortune')}</Text>
       <Text style={summaryCard.text} numberOfLines={3}>{summary}</Text>
     </View>
   );
@@ -127,19 +129,18 @@ const summaryCard = StyleSheet.create({
 // ── Premium locked overlay ────────────────────────────────────────────────────
 
 function LockedOverlay() {
+  const { t } = useTranslation('common');
   return (
     <View style={lock.overlay}>
       <View style={lock.card}>
         <Text style={lock.icon}>💬</Text>
-        <Text style={lock.title}>Ask Your Fortune AI</Text>
-        <Text style={lock.desc}>
-          Upgrade to Premium to have unlimited follow-up conversations with your cosmic advisor.
-        </Text>
+        <Text style={lock.title}>{t('fortuneChat.lockTitle')}</Text>
+        <Text style={lock.desc}>{t('fortuneChat.lockDesc')}</Text>
         <TouchableOpacity style={lock.btn} onPress={() => router.push('/paywall')}>
-          <Text style={lock.btnText}>Upgrade to Premium →</Text>
+          <Text style={lock.btnText}>{t('fortuneChat.upgradePremium')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={lock.cancel}>Maybe later</Text>
+          <Text style={lock.cancel}>{t('fortuneChat.maybeLater')}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -187,7 +188,8 @@ export default function FortuneChatScreen() {
     })(),
   };
 
-  const { isPremium } = useEntitlementStore();
+  const { t } = useTranslation('common');
+  const isPremium = useIsPremium();
   const { messages, streaming, error, rateLimited, premiumRequired, sendMessage } =
     useFortunChat(fortuneId, todayReading);
 
@@ -236,7 +238,7 @@ export default function FortuneChatScreen() {
     <>
       <Stack.Screen
         options={{
-          title: 'Fortune Chat',
+          title: t('fortuneChat.title'),
           headerStyle: { backgroundColor: '#1a0a2e' },
           headerTintColor: '#a78bfa',
           headerTitleStyle: { color: '#fff', fontWeight: '700' },
@@ -264,11 +266,8 @@ export default function FortuneChatScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyIcon}>✦</Text>
-                <Text style={styles.emptyTitle}>Ask your cosmic advisor</Text>
-                <Text style={styles.emptyDesc}>
-                  Dive deeper into your fortune — ask anything about your chart,
-                  today's energy, or upcoming decisions.
-                </Text>
+                <Text style={styles.emptyTitle}>{t('fortuneChat.askAdvisor')}</Text>
+                <Text style={styles.emptyDesc}>{t('fortuneChat.emptyDesc')}</Text>
               </View>
             )
           }
@@ -282,7 +281,7 @@ export default function FortuneChatScreen() {
         )}
         {rateLimited && (
           <View style={styles.errorBanner}>
-            <Text style={styles.errorText}>Daily limit reached (20 messages). Try again tomorrow.</Text>
+            <Text style={styles.errorText}>{t('fortuneChat.rateLimit')}</Text>
           </View>
         )}
 
@@ -295,7 +294,7 @@ export default function FortuneChatScreen() {
             style={styles.input}
             value={inputText}
             onChangeText={setInputText}
-            placeholder="Ask about your fortune…"
+            placeholder={t('fortuneChat.placeholder')}
             placeholderTextColor="#5a4d7a"
             multiline
             maxLength={400}

@@ -1,75 +1,216 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRef, useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { useIsPremium } from '../../src/store/entitlementStore';
+import { useFortune, type FortuneType } from '../../src/hooks/useFortune';
+import { T } from '../../src/theme/tokens';
 
-const FORTUNE_PERIODS = [
-  { label: 'Daily', icon: '☀️', available: true },
-  { label: 'Weekly', icon: '📆', available: true },
-  { label: 'Monthly', icon: '🌙', available: false, premium: true },
-  { label: 'Annual', icon: '🎆', available: false, premium: true },
-  { label: '대운 (10yr)', icon: '♾️', available: false, premium: true },
+// ── Config ────────────────────────────────────────────────────────────────────
+
+interface FortuneCard {
+  key: FortuneType;
+  labelKey: string;
+  icon: string;
+  premium: boolean;
+}
+
+const FORTUNE_CARDS: FortuneCard[] = [
+  { key: 'daily',   labelKey: 'fortune.daily',   icon: '☀️', premium: false },
+  { key: 'weekly',  labelKey: 'fortune.weekly',  icon: '📆', premium: false },
+  { key: 'monthly', labelKey: 'fortune.monthly', icon: '🌙', premium: true  },
+  { key: 'annual',  labelKey: 'fortune.annual',  icon: '🎆', premium: true  },
+  { key: 'daewoon', labelKey: 'fortune.daewoon', icon: '♾️', premium: true  },
 ];
 
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+
+function Skeleton({ width, height }: { width: number | string; height: number }) {
+  const opacity = useRef(new Animated.Value(0.4)).current;
+  useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0.85, duration: 700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.4,  duration: 700, useNativeDriver: true }),
+      ]),
+    );
+    anim.start();
+    return () => anim.stop();
+  }, [opacity]);
+  return (
+    <Animated.View
+      style={{ width, height, backgroundColor: T.bg.elevated, borderRadius: T.radius.sm, opacity, marginBottom: 8 }}
+    />
+  );
+}
+
+// ── Reading panel (shown inside an expanded card) ─────────────────────────────
+
+function ReadingPanel({ type }: { type: FortuneType }) {
+  const { loading, reading, error, refresh } = useFortune(type);
+  const { t } = useTranslation('common');
+
+  if (loading) {
+    return (
+      <View style={styles.panel}>
+        <Skeleton width="85%" height={18} />
+        <Skeleton width="100%" height={13} />
+        <Skeleton width="100%" height={13} />
+        <Skeleton width="70%"  height={13} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.panel}>
+        <Text style={styles.panelError}>{error}</Text>
+        <TouchableOpacity style={styles.retryBtn} onPress={refresh}>
+          <Text style={styles.retryText}>{t('retry')}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (!reading) return null;
+
+  return (
+    <View style={styles.panel}>
+      <View style={styles.panelDivider} />
+      <Text style={styles.panelSummary}>{reading.summary}</Text>
+      {reading.details.map((d, i) => (
+        <View key={i} style={styles.panelRow}>
+          <View style={styles.panelBullet} />
+          <Text style={styles.panelDetail}>{d}</Text>
+        </View>
+      ))}
+      {reading.luckyItems && (
+        <View style={styles.luckyRow}>
+          {reading.luckyItems.color     && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🎨 {reading.luckyItems.color}</Text>}
+          {reading.luckyItems.number != null && <Text style={styles.luckyChip} numberOfLines={1}>🔢 {reading.luckyItems.number}</Text>}
+          {reading.luckyItems.direction && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🧭 {reading.luckyItems.direction}</Text>}
+          {reading.luckyItems.food      && <Text style={styles.luckyChip} numberOfLines={1} ellipsizeMode="tail">🍽️ {reading.luckyItems.food}</Text>}
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ── Main screen ───────────────────────────────────────────────────────────────
+
 export default function FortuneScreen() {
+  const { t } = useTranslation('common');
+  const isPremium = useIsPremium();
+  const [expanded, setExpanded] = useState<FortuneType | null>(null);
+
+  function handleCardPress(card: FortuneCard) {
+    if (card.premium && !isPremium) {
+      router.push('/paywall');
+      return;
+    }
+    setExpanded(prev => (prev === card.key ? null : card.key));
+  }
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Fortune Readings</Text>
-      <Text style={styles.subtitle}>운세 · 流年 · Luck Cycles</Text>
+      <Text style={styles.title}>{t('fortune.title')}</Text>
+      <Text style={styles.subtitle}>{t('fortune.subtitle')}</Text>
 
-      {FORTUNE_PERIODS.map((p) => (
-        <TouchableOpacity
-          key={p.label}
-          style={[styles.card, !p.available && styles.cardLocked]}
-          onPress={() => {
-            if (!p.available) router.push('/paywall');
-          }}
-          disabled={p.available && false}
-        >
-          <Text style={styles.cardIcon}>{p.icon}</Text>
-          <View style={styles.cardBody}>
-            <Text style={styles.cardTitle}>{p.label}</Text>
-            {p.premium && <Text style={styles.premiumBadge}>Premium</Text>}
-          </View>
-          <Text style={styles.arrow}>{p.available ? '→' : '🔒'}</Text>
+      {FORTUNE_CARDS.map((card) => {
+        const locked    = card.premium && !isPremium;
+        const isOpen    = expanded === card.key;
+
+        return (
+          <TouchableOpacity
+            key={card.key}
+            style={[styles.card, isOpen && styles.cardOpen, locked && styles.cardLocked]}
+            onPress={() => handleCardPress(card)}
+            activeOpacity={0.8}
+          >
+            {/* Card header row */}
+            <View style={styles.cardRow}>
+              <Text style={styles.cardIcon}>{card.icon}</Text>
+              <View style={styles.cardBody}>
+                <Text style={styles.cardTitle}>{t(card.labelKey)}</Text>
+                {locked && (
+                  <Text style={styles.premiumBadge}>{t('fortune.premium')}</Text>
+                )}
+              </View>
+              <Text style={styles.arrow}>
+                {locked ? '🔒' : isOpen ? '▲' : '→'}
+              </Text>
+            </View>
+
+            {/* Expanded reading panel */}
+            {isOpen && !locked && <ReadingPanel type={card.key} />}
+          </TouchableOpacity>
+        );
+      })}
+
+      {!isPremium && (
+        <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
+          <Text style={styles.upgradeBtnText}>{t('fortune.unlockAll')}</Text>
         </TouchableOpacity>
-      ))}
-
-      <TouchableOpacity style={styles.upgradeBtn} onPress={() => router.push('/paywall')}>
-        <Text style={styles.upgradeBtnText}>Unlock all fortune readings</Text>
-      </TouchableOpacity>
+      )}
     </ScrollView>
   );
 }
 
+// ── Styles ────────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a0a2e' },
-  content: { padding: 24, paddingTop: 60 },
-  title: { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 4 },
-  subtitle: { fontSize: 14, color: '#9d8fbe', marginBottom: 32 },
+  container: { flex: 1, backgroundColor: T.bg.surface },
+  content:   { padding: T.spacing[6], paddingTop: 60, paddingBottom: T.spacing[8] },
+
+  title:    { fontSize: T.fontSize['2xl'], fontWeight: '800', color: T.text.primary, marginBottom: 4 },
+  subtitle: { fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[5] },
+
+  // Cards
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2d1854',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 12,
+    backgroundColor: T.bg.card,
+    borderRadius: T.radius.xl,
+    padding: T.spacing[5],
+    marginBottom: T.spacing[3],
+    borderWidth: 1,
+    borderColor: T.border.default,
   },
-  cardLocked: { opacity: 0.6 },
-  cardIcon: { fontSize: 28, marginRight: 16 },
-  cardBody: { flex: 1 },
-  cardTitle: { color: '#fff', fontWeight: '600', fontSize: 16 },
-  premiumBadge: {
-    color: '#a78bfa',
-    fontSize: 12,
-    marginTop: 2,
-    fontWeight: '600',
+  cardOpen:   { borderColor: T.primary.DEFAULT },
+  cardLocked: { opacity: 0.7 },
+  cardRow:    { flexDirection: 'row', alignItems: 'center' },
+  cardIcon:   { fontSize: 28, marginRight: T.spacing[4] },
+  cardBody:   { flex: 1 },
+  cardTitle:  { color: T.text.primary, fontWeight: '600', fontSize: T.fontSize.md },
+  premiumBadge: { color: T.primary.light, fontSize: T.fontSize.xs, fontWeight: '600', marginTop: 2 },
+  arrow:      { color: T.text.faint, fontSize: T.fontSize.md },
+
+  // Reading panel (inside expanded card)
+  panel:       { marginTop: T.spacing[4] },
+  panelDivider:{ height: 1, backgroundColor: T.border.default, marginBottom: T.spacing[4] },
+  panelSummary:{ fontSize: T.fontSize.base, fontWeight: '700', color: T.text.primary, lineHeight: 24, marginBottom: T.spacing[3] },
+  panelRow:    { flexDirection: 'row', gap: T.spacing[3], marginBottom: T.spacing[2], alignItems: 'flex-start' },
+  panelBullet: { width: 5, height: 5, borderRadius: 3, marginTop: 8, flexShrink: 0, backgroundColor: T.primary.DEFAULT },
+  panelDetail: { flex: 1, fontSize: T.fontSize.sm, color: T.text.muted, lineHeight: 20 },
+  panelError:  { color: T.semantic.error, fontSize: T.fontSize.sm, marginBottom: T.spacing[2] },
+
+  luckyRow:  { flexDirection: 'row', flexWrap: 'wrap', gap: T.spacing[2], marginTop: T.spacing[3] },
+  luckyChip: {
+    fontSize: T.fontSize.xs, color: T.text.secondary, fontWeight: '600',
+    backgroundColor: T.bg.base, borderRadius: T.radius.sm,
+    paddingHorizontal: T.spacing[2], paddingVertical: 4,
+    borderWidth: 1, borderColor: T.border.default,
+    maxWidth: '48%',   // prevents chip from exceeding half-row on long text (de/ar)
   },
-  arrow: { color: '#9d8fbe', fontSize: 18 },
-  upgradeBtn: {
-    backgroundColor: '#7c3aed',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  upgradeBtnText: { color: '#fff', fontWeight: '600', fontSize: 16 },
+
+  retryBtn:  { alignSelf: 'flex-start', paddingHorizontal: T.spacing[3], paddingVertical: T.spacing[2], borderRadius: T.radius.sm, borderWidth: 1, borderColor: T.border.default },
+  retryText: { color: T.text.faint, fontSize: T.fontSize.xs, fontWeight: '600' },
+
+  upgradeBtn:     { backgroundColor: T.primary.DEFAULT, borderRadius: T.radius.lg, paddingVertical: T.spacing[4], alignItems: 'center', marginTop: T.spacing[2] },
+  upgradeBtnText: { color: '#fff', fontWeight: '700', fontSize: T.fontSize.base },
 });
