@@ -15,21 +15,22 @@ import { configureNotifications } from '../src/lib/notifications';
 // Configure notification handler at module load (before any render)
 configureNotifications();
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   useAuthGuard();
   useNotifications();
+
+  // Hide splash screen immediately — no conditions, no waiting
+  useEffect(() => {
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
 
   // Wait for i18n to be initialized and languageStore to rehydrate
   const [i18nReady, setI18nReady] = useState(i18n.isInitialized);
   useLanguageStore(); // triggers rehydration which applies persisted language
   useEffect(() => {
     if (i18n.isInitialized) {
-      // Already initialized synchronously (initImmediate: false) — just mark ready.
       setI18nReady(true);
     } else {
-      // Fallback: wait for async init (should not happen with initImmediate: false).
       const handler = () => setI18nReady(true);
       i18n.on('initialized', handler);
       return () => { i18n.off('initialized', handler); };
@@ -44,7 +45,6 @@ export default function RootLayout() {
       const isDevBypass = process.env.EXPO_PUBLIC_ENABLE_DEV_BYPASS === 'true';
       const isDevUser = session.user.id === '00000000-0000-4000-8000-000000000000';
       if (isDevBypass && isDevUser) {
-        // Grant all entitlements for the dev user
         useEntitlementStore.getState().setEntitlements(true, {
           deepCompatibility: true,
           careerWealth: true,
@@ -60,10 +60,6 @@ export default function RootLayout() {
       useEntitlementStore.getState().reset();
     }
   }, [session?.user?.id]);
-
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
 
   if (!i18nReady) return null;
 
