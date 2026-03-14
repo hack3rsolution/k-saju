@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import i18n from '../src/i18n';
 import { useLanguageStore } from '../src/store/languageStore';
 import { useAuthGuard } from '../src/hooks/useAuthGuard';
 import { useNotifications } from '../src/hooks/useNotifications';
@@ -18,23 +17,11 @@ configureNotifications();
 export default function RootLayout() {
   useAuthGuard();
   useNotifications();
+  useLanguageStore(); // triggers rehydration which applies persisted language
 
   // Hide splash screen immediately — no conditions, no waiting
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {});
-  }, []);
-
-  // Wait for i18n to be initialized and languageStore to rehydrate
-  const [i18nReady, setI18nReady] = useState(i18n.isInitialized);
-  useLanguageStore(); // triggers rehydration which applies persisted language
-  useEffect(() => {
-    if (i18n.isInitialized) {
-      setI18nReady(true);
-    } else {
-      const handler = () => setI18nReady(true);
-      i18n.on('initialized', handler);
-      return () => { i18n.off('initialized', handler); };
-    }
   }, []);
 
   const session = useAuthStore((s) => s.session);
@@ -60,8 +47,6 @@ export default function RootLayout() {
       useEntitlementStore.getState().reset();
     }
   }, [session?.user?.id]);
-
-  if (!i18nReady) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
