@@ -58,6 +58,7 @@
       "expo-apple-authentication",
       "./plugins/withAndroidNodePath"
     ],
+    "entryPoint": "./index.js",
     "scheme": "ksaju",
     "experiments": {
       "typedRoutes": true
