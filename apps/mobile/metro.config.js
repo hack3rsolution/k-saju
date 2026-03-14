@@ -19,4 +19,9 @@ config.resolver.nodeModulesPaths = [
 config.resolver.unstable_enableSymlinks = true;
 config.resolver.unstable_enablePackageExports = true;
 
+// Block nested react-native copies that live inside other packages' node_modules.
+// @expo/metro-runtime ships its own react-native which causes
+// "Unable to resolve module ../LogBox/LogBox" because Metro picks the wrong copy.
+config.resolver.blockList = /node_modules\/@expo\/metro-runtime\/node_modules\/react-native\/.*/;
+
 module.exports = config;
