@@ -307,6 +307,25 @@ pnpm -r type-check
   3. 패치 영구 적용: `apps/mobile/scripts/patch-android-rnsvg.js` postinstall 스크립트
 - **참고**: Expo SDK 버전 확인 명령: `npx expo install --check react-native-svg`
 
+### Android 빌드 환경 설정 (2026-03-14, 영구 기록)
+
+- **Java 버전**: 시스템 기본 Java 25 → JAVA_HOME Java 17 고정 필수
+  - Gradle 8.8은 최대 Java 21까지만 지원 — Java 25 사용 시 `"Unsupported class file major version 69"` 발생
+  - `~/.zshrc`에 추가: `export JAVA_HOME=$(/usr/libexec/java_home -v 17)`
+  - Gradle 관련 에러 발생 시 `java -version` 먼저 확인
+
+- **오늘 해결한 커밋 목록 (2026-03-14)**:
+  - ci.yml pnpm version 충돌 수정
+  - AbortController SSE 메모리 누수 수정
+  - SSE fallback raw 노출 차단
+  - language useCallback deps 추가
+  - addon-report extractJson 통일
+  - AndroidManifest → app.json intentFilters
+  - react-native-svg Java 패치 + postinstall
+  - Metro blockList 중복 react-native 차단
+  - i18n initImmediate race condition 수정
+  - iOS podspec DEFINES_MODULE 패치
+
 ### Dev Login 버튼 조건 (expo run:ios 동작 특이사항)
 - `npx expo run:ios`는 네이티브 빌드이므로 `__DEV__` 가 `false`가 될 수 있음
 - Dev Login 버튼 조건을 `__DEV__` 단독에서 변경:
@@ -320,11 +339,11 @@ pnpm -r type-check
 
 ---
 
-## 현재 상태 (2026-03-14)
+## 현재 상태 (2026-03-15)
 
 **브랜치**: `feat/auspicious-calendar`
 **버전**: v2.4.0 준비 중
-**최근 커밋**: `8759b894` — SVG 아이콘 시스템 + AskMoreModal 채팅 모달
+**최근 커밋**: Android 빌드 환경·재발방지 규칙 문서화 (CLAUDE.md)
 
 ### 완료된 주요 기능 (Issues #1–#34 모두 CLOSED)
 
@@ -359,12 +378,20 @@ pnpm -r type-check
 - [x] **일간 탭 상세 설명**: 십신 테이블에서 일간(isDay=true) 탭 시 `STEM_DESC` 기반 설명 표시
 - [x] **전체 i18n 하드코딩 수정**: `check:i18n` 스크립트 신규, 온보딩/관계/일지/공유카드 등 영어 하드코딩 제거
 
+### 2026-03-15 작업 완료
+
+- [x] **iOS 언어 감지 버그 수정**: `detectLanguage()` — `locales[0]`만 보던 방식 → 전체 locales 순회 (Mac 호스트 `en-001`이 첫 번째로 와도 `ko` 감지)
+- [x] **languageStore `userSelected` 필드 추가**: 사용자가 명시적으로 언어 선택한 경우만 AsyncStorage 값 복원 — 자동 감지값은 재시작 시 재감지
+- [x] **birth-input.tsx 온보딩 i18n 완성**: "Step 1 of 3", "Year", "Day", "Hour (24h)", "Male", "Continue →" 하드코딩 → `tob()` 키 교체
+- [x] **Android SSE 스트리밍 폴백**: `useContentRecommendation.ts` — `resp.body` null 시 `resp.text()` 전체 파싱 방식으로 폴백 (Hermes `ReadableStream` 미지원 대응)
+
 ### 진행 중 / 미완료
 
 - [ ] v2.4.0 최종 QA 및 릴리스
 - [ ] 월주 계산 정밀도 개선 (절기 룩업 테이블 — 현재 근사치 사용)
 - [x] Android 빌드 수정 — `npx expo run:android` BUILD SUCCESSFUL (2026-03-14)
 - [ ] App Store / Play Store 메타데이터 업데이트 (v2.4.0 기준)
+- [ ] VirtualizedLists 중첩 경고 — ScrollView 안 FlatList 구조 개선 (기능 영향 없음)
 
 ---
 
@@ -612,6 +639,32 @@ npx supabase functions deploy saju-reading --no-verify-jwt --project-ref omypurq
 - **Section Info Modal은 ScrollView 내부에 body 표시** — 긴 맞춤 설명이 잘리지 않도록 `maxHeight: 320` ScrollView 유지
 - `SECTION_INFO` 객체는 반드시 `const { pillars, elements, dayStem } = chart` 이후에 정의 (early return `if (!chart)` 뒤에 위치)
 
+### Android 빌드 — NEVER TOUCH 규칙
+
+- **pnpm 버전 일치**: `package.json`의 `packageManager` 필드와 `.github/workflows/ci.yml`의 `pnpm/action-setup version`은 **반드시 동일**해야 함 — 현재: `pnpm@8` (양쪽 모두)
+  - 불일치 시 CI에서 lockfile 검증 실패 또는 의존성 해석 오류 발생
+
+- **`apps/mobile/scripts/patch-android-rnsvg.js` 절대 삭제 금지**
+  - `MatrixMathHelper.MatrixDecompositionContext` 5개 필드 및 `TransformHelper` 관련 Java 필드를 `public`으로 패치
+  - `apps/mobile/package.json`의 `"postinstall"` 스크립트로 등록됨 — 삭제 시 `pnpm install` 후 Android 빌드 즉시 실패
+
+- **`apps/mobile/metro.config.js` `blockList` 절대 삭제 금지**
+  - `@expo/metro-runtime` 내부의 중복 `react-native` 차단 설정
+  - 삭제 시 `LogBox/LogBox` 모듈 해석 실패 발생
+
+- **`AndroidManifest.xml`은 gitignore 대상** — 딥링크 등 Android 네이티브 설정은 반드시 `app.json`의 `intentFilters`/`permissions`로 관리
+  - `AndroidManifest.xml` 직접 수정 후 `expo prebuild` 실행 시 덮어써짐
+
+- **`i18n/index.ts`의 `initImmediate: false` 유지** — `true`로 변경 시 i18n 초기화 전 레이아웃 마운트 → 검은 화면 race condition 발생
+
+### Android SSE 스트리밍 폴백 규칙
+
+- **Android Hermes는 `fetch()` 응답에서 `response.body`(`ReadableStream`)를 `null`로 반환**
+- SSE를 사용하는 모든 훅은 `resp.body?.getReader()` 결과가 `undefined`일 때 `resp.text()` 폴백 처리 필수
+- 폴백 경로에서 **raw SSE 텍스트를 직접 상태에 저장 금지** — 반드시 `data:` 라인 파싱 후 payload JSON 추출
+- 현재 폴백 구현된 훅: `useFortunChat.ts`, `useContentRecommendation.ts`
+- 새 SSE 훅 추가 시 동일 패턴 적용 필수 (CLAUDE.md `AskMoreModal` 섹션의 SSE 파싱 패턴 참고)
+
 ---
 
 ## 🛡️ 개발 안전 규칙 (2026-03-12 수립)
@@ -796,3 +849,24 @@ bold.split(/\*\*(.*?)\*\*/g).map((part, i) =>
 | Android `"Plugin [id: 'com.facebook.react.settings'] was not found"` | Gradle `Process.execute()`가 Homebrew PATH 미상속 → node 미발견 | `withAndroidNodePath.js` config plugin이 node 절대 경로로 교체 (app.json 등록됨) |
 | Android `"Unsupported class file major version 69"` | Java 25 + Gradle 8.8 미호환 (최대 Java 22) | `withAndroidNodePath.js`가 `gradle.properties`에 `org.gradle.java.home=Java17경로` 추가 |
 | Android `react-native-svg:compileDebugJavaWithJavac` 실패 | `react-native-svg` 버전 너무 높거나 `MatrixDecompositionContext` 필드 접근 불가 | `react-native-svg` Expo SDK 51 권장 버전(`15.2.0`)으로 고정 + postinstall 스크립트로 RN 필드 public화 |
+| Android 오행 추천 "Streaming not supported" | Hermes가 `fetch()` `response.body`를 `null` 반환 — `ReadableStream` 미지원 | `resp.body?.getReader()` 없으면 `resp.text()` 전체 파싱 폴백 (`useContentRecommendation.ts`) |
+| Android `"Unsupported class file major version 69"` | 시스템 Java 25 + Gradle 8.8 미호환 | `~/.zshrc`에 `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` 추가 |
+| iOS 시뮬레이터 한국어 설정인데 앱이 영어로 표시 | `detectLanguage()`가 `locales[0]`만 확인 — Mac 호스트 `en-001`이 첫 번째로 삽입됨 | 전체 locales 배열 순회하여 첫 번째 지원 언어 반환 (`i18n/index.ts`) |
+
+---
+
+## Android 개발 체크리스트
+
+매 세션 시작 시 확인:
+
+```bash
+java -version          # 17.x.x 확인 (25면 ~/.zshrc JAVA_HOME 설정 확인)
+emulator -list-avds    # AVD 목록 확인
+npx expo run:android   # 빌드 및 실행
+```
+
+Android 빌드 실패 시 순서:
+1. `java -version` → 17 아니면 `export JAVA_HOME=$(/usr/libexec/java_home -v 17)`
+2. `pnpm install` → postinstall 스크립트(`patch-android-rnsvg.js`) 재적용 확인
+3. Gradle 캐시 문제: `cd android && ./gradlew clean && cd ..`
+4. Metro 캐시: `npx expo start --clear` 후 재시도
