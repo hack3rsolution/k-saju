@@ -5,27 +5,41 @@
  * Step 1: User taps 👍 or 👎 (passed in as `initialRating`)
  * Step 2: Sheet shows reason chips (3 examples + 직접 작성) → submit
  */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
-import { ThumbUpIcon, ThumbDownIcon } from './icons';
+import {
+  ThumbUpIcon,
+  ThumbDownIcon,
+  FortuneIcon,
+  MyChartIcon,
+  TodayIcon,
+  NeutralIcon,
+  RelationsIcon,
+  JournalIcon,
+  EditIcon,
+  ChatIcon,
+} from './icons';
 import type { FeedbackRating, FeedbackType } from '../hooks/useFeedback';
+
+const ICON_COLOR = '#C9A84C';
+const ICON_SIZE = 18;
 
 interface Reason {
   key: FeedbackType;
-  emoji: string;
+  icon: React.ReactElement;
   label: string;
 }
 
 const POSITIVE_REASONS: Reason[] = [
-  { key: 'accurate',   emoji: '✨', label: '정확해요' },
-  { key: 'insightful', emoji: '💡', label: '통찰력 있어요' },
-  { key: 'motivating', emoji: '🌟', label: '힘이 됐어요' },
+  { key: 'accurate',   icon: <FortuneIcon  color={ICON_COLOR} size={ICON_SIZE} />, label: '정확해요' },
+  { key: 'insightful', icon: <MyChartIcon  color={ICON_COLOR} size={ICON_SIZE} />, label: '통찰력 있어요' },
+  { key: 'motivating', icon: <TodayIcon    color={ICON_COLOR} size={ICON_SIZE} />, label: '힘이 됐어요' },
 ];
 
 const NEGATIVE_REASONS: Reason[] = [
-  { key: 'too_vague',   emoji: '🌫️', label: '너무 모호해요' },
-  { key: 'not_me',      emoji: '🤔', label: '나랑 안 맞아요' },
-  { key: 'too_general', emoji: '📋', label: '너무 일반적이에요' },
+  { key: 'too_vague',   icon: <NeutralIcon  color={ICON_COLOR} size={ICON_SIZE} />, label: '너무 모호해요' },
+  { key: 'not_me',      icon: <RelationsIcon color={ICON_COLOR} size={ICON_SIZE} />, label: '나랑 안 맞아요' },
+  { key: 'too_general', icon: <JournalIcon  color={ICON_COLOR} size={ICON_SIZE} />, label: '너무 일반적이에요' },
 ];
 
 interface Props {
@@ -95,7 +109,9 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
                 style={[styles.reasonBtn, styles.customSendBtn]}
                 onPress={handleCustomSubmit}
               >
-                <Text style={styles.reasonEmoji}>✉️</Text>
+                <View style={styles.reasonIcon}>
+                  <ChatIcon color={ICON_COLOR} size={ICON_SIZE} />
+                </View>
                 <Text style={styles.reasonLabel}>보내기</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.cancelBtn} onPress={() => setCustomMode(false)}>
@@ -110,7 +126,7 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
                   style={styles.reasonBtn}
                   onPress={() => onSelect(r.key)}
                 >
-                  <Text style={styles.reasonEmoji}>{r.emoji}</Text>
+                  <View style={styles.reasonIcon}>{r.icon}</View>
                   <Text style={styles.reasonLabel}>{r.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -119,7 +135,9 @@ export function FeedbackSheet({ visible, initialRating, submitting, onSelect, on
                 style={styles.reasonBtn}
                 onPress={() => setCustomMode(true)}
               >
-                <Text style={styles.reasonEmoji}>✏️</Text>
+                <View style={styles.reasonIcon}>
+                  <EditIcon color={ICON_COLOR} size={ICON_SIZE} />
+                </View>
                 <Text style={styles.reasonLabel}>직접 작성</Text>
               </TouchableOpacity>
 
@@ -186,8 +204,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-  reasonEmoji: {
-    fontSize: 22,
+  reasonIcon: {
+    width: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   reasonLabel: {
     color: '#e9d5ff',

@@ -5,7 +5,7 @@
  * Free users receive a 403 → redirect to paywall.
  * Premium users limited to 20 messages/day (enforced server-side).
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useSajuStore } from '../store/sajuStore';
@@ -44,6 +44,14 @@ export function useFortunChat(
   const { chart, frame } = useSajuStore();
   const { language } = useLanguageStore();
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
   const sendMessage = useCallback(async (content: string) => {
     if (!session || !chart || !todayReading || streaming) return;
 
@@ -61,10 +69,13 @@ export function useFortunChat(
     try {
       const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 
+      abortControllerRef.current = new AbortController();
+
       const resp = await globalThis.fetch(
         `${supabaseUrl}/functions/v1/fortune-chat`,
         {
           method: 'POST',
+          signal: abortControllerRef.current.signal,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.access_token}`,
@@ -121,7 +132,8 @@ export function useFortunChat(
             catch { return ''; }
           })
           .join('');
-        setMessages([...nextMessages, { role: 'assistant', content: content || text }]);
+        if (!content) throw new Error('Failed to parse SSE response');
+        setMessages([...nextMessages, { role: 'assistant', content }]);
         return;
       }
 
@@ -155,13 +167,14 @@ export function useFortunChat(
         }
       }
     } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'AbortError') return;
       setError(e instanceof Error ? e.message : 'Failed to get response');
       // Remove placeholder on error
       setMessages(nextMessages);
     } finally {
       setStreaming(false);
     }
-  }, [session, chart, frame, messages, todayReading, fortuneId, streaming]);
+  }, [session, chart, frame, messages, todayReading, fortuneId, streaming, language]);
 
   const reset = useCallback(() => {
     setMessages([]);

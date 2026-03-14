@@ -282,6 +282,30 @@ pnpm -r type-check
   - `react-native@0.74.0.patch` — `React-jsinspector.podspec`에 `"DEFINES_MODULE" => "YES"` 추가
 - `pnpm install` 실행 시 자동 적용 — 추가 작업 불필요
 - **주의**: `pnpm patch-commit` 실패 시("not in npm registry") → `pnpm patch`로 tmpdir 생성 후 수동 수정하면 성공
+- **⚠️ pnpm patch + node-linker=hoisted 한계**: pnpm patches가 hoisted node_modules에 적용되지 않는 경우가 있음
+  - `react-native@0.74.0` Java 파일 패치가 이 문제로 적용 안 됨
+  - 대안: `apps/mobile/scripts/patch-android-rnsvg.js` postinstall 스크립트 사용
+  - `apps/mobile/package.json`에 `"postinstall": "node scripts/patch-android-rnsvg.js"` 등록
+
+### Android 빌드 수정 히스토리 (2026-03-14)
+
+**에러 1**: `"Plugin [id: 'com.facebook.react.settings'] was not found"` (settings.gradle line 13)
+- **원인**: Gradle의 `Process.execute()`가 Homebrew PATH를 상속 안 함 → `node` 명령어를 찾지 못함
+- **해결**: `apps/mobile/plugins/withAndroidNodePath.js` config plugin 생성
+  - `withSettingsGradle`으로 settings.gradle의 `"node"` → `"/opt/homebrew/bin/node"` 절대 경로 교체
+  - `app.json` plugins 배열에 `"./plugins/withAndroidNodePath"` 등록
+
+**에러 2**: `"Unsupported class file major version 69"` (Java 25 vs Gradle 8.8)
+- **원인**: expo prebuild가 생성한 `gradle.properties`에 `org.gradle.java.home` 미포함 → 시스템 기본 Java 25 사용 → Gradle 8.8 미지원
+- **해결**: `withAndroidNodePath.js`에 `withDangerousMod`로 `gradle.properties`에 `org.gradle.java.home` 추가
+
+**에러 3**: `react-native-svg:compileDebugJavaWithJavac` 컴파일 실패
+- **원인**: `react-native-svg@15.15.3`은 RN 0.75+ API 타겟 — `MatrixDecompositionContext` 필드 접근 불가(package-private), `setBorderRadius` 시그니처 불일치
+- **해결**:
+  1. `react-native-svg` 다운그레이드: `^15.15.3` → `^15.2.0` (Expo SDK 51 권장 버전)
+  2. `MatrixMathHelper.MatrixDecompositionContext` 5개 필드 `public` 추가 (react-native-svg 15.2.0도 해당 필드 직접 접근함)
+  3. 패치 영구 적용: `apps/mobile/scripts/patch-android-rnsvg.js` postinstall 스크립트
+- **참고**: Expo SDK 버전 확인 명령: `npx expo install --check react-native-svg`
 
 ### Dev Login 버튼 조건 (expo run:ios 동작 특이사항)
 - `npx expo run:ios`는 네이티브 빌드이므로 `__DEV__` 가 `false`가 될 수 있음
@@ -296,10 +320,11 @@ pnpm -r type-check
 
 ---
 
-## 현재 상태 (2026-03-13)
+## 현재 상태 (2026-03-14)
 
 **브랜치**: `feat/auspicious-calendar`
 **버전**: v2.4.0 준비 중
+**최근 커밋**: `8759b894` — SVG 아이콘 시스템 + AskMoreModal 채팅 모달
 
 ### 완료된 주요 기능 (Issues #1–#34 모두 CLOSED)
 
@@ -338,7 +363,7 @@ pnpm -r type-check
 
 - [ ] v2.4.0 최종 QA 및 릴리스
 - [ ] 월주 계산 정밀도 개선 (절기 룩업 테이블 — 현재 근사치 사용)
-- [ ] Android 테스트 (현재 iOS 위주로 검증)
+- [x] Android 빌드 수정 — `npx expo run:android` BUILD SUCCESSFUL (2026-03-14)
 - [ ] App Store / Play Store 메타데이터 업데이트 (v2.4.0 기준)
 
 ---
@@ -668,3 +693,106 @@ npx tsx scripts/check-i18n.ts
 ```
 
 새 화면/컴포넌트 추가 시 반드시 위 스크립트로 검증 후 커밋할 것.
+
+---
+
+## 아이콘 시스템 (SVG Icon Library)
+
+### 위치 및 사용법
+- 모든 SVG 아이콘: `apps/mobile/src/components/icons/`
+- barrel export: `apps/mobile/src/components/icons/index.ts`
+- import: `import { TodayIcon, ChatIcon } from '../../src/components/icons'`
+
+### Props 규격
+```tsx
+interface Props { color: string; size?: number }  // size 기본값: 24
+```
+- `color` 필수 — 하드코딩 금지, 항상 토큰(`T.primary.DEFAULT`, `T.text.faint` 등) 또는 호출부에서 전달
+- 탭바 아이콘: `(color: string) => ReactNode` 팩토리 패턴 사용 (탭 포커스 색상 자동 적용)
+
+### 현재 등록된 아이콘 (39개)
+TodayIcon, WeekIcon, MonthIcon, AnnualReportIcon, MyChartIcon,
+ColorIcon, DirectionIcon, NumberIcon, FoodIcon, LockIcon,
+ChatIcon, GiftIcon, ThumbUpIcon, ThumbDownIcon,
+RefreshIcon, CloseIcon,
+HomeIcon, ChartIcon, FortuneIcon, SettingsIcon,
+RelationshipIcon, JournalIcon, TimingIcon, RoutineIcon,
+ShareIcon, BellIcon, StarIcon, CalendarIcon,
+WoodIcon, FireIcon, EarthIcon, MetalIcon, WaterIcon,
+StemIcon, BranchIcon, PillarIcon, ReportIcon, CompatIcon, KPersonalityIcon
+
+### 신규 아이콘 추가 규칙
+1. `src/components/icons/XxxIcon.tsx` 파일 생성 (`Svg`, `Path`/`Line`/`Rect`/`Circle`/`G` 사용)
+2. `index.ts` barrel에 export 추가
+3. `react-native-svg`가 네이티브 모듈 — 신규 설치 시 pod install 필요
+
+---
+
+## AskMoreModal (플로팅 채팅 모달)
+
+### 파일 위치
+- 컴포넌트: `apps/mobile/src/components/AskMoreModal.tsx`
+- 세션 스토리지: `apps/mobile/src/utils/chatStorage.ts`
+- 사용처: `apps/mobile/app/(tabs)/home.tsx`
+
+### 제한 상수
+```ts
+const MAX_FREE_TURNS    = 3;   // 무료 사용자 일일 질문 한도
+const MAX_PREMIUM_TURNS = 10;  // 프리미엄 사용자 일일 질문 한도
+```
+- `effectiveMax = isPremium ? MAX_PREMIUM_TURNS : MAX_FREE_TURNS`
+- 배지: 항상 `"N회 남음"` 형식 표시 (무제한 문구 없음)
+
+### 세션 유지 (chatStorage.ts)
+- AsyncStorage 키: `ask_more_session`
+- 구조: `{ date: 'YYYY-MM-DD', messages: ChatMessage[], turns: number }`
+- 날짜 변경 시 자동 무효화 (`session.date !== today()`)
+- 닫기: 세션 유지 (reset 없음) / 새로고침: `Alert.alert` 확인 후 `clearSession()`
+
+### SSE 파싱 패턴 (React Native fallback)
+React Native에서 `response.body` 가 `null`일 때 `resp.text()` 로 raw SSE 수신:
+```ts
+const text = await resp.text();
+const content = text
+  .split('\n')
+  .filter(l => l.startsWith('data: '))
+  .map(l => {
+    const d = l.slice(6).trim();
+    if (d === '[DONE]') return '';
+    try { return (JSON.parse(d) as { token?: string }).token ?? ''; }
+    catch { return ''; }
+  })
+  .join('');
+```
+- **절대 raw SSE 텍스트를 메시지로 직접 사용 금지** (`data: {"token":"오"}` 노출 버그)
+- `useFortunChat.ts` fallback 경로에 이 패턴이 구현돼 있음 — 제거 또는 우회 금지
+
+### 마크다운 볼드 렌더링
+```tsx
+bold.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+  i % 2 === 1
+    ? <Text key={i} style={{ color: '#C9A84C', fontWeight: '700' }}>{part}</Text>
+    : part
+)
+```
+
+### fortune-chat/[fortuneId].tsx
+- `@deprecated` — 홈 탭은 AskMoreModal 사용
+- Deep-link fallback 용도로만 유지 (`/fortune-chat/[fortuneId]` 라우트)
+- 삭제 금지
+
+---
+
+## 반복 발생 이슈 (Recurring Issues)
+
+| 증상 | 원인 | 해결 |
+|---|---|---|
+| SSE 응답이 `data: {"token":"오"}` 형태로 화면에 출력 | `response.body` null → fallback `resp.text()` 반환값을 직접 메시지로 사용 | fallback에서 SSE 라인 파싱 (위 패턴 적용) |
+| 새 SVG 아이콘 추가 후 iOS 빌드 실패 | react-native-svg 네이티브 모듈 — pod install 미실행 | `pod deintegrate && pod install --repo-update` |
+| 모달 닫았다 다시 열면 turns 0 리셋 | `visible=false` 시 hook state 초기화 | chatStorage.ts 세션 복원 패턴 사용 (load on `visible=true`) |
+| 프리미엄 사용자에게 배지 미표시 | `{!isPremium && <Badge />}` 조건부 렌더링 | 조건 제거 — 항상 배지 표시, 텍스트만 분기 |
+| CJK 운세 응답 중간에 잘림 (JSON 파싱 실패 → 502) | MAX_TOKENS 영어 기준 설정 — CJK는 1.5~2× 토큰 소모 | `getMaxTokens()` 함수로 언어별 동적 계산 (saju-reading claude.ts 참고) |
+| Edge Function 401 Invalid JWT | 신규 Supabase 프로젝트의 ES256 JWT를 게이트웨이가 검증 못 함 | 모든 함수 `--no-verify-jwt` 플래그로 재배포 |
+| Android `"Plugin [id: 'com.facebook.react.settings'] was not found"` | Gradle `Process.execute()`가 Homebrew PATH 미상속 → node 미발견 | `withAndroidNodePath.js` config plugin이 node 절대 경로로 교체 (app.json 등록됨) |
+| Android `"Unsupported class file major version 69"` | Java 25 + Gradle 8.8 미호환 (최대 Java 22) | `withAndroidNodePath.js`가 `gradle.properties`에 `org.gradle.java.home=Java17경로` 추가 |
+| Android `react-native-svg:compileDebugJavaWithJavac` 실패 | `react-native-svg` 버전 너무 높거나 `MatrixDecompositionContext` 필드 접근 불가 | `react-native-svg` Expo SDK 51 권장 버전(`15.2.0`)으로 고정 + postinstall 스크립트로 RN 필드 public화 |

@@ -1,3 +1,46 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/MatrixMathHelper.java b/ReactAndroid/src/main/java/com/facebook/react/uimanager/MatrixMathHelper.java
+index 0d698f7918965e58779f25591d752fe4e60dcd7d..b801814b15e7101eed84335b1149fd8dc0c4aff6 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/MatrixMathHelper.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/MatrixMathHelper.java
+@@ -18,11 +18,11 @@ public class MatrixMathHelper {
+   private static final double EPSILON = .00001d;
+ 
+   public static class MatrixDecompositionContext {
+-    double[] perspective = new double[4];
+-    double[] scale = new double[3];
+-    double[] skew = new double[3];
+-    double[] translation = new double[3];
+-    double[] rotationDegrees = new double[3];
++    public double[] perspective = new double[4];
++    public double[] scale = new double[3];
++    public double[] skew = new double[3];
++    public double[] translation = new double[3];
++    public double[] rotationDegrees = new double[3];
+ 
+     private static void resetArray(double[] arr) {
+       for (int i = 0; i < arr.length; i++) {
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/TransformHelper.java b/ReactAndroid/src/main/java/com/facebook/react/uimanager/TransformHelper.java
+index 5a5a9ddaa92750002af059d7aa965a1e6ff12c6e..3bfcbaf3b6824cd3208d97257e3c7aaba97af653 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/TransformHelper.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/TransformHelper.java
+@@ -49,6 +49,17 @@ public class TransformHelper {
+     processTransform(transforms, result, 0, 0, null);
+   }
+ 
++  /** Compatibility overload for react-native-svg (RN 0.74 pnpm patch) */
++  public static void processTransform(
++      ReadableArray transforms,
++      double[] result,
++      int viewWidth,
++      int viewHeight,
++      ReadableArray transformOrigin,
++      boolean unused) {
++    processTransform(transforms, result, (float) viewWidth, (float) viewHeight, transformOrigin);
++  }
++
+   public static void processTransform(
+       ReadableArray transforms,
+       double[] result,
 diff --git a/ReactCommon/jsinspector-modern/React-jsinspector.podspec b/ReactCommon/jsinspector-modern/React-jsinspector.podspec
 index e338fcd843e9b95f4a3a94c9653247c005d2a971..0a88f2362f477df1bdb0c32b28d346aa83498d3a 100644
 --- a/ReactCommon/jsinspector-modern/React-jsinspector.podspec

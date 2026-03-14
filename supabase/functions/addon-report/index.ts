@@ -13,6 +13,7 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsResponse, jsonResponse, errorResponse } from '../_shared/cors.ts';
+import { CLAUDE_MODEL, ANTHROPIC_API_URL, extractJson } from '../_shared/claude.ts';
 import { buildSystemPrompt, buildUserPrompt } from './prompts.ts';
 import type {
   AddonReportRequest,
@@ -62,9 +63,7 @@ function validateRequest(body: unknown): AddonReportRequest {
 
 // ── Claude API call ───────────────────────────────────────────────────────────
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
-const MAX_TOKENS = 1500;
+const MAX_TOKENS = 2200; // CJK 언어 대응 (영어 대비 1.5~2× 토큰 소모)
 
 async function callClaude(
   systemPrompt: string,
@@ -79,7 +78,7 @@ async function callClaude(
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: CLAUDE_MODEL,
       max_tokens: MAX_TOKENS,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
@@ -93,39 +92,20 @@ async function callClaude(
 
   const data = await res.json() as { content: { type: string; text: string }[] };
   const raw = data.content?.[0]?.text ?? '';
-  return parseOutput(raw);
-}
 
-function parseOutput(raw: string): ClaudeReportOutput {
-  const match = raw.match(/\{[\s\S]*\}/);
-  if (!match) {
-    return {
-      title: 'Report',
-      overview: raw.slice(0, 200).trim(),
-      sections: [{ heading: 'Analysis', content: raw.trim() }],
-    };
-  }
-  try {
-    const parsed = JSON.parse(match[0]) as Partial<ClaudeReportOutput>;
-    return {
-      title: String(parsed.title ?? 'Report').slice(0, 100),
-      overview: String(parsed.overview ?? '').slice(0, 500),
-      sections: Array.isArray(parsed.sections)
-        ? (parsed.sections as { heading: string; content: string }[])
-            .slice(0, 8)
-            .map((s) => ({
-              heading: String(s.heading ?? '').slice(0, 100),
-              content: String(s.content ?? ''),
-            }))
-        : [],
-    };
-  } catch {
-    return {
-      title: 'Report',
-      overview: raw.slice(0, 200).trim(),
-      sections: [{ heading: 'Analysis', content: raw.trim() }],
-    };
-  }
+  const parsed = extractJson(raw) as Partial<ClaudeReportOutput>;
+  return {
+    title: String(parsed.title ?? 'Report').slice(0, 100),
+    overview: String(parsed.overview ?? '').slice(0, 500),
+    sections: Array.isArray(parsed.sections)
+      ? (parsed.sections as { heading: string; content: string }[])
+          .slice(0, 8)
+          .map((s) => ({
+            heading: String(s.heading ?? '').slice(0, 100),
+            content: String(s.content ?? ''),
+          }))
+      : [],
+  };
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────

@@ -37,3 +37,4 @@ export { ChatIcon } from './ChatIcon';
 export { GiftIcon } from './GiftIcon';
 export { RefreshIcon } from './RefreshIcon';
 export { CloseIcon } from './CloseIcon';
+export { EditIcon } from './EditIcon';
