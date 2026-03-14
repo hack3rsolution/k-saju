@@ -110,6 +110,10 @@ i18n.use(initReactI18next).init({
   ns: ['common', 'onboarding', 'chart', 'fortune', 'paywall'],
   defaultNS: 'common',
   interpolation: { escapeValue: false },
+  // All resources are bundled in-memory — no async backend needed.
+  // initImmediate: false makes init synchronous so isInitialized is true
+  // immediately at module load, avoiding the black-screen race in _layout.tsx.
+  initImmediate: false,
   resources: {
     ko: { common: koCommon, onboarding: koOnboarding, chart: koChart, fortune: koFortune, paywall: koPaywall },
     'zh-Hans': { common: zhHansCommon, onboarding: zhHansOnboarding, chart: zhHansChart, fortune: zhHansFortune, paywall: zhHansPaywall },

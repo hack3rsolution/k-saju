@@ -25,8 +25,14 @@ export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(i18n.isInitialized);
   useLanguageStore(); // triggers rehydration which applies persisted language
   useEffect(() => {
-    if (!i18n.isInitialized) {
-      i18n.on('initialized', () => setI18nReady(true));
+    if (i18n.isInitialized) {
+      // Already initialized synchronously (initImmediate: false) — just mark ready.
+      setI18nReady(true);
+    } else {
+      // Fallback: wait for async init (should not happen with initImmediate: false).
+      const handler = () => setI18nReady(true);
+      i18n.on('initialized', handler);
+      return () => { i18n.off('initialized', handler); };
     }
   }, []);
 
