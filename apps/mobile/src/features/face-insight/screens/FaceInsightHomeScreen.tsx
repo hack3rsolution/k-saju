@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: T.spacing[6],
-    paddingTop: T.spacing[8],
+    paddingTop: 60,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,

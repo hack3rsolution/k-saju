@@ -67,5 +67,5 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 
 const styles = StyleSheet.create({
   container:  { flex: 1, backgroundColor: T.bg.surface },
-  headerArea: { paddingHorizontal: T.spacing[6], paddingTop: T.spacing[8] },
+  headerArea: { paddingHorizontal: T.spacing[6], paddingTop: 60 },
 })
