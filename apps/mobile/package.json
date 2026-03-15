@@ -4,7 +4,7 @@
   "main": "./index.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
+    "android": "expo run:android --no-install",
     "ios": "expo run:ios --no-install",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
