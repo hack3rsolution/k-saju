@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "您的訂閱已恢復。",
     "restoreEmptyMsg": "此帳戶未找到以前的購買記錄。",
     "restoreFailed": "恢復失敗",
-    "restoreFailedMsg": "請重試。"
+    "restoreFailedMsg": "請重試。",
+    "editProfile": "編輯個人資訊"
   },
   "journal": {
     "title": "人生日記",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "本月吉日",
+    "screenTitle": "吉日日曆",
     "lucky": "吉日",
     "unlucky": "凶日",
     "neutral": "普通",

@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "تمت استعادة اشتراكك.",
     "restoreEmptyMsg": "لم يتم العثور على مشتريات سابقة لهذا الحساب.",
     "restoreFailed": "فشل الاستعادة",
-    "restoreFailedMsg": "يرجى المحاولة مجددًا."
+    "restoreFailedMsg": "يرجى المحاولة مجددًا.",
+    "editProfile": "تعديل الملف الشخصي"
   },
   "journal": {
     "title": "مجلة الحياة",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "الأيام السعيدة هذا الشهر",
+    "screenTitle": "تقويم الأيام المباركة",
     "lucky": "يوم سعيد",
     "unlucky": "يوم نحس",
     "neutral": "عادي",

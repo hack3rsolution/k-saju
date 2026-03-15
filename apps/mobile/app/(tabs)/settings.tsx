@@ -97,6 +97,10 @@ export default function SettingsScreen() {
             <Text style={styles.rowText}>{t('settings.email')}</Text>
             <Text style={styles.rowValue}>{user?.email ?? '—'}</Text>
           </View>
+          <TouchableOpacity style={styles.row} onPress={() => router.push('/(onboarding)/birth-input')}>
+            <Text style={styles.rowText}>{t('settings.editProfile')}</Text>
+            <Text style={styles.rowValue}>→</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.row}
             onPress={() => !isPremium && router.push('/paywall')}

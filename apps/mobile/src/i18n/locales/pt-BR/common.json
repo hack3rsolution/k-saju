@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "Sua assinatura foi restaurada.",
     "restoreEmptyMsg": "Nenhuma compra anterior encontrada para esta conta.",
     "restoreFailed": "Falha ao restaurar",
-    "restoreFailedMsg": "Por favor, tente novamente."
+    "restoreFailedMsg": "Por favor, tente novamente.",
+    "editProfile": "Editar perfil"
   },
   "journal": {
     "title": "Diário de vida",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "Dias Auspiciosos",
+    "screenTitle": "Calendário de Dias Auspiciosos",
     "lucky": "Auspicioso",
     "unlucky": "Desfavorável",
     "neutral": "Neutro",

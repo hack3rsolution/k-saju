@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "आपकी सदस्यता पुनर्स्थापित हो गई है।",
     "restoreEmptyMsg": "इस खाते के लिए कोई पिछली खरीदारी नहीं मिली।",
     "restoreFailed": "पुनर्स्थापना विफल",
-    "restoreFailedMsg": "कृपया पुनः प्रयास करें।"
+    "restoreFailedMsg": "कृपया पुनः प्रयास करें।",
+    "editProfile": "प्रोफ़ाइल संपादित करें"
   },
   "journal": {
     "title": "जीवन डायरी",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "शुभ दिन",
+    "screenTitle": "शुभ दिन कैलेंडर",
     "lucky": "शुभ",
     "unlucky": "अशुभ",
     "neutral": "सामान्य",

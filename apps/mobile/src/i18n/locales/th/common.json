@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "การสมัครสมาชิกของคุณได้รับการกู้คืนแล้ว",
     "restoreEmptyMsg": "ไม่พบการซื้อก่อนหน้าสำหรับบัญชีนี้",
     "restoreFailed": "การกู้คืนล้มเหลว",
-    "restoreFailedMsg": "กรุณาลองอีกครั้ง"
+    "restoreFailedMsg": "กรุณาลองอีกครั้ง",
+    "editProfile": "แก้ไขโปรไฟล์"
   },
   "journal": {
     "title": "บันทึกชีวิต",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "วันมงคลประจำเดือน",
+    "screenTitle": "ปฏิทินวันมงคล",
     "lucky": "วันมงคล",
     "unlucky": "วันอัปมงคล",
     "neutral": "ปกติ",

@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "サブスクリプションが復元されました。",
     "restoreEmptyMsg": "このアカウントに以前の購入が見つかりませんでした。",
     "restoreFailed": "復元に失敗しました",
-    "restoreFailedMsg": "もう一度お試しください。"
+    "restoreFailedMsg": "もう一度お試しください。",
+    "editProfile": "プロフィール編集"
   },
   "journal": {
     "title": "人生日誌",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "今月の吉日",
+    "screenTitle": "吉日カレンダー",
     "lucky": "吉日",
     "unlucky": "凶日",
     "neutral": "普通",

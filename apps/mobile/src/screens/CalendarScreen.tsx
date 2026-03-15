@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useAuspiciousDays } from '../hooks/useAuspiciousDays'
 import { useIsPremium } from '../store/entitlementStore'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function CalendarScreen({ onUpgradePress }: Props) {
+  const { t } = useTranslation('common')
   const [month, setMonth]         = useState(dayjs().format('YYYY-MM'))
   const [eventType, setEventType] = useState<EventType>('wedding')
   const isPremium = useIsPremium()
@@ -22,6 +24,9 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>{t('calendar.screenTitle')}</Text>
+      </View>
       <EventTypePicker
         selected={eventType}
         onSelect={setEventType}
@@ -56,4 +61,6 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAF6F1' },
+  header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 4 },
+  headerTitle: { fontSize: 22, fontWeight: '700', color: '#1C1C1E' },
 })

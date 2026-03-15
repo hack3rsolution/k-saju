@@ -103,7 +103,8 @@
     "restoreSuccessMsg": "Your subscription has been restored.",
     "restoreEmptyMsg": "No previous purchases found for this account.",
     "restoreFailed": "Restore Failed",
-    "restoreFailedMsg": "Please try again."
+    "restoreFailedMsg": "Please try again.",
+    "editProfile": "Edit Profile"
   },
   "journal": {
     "title": "Life Journal",
@@ -204,6 +205,7 @@
   },
   "calendar": {
     "title": "Auspicious Days",
+    "screenTitle": "Auspicious Calendar",
     "lucky": "Lucky",
     "unlucky": "Unlucky",
     "neutral": "Neutral",

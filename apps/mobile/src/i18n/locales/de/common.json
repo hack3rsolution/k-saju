@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "Ihr Abonnement wurde wiederhergestellt.",
     "restoreEmptyMsg": "Keine früheren Käufe für dieses Konto gefunden.",
     "restoreFailed": "Wiederherstellung fehlgeschlagen",
-    "restoreFailedMsg": "Bitte versuchen Sie es erneut."
+    "restoreFailedMsg": "Bitte versuchen Sie es erneut.",
+    "editProfile": "Profil bearbeiten"
   },
   "journal": {
     "title": "Lebenstagebuch",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "Günstige Tage",
+    "screenTitle": "Glückstage-Kalender",
     "lucky": "Günstig",
     "unlucky": "Ungünstig",
     "neutral": "Neutral",

@@ -102,7 +102,8 @@
     "restoreSuccessMsg": "Tu suscripción ha sido restaurada.",
     "restoreEmptyMsg": "No se encontraron compras anteriores para esta cuenta.",
     "restoreFailed": "Error al restaurar",
-    "restoreFailedMsg": "Por favor, inténtalo de nuevo."
+    "restoreFailedMsg": "Por favor, inténtalo de nuevo.",
+    "editProfile": "Editar perfil"
   },
   "journal": {
     "title": "Diario de vida",
@@ -203,6 +204,7 @@
   },
   "calendar": {
     "title": "Días Auspiciosos",
+    "screenTitle": "Calendario de Días Auspiciosos",
     "lucky": "Auspicioso",
     "unlucky": "Desfavorable",
     "neutral": "Neutral",
