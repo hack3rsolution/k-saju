@@ -384,6 +384,14 @@ pnpm -r type-check
 - [x] **languageStore `userSelected` 필드 추가**: 사용자가 명시적으로 언어 선택한 경우만 AsyncStorage 값 복원 — 자동 감지값은 재시작 시 재감지
 - [x] **birth-input.tsx 온보딩 i18n 완성**: "Step 1 of 3", "Year", "Day", "Hour (24h)", "Male", "Continue →" 하드코딩 → `tob()` 키 교체
 - [x] **Android SSE 스트리밍 폴백**: `useContentRecommendation.ts` — `resp.body` null 시 `resp.text()` 전체 파싱 방식으로 폴백 (Hermes `ReadableStream` 미지원 대응)
+- [x] **전체 탭 헤더 통일**: `ScreenHeader` 공통 컴포넌트 생성 → fortune/journal/relationships/chart/calendar/settings/face-insight 전체 적용
+- [x] **CalendarScreen 다크 테마**: 두 가지 배경색 구조 → 단일 다크 배경으로 통일, EventTypePicker/MonthlyCalendarView 색상 업데이트
+- [x] **paddingTop 통일**: calendar/face-insight 화면 `paddingTop: 60`으로 다른 탭과 동일하게 수정
+- [x] **설정 화면 내 정보 수정 메뉴 추가**: `router.push('/edit-profile')` 연결
+- [x] **edit-profile.tsx 신규 생성**: onboarding 그룹 외부 독립 라우트 — `useAuthGuard` 리다이렉트 우회
+- [x] **연도 초기값 2000년 고정**: `initYearIdx = 70` 하드코딩 (메타데이터 저장값 무시)
+- [x] **출생시간 토글 기본값 OFF**: `useState(false)` 고정
+- [x] **WheelPicker VirtualizedLists 경고 근본 제거**: FlatList → ScrollView + map 교체
 
 ### 진행 중 / 미완료
 
@@ -391,7 +399,6 @@ pnpm -r type-check
 - [ ] 월주 계산 정밀도 개선 (절기 룩업 테이블 — 현재 근사치 사용)
 - [x] Android 빌드 수정 — `npx expo run:android` BUILD SUCCESSFUL (2026-03-14)
 - [ ] App Store / Play Store 메타데이터 업데이트 (v2.4.0 기준)
-- [ ] VirtualizedLists 중첩 경고 — ScrollView 안 FlatList 구조 개선 (기능 영향 없음)
 
 ---
 
@@ -852,6 +859,8 @@ bold.split(/\*\*(.*?)\*\*/g).map((part, i) =>
 | Android 오행 추천 "Streaming not supported" | Hermes가 `fetch()` `response.body`를 `null` 반환 — `ReadableStream` 미지원 | `resp.body?.getReader()` 없으면 `resp.text()` 전체 파싱 폴백 (`useContentRecommendation.ts`) |
 | Android `"Unsupported class file major version 69"` | 시스템 Java 25 + Gradle 8.8 미호환 | `~/.zshrc`에 `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` 추가 |
 | iOS 시뮬레이터 한국어 설정인데 앱이 영어로 표시 | `detectLanguage()`가 `locales[0]`만 확인 — Mac 호스트 `en-001`이 첫 번째로 삽입됨 | 전체 locales 배열 순회하여 첫 번째 지원 언어 반환 (`i18n/index.ts`) |
+| `VirtualizedLists should never be nested inside plain ScrollViews` 경고 | FlatList/WheelPicker가 ScrollView 안에 중첩됨 | WheelPicker를 `ScrollView + map`으로 교체 (`nestedScrollEnabled`는 경고 미제거) |
+| 설정 → 내 정보 수정 탭 시 홈으로 리다이렉트 | `(onboarding)` 그룹은 `useAuthGuard`가 인증 사용자를 홈으로 리다이렉트 | `app/edit-profile.tsx` 독립 라우트 사용 (`/(onboarding)/birth-input` 직접 접근 금지) |
 
 ---
 
@@ -870,3 +879,45 @@ Android 빌드 실패 시 순서:
 2. `pnpm install` → postinstall 스크립트(`patch-android-rnsvg.js`) 재적용 확인
 3. Gradle 캐시 문제: `cd android && ./gradlew clean && cd ..`
 4. Metro 캐시: `npx expo start --clear` 후 재시도
+
+---
+
+## UI 컴포넌트 규칙 (2026-03-15 수립)
+
+### 탭 화면 헤더 — ScreenHeader 필수
+
+- **위치**: `apps/mobile/src/components/ScreenHeader.tsx`
+- **적용 대상**: 모든 탭 화면 (home 탭 제외 — 별도 디자인)
+- **props**: `title: string`, `subtitle?: string`
+- **현재 적용됨**: fortune, journal, relationships, chart, calendar (CalendarScreen), settings, face-insight
+
+```tsx
+import { ScreenHeader } from '../../src/components/ScreenHeader';
+// 사용:
+<ScreenHeader title={t('screen.title')} subtitle={t('screen.subtitle')} />
+```
+
+**절대 금지**: 탭 화면에서 별도 `<Text style={styles.title}>` 구조 사용 — ScreenHeader로 통일
+
+### 탭 화면 paddingTop 규칙
+
+- **ScrollView/View 기반 탭**: `contentContainerStyle: { paddingTop: 60 }`
+- **SafeAreaView 기반 탭**: 내부 컨테이너에 `paddingTop: 60` (SafeAreaView는 safe area inset 추가)
+- **CalendarScreen**: SafeAreaView + `headerArea: { paddingTop: 60, paddingHorizontal: T.spacing[6] }`
+- 60 미만/초과 사용 시 화면 간 제목 높이 불일치 발생 → 반드시 60 통일
+
+### WheelPicker 규칙
+
+- **FlatList 사용 금지**: VirtualizedLists 중첩 경고 발생
+- **ScrollView + map 방식 사용** (현재 구현: `src/components/WheelPicker.tsx`)
+- 데이터 최대 81개 (YEARS), 성능 문제 없음
+- `snapToInterval={ITEM_H}` + `decelerationRate="fast"` 으로 드럼롤 동작 유지
+- `ref.current?.scrollTo({ y: selectedIndex * ITEM_H, animated: false })` — FlatList의 `scrollToOffset` 대신 ScrollView의 `scrollTo` 사용
+
+### edit-profile.tsx 라우팅 규칙
+
+- **경로**: `app/edit-profile.tsx` (onboarding 그룹 **외부**)
+- **이유**: `(onboarding)` 그룹은 `useAuthGuard`가 `onboarding_completed=true` 사용자를 홈으로 리다이렉트
+- **설정 화면에서 진입**: `router.push('/edit-profile')` (절대 `/(onboarding)/birth-input` 사용 금지)
+- **연도 초기값**: `useState(70)` 고정 (= 2000년), 저장된 메타데이터 무시
+- **출생시간 토글**: `useState(false)` 고정 (항상 OFF)
