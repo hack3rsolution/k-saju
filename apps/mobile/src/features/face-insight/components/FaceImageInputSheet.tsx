@@ -2,6 +2,7 @@ import { Alert, Linking, Modal, StyleSheet, Text, TouchableOpacity, View } from 
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useTranslation } from 'react-i18next';
+import { CameraIcon, GalleryIcon } from '../../../components/icons';
 
 interface FaceImageInputSheetProps {
   visible: boolean;
@@ -90,12 +91,12 @@ export function FaceImageInputSheet({ visible, onClose, onImageSelected }: FaceI
           <Text style={styles.subtitle}>{t('face.input.subtitle')}</Text>
 
           <TouchableOpacity style={styles.actionBtn} onPress={handleCamera}>
-            <Text style={styles.actionEmoji}>📷</Text>
+            <CameraIcon color="#C9A84C" size={22} />
             <Text style={styles.actionLabel}>{t('face.input.camera')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionBtn} onPress={handleLibrary}>
-            <Text style={styles.actionEmoji}>🖼️</Text>
+            <GalleryIcon color="#C9A84C" size={22} />
             <Text style={styles.actionLabel}>{t('face.input.library')}</Text>
           </TouchableOpacity>
 
@@ -151,9 +152,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     marginBottom: 10,
-  },
-  actionEmoji: {
-    fontSize: 22,
   },
   actionLabel: {
     color: '#e9d5ff',

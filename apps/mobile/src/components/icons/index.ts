@@ -38,3 +38,7 @@ export { GiftIcon } from './GiftIcon';
 export { RefreshIcon } from './RefreshIcon';
 export { CloseIcon } from './CloseIcon';
 export { EditIcon } from './EditIcon';
+export { BrainIcon } from './BrainIcon';
+export { FaceReadingIcon } from './FaceReadingIcon';
+export { CameraIcon } from './CameraIcon';
+export { GalleryIcon } from './GalleryIcon';

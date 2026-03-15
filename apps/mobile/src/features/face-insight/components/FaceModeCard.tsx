@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { T } from '../../../theme/tokens';
+import { BrainIcon, FaceReadingIcon } from '../.././../components/icons';
 
 export interface FaceModeCardProps {
   mode: 'traditional' | 'state';
@@ -8,22 +9,25 @@ export interface FaceModeCardProps {
   isPremiumLocked?: boolean;
 }
 
+const ICON_COLOR = '#C9A84C';
+
 const STYLE_CONFIG = {
   state: {
     accent: T.primary.DEFAULT,
     iconBg: T.primary.muted,
-    emoji: '🧠',
+    Icon: BrainIcon,
   },
   traditional: {
     accent: T.obang.hwang,
     iconBg: T.obang.hwang + '22',
-    emoji: '🔮',
+    Icon: FaceReadingIcon,
   },
 } as const;
 
 export function FaceModeCard({ mode, onPress, isPremiumLocked = false }: FaceModeCardProps) {
   const { t } = useTranslation('common');
   const c = STYLE_CONFIG[mode];
+  const { Icon } = c;
   const titleKey = mode === 'state' ? 'face.stateCheck.title' : 'face.traditional.title';
   const descKey = mode === 'state' ? 'face.stateCheck.description' : 'face.traditional.description';
   const ctaKey = mode === 'state' ? 'face.stateCheck.cta' : 'face.traditional.cta';
@@ -41,7 +45,7 @@ export function FaceModeCard({ mode, onPress, isPremiumLocked = false }: FaceMod
         {/* Header row */}
         <View style={styles.headerRow}>
           <View style={[styles.iconWrap, { backgroundColor: c.iconBg }]}>
-            <Text style={styles.emoji}>{c.emoji}</Text>
+            <Icon color={ICON_COLOR} size={28} />
           </View>
           <Text style={styles.title}>{t(titleKey)}</Text>
         </View>
@@ -92,9 +96,6 @@ const styles = StyleSheet.create({
     borderRadius: T.radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  emoji: {
-    fontSize: 20,
   },
   title: {
     flex: 1,
