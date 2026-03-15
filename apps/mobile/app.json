@@ -58,7 +58,14 @@
       "expo-router",
       "expo-apple-authentication",
       "./plugins/withAndroidNodePath",
-      "./plugins/withIosDeploymentTarget"
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "14.0"
+          }
+        }
+      ]
     ],
     "entryPoint": "./index.js",
     "scheme": "ksaju",
