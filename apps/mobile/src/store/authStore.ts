@@ -88,7 +88,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       role: 'authenticated',
       email: 'dev@k-saju.com',
       app_metadata: { provider: 'dev' },
-      user_metadata: { name: 'Dev User', is_premium: true, birth_year: 1990, birth_month: 6, birth_day: 15, birth_hour: 10, gender: 'M', cultural_frame: 'kr' },
+      user_metadata: { name: 'Dev User', is_premium: true, onboarding_completed: true, birth_year: 1990, birth_month: 6, birth_day: 15, birth_hour: 10, gender: 'M', cultural_frame: 'kr' },
       created_at: new Date().toISOString(),
     };
     const devSession: Session = {

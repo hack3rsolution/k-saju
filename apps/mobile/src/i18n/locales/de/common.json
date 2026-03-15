@@ -313,6 +313,31 @@
     "fortune": "Glück",
     "relations": "Beziehungen",
     "journal": "Tagebuch",
+    "face": "Face",
     "calendar": "Kalender"
+  },
+  "face": {
+    "title": "Einblick",
+    "subtitle": "Betrachte dein Gesicht durch zwei verschiedene Perspektiven",
+    "uploading": "Foto wird hochgeladen…",
+    "analyzing": "Dein Gesicht wird analysiert…",
+    "stateCheck": {
+      "title": "Aktueller Zustandscheck",
+      "description": "Erkenne mögliche Stimmungs-, Stress- und Müdigkeitssignale in deinem Gesicht",
+      "cta": "Jetzt prüfen",
+      "disclaimer": "Nur zur Gesundheitsbewusstsein. Kein medizinisches Urteil."
+    },
+    "traditional": {
+      "title": "Traditionelles Gesichtslesen",
+      "description": "Kulturelle Interpretation inspiriert von traditionellen Gesichtslesekonzepten",
+      "cta": "Lesen starten",
+      "disclaimer": "Nur kulturelle und Unterhaltungsinterpretation."
+    },
+    "input": {
+      "title": "Foto hinzufügen",
+      "subtitle": "Wähle, wie du dein Foto bereitstellen möchtest",
+      "camera": "Foto aufnehmen",
+      "library": "Aus Bibliothek wählen"
+    }
   }
 }

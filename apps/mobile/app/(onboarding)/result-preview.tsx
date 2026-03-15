@@ -15,6 +15,7 @@ import {
   type FiveElement,
 } from '@k-saju/saju-engine';
 import { supabase } from '../../src/lib/supabase';
+import { useAuthStore } from '../../src/store/authStore';
 import { useOnboardingStore } from '../../src/store/onboardingStore';
 import { useSajuStore } from '../../src/store/sajuStore';
 import {
@@ -134,6 +135,7 @@ export default function ResultPreviewScreen() {
   const { t } = useTranslation('common');
   const { birthYear, birthMonth, birthDay, birthHour, gender, frame } = useOnboardingStore();
   const { setChart } = useSajuStore();
+  const setSession = useAuthStore((s) => s.setSession);
 
   const [saving, setSaving] = useState(false);
 
@@ -176,6 +178,11 @@ export default function ResultPreviewScreen() {
           onboarding_completed: true,
         },
       });
+      // Force-refresh the local session so useAuthGuard sees onboarding_completed
+      // before navigation. onAuthStateChange fires asynchronously and may arrive
+      // after router.replace(), causing a redirect loop back to birth-input.
+      const { data: refreshed } = await supabase.auth.refreshSession();
+      if (refreshed?.session) setSession(refreshed.session);
 
       // 2) Save chart to saju_charts table (non-blocking on failure)
       const { data: { user } } = await supabase.auth.getUser();

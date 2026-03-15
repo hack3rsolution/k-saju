@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import {
   TodayIcon,
@@ -105,6 +106,20 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: 'center', gap: 3 }}>
               <CalendarIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} size={24} />
+              {focused && (
+                <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
+              )}
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="face"
+        options={{
+          title: t('face.title'),
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center', gap: 3 }}>
+              <Ionicons name="scan-outline" size={24} color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} />
               {focused && (
                 <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: ACTIVE_COLOR }} />
               )}

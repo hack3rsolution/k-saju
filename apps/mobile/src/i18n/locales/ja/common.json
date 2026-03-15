@@ -313,6 +313,31 @@
     "fortune": "運勢",
     "relations": "関係",
     "journal": "日記",
+    "face": "Face",
     "calendar": "暦"
+  },
+  "face": {
+    "title": "インサイト",
+    "subtitle": "2つの異なる視点からあなたの顔を読み解きます",
+    "uploading": "写真をアップロード中…",
+    "analyzing": "顔を分析中…",
+    "stateCheck": {
+      "title": "現在の状態チェック",
+      "description": "顔から気分・ストレス・疲労のサインを確認しましょう",
+      "cta": "今すぐチェック",
+      "disclaimer": "ウェルネス情報提供のみを目的とし、医療診断ではありません。"
+    },
+    "traditional": {
+      "title": "伝統的な人相読み",
+      "description": "伝統的な人相学からインスピレーションを得た文化的な解釈",
+      "cta": "人相を見る",
+      "disclaimer": "文化的・娯楽的な解釈のみを目的としています。"
+    },
+    "input": {
+      "title": "写真を追加",
+      "subtitle": "写真の提供方法を選択してください",
+      "camera": "写真を撮る",
+      "library": "ライブラリから選ぶ"
+    }
   }
 }

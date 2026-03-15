@@ -313,6 +313,31 @@
     "fortune": "Fortune",
     "relations": "Relations",
     "journal": "Journal",
+    "face": "Face",
     "calendar": "Calendrier"
+  },
+  "face": {
+    "title": "Aperçu",
+    "subtitle": "Voyez votre visage à travers deux prismes différents",
+    "uploading": "Téléchargement de la photo…",
+    "analyzing": "Analyse de votre visage…",
+    "stateCheck": {
+      "title": "Vérification de l'État Actuel",
+      "description": "Détectez les signaux possibles d'humeur, de stress et de fatigue sur votre visage",
+      "cta": "Vérifier Maintenant",
+      "disclaimer": "À titre indicatif uniquement. Pas un diagnostic médical."
+    },
+    "traditional": {
+      "title": "Lecture Faciale Traditionnelle",
+      "description": "Interprétation culturelle inspirée des concepts traditionnels de lecture du visage",
+      "cta": "Commencer la Lecture",
+      "disclaimer": "Interprétation culturelle et de divertissement uniquement."
+    },
+    "input": {
+      "title": "Ajouter une Photo",
+      "subtitle": "Choisissez comment fournir votre photo",
+      "camera": "Prendre une Photo",
+      "library": "Choisir dans la Bibliothèque"
+    }
   }
 }

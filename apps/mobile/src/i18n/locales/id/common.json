@@ -313,6 +313,31 @@
     "fortune": "Nasib",
     "relations": "Hubungan",
     "journal": "Jurnal",
+    "face": "Face",
     "calendar": "Kalender"
+  },
+  "face": {
+    "title": "Wawasan",
+    "subtitle": "Lihat wajah Anda melalui dua perspektif berbeda",
+    "uploading": "Mengunggah foto…",
+    "analyzing": "Menganalisis wajah Anda…",
+    "stateCheck": {
+      "title": "Pemeriksaan Kondisi Terkini",
+      "description": "Deteksi kemungkinan sinyal suasana hati, stres, dan kelelahan dari wajah Anda",
+      "cta": "Periksa Sekarang",
+      "disclaimer": "Hanya untuk kesadaran kesehatan. Bukan diagnosis medis."
+    },
+    "traditional": {
+      "title": "Pembacaan Wajah Tradisional",
+      "description": "Interpretasi budaya yang menyenangkan berdasarkan konsep pembacaan wajah tradisional",
+      "cta": "Mulai Membaca",
+      "disclaimer": "Hanya interpretasi budaya dan hiburan."
+    },
+    "input": {
+      "title": "Tambah Foto",
+      "subtitle": "Pilih cara memberikan foto Anda",
+      "camera": "Ambil Foto",
+      "library": "Pilih dari Galeri"
+    }
   }
 }
