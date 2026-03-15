@@ -58,6 +58,7 @@ export function WheelPicker({ data, selectedIndex, onIndexChange, width = 80 }: 
         snapToInterval={ITEM_H}
         decelerationRate="fast"
         removeClippedSubviews={false}
+        nestedScrollEnabled
         onMomentumScrollEnd={onMomentumScrollEnd}
         style={styles.list}
         renderItem={({ item, index }) => {

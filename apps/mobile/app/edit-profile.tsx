@@ -4,10 +4,13 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Switch,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -39,25 +42,24 @@ export default function EditProfileScreen() {
 
   const meta = session?.user?.user_metadata ?? {};
 
-  // Initialise pickers from saved metadata
-  const initYearIdx = Math.max(0, Math.min(80, (meta.birth_year ?? 1990) - 1930));
+  // Pre-populate from saved metadata; default year = 2000, timeKnown = false
+  const initYearIdx  = Math.max(0, Math.min(80, (meta.birth_year  ?? 2000) - 1930));
   const initMonthIdx = Math.max(0, (meta.birth_month ?? 1) - 1);
-  const initDayIdx = Math.max(0, (meta.birth_day ?? 1) - 1);
-  const initHourIdx = meta.birth_hour ?? 12;
-  const initTimeKnown = meta.birth_hour != null;
+  const initDayIdx   = Math.max(0, (meta.birth_day   ?? 1) - 1);
+  const initHourIdx  = meta.birth_hour ?? 12;
   const initGender: 'M' | 'F' | null = meta.gender ?? null;
 
-  const [yearIdx, setYearIdx] = useState(initYearIdx);
-  const [monthIdx, setMonthIdx] = useState(initMonthIdx);
-  const [dayIdx, setDayIdx] = useState(initDayIdx);
-  const [hourIdx, setHourIdx] = useState(initHourIdx);
-  const [timeKnown, setTimeKnown] = useState(initTimeKnown);
-  const [gender, setGender] = useState<'M' | 'F' | null>(initGender);
-  const [saving, setSaving] = useState(false);
+  const [yearIdx,    setYearIdx]    = useState(initYearIdx);
+  const [monthIdx,   setMonthIdx]   = useState(initMonthIdx);
+  const [dayIdx,     setDayIdx]     = useState(initDayIdx);
+  const [hourIdx,    setHourIdx]    = useState(initHourIdx);
+  const [timeKnown,  setTimeKnown]  = useState(false);   // ← always default OFF
+  const [gender,     setGender]     = useState<'M' | 'F' | null>(initGender);
+  const [saving,     setSaving]     = useState(false);
 
-  const year = 1930 + yearIdx;
+  const year  = 1930 + yearIdx;
   const month = monthIdx + 1;
-  const days = useMemo(
+  const days  = useMemo(
     () => Array.from({ length: daysInMonth(year, month) }, (_, i) => String(i + 1).padStart(2, '0')),
     [year, month],
   );
@@ -67,26 +69,23 @@ export default function EditProfileScreen() {
     if (!gender) return;
     setSaving(true);
     try {
-      const birthYear = year;
+      const birthYear  = year;
       const birthMonth = month;
-      const birthDay = clampedDayIdx + 1;
-      const birthHour = timeKnown ? hourIdx : null;
+      const birthDay   = clampedDayIdx + 1;
+      const birthHour  = timeKnown ? hourIdx : null;
 
-      // 1) Update Supabase user metadata (keep existing fields intact)
       await supabase.auth.updateUser({
         data: { birth_year: birthYear, birth_month: birthMonth, birth_day: birthDay, birth_hour: birthHour, gender },
       });
 
-      // 2) Refresh local session
       const { data: refreshed } = await supabase.auth.refreshSession();
       if (refreshed?.session) setSession(refreshed.session);
 
-      // 3) Recalculate chart and update Supabase + store
       const birthData = { year: birthYear, month: birthMonth, day: birthDay, hour: birthHour ?? undefined, gender };
-      const pillars = calculateFourPillars(birthData);
-      const elements = calculateElementBalance(pillars);
-      const daewoon = calculateDaewoon(birthData);
-      const chart = { pillars, elements, dayStem: pillars.day.stem, dayElement: STEM_ELEMENT[pillars.day.stem] };
+      const pillars   = calculateFourPillars(birthData);
+      const elements  = calculateElementBalance(pillars);
+      const daewoon   = calculateDaewoon(birthData);
+      const chart     = { pillars, elements, dayStem: pillars.day.stem, dayElement: STEM_ELEMENT[pillars.day.stem] };
 
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
@@ -96,11 +95,8 @@ export default function EditProfileScreen() {
           elements: JSON.stringify(elements),
           day_stem: chart.dayStem,
           day_element: chart.dayElement,
-          birth_year: birthYear,
-          birth_month: birthMonth,
-          birth_day: birthDay,
-          birth_hour: birthHour,
-          gender,
+          birth_year: birthYear, birth_month: birthMonth, birth_day: birthDay,
+          birth_hour: birthHour, gender,
           cultural_frame: frame ?? meta.cultural_frame ?? 'en',
         });
       }
@@ -115,94 +111,101 @@ export default function EditProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-        <Text style={styles.backText}>← {t('cancel')}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.title}>{t('settings.editProfile')}</Text>
-
-      {/* Date pickers */}
-      <View style={styles.pickerCard}>
-        <View style={styles.pickerRow}>
-          <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>{t('compatibility.year')}</Text>
-            <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
-          </View>
-          <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>{t('compatibility.month')}</Text>
-            <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
-          </View>
-          <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>{t('compatibility.day')}</Text>
-            <WheelPicker
-              data={days}
-              selectedIndex={clampedDayIdx}
-              onIndexChange={setDayIdx}
-              width={68}
-            />
-          </View>
-        </View>
-      </View>
-
-      {/* Time */}
-      <View style={styles.card}>
-        <View style={styles.switchRow}>
-          <Text style={styles.cardLabel}>{t('onboarding.birthTimeKnown')}</Text>
-          <Switch
-            value={timeKnown}
-            onValueChange={setTimeKnown}
-            trackColor={{ true: '#7c3aed', false: '#3d2471' }}
-            thumbColor="#fff"
-          />
-        </View>
-        {timeKnown && (
-          <View style={styles.hourPicker}>
-            <Text style={styles.pickerLabel}>{tob('birthInput.birthTime')}</Text>
-            <WheelPicker data={HOURS} selectedIndex={hourIdx} onIndexChange={setHourIdx} width={72} />
-          </View>
-        )}
-      </View>
-
-      {/* Gender */}
-      <View style={styles.card}>
-        <Text style={styles.cardLabel}>{t('relationships.form.gender')}</Text>
-        <View style={styles.genderRow}>
-          <TouchableOpacity
-            style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
-            onPress={() => setGender('M')}
-          >
-            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>{tob('birthInput.male')}</Text>
+    <SafeAreaView style={styles.safe}>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        {/* Use ScrollView only to allow scrolling on small devices;
+            WheelPicker FlatList has nestedScrollEnabled to suppress VirtualizedList warning */}
+        <ScrollView
+          style={styles.flex}
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <Text style={styles.backText}>← {t('cancel')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
-            onPress={() => setGender('F')}
-          >
-            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{tob('birthInput.female')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
 
-      <TouchableOpacity
-        style={[styles.button, (!gender || saving) && styles.buttonDisabled]}
-        onPress={handleSave}
-        disabled={!gender || saving}
-      >
-        {saving
-          ? <ActivityIndicator color="#fff" />
-          : <Text style={styles.buttonText}>{t('save')}</Text>
-        }
-      </TouchableOpacity>
-    </ScrollView>
+          <Text style={styles.title}>{t('settings.editProfile')}</Text>
+
+          {/* Date pickers */}
+          <View style={styles.pickerCard}>
+            <View style={styles.pickerRow}>
+              <View style={styles.pickerCol}>
+                <Text style={styles.pickerLabel}>{t('compatibility.year')}</Text>
+                <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
+              </View>
+              <View style={styles.pickerCol}>
+                <Text style={styles.pickerLabel}>{t('compatibility.month')}</Text>
+                <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
+              </View>
+              <View style={styles.pickerCol}>
+                <Text style={styles.pickerLabel}>{t('compatibility.day')}</Text>
+                <WheelPicker data={days} selectedIndex={clampedDayIdx} onIndexChange={setDayIdx} width={68} />
+              </View>
+            </View>
+          </View>
+
+          {/* Time */}
+          <View style={styles.card}>
+            <View style={styles.switchRow}>
+              <Text style={styles.cardLabel}>{t('onboarding.birthTimeKnown')}</Text>
+              <Switch
+                value={timeKnown}
+                onValueChange={setTimeKnown}
+                trackColor={{ true: '#7c3aed', false: '#3d2471' }}
+                thumbColor="#fff"
+              />
+            </View>
+            {timeKnown && (
+              <View style={styles.hourPicker}>
+                <Text style={styles.pickerLabel}>{tob('birthInput.birthTime')}</Text>
+                <WheelPicker data={HOURS} selectedIndex={hourIdx} onIndexChange={setHourIdx} width={72} />
+              </View>
+            )}
+          </View>
+
+          {/* Gender */}
+          <View style={styles.card}>
+            <Text style={styles.cardLabel}>{t('relationships.form.gender')}</Text>
+            <View style={styles.genderRow}>
+              <TouchableOpacity
+                style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
+                onPress={() => setGender('M')}
+              >
+                <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>{tob('birthInput.male')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
+                onPress={() => setGender('F')}
+              >
+                <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{tob('birthInput.female')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={[styles.button, (!gender || saving) && styles.buttonDisabled]}
+            onPress={handleSave}
+            disabled={!gender || saving}
+          >
+            {saving
+              ? <ActivityIndicator color="#fff" />
+              : <Text style={styles.buttonText}>{t('save')}</Text>
+            }
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a0a2e' },
-  content:   { padding: 28, paddingTop: 60, paddingBottom: 40 },
-  backBtn:   { marginBottom: 20 },
-  backText:  { color: '#a78bfa', fontSize: 15, fontWeight: '600' },
-  title:     { fontSize: 28, fontWeight: '700', color: '#fff', marginBottom: 28 },
+  safe:    { flex: 1, backgroundColor: '#1a0a2e' },
+  flex:    { flex: 1 },
+  content: { padding: 28, paddingTop: 60, paddingBottom: 40 },
+  backBtn: { marginBottom: 20 },
+  backText: { color: '#a78bfa', fontSize: 15, fontWeight: '600' },
+  title:   { fontSize: 28, fontWeight: '700', color: '#fff', marginBottom: 28 },
   pickerCard: {
     backgroundColor: '#2d1854', borderRadius: 16,
     paddingVertical: 16, paddingHorizontal: 12, marginBottom: 16,
