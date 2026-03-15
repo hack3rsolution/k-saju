@@ -87,11 +87,8 @@ export const FRAME_DEFAULT_LANGUAGE: Record<string, SupportedLanguage> = {
   in: 'hi',
 };
 
-/** Map device locale tags to our supported codes */
-function detectLanguage(): SupportedLanguage {
-  const locales = Localization.getLocales();
-  const tag = locales[0]?.languageTag ?? 'en';
-
+/** Map a single locale tag to a supported language code, or null if unsupported */
+function tagToLanguage(tag: string): SupportedLanguage | null {
   if (tag.startsWith('ko')) return 'ko';
   if (tag === 'zh-Hans' || tag.startsWith('zh-Hans') || tag === 'zh-CN') return 'zh-Hans';
   if (tag === 'zh-Hant' || tag.startsWith('zh-Hant') || tag === 'zh-TW' || tag === 'zh-HK') return 'zh-Hant';
@@ -101,6 +98,22 @@ function detectLanguage(): SupportedLanguage {
   if (tag.startsWith('hi')) return 'hi';
   if (tag.startsWith('vi')) return 'vi';
   if (tag.startsWith('id')) return 'id';
+  if (tag.startsWith('en')) return 'en';
+  return null;
+}
+
+/**
+ * Detect device language by scanning ALL returned locales in priority order.
+ * iOS Simulator with Expo Dev Client sometimes inserts the Mac's host locale
+ * (e.g. `en-001`) as the first entry even when the simulator language is Korean.
+ * Scanning all locales ensures we find `ko` further down the list.
+ */
+export function detectLanguage(): SupportedLanguage {
+  const locales = Localization.getLocales();
+  for (const locale of locales) {
+    const lang = tagToLanguage(locale.languageTag ?? '');
+    if (lang !== null) return lang;
+  }
   return 'en';
 }
 

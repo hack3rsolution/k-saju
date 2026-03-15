@@ -115,55 +115,67 @@ export function useContentRecommendation(): ContentRecommendationState {
       }
 
       // ── 2. Read SSE stream ─────────────────────────────────────────────────
-      const reader = resp.body?.getReader();
-      if (!reader) {
-        throw new Error('Streaming not supported');
-      }
-
-      const decoder = new TextDecoder();
-      let lineBuffer = '';
       // Local accumulator — source of truth for cache save at end
       const accumulated: { music?: RecommendationItem[]; books?: RecommendationItem[]; travel?: RecommendationItem[] } = {};
       let element = 'Wood';
 
-      outer: while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      // Helper: process one parsed SSE event object; returns true if stream should stop.
+      function handleEvent(event: { type: string; element?: string; items?: RecommendationItem[]; message?: string }): boolean {
+        if (event.type === 'error') {
+          setError(event.message ?? 'Recommendation service unavailable.');
+          return true;
+        }
+        if (event.element) element = event.element;
+        if (event.type === 'music' || event.type === 'books' || event.type === 'travel') {
+          const items = event.items ?? [];
+          accumulated[event.type] = items;
+          setLoading(false);
+          setData((prev) => ({
+            element,
+            music:  prev?.music  ?? [],
+            books:  prev?.books  ?? [],
+            travel: prev?.travel ?? [],
+            [event.type]: items,
+          }));
+        }
+        return false;
+      }
 
-        lineBuffer += decoder.decode(value, { stream: true });
-        const lines = lineBuffer.split('\n');
-        lineBuffer = lines.pop() ?? '';
+      const reader = resp.body?.getReader();
 
-        for (const line of lines) {
+      if (!reader) {
+        // ── Android / Hermes: response.body is null — ReadableStream not supported.
+        // Read full response text and parse SSE lines in one pass.
+        // Pattern mirrors useFortunChat.ts fallback (see CLAUDE.md).
+        const rawText = await resp.text();
+        for (const line of rawText.split('\n')) {
           if (!line.startsWith('data: ')) continue;
           const payload = line.slice(6).trim();
-          if (payload === '[DONE]') break outer;
-
+          if (payload === '[DONE]') break;
           let event: { type: string; element?: string; items?: RecommendationItem[]; message?: string };
-          try {
-            event = JSON.parse(payload);
-          } catch { continue; }
+          try { event = JSON.parse(payload); } catch { continue; }
+          if (handleEvent(event)) break;
+        }
+      } else {
+        // ── iOS / standard: streaming via ReadableStream reader
+        const decoder = new TextDecoder();
+        let lineBuffer = '';
 
-          if (event.type === 'error') {
-            setError(event.message ?? 'Recommendation service unavailable.');
-            break outer;
-          }
+        outer: while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-          if (event.element) element = event.element;
+          lineBuffer += decoder.decode(value, { stream: true });
+          const lines = lineBuffer.split('\n');
+          lineBuffer = lines.pop() ?? '';
 
-          if (event.type === 'music' || event.type === 'books' || event.type === 'travel') {
-            const items = event.items ?? [];
-            accumulated[event.type] = items;
-
-            // First category to arrive: flip loading→false so UI renders immediately
-            setLoading(false);
-            setData((prev) => ({
-              element,
-              music:  prev?.music  ?? [],
-              books:  prev?.books  ?? [],
-              travel: prev?.travel ?? [],
-              [event.type]: items,
-            }));
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const payload = line.slice(6).trim();
+            if (payload === '[DONE]') break outer;
+            let event: { type: string; element?: string; items?: RecommendationItem[]; message?: string };
+            try { event = JSON.parse(payload); } catch { continue; }
+            if (handleEvent(event)) break outer;
           }
         }
       }

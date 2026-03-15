@@ -22,6 +22,7 @@ function daysInMonth(year: number, month: number) {
 
 export default function BirthInputScreen() {
   const { t } = useTranslation('common');
+  const { t: tob } = useTranslation('onboarding');
   const { setBirthData } = useOnboardingStore();
 
   const [yearIdx, setYearIdx] = useState(60);   // 1990
@@ -55,17 +56,15 @@ export default function BirthInputScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.step}>Step 1 of 3</Text>
-      <Text style={styles.title}>{t('onboarding.birthInfoTitle')}</Text>
-      <Text style={styles.subtitle}>
-        We use your birth date and time to calculate your Four Pillars (四柱).
-      </Text>
+      <Text style={styles.step}>{tob('step', { current: 1, total: 3 })}</Text>
+      <Text style={styles.title}>{tob('birthInput.title')}</Text>
+      <Text style={styles.subtitle}>{tob('birthInput.subtitle')}</Text>
 
       {/* Date pickers */}
       <View style={styles.pickerCard}>
         <View style={styles.pickerRow}>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Year</Text>
+            <Text style={styles.pickerLabel}>{t('compatibility.year')}</Text>
             <WheelPicker data={YEARS} selectedIndex={yearIdx} onIndexChange={setYearIdx} width={92} />
           </View>
           <View style={styles.pickerCol}>
@@ -73,7 +72,7 @@ export default function BirthInputScreen() {
             <WheelPicker data={MONTHS} selectedIndex={monthIdx} onIndexChange={setMonthIdx} width={68} />
           </View>
           <View style={styles.pickerCol}>
-            <Text style={styles.pickerLabel}>Day</Text>
+            <Text style={styles.pickerLabel}>{t('compatibility.day')}</Text>
             <WheelPicker
               data={days}
               selectedIndex={clampedDayIdx}
@@ -97,7 +96,7 @@ export default function BirthInputScreen() {
         </View>
         {timeKnown && (
           <View style={styles.hourPicker}>
-            <Text style={styles.pickerLabel}>Hour (24h)</Text>
+            <Text style={styles.pickerLabel}>{tob('birthInput.birthTime')}</Text>
             <WheelPicker data={HOURS} selectedIndex={hourIdx} onIndexChange={setHourIdx} width={72} />
           </View>
         )}
@@ -111,13 +110,13 @@ export default function BirthInputScreen() {
             style={[styles.genderBtn, gender === 'M' && styles.genderBtnActive]}
             onPress={() => setGender('M')}
           >
-            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>Male</Text>
+            <Text style={[styles.genderText, gender === 'M' && styles.genderTextActive]}>{tob('birthInput.male')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.genderBtn, gender === 'F' && styles.genderBtnActive]}
             onPress={() => setGender('F')}
           >
-            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{t('onboarding.female')}</Text>
+            <Text style={[styles.genderText, gender === 'F' && styles.genderTextActive]}>{tob('birthInput.female')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -127,7 +126,7 @@ export default function BirthInputScreen() {
         onPress={handleContinue}
         disabled={!gender}
       >
-        <Text style={styles.buttonText}>Continue →</Text>
+        <Text style={styles.buttonText}>{tob('birthInput.continue')} →</Text>
       </TouchableOpacity>
     </ScrollView>
   );
