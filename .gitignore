@@ -104,3 +104,7 @@ Thumbs.db
 .expo/
 dist/
 .vercel
+
+# Stale Expo prebuild artifacts at repo root (actual native projects are in apps/mobile/android|ios)
+/android/
+/ios/
