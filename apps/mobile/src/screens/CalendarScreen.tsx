@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
+import { T } from '../theme/tokens'
+import { ScreenHeader } from '../components/ScreenHeader'
 import { useAuspiciousDays } from '../hooks/useAuspiciousDays'
 import { useIsPremium } from '../store/entitlementStore'
 import { EventTypePicker } from '../components/calendar/EventTypePicker'
@@ -24,31 +26,31 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('calendar.screenTitle')}</Text>
-        <Text style={styles.subtitle}>{t('calendar.subtitle')}</Text>
-      </View>
-
-      <View style={styles.content}>
-        <EventTypePicker
-          selected={eventType}
-          onSelect={setEventType}
-          isPremium={isPremium}
-          onUpgradePress={onUpgradePress}
-        />
-
-        <MonthlyCalendarView
-          month={month}
-          days={days}
-          isLoading={isLoading}
-          isPremium={isPremium}
-          onDayPress={(day) => {
-            selectDay(day)
-            if (!day.interpretation) fetchInterpretation(day)
-          }}
-          onMonthChange={setMonth}
+      <View style={styles.headerArea}>
+        <ScreenHeader
+          title={t('calendar.screenTitle')}
+          subtitle={t('calendar.subtitle')}
         />
       </View>
+
+      <EventTypePicker
+        selected={eventType}
+        onSelect={setEventType}
+        isPremium={isPremium}
+        onUpgradePress={onUpgradePress}
+      />
+
+      <MonthlyCalendarView
+        month={month}
+        days={days}
+        isLoading={isLoading}
+        isPremium={isPremium}
+        onDayPress={(day) => {
+          selectDay(day)
+          if (!day.interpretation) fetchInterpretation(day)
+        }}
+        onMonthChange={setMonth}
+      />
 
       {selectedDay && (
         <DayDetailModal
@@ -64,14 +66,6 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1a0a2e' },
-  header: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
-    backgroundColor: '#1a0a2e',
-  },
-  title:    { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 2 },
-  subtitle: { fontSize: 13, color: '#9d8fbe' },
-  content:  { flex: 1, backgroundColor: '#FAF6F1' },
+  container:  { flex: 1, backgroundColor: T.bg.surface },
+  headerArea: { paddingHorizontal: T.spacing[6], paddingTop: T.spacing[8] },
 })

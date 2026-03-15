@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useEntitlementStore } from '../../../store/entitlementStore';
 import { useAuthStore } from '../../../store/authStore';
 import { T } from '../../../theme/tokens';
+import { ScreenHeader } from '../../../components/ScreenHeader';
 import { FaceModeCard } from '../components/FaceModeCard';
 import { FaceImageInputSheet } from '../components/FaceImageInputSheet';
 import { useFaceInsightStore } from '../store/faceInsightStore';
@@ -86,11 +87,7 @@ export function FaceInsightHomeScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>{t('face.title')}</Text>
-            <Text style={styles.subtitle}>{t('face.subtitle')}</Text>
-          </View>
+          <ScreenHeader title={t('face.title')} subtitle={t('face.subtitle')} />
 
           {/* State card first */}
           <FaceModeCard
@@ -140,20 +137,6 @@ const styles = StyleSheet.create({
   content: {
     padding: T.spacing[6],
     paddingTop: T.spacing[8],
-  },
-  header: {
-    marginBottom: T.spacing[8],
-  },
-  title: {
-    color: T.text.primary,
-    fontSize: T.fontSize['3xl'],
-    fontWeight: '800',
-    marginBottom: T.spacing[2],
-  },
-  subtitle: {
-    color: T.text.muted,
-    fontSize: T.fontSize.base,
-    lineHeight: 22,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,

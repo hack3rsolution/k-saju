@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useIsPremium } from '../../src/store/entitlementStore';
 import { useFortune, type FortuneType } from '../../src/hooks/useFortune';
 import { T } from '../../src/theme/tokens';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
 import {
   TodayIcon,
   WeekIcon,
@@ -152,8 +153,7 @@ export default function FortuneScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>{t('fortune.title')}</Text>
-      <Text style={styles.subtitle}>{t('fortune.subtitle')}</Text>
+      <ScreenHeader title={t('fortune.title')} subtitle={t('fortune.subtitle')} />
 
       {FORTUNE_CARDS.map((card) => {
         const locked    = card.premium && !isPremium;
@@ -202,8 +202,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: T.bg.surface },
   content:   { padding: T.spacing[6], paddingTop: 60, paddingBottom: T.spacing[8] },
 
-  title:    { fontSize: T.fontSize['2xl'], fontWeight: '800', color: T.text.primary, marginBottom: 4 },
-  subtitle: { fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[5] },
 
   // Cards
   card: {

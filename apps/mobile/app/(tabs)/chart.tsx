@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSajuStore } from '../../src/store/sajuStore';
 import { getShiShin, STEM_ELEMENT, BRANCH_ELEMENT } from '@k-saju/saju-engine';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
 import { ContentRecommendationSection } from '../../src/components/ContentRecommendationSection';
 import { T } from '../../src/theme/tokens';
 import type {
@@ -353,9 +354,7 @@ export default function ChartScreen() {
     <>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
 
-      {/* ── Header ── */}
-      <Text style={styles.title}>{labels.title}</Text>
-      <Text style={styles.subtitle}>{labels.subtitle}</Text>
+      <ScreenHeader title={labels.title} subtitle={labels.subtitle} />
 
       {/* ── Day Master pill ── */}
       <TouchableOpacity style={styles.dayMasterRow} onPress={() => setSectionInfo(SECTION_INFO.dayMaster)} activeOpacity={0.7}>
@@ -675,8 +674,6 @@ const styles = StyleSheet.create({
   emptyText: { color: T.text.faint, fontSize: T.fontSize.md, textAlign: 'center', lineHeight: 24 },
 
   // Header
-  title: { fontSize: T.fontSize['4xl'], fontWeight: '800', color: T.text.primary, marginBottom: 2, letterSpacing: -0.5 },
-  subtitle: { fontSize: T.fontSize.sm, color: T.text.faint, marginBottom: T.spacing[4] },
 
   // Day Master pill
   dayMasterRow: { flexDirection: 'row', alignItems: 'center', marginBottom: T.spacing[6] },

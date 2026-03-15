@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { FortuneIcon, BookIcon, LockIcon } from '../../src/components/icons';
 import { useJournal } from '../../src/hooks/useJournal';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
 import { JournalEventCard } from '../../src/components/JournalEventCard';
 import { AddEventModal } from '../../src/components/AddEventModal';
 import { JournalAnalysisSheet } from '../../src/components/JournalAnalysisSheet';
@@ -120,9 +121,7 @@ export default function JournalScreen() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
-        {/* Header */}
-        <Text style={styles.title}>{t('journal.title')}</Text>
-        <Text style={styles.subtitle}>{t('journal.subtitle')}</Text>
+        <ScreenHeader title={t('journal.title')} subtitle={t('journal.subtitle')} />
 
         {/* 대운/세운 overlay banner */}
         <View style={styles.cycleBanner}>
@@ -242,8 +241,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1a0a2e' },
   scroll:    { flex: 1 },
   content:   { padding: 24, paddingTop: 60, paddingBottom: 100 },
-  title:     { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 2 },
-  subtitle:  { fontSize: 13, color: '#9d8fbe', marginBottom: 16 },
 
   cycleBanner: {
     flexDirection: 'row', alignItems: 'center', gap: 8,

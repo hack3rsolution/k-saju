@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LoveIcon } from '../../src/components/icons';
 import { useRelationships } from '../../src/hooks/useRelationships';
 import { useTranslation } from 'react-i18next';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
 import { RelationshipCard } from '../../src/components/RelationshipCard';
 import { AddRelationshipModal } from '../../src/components/AddRelationshipModal';
 import { RelationshipDetailSheet } from '../../src/components/RelationshipDetailSheet';
@@ -92,8 +93,7 @@ export default function RelationshipsScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>{t('relationships.title')}</Text>
-          <Text style={styles.subtitle}>관계 지도 · 人脈運</Text>
+          <ScreenHeader title={t('relationships.title')} subtitle={t('relationships.subtitle', { date: new Date().toLocaleString(undefined, { month: 'long', year: 'numeric' }) })} />
           <View style={styles.lockedCard}>
             <View style={styles.lockedIcon}><LoveIcon color="#a78bfa" size={48} /></View>
             <Text style={styles.lockedTitle}>{t('relationships.premiumTitle')}</Text>
@@ -116,9 +116,7 @@ export default function RelationshipsScreen() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={list} tintColor="#a78bfa" />}
       >
-        {/* Header */}
-        <Text style={styles.title}>{t('relationships.title')}</Text>
-        <Text style={styles.subtitle}>{t('relationships.subtitle', { date: new Date().toLocaleString(undefined, { month: 'long', year: 'numeric' }) })}</Text>
+        <ScreenHeader title={t('relationships.title')} subtitle={t('relationships.subtitle', { date: new Date().toLocaleString(undefined, { month: 'long', year: 'numeric' }) })} />
 
         {/* Error banner */}
         {error && error !== 'premium_required' && (
@@ -192,8 +190,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1a0a2e' },
   scroll:    { flex: 1 },
   content:   { padding: 24, paddingTop: 60, paddingBottom: 100 },
-  title:     { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 2 },
-  subtitle:  { fontSize: 13, color: '#9d8fbe', marginBottom: 24 },
 
   errorBanner: { backgroundColor: '#ef444422', borderRadius: 10, padding: 12, marginBottom: 12 },
   errorText:   { color: '#f87171', fontSize: 13, textAlign: 'center' },

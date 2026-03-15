@@ -4,10 +4,10 @@ import type { EventType } from '../../types/calendar'
 import { WeddingIcon, FamilyIcon, ContractIcon, CareerIcon, LockIcon } from '../icons'
 
 const EVENT_CONFIG: { type: EventType; label: string; icon: ReactNode; premiumOnly: boolean }[] = [
-  { type: 'wedding',   label: '결혼', icon: <WeddingIcon  color="#374151" size={15} />, premiumOnly: false },
-  { type: 'moving',    label: '이사', icon: <FamilyIcon   color="#374151" size={15} />, premiumOnly: true  },
-  { type: 'contract',  label: '계약', icon: <ContractIcon color="#374151" size={15} />, premiumOnly: true  },
-  { type: 'interview', label: '면접', icon: <CareerIcon   color="#374151" size={15} />, premiumOnly: true  },
+  { type: 'wedding',   label: '결혼', icon: <WeddingIcon  color="#b8a9d9" size={15} />, premiumOnly: false },
+  { type: 'moving',    label: '이사', icon: <FamilyIcon   color="#b8a9d9" size={15} />, premiumOnly: true  },
+  { type: 'contract',  label: '계약', icon: <ContractIcon color="#b8a9d9" size={15} />, premiumOnly: true  },
+  { type: 'interview', label: '면접', icon: <CareerIcon   color="#b8a9d9" size={15} />, premiumOnly: true  },
 ]
 
 interface Props {
@@ -43,9 +43,9 @@ export function EventTypePicker({ selected, onSelect, isPremium = false, onUpgra
           >
             <View style={styles.iconWrap}>
               {locked
-                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#9CA3AF' })
+                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#5a4d7a' })
                 : active
-                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#7C3AED' })
+                ? React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: '#a78bfa' })
                 : icon
               }
             </View>
@@ -66,12 +66,12 @@ export function EventTypePicker({ selected, onSelect, isPremium = false, onUpgra
 
 const styles = StyleSheet.create({
   scrollView:  { height: 52, flexGrow: 0 },
-  container:   { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, gap: 8 },
-  tab:         { flexDirection: 'row', alignItems: 'center', height: 36, paddingHorizontal: 12, borderRadius: 18, backgroundColor: '#F5F0FF', gap: 4, borderWidth: 1.5, borderColor: 'transparent' },
-  activeTab:   { backgroundColor: '#EDE9FE', borderColor: '#7C3AED' },
-  lockedTab:   { opacity: 0.6 },
+  container:   { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 0, gap: 8 },
+  tab:         { flexDirection: 'row', alignItems: 'center', height: 36, paddingHorizontal: 12, borderRadius: 18, backgroundColor: '#2d1854', gap: 4, borderWidth: 1.5, borderColor: 'transparent' },
+  activeTab:   { backgroundColor: '#3d2471', borderColor: '#7C3AED' },
+  lockedTab:   { opacity: 0.5 },
   iconWrap:    { width: 15, height: 15, alignItems: 'center', justifyContent: 'center' },
-  label:       { fontSize: 13, color: '#374151', fontWeight: '500' },
-  activeLabel: { color: '#7C3AED', fontWeight: '700' },
+  label:       { fontSize: 13, color: '#b8a9d9', fontWeight: '500' },
+  activeLabel: { color: '#a78bfa', fontWeight: '700' },
   lockIconWrap:{ width: 10, height: 10, alignItems: 'center', justifyContent: 'center' },
 })
