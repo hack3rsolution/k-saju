@@ -78,13 +78,13 @@ function withNodePathInSettings(config) {
     config.modResults.contents = config.modResults.contents
       .replace(/\["node",/g, `["${nodePath}",`)
       .replace(/commandLine\("node",/g, `commandLine("${nodePath}",`)
-      // RN 0.74.x에서 com.facebook.react.settings 플러그인은 react-settings-plugin(로컬)이 제공.
-      // Expo prebuild 템플릿은 reactNativePatch <= 3 조건으로 올바르게 포함하나,
-      // 이전 패치가 이 조건을 < 0(항상 false)으로 바꿔 플러그인 미포함 → 빌드 실패.
-      // 안전장치: 조건이 < 0으로 잘못 설정된 경우 <= 3으로 복원.
+      // com.facebook.react.settings는 react-settings-plugin(로컬)이 제공.
+      // Expo prebuild 템플릿은 조건부로 includeBuild("react-settings-plugin")를 실행하나
+      // 조건이 false가 될 경우 플러그인 미등록 → 빌드 실패.
+      // 안전장치: 조건부 includeBuild를 무조건 실행으로 교체.
       .replace(
-        'reactNativeMinor == 74 && reactNativePatch < 0',
-        'reactNativeMinor == 74 && reactNativePatch <= 3',
+        /if\(reactNativeMinor == 74 && reactNativePatch[^)]+\)\{\s*includeBuild\("react-settings-plugin"\)\s*\}/,
+        'includeBuild("react-settings-plugin")',
       );
 
     return config;
