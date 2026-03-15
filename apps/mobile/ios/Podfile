@@ -38,6 +38,12 @@ target 'KSaju' do
   use_expo_modules!
   config = use_native_modules!
 
+  # pnpm hoisted monorepo: @react-native-async-storage is at monorepo root node_modules/,
+  # not apps/mobile/node_modules/, so Expo autolinking cannot find it automatically.
+  # Explicit path is required to prevent "NativeModule: AsyncStorage is null" at runtime.
+  pod 'RNCAsyncStorage',
+    :path => '../../../node_modules/@react-native-async-storage/async-storage'
+
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
