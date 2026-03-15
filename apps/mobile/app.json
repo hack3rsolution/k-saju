@@ -51,12 +51,23 @@
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
         "INTERNET",
-        "ACCESS_NETWORK_STATE"
+        "ACCESS_NETWORK_STATE",
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ]
     },
     "plugins": [
       "expo-router",
       "expo-apple-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "K-Saju needs photo access to analyze your face.",
+          "cameraPermission": "K-Saju needs camera access for face analysis."
+        }
+      ],
       "./plugins/withAndroidNodePath",
       [
         "expo-build-properties",
