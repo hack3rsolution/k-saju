@@ -43,7 +43,7 @@ export default function EditProfileScreen() {
   const meta = session?.user?.user_metadata ?? {};
 
   // Pre-populate from saved metadata; default year = 2000, timeKnown = false
-  const initYearIdx  = Math.max(0, Math.min(80, (meta.birth_year  ?? 2000) - 1930));
+  const initYearIdx  = 70; // always default to year 2000 (index 70 = 1930 + 70)
   const initMonthIdx = Math.max(0, (meta.birth_month ?? 1) - 1);
   const initDayIdx   = Math.max(0, (meta.birth_day   ?? 1) - 1);
   const initHourIdx  = meta.birth_hour ?? 12;

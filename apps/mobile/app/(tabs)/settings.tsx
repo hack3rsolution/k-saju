@@ -2,6 +2,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Switch, Modal, Fl
 import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../src/i18n';
 import { useLanguageStore } from '../../src/store/languageStore';
 import { useAuthStore } from '../../src/store/authStore';
@@ -89,7 +90,7 @@ export default function SettingsScreen() {
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('settings.title')}</Text>
+        <ScreenHeader title={t('settings.title')} />
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t('settings.account')}</Text>
@@ -207,7 +208,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#1a0a2e' },
   content: { padding: 24, paddingTop: 60 },
-  title: { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 32 },
   section: { marginBottom: 32 },
   sectionLabel: { fontSize: 12, color: '#7c3aed', fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 },
   row: {

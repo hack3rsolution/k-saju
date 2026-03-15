@@ -1,13 +1,15 @@
 /**
- * WheelPicker — drum-roll style picker using FlatList snap scrolling.
+ * WheelPicker — drum-roll style picker using ScrollView snap scrolling.
  *
  * Pads the data array with empty slots so the first and last real items
  * can be centred in the 5-item visible window. Offset math:
  *   offset = selectedIndex × ITEM_H  (maps to paddedData[selectedIndex + SIDE])
+ *
+ * Uses ScrollView + map (not FlatList) to avoid VirtualizedLists nesting warning.
  */
 import { useRef, useEffect, useCallback } from 'react';
 import {
-  FlatList,
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -26,13 +28,13 @@ interface Props {
 }
 
 export function WheelPicker({ data, selectedIndex, onIndexChange, width = 80 }: Props) {
-  const ref = useRef<FlatList>(null);
+  const ref = useRef<ScrollView>(null);
   const paddedData = [...Array(SIDE).fill(''), ...data, ...Array(SIDE).fill('')];
 
   // Scroll to the initial selection after layout
   useEffect(() => {
     const timer = setTimeout(() => {
-      ref.current?.scrollToOffset({ offset: selectedIndex * ITEM_H, animated: false });
+      ref.current?.scrollTo({ y: selectedIndex * ITEM_H, animated: false });
     }, 150);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,27 +52,25 @@ export function WheelPicker({ data, selectedIndex, onIndexChange, width = 80 }: 
     <View style={[styles.container, { width }]}>
       {/* Selection highlight bar */}
       <View style={styles.selector} pointerEvents="none" />
-      <FlatList
+      <ScrollView
         ref={ref}
-        data={paddedData}
-        keyExtractor={(_, i) => String(i)}
         showsVerticalScrollIndicator={false}
         snapToInterval={ITEM_H}
         decelerationRate="fast"
-        removeClippedSubviews={false}
-        nestedScrollEnabled
         onMomentumScrollEnd={onMomentumScrollEnd}
+        scrollEventThrottle={16}
         style={styles.list}
-        renderItem={({ item, index }) => {
+      >
+        {paddedData.map((item, index) => {
           const actualIdx = index - SIDE;
           const isSelected = actualIdx === selectedIndex;
           return (
-            <View style={styles.item}>
+            <View key={index} style={styles.item}>
               <Text style={[styles.text, isSelected && styles.textSelected]}>{item}</Text>
             </View>
           );
-        }}
-      />
+        })}
+      </ScrollView>
     </View>
   );
 }
