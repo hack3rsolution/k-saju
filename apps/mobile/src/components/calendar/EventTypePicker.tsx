@@ -66,7 +66,7 @@ export function EventTypePicker({ selected, onSelect, isPremium = false, onUpgra
 
 const styles = StyleSheet.create({
   scrollView:  { height: 52, flexGrow: 0 },
-  container:   { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 0, gap: 8 },
+  container:   { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 24, gap: 8 },
   tab:         { flexDirection: 'row', alignItems: 'center', height: 36, paddingHorizontal: 12, borderRadius: 18, backgroundColor: '#2d1854', gap: 4, borderWidth: 1.5, borderColor: 'transparent' },
   activeTab:   { backgroundColor: '#3d2471', borderColor: '#7C3AED' },
   lockedTab:   { opacity: 0.5 },
