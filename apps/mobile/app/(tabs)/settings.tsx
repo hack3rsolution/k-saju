@@ -97,7 +97,7 @@ export default function SettingsScreen() {
             <Text style={styles.rowText}>{t('settings.email')}</Text>
             <Text style={styles.rowValue}>{user?.email ?? '—'}</Text>
           </View>
-          <TouchableOpacity style={styles.row} onPress={() => router.push('/(onboarding)/birth-input')}>
+          <TouchableOpacity style={styles.row} onPress={() => router.push('/edit-profile')}>
             <Text style={styles.rowText}>{t('settings.editProfile')}</Text>
             <Text style={styles.rowValue}>→</Text>
           </TouchableOpacity>
