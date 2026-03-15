@@ -205,6 +205,7 @@
   "calendar": {
     "title": "Günstige Tage",
     "screenTitle": "Glückstage-Kalender",
+    "subtitle": "Datum · Glück · Ereignisse",
     "lucky": "Günstig",
     "unlucky": "Ungünstig",
     "neutral": "Neutral",

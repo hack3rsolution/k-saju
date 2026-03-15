@@ -206,6 +206,7 @@
   "calendar": {
     "title": "이달의 길일",
     "screenTitle": "길일 캘린더",
+    "subtitle": "날짜 · 길흉 · 행사",
     "lucky": "길일",
     "unlucky": "흉일",
     "neutral": "보통",

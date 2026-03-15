@@ -205,6 +205,7 @@
   "calendar": {
     "title": "今月の吉日",
     "screenTitle": "吉日カレンダー",
+    "subtitle": "日付 · 吉凶 · 行事",
     "lucky": "吉日",
     "unlucky": "凶日",
     "neutral": "普通",

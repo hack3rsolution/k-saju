@@ -205,6 +205,7 @@
   "calendar": {
     "title": "Jours Fastes",
     "screenTitle": "Calendrier des Jours Fastes",
+    "subtitle": "Date · Chance · Événements",
     "lucky": "Faste",
     "unlucky": "Néfaste",
     "neutral": "Neutre",

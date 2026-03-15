@@ -25,26 +25,30 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('calendar.screenTitle')}</Text>
+        <Text style={styles.title}>{t('calendar.screenTitle')}</Text>
+        <Text style={styles.subtitle}>{t('calendar.subtitle')}</Text>
       </View>
-      <EventTypePicker
-        selected={eventType}
-        onSelect={setEventType}
-        isPremium={isPremium}
-        onUpgradePress={onUpgradePress}
-      />
 
-      <MonthlyCalendarView
-        month={month}
-        days={days}
-        isLoading={isLoading}
-        isPremium={isPremium}
-        onDayPress={(day) => {
-          selectDay(day)
-          if (!day.interpretation) fetchInterpretation(day)
-        }}
-        onMonthChange={setMonth}
-      />
+      <View style={styles.content}>
+        <EventTypePicker
+          selected={eventType}
+          onSelect={setEventType}
+          isPremium={isPremium}
+          onUpgradePress={onUpgradePress}
+        />
+
+        <MonthlyCalendarView
+          month={month}
+          days={days}
+          isLoading={isLoading}
+          isPremium={isPremium}
+          onDayPress={(day) => {
+            selectDay(day)
+            if (!day.interpretation) fetchInterpretation(day)
+          }}
+          onMonthChange={setMonth}
+        />
+      </View>
 
       {selectedDay && (
         <DayDetailModal
@@ -60,7 +64,14 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FAF6F1' },
-  header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 4 },
-  headerTitle: { fontSize: 22, fontWeight: '700', color: '#1C1C1E' },
+  container: { flex: 1, backgroundColor: '#1a0a2e' },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 16,
+    backgroundColor: '#1a0a2e',
+  },
+  title:    { fontSize: 26, fontWeight: '700', color: '#fff', marginBottom: 2 },
+  subtitle: { fontSize: 13, color: '#9d8fbe' },
+  content:  { flex: 1, backgroundColor: '#FAF6F1' },
 })

@@ -205,6 +205,7 @@
   "calendar": {
     "title": "Dias Auspiciosos",
     "screenTitle": "Calendário de Dias Auspiciosos",
+    "subtitle": "Data · Sorte · Eventos",
     "lucky": "Auspicioso",
     "unlucky": "Desfavorável",
     "neutral": "Neutro",
