@@ -108,3 +108,7 @@ dist/
 # Stale Expo prebuild artifacts at repo root (actual native projects are in apps/mobile/android|ios)
 /android/
 /ios/
+
+# iOS CocoaPods (both repo-root prebuild and apps/mobile)
+ios/Pods/
+apps/mobile/ios/Pods/

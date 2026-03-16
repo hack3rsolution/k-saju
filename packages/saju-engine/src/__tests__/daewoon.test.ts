@@ -39,7 +39,7 @@ describe('calculateDaewoon (대운)', () => {
   });
 
   test('each period has a valid FiveElement', () => {
-    const validElements = ['Wood', 'Fire', 'Earth', 'Metal', 'Water'];
+    const validElements = ['木', '火', '土', '金', '水']; // kanji FiveElement values
     const periods = calculateDaewoon(maleBirth);
     periods.forEach((p) => {
       expect(validElements).toContain(p.element);
