@@ -299,7 +299,15 @@
     "maybeLater": "Quizás más tarde",
     "chip1": "¿Debería tomar una decisión importante hoy?",
     "chip2": "¿Cómo aprovechar al máximo mis elementos de la suerte?",
-    "chip3": "¿En qué debería concentrarme esta semana?"
+    "chip3": "¿En qué debería concentrarme esta semana?",
+    "remaining": "{{count}} restante(s)",
+    "freeLimitReached": "Has usado todos los chats gratis de hoy",
+    "premiumLimitReached": "Límite diario (10) alcanzado",
+    "sessionRestored": "Conversación de hoy restaurada",
+    "resetTitle": "Reiniciar conversación",
+    "resetMessage": "Se eliminará toda la conversación actual.",
+    "resetConfirm": "Reiniciar",
+    "lockedPlaceholder": "Límite gratis alcanzado"
   },
   "onboarding": {
     "birthInfoTitle": "Datos de nacimiento",

@@ -4,7 +4,7 @@
   "plans": {
     "monthly": {
       "name": "高级月订阅",
-      "price": "$8.99",
+      "price": "$7.99",
       "period": "/月",
       "cta": "订阅月度方案"
     },
@@ -12,8 +12,9 @@
       "name": "高级年订阅",
       "price": "$59.99",
       "period": "/年",
-      "badge": "最超值 · 节省44%",
-      "cta": "订阅年度方案"
+      "badge": "超值 · 省37%",
+      "cta": "订阅年度方案",
+      "monthlyEquiv": "每月$5.00，按年计费"
     }
   },
   "addons": {
@@ -22,7 +23,11 @@
     "deep_compatibility": "深度合婚报告",
     "career_wealth": "事业财运报告",
     "daewoon_report_pdf": "完整大运报告（PDF）",
-    "name_analysis": "命名分析"
+    "name_analysis": "命名分析",
+    "starter_bundle": "入门套餐",
+    "starter_bundle_desc": "包含时机+合盘+财运3项",
+    "full_bundle": "全套套餐",
+    "full_bundle_desc": "包含全部5项附加功能"
   },
   "legal": "费用通过App Store/Google Play账户扣除。随时可取消。价格因地区而异。",
   "restore": "恢复购买",

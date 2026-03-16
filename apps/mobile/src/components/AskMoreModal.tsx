@@ -211,12 +211,12 @@ export function AskMoreModal({ visible, onClose, isPremium, fortuneId, todayRead
 
   function handleRefresh() {
     Alert.alert(
-      '대화 초기화',
-      '현재 대화가 모두 삭제됩니다.',
+      t('fortuneChat.resetTitle'),
+      t('fortuneChat.resetMessage'),
       [
-        { text: '취소', style: 'cancel' },
+        { text: t('cancel'), style: 'cancel' },
         {
-          text: '초기화',
+          text: t('fortuneChat.resetConfirm'),
           style: 'destructive',
           onPress: async () => {
             await clearSession();
@@ -276,7 +276,7 @@ export function AskMoreModal({ visible, onClose, isPremium, fortuneId, todayRead
                   styles.badgeText,
                   remaining <= 1 && styles.badgeTextWarn,
                 ]}>
-                  {remaining > 0 ? `${remaining}회 남음` : '0회 남음'}
+                  {t('fortuneChat.remaining', { count: remaining })}
                 </Text>
               </View>
               <TouchableOpacity
@@ -295,7 +295,7 @@ export function AskMoreModal({ visible, onClose, isPremium, fortuneId, todayRead
           {/* Restored session banner */}
           {isRestored && (
             <View style={styles.restoredBanner}>
-              <Text style={styles.restoredText}>오늘 대화를 불러왔어요</Text>
+              <Text style={styles.restoredText}>{t('fortuneChat.sessionRestored')}</Text>
             </View>
           )}
 
@@ -332,12 +332,12 @@ export function AskMoreModal({ visible, onClose, isPremium, fortuneId, todayRead
                 {isServerLocked
                   ? t('fortuneChat.lockDesc')
                   : isPremium
-                  ? '오늘 질문 한도(10회)에 도달했어요'
-                  : '오늘 무료 질문을 모두 사용했어요'}
+                  ? t('fortuneChat.premiumLimitReached')
+                  : t('fortuneChat.freeLimitReached')}
               </Text>
               {!isPremium && !isServerLocked && (
                 <TouchableOpacity onPress={() => { handleClose(); router.push('/paywall'); }}>
-                  <Text style={styles.upgradeText}>프리미엄 →</Text>
+                  <Text style={styles.upgradeText}>{t('fortuneChat.upgradePremium')}</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -353,7 +353,7 @@ export function AskMoreModal({ visible, onClose, isPremium, fortuneId, todayRead
               value={input}
               onChangeText={setInput}
               placeholder={
-                isLocked ? '무료 횟수를 모두 사용했어요' : t('fortuneChat.placeholder')
+                isLocked ? t('fortuneChat.lockedPlaceholder') : t('fortuneChat.placeholder')
               }
               placeholderTextColor={isLocked ? 'rgba(201,168,76,0.25)' : 'rgba(255,255,255,0.3)'}
               editable={!isDisabled}

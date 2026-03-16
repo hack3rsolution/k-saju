@@ -20,7 +20,7 @@
   "plans": {
     "monthly": {
       "name": "프리미엄 월간",
-      "price": "$8.99",
+      "price": "$7.99",
       "period": "/월",
       "cta": "월간 구독 시작"
     },
@@ -28,8 +28,9 @@
       "name": "프리미엄 연간",
       "price": "$59.99",
       "period": "/년",
-      "badge": "최고 혜택 · 44% 절약",
-      "cta": "연간 구독 시작"
+      "badge": "최고 혜택 · 37% 절약",
+      "cta": "연간 구독 시작",
+      "monthlyEquiv": "월 $5.00, 연간 결제"
     }
   },
   "addons": {
@@ -38,7 +39,11 @@
     "deep_compatibility": "심층 궁합 리포트",
     "career_wealth": "직업 · 재물 리포트",
     "daewoon_report_pdf": "대운 전체 리포트 (PDF)",
-    "name_analysis": "작명 분석"
+    "name_analysis": "작명 분석",
+    "starter_bundle": "스타터 번들",
+    "starter_bundle_desc": "타이밍 + 궁합 + 재물운 3개 포함",
+    "full_bundle": "풀 번들",
+    "full_bundle_desc": "모든 애드온 5개 포함"
   },
   "legal": "결제는 App Store/Google Play 계정으로 청구됩니다. 언제든지 취소 가능. 가격은 지역마다 다를 수 있습니다.",
   "restore": "구매 복원",

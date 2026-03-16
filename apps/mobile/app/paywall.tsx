@@ -32,7 +32,7 @@ import { useIsPremium } from '../src/store/entitlementStore';
 const PLAN_META = {
   monthly: {
     key: 'monthly' as const,
-    fallbackPrice: '$8.99/mo',
+    fallbackPrice: '$7.99/mo',
     highlight: false,
     featureKeys: ['unlimited_daily', 'monthly_annual', 'daewoon', 'compatibility', 'all_frames'],
   },
@@ -50,6 +50,11 @@ const ADDON_META: { key: string; tKey: string; fallbackPrice: string }[] = [
   { key: 'k_saju_career',        tKey: 'career_wealth',       fallbackPrice: '$4.99' },
   { key: 'k_saju_daewoon_pdf',   tKey: 'daewoon_report_pdf',  fallbackPrice: '$6.99' },
   { key: 'k_saju_name_analysis', tKey: 'name_analysis',       fallbackPrice: '$9.99' },
+];
+
+const BUNDLE_META: { key: string; tKey: string; fallbackPrice: string }[] = [
+  { key: 'k_saju_starter_bundle', tKey: 'starter_bundle', fallbackPrice: '$12.99' },
+  { key: 'k_saju_full_bundle',    tKey: 'full_bundle',    fallbackPrice: '$22.99' },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -170,6 +175,9 @@ export default function PaywallScreen() {
         <View style={styles.priceRow}>
           <Text style={styles.planPrice}>{price}</Text>
         </View>
+        {meta.key === 'annual' && (
+          <Text style={styles.monthlyEquiv}>{t('plans.annual.monthlyEquiv')}</Text>
+        )}
         {meta.featureKeys.map((fk) => (
           <Text key={fk} style={styles.feature}>✓  {t(`features.${fk}`)}</Text>
         ))}
@@ -219,6 +227,34 @@ export default function PaywallScreen() {
 
       {/* ── Add-ons ─────────────────────────────────────────────────────── */}
       <Text style={styles.addonTitle}>{t('addons.title')}</Text>
+
+      {/* Bundles (shown first) */}
+      {BUNDLE_META.map((b) => {
+        const bundlePkg = findAddonPkg(b.key);
+        const price = bundlePkg ? packagePrice(bundlePkg) : b.fallbackPrice;
+        const isBuying = purchasing === bundlePkg?.identifier;
+        const bundleName = t(`addons.${b.tKey}`);
+        return (
+          <TouchableOpacity
+            key={b.key}
+            style={[styles.addonRow, styles.bundleRow]}
+            onPress={() => handlePurchase(bundlePkg, bundleName)}
+            disabled={isBuying || purchasing !== null}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.addonName, styles.bundleName]}>{bundleName}</Text>
+              <Text style={styles.bundleDesc}>{t(`addons.${b.tKey}_desc`)}</Text>
+            </View>
+            {isBuying ? (
+              <ActivityIndicator color="#a78bfa" size="small" />
+            ) : (
+              <Text style={styles.addonPrice}>{price}</Text>
+            )}
+          </TouchableOpacity>
+        );
+      })}
+
+      {/* Individual addons */}
       {ADDON_META.map((a) => {
         const addonPkg = findAddonPkg(a.key);
         const price = addonPkg ? packagePrice(addonPkg) : a.fallbackPrice;
@@ -292,7 +328,8 @@ const styles = StyleSheet.create({
   badgeText: { color: '#fff', fontSize: 12, fontWeight: '700' },
   planName: { fontSize: 18, fontWeight: '700', color: '#fff', marginBottom: 8 },
   priceRow: { flexDirection: 'row', alignItems: 'baseline', marginBottom: 16 },
-  planPrice: { fontSize: 32, fontWeight: '800', color: '#fff' },
+  planPrice:    { fontSize: 32, fontWeight: '800', color: '#fff' },
+  monthlyEquiv: { fontSize: 13, color: '#c4b5fd', marginBottom: 8, marginTop: -8 },
   feature: { color: '#c4b5fd', fontSize: 14, marginBottom: 6, lineHeight: 20 },
   planBtn: {
     backgroundColor: '#4c1d95',
@@ -316,8 +353,11 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     marginBottom: 8,
   },
-  addonName: { color: '#d8b4fe', fontSize: 14, flex: 1 },
-  addonPrice: { color: '#a78bfa', fontWeight: '700', fontSize: 14 },
+  addonName:   { color: '#d8b4fe', fontSize: 14, flex: 1 },
+  addonPrice:  { color: '#a78bfa', fontWeight: '700', fontSize: 14 },
+  bundleRow:   { borderWidth: 1, borderColor: 'rgba(167,139,250,0.4)', backgroundColor: '#3d1f6e' },
+  bundleName:  { fontWeight: '700', fontSize: 15 },
+  bundleDesc:  { color: '#9d8fbe', fontSize: 12, marginTop: 2 },
 
   restoreBtn: {
     alignItems: 'center',

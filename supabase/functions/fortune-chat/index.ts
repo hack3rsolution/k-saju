@@ -7,8 +7,8 @@
  *
  * Receives a conversation history + saju chart + today's reading,
  * streams Claude's follow-up response as SSE tokens.
- * Premium users: 20 requests / day rate limit.
- * Free users: blocked (respond with 403 + paywall prompt).
+ * Premium users: 20 requests / day rate limit (in-memory).
+ * Free users: 3 requests / day rate limit (DB-based count).
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -20,13 +20,15 @@ import type {
   CulturalFrame,
 } from './types.ts';
 
-// ── Daily rate limit (Premium: 20/day) ───────────────────────────────────────
+// ── Daily rate limits ─────────────────────────────────────────────────────────
 
 interface RateLimitRecord { count: number; resetAt: number; }
 const rateLimitMap = new Map<string, RateLimitRecord>();
-const DAILY_LIMIT = 20;
+const PREMIUM_DAILY_LIMIT   = 20;
+const FREE_CHAT_DAILY_LIMIT = 3;
+const DEV_USER_ID = '00000000-0000-4000-8000-000000000000';
 
-function checkRateLimit(userId: string): boolean {
+function checkPremiumRateLimit(userId: string): boolean {
   const now = Date.now();
   const midnight = new Date();
   midnight.setHours(24, 0, 0, 0);
@@ -36,7 +38,22 @@ function checkRateLimit(userId: string): boolean {
   if (now > rec.resetAt) { rec.count = 0; rec.resetAt = resetAt; }
   rec.count++;
   rateLimitMap.set(userId, rec);
-  return rec.count <= DAILY_LIMIT;
+  return rec.count <= PREMIUM_DAILY_LIMIT;
+}
+
+async function checkFreeChatLimit(
+  adminClient: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<boolean> {
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const { count } = await adminClient
+    .from('fortune_chat_history')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('role', 'user')
+    .gte('created_at', todayStart.toISOString());
+  return (count ?? 0) < FREE_CHAT_DAILY_LIMIT;
 }
 
 // ── Validation ────────────────────────────────────────────────────────────────
@@ -171,19 +188,26 @@ Deno.serve(async (req: Request) => {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) return errorResponse('Unauthorized', 401);
 
-  // ── Premium gate ──────────────────────────────────────────────────────────
+  // ── Free / Premium gate ───────────────────────────────────────────────────
   const isPremium = user.user_metadata?.is_premium === true;
-  if (!isPremium) {
-    return jsonResponse({
-      ok:    false,
-      error: 'premium_required',
-      suggestedQuestions: SUGGESTED_QUESTIONS['en'],
-    }, 403);
+  const isDevUser = user.id === DEV_USER_ID;
+
+  if (!isPremium && !isDevUser) {
+    // Free users: DB-based daily limit (3/day)
+    const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const allowed = await checkFreeChatLimit(adminClient, user.id);
+    if (!allowed) {
+      return jsonResponse({
+        ok:    false,
+        error: 'free_limit_reached',
+        limit: FREE_CHAT_DAILY_LIMIT,
+      }, 402);
+    }
   }
 
-  // ── Rate limit ────────────────────────────────────────────────────────────
-  if (!checkRateLimit(user.id)) {
-    return errorResponse('Daily limit of 20 chat messages reached. Try again tomorrow.', 429);
+  // ── Rate limit (Premium only: 20/day in-memory) ───────────────────────────
+  if (isPremium && !checkPremiumRateLimit(user.id)) {
+    return errorResponse(`Daily limit of ${PREMIUM_DAILY_LIMIT} chat messages reached. Try again tomorrow.`, 429);
   }
 
   // ── Parse & validate ──────────────────────────────────────────────────────

@@ -4,7 +4,7 @@
   "plans": {
     "monthly": {
       "name": "Premium Hàng Tháng",
-      "price": "$8.99",
+      "price": "$7.99",
       "period": "/tháng",
       "cta": "Đăng Ký Tháng"
     },
@@ -12,8 +12,9 @@
       "name": "Premium Hàng Năm",
       "price": "$59.99",
       "period": "/năm",
-      "badge": "Giá Trị Nhất · Tiết Kiệm 44%",
-      "cta": "Đăng Ký Năm"
+      "badge": "Giá Tốt Nhất · Tiết Kiệm 37%",
+      "cta": "Đăng Ký Năm",
+      "monthlyEquiv": "$5.00/tháng, thanh toán hàng năm"
     }
   },
   "addons": {
@@ -22,7 +23,11 @@
     "deep_compatibility": "Báo Cáo Hợp Duyên Chuyên Sâu",
     "career_wealth": "Báo Cáo Sự Nghiệp & Tài Lộc",
     "daewoon_report_pdf": "Báo Cáo Đại Vận Đầy Đủ (PDF)",
-    "name_analysis": "Phân Tích Tên"
+    "name_analysis": "Phân Tích Tên",
+    "starter_bundle": "Gói Khởi Đầu",
+    "starter_bundle_desc": "Thời điểm + Hợp duyên + Sự nghiệp",
+    "full_bundle": "Gói Đầy Đủ",
+    "full_bundle_desc": "Bao gồm tất cả 5 tiện ích"
   },
   "legal": "Thanh toán được tính vào tài khoản App Store/Google Play của bạn. Hủy bất cứ lúc nào. Giá có thể thay đổi theo khu vực.",
   "restore": "Khôi Phục Giao Dịch",

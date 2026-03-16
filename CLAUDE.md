@@ -147,32 +147,45 @@ should be prefixed with the cultural frame system prompt to localize output tone
 
 ---
 
-## Pricing Model
+## Pricing Model (v2 — 2026-03-16)
 
 ### Subscription (via RevenueCat)
 
 | Plan | Price | Billing | Key Features |
 |---|---|---|---|
-| **Free** | $0 | — | 1 reading/week, full onboarding, chart view |
-| **Premium Monthly** | $8.99 | Monthly | Unlimited daily + weekly + monthly + annual readings, 대운 |
-| **Premium Annual** | $59.99 | Yearly (~44% off) | Everything Monthly + 2 add-on reports/yr |
+| **Free** | $0 | — | 3 Fortune Chats/day, 7-day calendar preview, chart view |
+| **Premium Monthly** | $7.99 | Monthly | Unlimited readings, 대운, full calendar, all frames |
+| **Premium Annual** | $59.99 | Yearly (~37% off) | Everything Monthly + 2 add-on reports/yr |
 
 ### Add-ons (one-time IAP)
 
-| Add-on | Price |
-|---|---|
-| Deep Compatibility Report | $4.99 |
-| Career & Wealth Report | $4.99 |
-| Full 대운 Report (PDF export) | $6.99 |
-| Name Analysis (작명) | $9.99 |
+| Add-on | RC Product ID | Price |
+|---|---|---|
+| Timing Advisor | k_saju_timing | $2.99 |
+| Deep Compatibility Report | k_saju_compatibility | $4.99 |
+| Career & Wealth Report | k_saju_career | $4.99 |
+| Full 대운 Report (PDF export) | k_saju_daewoon_pdf | $6.99 |
+| Name Analysis (작명) | k_saju_name_analysis | $9.99 |
+| **Starter Bundle** (timing + compatibility + career) | k_saju_starter_bundle | **$12.99** |
+| **Full Bundle** (all 5 addons) | k_saju_full_bundle | **$22.99** |
 
 ### Entitlement Gate Logic
 
 ```
-FREE:    daily_fortune_count <= 1/week, chart_view, onboarding
-PREMIUM: all_readings, daewoon, compatibility_basic, annual_report
-ADDON:   deep_compatibility, career_wealth, daewoon_pdf, name_analysis
+FREE:    fortune_chat <= 3/day (DB), calendar <= today+6, chart_view, onboarding
+PREMIUM: all_readings, daewoon, full_calendar, all_frames
+ADDON:   deep_compatibility, career_wealth, daewoon_pdf, name_analysis, timing_advisor
+BUNDLE:  starterPack → timing+compatibility+career; fullPack → all 5 addons
 ```
+
+### RevenueCat Manual Tasks (⚠️ RC Dashboard config required)
+
+- [ ] Update Monthly subscription price to **$7.99/mo** (was $8.99)
+- [ ] Create product `k_saju_starter_bundle` ($12.99 one-time) + entitlement `starter_pack`
+- [ ] Create product `k_saju_full_bundle` ($22.99 one-time) + entitlement `full_pack`
+- [ ] Map `starter_pack` entitlement → grants: timing_advisor + deep_compatibility + career_wealth
+- [ ] Map `full_pack` entitlement → grants: all 5 individual addons
+- [ ] Verify `k_saju_timing` product is still active (Timing Advisor $2.99)
 
 ---
 
@@ -184,8 +197,9 @@ ADDON:   deep_compatibility, career_wealth, daewoon_pdf, name_analysis
 2. **Cultural frame is selected at onboarding** and stored in Zustand + Supabase user profile.
    It affects Claude API system prompts only — not the calculation.
 
-3. **Month pillar** requires solar-term (절기) table for full accuracy. The current
-   `pillars.ts` uses a simplified approximation. Replace with a lookup table for production.
+3. **Month pillar** uses Jean Meeus astronomical algorithm (Ch. 25) in `solar-terms.ts`
+   for precise 절기 dates (±15 min over 2000–2100). January 子月/丑月 bug was fixed
+   by checking both previous year and current year 月節 boundaries.
 
 4. **Paywall** is a modal screen (`/paywall`) accessible from any locked feature.
    RevenueCat handles entitlement validation; Zustand caches the entitlement locally.
@@ -339,11 +353,11 @@ pnpm -r type-check
 
 ---
 
-## 현재 상태 (2026-03-15)
+## 현재 상태 (2026-03-16)
 
 **브랜치**: `feat/auspicious-calendar`
 **버전**: v2.4.0 준비 중
-**최근 커밋**: Android 빌드 환경·재발방지 규칙 문서화 (CLAUDE.md)
+**최근 커밋**: 가격 정책 v2 + saju-engine 절기 정밀도 개선
 
 ### 완료된 주요 기능 (Issues #1–#34 모두 CLOSED)
 
@@ -393,10 +407,18 @@ pnpm -r type-check
 - [x] **출생시간 토글 기본값 OFF**: `useState(false)` 고정
 - [x] **WheelPicker VirtualizedLists 경고 근본 제거**: FlatList → ScrollView + map 교체
 
+### 2026-03-16 작업 완료
+
+- [x] **saju-engine 절기 정밀도 개선**: Jean Meeus 천문학 알고리즘으로 교체, 1월 子月/丑月 경계 버그 수정, 경계 케이스 테스트 25개 추가
+- [x] **가격 정책 v2**: Fortune Chat 무료 3회/일, Calendar 7일 무료 게이트, 구독 $7.99/mo, Starter Bundle $12.99, Full Bundle $22.99
+- [x] **bundle entitlements**: `starterPack`/`fullPack` → entitlementStore + useHasAddon 번들 체크 로직
+- [x] **i18n 완성**: fortuneChat 8개 신규 키, paywall 번들 키 → 14개 언어 전체 적용
+
 ### 진행 중 / 미완료
 
 - [ ] v2.4.0 최종 QA 및 릴리스
-- [ ] 월주 계산 정밀도 개선 (절기 룩업 테이블 — 현재 근사치 사용)
+- [ ] RevenueCat 대시보드 설정 (위 RevenueCat Manual Tasks 체크리스트)
+- [x] 월주 계산 정밀도 개선 — Jean Meeus 구현 완료 (2026-03-16)
 - [x] Android 빌드 수정 — `npx expo run:android` BUILD SUCCESSFUL (2026-03-14)
 - [ ] App Store / Play Store 메타데이터 업데이트 (v2.4.0 기준)
 

@@ -299,7 +299,15 @@
     "maybeLater": "あとで",
     "chip1": "今日は重要な決断をすべきですか？",
     "chip2": "ラッキーエレメントを最大限に活かすには？",
-    "chip3": "今週は何に集中すべきですか？"
+    "chip3": "今週は何に集中すべきですか？",
+    "remaining": "残り{{count}}回",
+    "freeLimitReached": "本日の無料チャットを使い切りました",
+    "premiumLimitReached": "本日の上限（10回）に達しました",
+    "sessionRestored": "本日の会話を復元しました",
+    "resetTitle": "会話をリセット",
+    "resetMessage": "現在の会話がすべて削除されます。",
+    "resetConfirm": "リセット",
+    "lockedPlaceholder": "無料回数を使い切りました"
   },
   "onboarding": {
     "birthInfoTitle": "生年月日を入力",

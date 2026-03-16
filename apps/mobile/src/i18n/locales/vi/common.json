@@ -299,7 +299,15 @@
     "maybeLater": "Để sau",
     "chip1": "Hôm nay tôi có nên đưa ra quyết định quan trọng không?",
     "chip2": "Làm thế nào để tận dụng tối đa các yếu tố may mắn?",
-    "chip3": "Tuần này tôi nên tập trung vào điều gì?"
+    "chip3": "Tuần này tôi nên tập trung vào điều gì?",
+    "remaining": "Còn {{count}}",
+    "freeLimitReached": "Bạn đã dùng hết chat miễn phí hôm nay",
+    "premiumLimitReached": "Đã đạt giới hạn ngày (10)",
+    "sessionRestored": "Đã khôi phục cuộc trò chuyện hôm nay",
+    "resetTitle": "Đặt lại cuộc trò chuyện",
+    "resetMessage": "Cuộc trò chuyện hiện tại sẽ bị xóa.",
+    "resetConfirm": "Đặt lại",
+    "lockedPlaceholder": "Đã hết lượt miễn phí"
   },
   "onboarding": {
     "birthInfoTitle": "Nhập thông tin sinh",

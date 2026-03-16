@@ -4,7 +4,7 @@
   "plans": {
     "monthly": {
       "name": "Premium Bulanan",
-      "price": "$8.99",
+      "price": "$7.99",
       "period": "/bulan",
       "cta": "Dapatkan Bulanan"
     },
@@ -12,8 +12,9 @@
       "name": "Premium Tahunan",
       "price": "$59.99",
       "period": "/tahun",
-      "badge": "Nilai Terbaik · Hemat 44%",
-      "cta": "Dapatkan Tahunan"
+      "badge": "Nilai Terbaik · Hemat 37%",
+      "cta": "Dapatkan Tahunan",
+      "monthlyEquiv": "$5,00/bulan, ditagih tahunan"
     }
   },
   "addons": {
@@ -22,7 +23,11 @@
     "deep_compatibility": "Laporan Kecocokan Mendalam",
     "career_wealth": "Laporan Karier & Kekayaan",
     "daewoon_report_pdf": "Laporan Siklus Keberuntungan Penuh (PDF)",
-    "name_analysis": "Analisis Nama"
+    "name_analysis": "Analisis Nama",
+    "starter_bundle": "Paket Pemula",
+    "starter_bundle_desc": "Timing + Kecocokan + Karier",
+    "full_bundle": "Paket Lengkap",
+    "full_bundle_desc": "Semua 5 add-on termasuk"
   },
   "legal": "Pembayaran ditagihkan ke akun App Store/Google Play Anda. Batalkan kapan saja. Harga dapat berbeda per wilayah.",
   "restore": "Pulihkan Pembelian",

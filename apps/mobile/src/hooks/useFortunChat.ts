@@ -98,8 +98,8 @@ export function useFortunChat(
         },
       );
 
-      // Premium gate
-      if (resp.status === 403) {
+      // Premium gate or free daily limit reached
+      if (resp.status === 403 || resp.status === 402) {
         setPremiumRequired(true);
         setMessages(nextMessages); // remove placeholder
         return;

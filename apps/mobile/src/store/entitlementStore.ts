@@ -12,6 +12,10 @@ export interface EntitlementAddons {
   daewoonPdf: boolean;
   nameAnalysis: boolean;
   timingAdvisor: boolean;
+  /** Bundle: timing + compatibility + career */
+  starterPack: boolean;
+  /** Bundle: all 5 addons */
+  fullPack: boolean;
 }
 
 const DEFAULT_ADDONS: EntitlementAddons = {
@@ -20,6 +24,8 @@ const DEFAULT_ADDONS: EntitlementAddons = {
   daewoonPdf: false,
   nameAnalysis: false,
   timingAdvisor: false,
+  starterPack: false,
+  fullPack: false,
 };
 
 // Dev bypass: when EXPO_PUBLIC_ENABLE_DEV_BYPASS=true, all premium features are unlocked from the start
@@ -30,7 +36,14 @@ const ALL_ADDONS: EntitlementAddons = {
   daewoonPdf: true,
   nameAnalysis: true,
   timingAdvisor: true,
+  starterPack: true,
+  fullPack: true,
 };
+
+// Items unlocked by Starter Pack
+const STARTER_PACK_ITEMS: (keyof EntitlementAddons)[] = [
+  'deepCompatibility', 'careerWealth', 'timingAdvisor',
+];
 
 interface EntitlementState {
   isPremium: boolean;
@@ -66,6 +79,10 @@ export function useIsPremium(): boolean {
 }
 
 export function useHasAddon(addon: keyof EntitlementAddons): boolean {
-  const storeHasAddon = useEntitlementStore((s) => s.addons[addon]);
-  return DEV_PREMIUM || storeHasAddon;
+  const addons = useEntitlementStore((s) => s.addons);
+  if (DEV_PREMIUM) return true;
+  if (addons[addon]) return true;
+  if (addons.fullPack) return true;
+  if (addons.starterPack && STARTER_PACK_ITEMS.includes(addon)) return true;
+  return false;
 }

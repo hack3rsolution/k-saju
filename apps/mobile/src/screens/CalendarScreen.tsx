@@ -50,6 +50,7 @@ export default function CalendarScreen({ onUpgradePress }: Props) {
           if (!day.interpretation) fetchInterpretation(day)
         }}
         onMonthChange={setMonth}
+        onUpgradePress={onUpgradePress}
       />
 
       {selectedDay && (

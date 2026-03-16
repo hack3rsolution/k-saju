@@ -28,9 +28,9 @@
       "name": "Premium Annual",
       "price": "$59.99",
       "period": "/year",
-      "badge": "Best Value · Save 37%",
+      "badge": "Bestes Angebot · Spare 37%",
       "cta": "Get Annual",
-      "monthlyEquiv": "$5.00/month, billed annually"
+      "monthlyEquiv": "5,00 $/Monat, jährlich abgerechnet"
     }
   },
   "addons": {
@@ -40,10 +40,10 @@
     "career_wealth": "Career & Wealth Report",
     "daewoon_report_pdf": "Full Luck Cycle Report (PDF)",
     "name_analysis": "Name Analysis",
-    "starter_bundle": "Starter Bundle",
-    "starter_bundle_desc": "Timing + Compatibility + Career",
-    "full_bundle": "Full Bundle",
-    "full_bundle_desc": "All 5 add-ons included"
+    "starter_bundle": "Starter-Bundle",
+    "starter_bundle_desc": "Timing + Kompatibilität + Karriere",
+    "full_bundle": "Voll-Bundle",
+    "full_bundle_desc": "Alle 5 Erweiterungen enthalten"
   },
   "legal": "Payment charged to your App Store/Google Play account. Cancel anytime. Prices may vary by region.",
   "restore": "Restore Purchases",

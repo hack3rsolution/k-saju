@@ -299,7 +299,15 @@
     "maybeLater": "Nanti saja",
     "chip1": "Haruskah saya membuat keputusan penting hari ini?",
     "chip2": "Bagaimana memaksimalkan elemen keberuntunganku?",
-    "chip3": "Apa yang harus saya fokuskan minggu ini?"
+    "chip3": "Apa yang harus saya fokuskan minggu ini?",
+    "remaining": "{{count}} tersisa",
+    "freeLimitReached": "Anda telah menggunakan semua obrolan gratis hari ini",
+    "premiumLimitReached": "Batas harian (10) tercapai",
+    "sessionRestored": "Percakapan hari ini dipulihkan",
+    "resetTitle": "Reset percakapan",
+    "resetMessage": "Percakapan saat ini akan dihapus semua.",
+    "resetConfirm": "Reset",
+    "lockedPlaceholder": "Batas gratis tercapai"
   },
   "onboarding": {
     "birthInfoTitle": "Masukkan data kelahiran",

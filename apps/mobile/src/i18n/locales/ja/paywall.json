@@ -2,8 +2,20 @@
   "title": "あなたの運命を完全に解放する",
   "subtitle": "プレミアムですべての運勢・レポート・宇宙的洞察に無制限アクセス。",
   "plans": {
-    "monthly": { "name": "プレミアム月額", "price": "$8.99", "period": "/月", "cta": "月額プランを始める" },
-    "annual": { "name": "プレミアム年額", "price": "$59.99", "period": "/年", "badge": "最高のコスパ · 44%OFF", "cta": "年額プランを始める" }
+    "monthly": {
+      "name": "プレミアム月額",
+      "price": "$7.99",
+      "period": "/月",
+      "cta": "月額プランを始める"
+    },
+    "annual": {
+      "name": "プレミアム年額",
+      "price": "$59.99",
+      "period": "/年",
+      "badge": "お得 · 37%節約",
+      "cta": "年額プランを始める",
+      "monthlyEquiv": "月額$5.00、年間一括払い"
+    }
   },
   "addons": {
     "title": "アドオン（買い切り）",
@@ -11,7 +23,11 @@
     "deep_compatibility": "詳細相性レポート",
     "career_wealth": "仕事・財運レポート",
     "daewoon_report_pdf": "大運全体レポート（PDF）",
-    "name_analysis": "命名分析"
+    "name_analysis": "命名分析",
+    "starter_bundle": "スターターバンドル",
+    "starter_bundle_desc": "タイミング＋相性＋仕事運3点セット",
+    "full_bundle": "フルバンドル",
+    "full_bundle_desc": "全5アドオン含む"
   },
   "legal": "App Store/Google Playアカウントに請求されます。いつでもキャンセル可能。価格は地域により異なります。",
   "restore": "購入を復元",

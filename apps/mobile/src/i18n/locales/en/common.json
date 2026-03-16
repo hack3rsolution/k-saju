@@ -300,7 +300,15 @@
     "maybeLater": "Maybe later",
     "chip1": "Should I make an important decision today?",
     "chip2": "How can I make the most of my lucky elements?",
-    "chip3": "What should I focus on this week?"
+    "chip3": "What should I focus on this week?",
+    "remaining": "{{count}} left",
+    "freeLimitReached": "You've used all free chats today",
+    "premiumLimitReached": "Daily limit (10) reached",
+    "sessionRestored": "Today's conversation restored",
+    "resetTitle": "Reset Conversation",
+    "resetMessage": "This will delete the current conversation.",
+    "resetConfirm": "Reset",
+    "lockedPlaceholder": "Free limit reached"
   },
   "onboarding": {
     "birthInfoTitle": "Your Birth Info",

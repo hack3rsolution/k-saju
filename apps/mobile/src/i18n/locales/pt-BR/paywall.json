@@ -4,7 +4,7 @@
   "plans": {
     "monthly": {
       "name": "Premium Mensal",
-      "price": "$8.99",
+      "price": "$7.99",
       "period": "/mês",
       "cta": "Assinar Mensal"
     },
@@ -12,8 +12,9 @@
       "name": "Premium Anual",
       "price": "$59.99",
       "period": "/ano",
-      "badge": "Melhor Valor · Economize 44%",
-      "cta": "Assinar Anual"
+      "badge": "Melhor Valor · Economize 37%",
+      "cta": "Assinar Anual",
+      "monthlyEquiv": "$5,00/mês, cobrado anualmente"
     }
   },
   "addons": {
@@ -22,7 +23,11 @@
     "deep_compatibility": "Relatório de Compatibilidade Profunda",
     "career_wealth": "Relatório de Carreira e Riqueza",
     "daewoon_report_pdf": "Relatório Completo do Ciclo de Sorte (PDF)",
-    "name_analysis": "Análise de Nome"
+    "name_analysis": "Análise de Nome",
+    "starter_bundle": "Pacote Inicial",
+    "starter_bundle_desc": "Timing + Compatibilidade + Carreira",
+    "full_bundle": "Pacote Completo",
+    "full_bundle_desc": "Todos os 5 complementos incluídos"
   },
   "legal": "O pagamento é cobrado na sua conta da App Store/Google Play. Cancele a qualquer momento. Os preços podem variar por região.",
   "restore": "Restaurar Compras",

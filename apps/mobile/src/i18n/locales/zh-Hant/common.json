@@ -299,7 +299,15 @@
     "maybeLater": "稍後再說",
     "chip1": "今天適合做重要決定嗎？",
     "chip2": "如何最大程度發揮我的幸運元素？",
-    "chip3": "本週應該專注於什麼？"
+    "chip3": "本週應該專注於什麼？",
+    "remaining": "剩餘{{count}}次",
+    "freeLimitReached": "今日免費次數已用完",
+    "premiumLimitReached": "今日上限（10次）已達到",
+    "sessionRestored": "已恢復今日對話",
+    "resetTitle": "重置對話",
+    "resetMessage": "目前對話將被全部刪除。",
+    "resetConfirm": "重置",
+    "lockedPlaceholder": "免費次數已用完"
   },
   "onboarding": {
     "birthInfoTitle": "輸入出生資訊",

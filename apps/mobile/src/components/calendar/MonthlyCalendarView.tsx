@@ -1,10 +1,14 @@
 import React, { useMemo } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import { DayCell } from './DayCell'
 import type { AuspiciousDay, DayStatus } from '../../types/calendar'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
+
+// Free users: today + next 6 days (7 days total), 8+ days in the future are blurred
+const FREE_WINDOW_DAYS = 7
 
 interface Props {
   month: string           // 'YYYY-MM'
@@ -13,11 +17,15 @@ interface Props {
   onDayPress: (day: AuspiciousDay) => void
   onMonthChange: (month: string) => void
   isPremium?: boolean
+  onUpgradePress?: () => void
 }
 
-export function MonthlyCalendarView({ month, days, isLoading, onDayPress, onMonthChange, isPremium = false }: Props) {
+export function MonthlyCalendarView({ month, days, isLoading, onDayPress, onMonthChange, isPremium = false, onUpgradePress }: Props) {
+  const { t } = useTranslation('common')
   const current = dayjs(month)
   const today   = dayjs().format('YYYY-MM-DD')
+  // Last free day (inclusive): today + 6
+  const freeEndDate = dayjs().add(FREE_WINDOW_DAYS - 1, 'day').format('YYYY-MM-DD')
 
   // Free 유저: lucky 날 상위 3개 이외는 neutral로 표시
   const visibleStatusMap = useMemo<Record<string, DayStatus>>(() => {
@@ -108,19 +116,31 @@ export function MonthlyCalendarView({ month, days, isLoading, onDayPress, onMont
                 date: cell.date, score: 50, status: 'neutral' as DayStatus,
                 heavenlyStem: '', earthlyBranch: '',
               }
+              const isBlurred = !isPremium && cell.isCurrentMonth && cell.date > freeEndDate
               return (
                 <DayCell
                   key={cell.date}
                   day={dayData}
                   isToday={cell.date === today}
                   isCurrentMonth={cell.isCurrentMonth}
-                  onPress={onDayPress}
+                  onPress={isBlurred ? () => onUpgradePress?.() : onDayPress}
                   visibleStatus={visibleStatusMap[cell.date]}
+                  isBlurred={isBlurred}
                 />
               )
             })}
           </View>
         ))
+      )}
+
+      {/* 프리미엄 업그레이드 배너 (Free 유저 전용) */}
+      {!isPremium && (
+        <View style={styles.upgradeBanner}>
+          <Text style={styles.bannerText}>{t('calendar.premiumRequired')}</Text>
+          <TouchableOpacity style={styles.bannerBtn} onPress={onUpgradePress}>
+            <Text style={styles.bannerBtnText}>{t('calendar.upgradeNow')}</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   )
@@ -138,4 +158,14 @@ const styles = StyleSheet.create({
   saturday:         { color: '#7dd3fc' },
   week:             { flexDirection: 'row' },
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 60 },
+  upgradeBanner: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    marginTop: 12, marginHorizontal: 4, paddingHorizontal: 14, paddingVertical: 10,
+    backgroundColor: 'rgba(124,58,237,0.12)',
+    borderRadius: 12,
+    borderWidth: 1, borderColor: 'rgba(124,58,237,0.3)',
+  },
+  bannerText:    { flex: 1, fontSize: 12, color: '#c4b5fd', marginRight: 8 },
+  bannerBtn:     { backgroundColor: '#7C3AED', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
+  bannerBtnText: { fontSize: 12, fontWeight: '700', color: '#fff' },
 })
